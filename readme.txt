@@ -1,4 +1,4 @@
-GDS2POV 0.5
+GDS2POV 0.6
 ===========
 
 Introduction
@@ -22,7 +22,7 @@ section at the bottom of this document.
 Usage
 -----
 
-gds2pov input.gds output.pov [-c config.txt] [-p process.txt]
+gds2pov input.gds output.pov [-c config.txt] [-p process.txt] [-v]
 
 
 First steps - what do you need at the absolute minimum? This program, a GDS2 

@@ -3,3 +3,4 @@ Version 0.6
 
 - Added verbose output option for helping debug problems with gds2 files.
 - Default font used is crystal.ttf (supplied with POV-Ray) and font is definable in config.txt
+- Invalid characters in structure names are replaced with _.
