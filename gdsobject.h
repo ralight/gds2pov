@@ -140,6 +140,8 @@ public:
 	char *GetARefName(int Index);
 
 	struct _Boundary *GetBoundary(struct ObjectList *objectlist);
+
+	bool GetIsOutput();
 };
 
 #endif // __GDSOBJECT_H__

@@ -135,6 +135,13 @@ GDSParse::~GDSParse ()
 
 void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *optr)
 {
+//	char *s = Object->GetName();
+//	if(strcmp(s, "npnHP1")==0){
+//		printf("j");
+//	}
+	if(Object->GetIsOutput()){
+		return;
+	}
 	if(Object->HasASRef()){
 		GDSObject *child;
 

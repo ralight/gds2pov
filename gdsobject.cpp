@@ -27,8 +27,8 @@ GDSObject::GDSObject(char *NewName)
 	strncpy(Name, NewName, strlen(NewName)+1);
 
 	GotBoundary = false;
-	Boundary.XMax = Boundary.YMax = -10000.0;
-	Boundary.XMin = Boundary.YMin = 10000.0;
+	Boundary.XMax = Boundary.YMax = -100000.0;
+	Boundary.XMin = Boundary.YMin = 100000.0;
 
 	IsOutput = false;
 }
@@ -146,8 +146,6 @@ GDSObject::~GDSObject()
 void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font)
 {
 	if(fptr && !IsOutput){
-
-		struct _Boundary *thisBound;
 
 		fprintf(fptr, "#declare str_%s = union {\n", Name);
 		if(FirstPrism){
@@ -364,7 +362,6 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font)
 				}
 				fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
 				if(sref->Rotate.Y){
-					thisBound = Objects->GetObject(sref->Name)->GetBoundary(Objects->GetObjectList());
 					fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
 				}
 				fprintf(fptr, "}\n");
@@ -768,13 +765,15 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		SRefElement *sref = &dummysref;
 
 		struct ObjectList *object;
-		dummyobject.Next = objectlist;
+		dummyobject.Prev = objectlist;
 		struct _Boundary *NewBound;
+
 		while(sref->Next){
 			sref = sref->Next;
 			object = &dummyobject;
-			while(object->Next){
-				object = object->Next;
+
+			while(object->Prev){
+				object = object->Prev;
 				if(strncmp(object->Object->GetName(), sref->Name, strlen(sref->Name))==0){
 					NewBound = object->Object->GetBoundary(objectlist);
 					if(sref->X + NewBound->XMax > Boundary.XMax){
@@ -934,5 +933,10 @@ char *GDSObject::GetARefName(int Index)
 		}
 	}
 	return NULL;
+}
+
+bool GDSObject::GetIsOutput()
+{
+	return IsOutput;
 }
 

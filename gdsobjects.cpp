@@ -97,15 +97,15 @@ struct _Boundary *GDSObjects::GetBoundary()
 		Boundary = new struct _Boundary;
 	}
 
-	Boundary->XMax = Boundary->YMax = -10000.0;
-	Boundary->XMin = Boundary->YMin =  10000.0;
+	Boundary->XMax = Boundary->YMax = -100000.0;
+	Boundary->XMin = Boundary->YMin =  100000.0;
 
 	if(FirstObject){
-		struct ObjectList *object = FirstObject;
+		struct ObjectList *objectlist = LastObject;
 		struct _Boundary *object_bound;
 
-		while(object->Next){
-			object_bound = object->Object->GetBoundary(FirstObject);
+		while(objectlist->Prev){
+			object_bound = objectlist->Object->GetBoundary(FirstObject);
 
 			if(object_bound->XMax > Boundary->XMax){
 				Boundary->XMax = object_bound->XMax;
@@ -120,9 +120,9 @@ struct _Boundary *GDSObjects::GetBoundary()
 				Boundary->YMin = object_bound->YMin;
 			}
 
-			object = object->Next;
+			objectlist = objectlist->Prev;
 		}
-		object_bound = object->Object->GetBoundary(FirstObject);
+		object_bound = objectlist->Object->GetBoundary(FirstObject);
 
 		if(object_bound->XMax > Boundary->XMax){
 			Boundary->XMax = object_bound->XMax;
