@@ -36,21 +36,22 @@ int main(int argc, char *argv[])
 
 	for(int i=3; i<argc; i++){
 		if(argv[i][0] == '-'){
-			if(strncmp(argv[i], "-c", strlen("-c"))!=0){
+			if(strncmp(argv[i], "-c", strlen("-c"))==0){
+
 				if(i==argc-1){
 					printusage();
 					return 1;
 				}else{
 					configfile = argv[i+1];
 				}
-			}else if(strncmp(argv[i], "-p", strlen("-p"))!=0){
+			}else if(strncmp(argv[i], "-p", strlen("-p"))==0){
 				if(i==argc-1){
 					printusage();
 					return 1;
 				}else{
-					processfile = argv[4];
+					processfile = argv[i+1];
 				}
-			}else if(strncmp(argv[i], "-v", strlen("-v"))!=0){
+			}else if(strncmp(argv[i], "-v", strlen("-v"))==0){
 				verbose = true;
 			}else{
 				printusage();
