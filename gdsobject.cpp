@@ -335,7 +335,6 @@ void GDSObject::OutputToFile(FILE *fptr)
 			ARefElement *aref = &dummyaref;
 
 			float dx, dy;
-			float X, Y;
 
 			while(aref->Next){
 				aref = aref->Next;
@@ -344,37 +343,58 @@ void GDSObject::OutputToFile(FILE *fptr)
 						dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
 						dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
 
-						for(X=0; X<aref->Columns; X++){
-							for(Y=0; Y<aref->Rows; Y++){
-								fprintf(fptr, "object{str_%s ", aref->Name);
-								if(aref->Flipped){
-									fprintf(fptr, "scale <1,1,-1> ");
-								}
-								fprintf(fptr, "translate <%.2f,0,%.2f>", aref->X1 + dx*X, aref->Y1 + dy*Y);
-								if(aref->Rotate.Y){
-									fprintf(fptr, " Rotate_Around_Trans(<0,%.2f,0>,<%.2f,0,%.2f>)", aref->Rotate.Y, aref->X1 + dx*X, aref->Y1 + dy*Y);
-								}
-								fprintf(fptr, "}\n");
-							}
+						fprintf(fptr, "#declare dx = %.2f;\n", dx);
+						fprintf(fptr, "#declare dy = %.2f;\n", dy);
+
+						fprintf(fptr, "#declare colcount = 0;\n");
+						fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
+						fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
+						fprintf(fptr, "#while (colcount < cols)\n");
+						fprintf(fptr, "\t#declare rowcount = 0;");
+						fprintf(fptr, "\t#while (rowcount < rows)\n");
+						fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
+						if(aref->Flipped){
+							fprintf(fptr, "scale <1,1,-1> ");
 						}
+						fprintf(fptr, "translate <%.2f+dx*colcount,0,%.2f+dy*rowcount>", aref->X1, aref->Y1);
+						if(aref->Rotate.Y){
+							fprintf(fptr, " Rotate_Around_Trans(<0,%.2f,0>,<%.2f+dx*colcount,0,%.2f+dy*rowcount>)", aref->Rotate.Y, aref->X1, aref->Y1);
+						}
+						fprintf(fptr, "}\n");
+
+						fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
+						fprintf(fptr, "\t#end\n");
+						fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
+						fprintf(fptr, "#end\n");
 					}
 				}else{
 					if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
 						dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
 						dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
-						for(X=0; X<aref->Columns; X++){
-							for(Y=0; Y<aref->Rows; Y++){
-								fprintf(fptr, "object { str_%s ", aref->Name);
-								if(aref->Flipped){
-									fprintf(fptr, "scale <1,1,-1> ");
-								}
-								fprintf(fptr, "translate <%.2f,0,%.2f>", aref->X1 + dx*X, aref->Y1 + dy*Y);
-								if(aref->Rotate.Y){
-									fprintf(fptr, " Rotate_Around_Trans(<0,%.2f,0>,<%.2f,0,%.2f>)", aref->Rotate.Y, aref->X1 + dx*X, aref->Y1 + dy*Y);
-								}
-								fprintf(fptr, "}\n");
-							}
+
+						fprintf(fptr, "#declare dx = %.2f;\n", dx);
+						fprintf(fptr, "#declare dy = %.2f;\n", dy);
+
+						fprintf(fptr, "#declare colcount = 0;\n");
+						fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
+						fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
+						fprintf(fptr, "#while (colcount < cols)\n");
+						fprintf(fptr, "\t#declare rowcount = 0;");
+						fprintf(fptr, "\t#while (rowcount < rows)\n");
+						fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
+						if(aref->Flipped){
+							fprintf(fptr, "scale <1,1,-1> ");
 						}
+						fprintf(fptr, "translate <%.2f+dx*colcount,0,%.2f+dy*rowcount>", aref->X1, aref->Y1);
+						if(aref->Rotate.Y){
+							fprintf(fptr, " Rotate_Around_Trans(<0,%.2f,0>,<%.2f+dx*colcount,0,%.2f+dy*rowcount>)", aref->Rotate.Y, aref->X1, aref->Y1);
+						}
+						fprintf(fptr, "}\n");
+
+						fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
+						fprintf(fptr, "\t#end\n");
+						fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
+						fprintf(fptr, "#end\n");
 					}
 				}
 			}

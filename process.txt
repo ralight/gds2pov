@@ -238,6 +238,21 @@ Metal: 0
 Show: 1
 LayerEnd
 
+LayerStart: POLY1PIN
+Layer: 61
+Datatype: 1
+LayerEnd
+
+LayerStart: MET1PIN
+Layer: 61
+Datatype: 2
+LayerEnd
+
+LayerStart: CELBOX
+Layer: 62
+Datatype: 1
+LayerEnd
+
 LayerStart: DIODE
 Layer: 62
 Datatype: 11

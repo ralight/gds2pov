@@ -14,6 +14,7 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 	libname = NULL;
 	sname = NULL;
 	textstring = NULL;
+	Objects = NULL;
 
 	PathElements = 0;
 	BoundaryElements = 0;
@@ -75,11 +76,12 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 		}
 		fclose(iptr);
 		iptr = NULL;
+
+		printf("\nSummary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
+			PathElements, BoundaryElements, TextElements, SRefElements, ARefElements);
 	}else{
 		printf("Unable to read %s\n", infile);
 	}
-	printf("\nSummary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
-		PathElements, BoundaryElements, TextElements, SRefElements, ARefElements);
 }
 
 GDSParse::~GDSParse ()
@@ -693,8 +695,8 @@ void GDSParse::ParseXY()
 			TextElements++;
 
 			if(thislayer==NULL){
-				printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
-				printf("\tIgnoring this element\n.");
+				printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", currentlayer, currentdatatype);
+				printf("\tIgnoring this string\n.");
 				while(recordlen){
 					GetFourByteSignedInt();
 				}
