@@ -1,4 +1,4 @@
-GDS2POV 0.7.2
+GDS2POV 0.7.3
 =============
 
 Introduction

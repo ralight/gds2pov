@@ -1,3 +1,11 @@
+Version 0.7.3 (23rd November 2004)
+==================================
+
+- Fixed occasional problem with invalid characters being printed in layer
+  names. Thanks to Scott Lin.
+- Fixed boundary calculation when an SREF only contained other SREFs.
+- SREF boundaries are now output when the -v option is given.
+
 Version 0.7.2 (17th November 2004)
 ==================================
 
