@@ -35,7 +35,6 @@ typedef enum{
 class GDSParse
 {
 private:
-	short gdsversion;
 	char *libname;
 
 	short currentlayer;
@@ -53,13 +52,14 @@ private:
 	short arrayrows, arraycols;
 	float units;
 	float angle;
-	int mirror;
 	FILE *iptr;
 	FILE *optr;
 	class GDSProcess *process;
 	class GDSConfig *config;
 	
 	short recordlen;
+
+	bool unsupported[70];
 
 	long PathElements;
 	long BoundaryElements;

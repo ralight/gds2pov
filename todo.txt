@@ -9,8 +9,9 @@ Definite
 	Also for flipped objects.
 - Documentation (source and usage)
 - Improve error reporting. Mark where the errors come from for process/config!
+- Convert to bools
 
-Tasks: 6
+Tasks: 7
 
 
 Possible

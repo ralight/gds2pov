@@ -63,7 +63,7 @@ GDSConfig::GDSConfig(char *configfile)
 	cptr = fopen(configfile, "rt");
 	
 	if(!cptr){
-		fprintf(stderr, "Error: Unable to open \"%s\"\n", configfile);
+		fprintf(stderr, "Error: Unable to open config file \"%s\"\n", configfile);
 		Valid = 0;
 		return;
 	}
@@ -82,17 +82,17 @@ GDSConfig::GDSConfig(char *configfile)
 		}
 	}
 	if(posstart_cnt!=posend_cnt){
-		printf("Invalid config file. ");
-		printf("There should be equal numbers of PositionStart and PositionEnd elements! ");
-		printf("(%d and %d found respectively)\n", posstart_cnt, posend_cnt);
+		fprintf(stderr, "Invalid config file. ");
+		fprintf(stderr, "There should be equal numbers of PositionStart and PositionEnd elements! ");
+		fprintf(stderr, "(%d and %d found respectively)\n", posstart_cnt, posend_cnt);
 		Valid = 0;
 		return;
 	}
 
 	if(globalstart_cnt!=globalend_cnt || globalstart_cnt > 1 || globalend_cnt > 1){
-		printf("Invalid config file. ");
-		printf("There should be either 1 or 0 of both of GlobalStart and GlobalEnd elements! ");
-		printf("(%d and %d found respectively)\n", globalstart_cnt, globalend_cnt);
+		fprintf(stderr, "Invalid config file. ");
+		fprintf(stderr, "There should be either 1 or 0 of both of GlobalStart and GlobalEnd elements! ");
+		fprintf(stderr, "(%d and %d found respectively)\n", globalstart_cnt, globalend_cnt);
 		Valid = 0;
 		return;
 	}
@@ -105,7 +105,7 @@ GDSConfig::GDSConfig(char *configfile)
 		if(line[0]!='#'){
 			if(strstr(line, "GlobalStart")){
 				if(in_position){
-					printf("Error: GlobalStart inside PositionStart on line %d.\n", current_line);
+					fprintf(stderr, "Error: GlobalStart inside PositionStart on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
@@ -114,24 +114,24 @@ GDSConfig::GDSConfig(char *configfile)
 				got_processfile = false;
 			}else if(strstr(line, "Ambient:")){
 				if(!in_global){
-					printf("Error: Ambient definition outside of GlobalStart and GlobalEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: Ambient definition outside of GlobalStart and GlobalEnd on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(got_ambient){
-					printf("Warning: Duplicate Ambient definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Warning: Duplicate Ambient definition on line %d. Ignoring new definition.\n", current_line);
 				}else{
 					sscanf(line, "Ambient: %f", &Ambient);
 				}
 				got_ambient = true;
 			}else if(strstr(line, "ProcessFile:")){
 				if(!in_global){
-					printf("Error: ProcessFile definition outside of GlobalStart and GlobalEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: ProcessFile definition outside of GlobalStart and GlobalEnd on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(got_processfile){
-					printf("Warning: Duplicate ProcessFile definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Warning: Duplicate ProcessFile definition on line %d. Ignoring new definition.\n", current_line);
 				}else{
 					if(ProcessFile){
 						delete ProcessFile;
@@ -152,11 +152,11 @@ GDSConfig::GDSConfig(char *configfile)
 				in_global = false;
 			}else if(strstr(line, "PositionStart")){
 				if(in_position){
-					printf("Error: PositionStart without PositionEnd not allowed. PositionEnd should appear before line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionStart without PositionEnd not allowed. PositionEnd should appear before line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}else if(in_global){
-					printf("Error: PositionStart inside GlobalStart on line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionStart inside GlobalStart on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
@@ -169,12 +169,12 @@ GDSConfig::GDSConfig(char *configfile)
 				current_type = ptNone;
 			}else if(strstr(line, "Type:")){
 				if(!in_position){
-					printf("Error: Type definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: Type definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(got_type){
-					printf("Warning: Duplicate Type definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Warning: Duplicate Type definition on line %d. Ignoring new definition.\n", current_line);
 				}else{
 					if(strstr(line, "Type: Camera")){
 						current_type = ptCamera;
@@ -200,7 +200,7 @@ GDSConfig::GDSConfig(char *configfile)
 							LastLight->ZMod = 1.0;
 						}
 					}else{
-						printf("Error: Unknown position type \"%s\" on line %d.\n", line, current_line);
+						fprintf(stderr, "Error: Unknown position type \"%s\" on line %d.\n", line, current_line);
 						Valid = 0;
 						return;
 					}
@@ -208,17 +208,17 @@ GDSConfig::GDSConfig(char *configfile)
 				}
 			}else if(strstr(line, "Position:")){
 				if(!in_position){
-					printf("Error: Position definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: Position definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(!got_type){
-					printf("Error: Type must be defined before any other elements in a Position block.\n");
+					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
 					Valid = 0;
 					return;
 				}
 				if(got_position){
-					printf("Warning: Duplicate Position definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Warning: Duplicate Position definition on line %d. Ignoring new definition.\n", current_line);
 				}else{
 					BoundaryPos thispos;
 					if(strstr(line, "Position: Centre")){
@@ -232,7 +232,7 @@ GDSConfig::GDSConfig(char *configfile)
 					}else if(strstr(line, "Position: BottomRight")){
 						thispos = bpBottomRight;
 					}else{
-						printf("Error: Unknown Position \"%s\" on line %d.\n", line, current_line);
+						fprintf(stderr, "Error: Unknown Position \"%s\" on line %d.\n", line, current_line);
 						Valid = 0;
 						return;
 					}
@@ -247,14 +247,14 @@ GDSConfig::GDSConfig(char *configfile)
 							if(LastLight){
 								LastLight->boundarypos = thispos;
 							}else{
-								printf("Error: Position found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								fprintf(stderr, "Error: Position found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								Valid = 0;
 								return;
 							}
 							break;
 						case ptNone:
 						default:
-							printf("Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
+							fprintf(stderr, "Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
 							break;
 					}
 					got_position = true;
@@ -262,17 +262,17 @@ GDSConfig::GDSConfig(char *configfile)
 				
 			}else if(strstr(line, "XMod:")){
 				if(!in_position){
-					printf("Error: XMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: XMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(!got_type){
-					printf("Error: Type must be defined before any other elements in a Position block.\n");
+					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
 					Valid = 0;
 					return;
 				}
 				if(got_xmod){
-					printf("Error: Duplicate XMod definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate XMod definition on line %d. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
@@ -285,31 +285,31 @@ GDSConfig::GDSConfig(char *configfile)
 							if(LastLight){
 								sscanf(line, "XMod: %f", &LastLight->XMod);
 							}else{
-								printf("Error: XMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								fprintf(stderr, "Error: XMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								Valid = 0;
 								return;
 							}
 							break;
 						case ptNone:
 						default:
-							printf("Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
+							fprintf(stderr, "Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
 							break;
 					}
 					got_xmod = true;
 				}
 			}else if(strstr(line, "YMod:")){
 				if(!in_position){
-					printf("Error: YMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: YMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(!got_type){
-					printf("Error: Type must be defined before any other elements in a Position block.\n");
+					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
 					Valid = 0;
 					return;
 				}
 				if(got_ymod){
-					printf("Error: Duplicate YMod definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate YMod definition on line %d. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
@@ -322,31 +322,31 @@ GDSConfig::GDSConfig(char *configfile)
 							if(LastLight){
 								sscanf(line, "YMod: %f", &LastLight->YMod);
 							}else{
-								printf("Error: YMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								fprintf(stderr, "Error: YMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								Valid = 0;
 								return;
 							}
 							break;
 						case ptNone:
 						default:
-							printf("Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
+							fprintf(stderr, "Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
 							break;
 					}
 					got_ymod = true;
 				}
 			}else if(strstr(line, "ZMod:")){
 				if(!in_position){
-					printf("Error: ZMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: ZMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(!got_type){
-					printf("Error: Type must be defined before any other elements in a Position block.\n");
+					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
 					Valid = 0;
 					return;
 				}
 				if(got_zmod){
-					printf("Error: Duplicate ZMod definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate ZMod definition on line %d. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
@@ -359,29 +359,29 @@ GDSConfig::GDSConfig(char *configfile)
 							if(LastLight){
 								sscanf(line, "ZMod: %f", &LastLight->ZMod);
 							}else{
-								printf("Error: ZMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								fprintf(stderr, "Error: ZMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								Valid = 0;
 								return;
 							}
 							break;
 						case ptNone:
 						default:
-							printf("Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
+							fprintf(stderr, "Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
 							break;
 					}
 					got_zmod = true;
 				}
 			}else if(strstr(line, "PositionEnd")){
 				if(!in_position){
-					printf("Error: PositionEnd without PositionStart on line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionEnd without PositionStart on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}else if(!got_type){
-					printf("Error: PositionEnd without Type on line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionEnd without Type on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}else if(!got_position){
-					printf("Error: PositionEnd without Position on line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionEnd without Position on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}

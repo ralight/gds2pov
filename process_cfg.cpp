@@ -32,22 +32,22 @@ GDSProcess::GDSProcess(char *processfile)
 	FILE *pptr = NULL;
 
 	Count = 0;
-	Valid = 1;
+	Valid = true;
 
 	/* State variables */
-	char in_layer = 0;
-	char got_layer = 0;
-	char got_datatype = 0;
-	char got_height = 0;
-	char got_thickness = 0;
-	char got_red = 0;
-	char got_green = 0;
-	char got_blue = 0;
-	char got_filter = 0;
-	char got_metal = 0;
-	char got_show = 0;
+	bool in_layer = false;
+	bool got_layer = false;
+	bool got_datatype = false;
+	bool got_height = false;
+	bool got_thickness = false;
+	bool got_red = false;
+	bool got_green = false;
+	bool got_blue = false;
+	bool got_filter = false;
+	bool got_metal = false;
+	bool got_show = false;
 	/* End State variables */
-	char showing;
+	bool showing;
 
 	FirstLayer = NULL;
 
@@ -57,7 +57,7 @@ GDSProcess::GDSProcess(char *processfile)
 	pptr = fopen(processfile, "rt");
 	
 	if(!pptr){
-		Valid = 0;
+		Valid = false;
 		return;
 	}
 
@@ -71,10 +71,10 @@ GDSProcess::GDSProcess(char *processfile)
 		}
 	}
 	if(layerstart_cnt!=layerend_cnt){
-		printf("Invalid process file. ");
-		printf("There should be equal numbers of LayerStart and LayerEnd elements! ");
-		printf("(%d and %d found respectively)\n", layerstart_cnt, layerend_cnt);
-		Valid = 0;
+		fprintf(stderr, "Invalid process file. ");
+		fprintf(stderr, "There should be equal numbers of LayerStart and LayerEnd elements! ");
+		fprintf(stderr, "(%d and %d found respectively)\n", layerstart_cnt, layerend_cnt);
+		Valid = false;
 		return;
 	}
 
@@ -86,21 +86,21 @@ GDSProcess::GDSProcess(char *processfile)
 		if(line[0]!='#'){
 			if(strstr(line, "LayerStart:")){
 				if(in_layer){
-					printf("Error: LayerStart without LayerEnd not allowed. LayerEnd should appear before line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: LayerStart without LayerEnd not allowed. LayerEnd should appear before line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
-				in_layer = 1;
-				got_layer = 0;
-				got_datatype = 0;
-				got_height = 0;
-				got_thickness = 0;
-				got_red = 0;
-				got_green = 0;
-				got_blue = 0;
-				got_filter = 0;
-				got_metal = 0;
-				got_show = 0;				
+				in_layer = true;
+				got_layer = false;
+				got_datatype = false;
+				got_height = false;
+				got_thickness = false;
+				got_red = false;
+				got_green = false;
+				got_blue = false;
+				got_filter = false;
+				got_metal = false;
+				got_show = false;
 				current_element++;
 
 				if(NewLayer.Name){
@@ -116,183 +116,175 @@ GDSProcess::GDSProcess(char *processfile)
 				NewLayer.Blue = 0.0;
 				NewLayer.Filter = 0.0;
 				NewLayer.Metal = 0;
-				NewLayer.Show = 0;
+				NewLayer.Show = false;
 				NewLayer.Next = NULL;
 			}else if(strstr(line, "Layer:")){
 				if(!in_layer){
-					printf("Error: Layer definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Layer definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_layer){
-					printf("Error: Duplicate Layer definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Layer definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Layer: %d", &NewLayer.Layer);
+					got_layer = true;
 				}
-				sscanf(line, "Layer: %d", &NewLayer.Layer);
-				got_layer = 1;
 			}else if(strstr(line, "Datatype:")){
 				if(!in_layer){
-					printf("Error: Datatype definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Datatype definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_datatype){
-					printf("Error: Duplicate Datatype definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Datatype definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Datatype: %d", &NewLayer.Datatype);
+					got_datatype = true;
 				}
-				sscanf(line, "Datatype: %d", &NewLayer.Datatype);
-				got_datatype = 1;
 			}else if(strstr(line, "Height:")){
 				if(!in_layer){
-					printf("Error: Height definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Height definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_height){
-					printf("Error: Duplicate Height definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Height definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Height: %f", &NewLayer.Height);
+					got_height = true;
 				}
-				sscanf(line, "Height: %f", &NewLayer.Height);
-				got_height = 1;
 			}else if(strstr(line, "Thickness:")){
 				if(!in_layer){
-					printf("Error: Thickness definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Thickness definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_thickness){
-					printf("Error: Duplicate Thickness definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Thickness definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Thickness: %f", &NewLayer.Thickness);
+					got_thickness = true;
 				}
-				sscanf(line, "Thickness: %f", &NewLayer.Thickness);
-				got_thickness = 1;
 			}else if(strstr(line, "Red:")){
 				if(!in_layer){
-					printf("Error: Red definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Red definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_red){
-					printf("Error: Duplicate Red definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Red definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Red: %f", &NewLayer.Red);
+					got_red = true;
 				}
-				sscanf(line, "Red: %f", &NewLayer.Red);
-				got_red = 1;
 			}else if(strstr(line, "Green:")){
 				if(!in_layer){
-					printf("Error: Green definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Green definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_green){
-					printf("Error: Duplicate Green definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Green definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Green: %f", &NewLayer.Green);
+					got_green = true;
 				}
-				sscanf(line, "Green: %f", &NewLayer.Green);
-				got_green = 1;
 			}else if(strstr(line, "Blue:")){
 				if(!in_layer){
-					printf("Error: Blue definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Blue definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_blue){
-					printf("Error: Duplicate Blue definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Blue definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Blue: %f", &NewLayer.Blue);
+					got_blue = true;
 				}
-				sscanf(line, "Blue: %f", &NewLayer.Blue);
-				got_blue = 1;
 			}else if(strstr(line, "Filter:")){
 				if(!in_layer){
-					printf("Error: Filter definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Filter definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_filter){
-					printf("Error: Duplicate Filter definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Filter definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Filter: %f", &NewLayer.Filter);
+					got_filter = true;
 				}
-				sscanf(line, "Filter: %f", &NewLayer.Filter);
-				got_filter = 1;
 			}else if(strstr(line, "Metal:")){
 				if(!in_layer){
-					printf("Error: Metal definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Metal definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_metal){
-					printf("Error: Duplicate Metal definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Metal definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Metal: %d", &NewLayer.Metal);
+					got_metal = true;
 				}
-				sscanf(line, "Metal: %d", &NewLayer.Metal);
-				got_metal = 1;
 			}else if(strstr(line, "Show:")){
 				if(!in_layer){
-					printf("Error: Show definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: Show definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}
 				if(got_show){
-					printf("Error: Duplicate Show definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
+					fprintf(stderr, "Warning: Duplicate Show definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Show: %d", &NewLayer.Show);
+					got_show = true;
 				}
-				sscanf(line, "Show: %d", &NewLayer.Show);
-				got_show = 1;
 			}else if(strstr(line, "LayerEnd")){
 				showing = NewLayer.Show;
 				if(!in_layer){
-					printf("Error: LayerEnd without LayerStart on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: LayerEnd without LayerStart on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}else if(!got_layer){
-					printf("Error: LayerEnd without Layer on line %d.\n", current_line);
-					Valid = 0;
+					fprintf(stderr, "Error: LayerEnd without Layer on line %d.\n", current_line);
+					Valid = false;
 					return;
 				}else if(!got_height){
 					//printf("Error: LayerEnd without Height on line %d.\n", current_line);
-					showing = 0;
+					showing = false;
 				}else if(!got_thickness){
 //					printf("Error: LayerEnd without Thickness on line %d.\n", current_line);
-					showing = 0;
+					showing = false;
 				}else if(!got_red){
 //					printf("Error: LayerEnd without Red on line %d.\n", current_line);
-					showing = 0;
+					showing = false;
 				}else if(!got_green){
 //					printf("Error: LayerEnd without Green on line %d.\n", current_line);
-					showing = 0;
+					showing = false;
 				}else if(!got_blue){
 //					printf("Error: LayerEnd without Blue on line %d.\n", current_line);
-					showing = 0;
+					showing = false;
 				}else if(!got_filter){
 //					printf("Error: LayerEnd without Filter on line %d.\n", current_line);
-					showing = 0;
+					showing = false;
 				}
 				AddLayer(&NewLayer);
 				//if(NewLayer.Name){
 					if(!showing){
-						printf("Not showing layer %d\n", NewLayer.Layer);
+						printf("Notice: Not showing layer %d\n", NewLayer.Layer);
 					}
 				//	delete NewLayer.Name;
 				//	NewLayer.Name = NULL;
 				//}
-				in_layer = 0;
+				in_layer = false;
 			}
 		}
 	}
 	if(in_layer){
-		printf("Error: Missing final LayerEnd.\n");
+		fprintf(stderr, "Error: Missing final LayerEnd.\n");
+		Valid = false;
 		return;
 	}
+	printf("\n");
 }
 
 GDSProcess::~GDSProcess ()
@@ -378,3 +370,4 @@ int GDSProcess::IsValid()
 {
 	return Valid;
 }
+
