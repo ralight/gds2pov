@@ -84,11 +84,11 @@ LayerEnd
 
 LayerStart: POLY2
 Layer: 30
-Height: 0
+Height: 400
 Thickness: 280
-Red: 0
-Green: 0
-Blue: 0
+Red: 0.9
+Green: 0.35
+Blue: 0.04
 Filter: 0
 Metal: 0
 Show: 1
@@ -187,7 +187,7 @@ Green: 0
 Blue: 1
 Filter: 0
 Metal: 1
-Show: 1
+Show: 0
 LayerEnd
 
 LayerStart: TEXT
@@ -204,14 +204,14 @@ LayerEnd
 
 LayerStart: RESDEF
 Layer: 62
-Height: 0
-Thickness: 0
-Red: 0
-Green: 0
-Blue: 0
+Height: 28
+Thickness: 280
+Red: 0.4
+Green: 0.7
+Blue: 0.08
 Filter: 0
 Metal: 0
-Show: 0
+Show: 1
 LayerEnd
 
 LayerStart: ERROR

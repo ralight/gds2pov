@@ -23,6 +23,14 @@ using namespace std;
 #define endian_swap_short bswap_16
 #endif
 
+typedef enum{
+	cpCentre,
+	cpBottomLeft,
+	cpBottomRight,
+	cpTopLeft,
+	cpTopRight
+} CameraPosition;
+
 class GDSParse
 {
 private:

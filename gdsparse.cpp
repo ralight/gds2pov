@@ -78,6 +78,8 @@ void GDSParse::OutputPOVHeader()
 		struct _Boundary *Boundary = Objects->GetBoundary();
 		float half_widthX = (Boundary->XMax - Boundary->XMin)/2;
 		float half_widthY = (Boundary->YMax - Boundary->YMin)/2;
+		float centreX = half_widthX + Boundary->XMin;
+		float centreY = half_widthY + Boundary->YMin;
 
 		float distance;
 		if(half_widthX > half_widthY){
@@ -86,22 +88,39 @@ void GDSParse::OutputPOVHeader()
 			distance = half_widthY * 1.8;
 		}
 
-#ifndef ASDF
-		float centreX = half_widthX + Boundary->XMin;
-		float centreY = half_widthY + Boundary->YMin;
+		CameraPosition cp;
+		cp = cpTopRight;
 
-		// Default camera angle = 67.38
-		// Half of this is 33.69
-		// tan(33.69) = 0.66666 = 1/1.5
-		// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
+		float modifier = (float)1.2;
 
-		fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", centreX, distance, centreY);
-		fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", centreX, centreY);
-#else
-		float modifier = 4.2;
-		fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*modifier, distance*0.4, Boundary->YMin*modifier);
-		fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMax/modifier, Boundary->YMax/modifier);
-#endif
+		switch(cp){
+			case cpCentre:
+				// Default camera angle = 67.38
+				// Half of this is 33.69
+				// tan(33.69) = 0.66666 = 1/1.5
+				// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
+
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", centreX, distance, centreY);
+				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", centreX, centreY);
+				break;
+			case cpTopLeft:
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*modifier, distance*0.4, Boundary->YMax*modifier);
+				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMax/modifier, Boundary->YMin/modifier);
+				break;
+			case cpTopRight:
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*modifier, distance*0.4, Boundary->YMax*modifier);
+				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMin/modifier, Boundary->YMin/modifier);
+				break;
+			case cpBottomLeft:
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*modifier, distance*0.4, Boundary->YMin*modifier);
+				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMax/modifier, Boundary->YMax/modifier);
+				break;
+			case cpBottomRight:
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*modifier, distance*0.4, Boundary->YMin*modifier);
+				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMin/modifier, Boundary->YMax/modifier);
+				break;
+		}
+
 		fprintf(optr, "background { color Black }\n");
 		fprintf(optr, "light_source { <2000, 2000, -30000> White }\n");
 		fprintf(optr, "light_source { <10000, 20000, -10000> White }\n");

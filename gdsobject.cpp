@@ -157,7 +157,7 @@ void GDSObject::OutputToFile(FILE *fptr)
 				if(!prism->Colour.Metal){
 					fprintf(fptr, " texture{ pigment{ rgbf <%.2f,%.2f,%.2f,%.2f>}}", prism->Colour.R, prism->Colour.G, prism->Colour.B, prism->Colour.F);
 				}else{
-					fprintf(fptr, " texture{ pigment{ rgbf <%.2f,%.2f,%.2f,%.2f>} finish{F_MetalC}}", prism->Colour.R, prism->Colour.G, prism->Colour.B, prism->Colour.F);
+					fprintf(fptr, " texture{ pigment{ rgbf <%.2f,%.2f,%.2f,%.2f>} finish{F_MetalA}}", prism->Colour.R, prism->Colour.G, prism->Colour.B, prism->Colour.F);
 				}
 				fprintf(fptr, "}\n");
 			}
@@ -249,7 +249,7 @@ void GDSObject::OutputToFile(FILE *fptr)
 					if(!path->Colour.Metal){
 						fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 					}else{
-						fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalC } ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 					}
 				fprintf(fptr, "}\n");
 				}
