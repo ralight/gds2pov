@@ -18,21 +18,53 @@
 	** EndLayer
 	*/
 
-
 #include "process_cfg.h"
+#include "gds_globals.h"
 
 GDSProcess::GDSProcess(char *processfile)
+{
+	Count = 0;
+	Valid = true;
+
+	FirstLayer = NULL;
+}
+
+GDSProcess::~GDSProcess ()
+{
+	if(FirstLayer){
+		struct ProcessLayer *layer1;
+		struct ProcessLayer *layer2;
+
+		layer1 = FirstLayer;
+
+		while(layer1->Next){
+			layer2 = layer1->Next;
+			if(layer1->Name){
+				delete layer1->Name;
+			}
+			if(layer1){
+				delete layer1;
+			}
+			layer1 = layer2;
+		}
+		if(layer1->Name){
+			delete layer1->Name;
+		}
+		if(layer1){
+			delete layer1;
+		}
+	}
+}
+
+//bool GDSProcess::Parse(char *processfile)
+void GDSProcess::Parse(char *processfile)
 {
 	int layerstart_cnt = 0;
 	int layerend_cnt = 0;
 	char line[1024];
+
 	int current_line = 0;
 	int current_element = -1;
-
-	FILE *pptr = NULL;
-
-	Count = 0;
-	Valid = true;
 
 	/* State variables */
 	bool in_layer = false;
@@ -45,14 +77,14 @@ GDSProcess::GDSProcess(char *processfile)
 	bool got_blue = false;
 	bool got_filter = false;
 	bool got_metal = false;
-	bool got_show = false;
+	bool got_show = false; 
 	/* End State variables */
 	bool showing;
 
-	FirstLayer = NULL;
-
 	struct ProcessLayer NewLayer;
 	NewLayer.Name = NULL;
+
+	FILE *pptr = NULL;
 
 	pptr = fopen(processfile, "rt");
 	
@@ -254,18 +286,18 @@ GDSProcess::GDSProcess(char *processfile)
 					Valid = false;
 					return;
 				}else if(!got_height){
-					//printf("Error: LayerEnd without Height on line %d of process file.\n", current_line);
+					//v_printf(1, "Error: LayerEnd without Height on line %d of process file.\n", current_line);
 					showing = false;
 				}else if(!got_thickness){
-//					printf("Error: LayerEnd without Thickness on line %d of process file.\n", current_line);
+//					v_printf(1, "Error: LayerEnd without Thickness on line %d of process file.\n", current_line);
 					showing = false;
 				}
 				AddLayer(&NewLayer);
 					if(!showing){
 						if(NewLayer.Datatype == -1){
-							printf("Notice: Not showing layer %d (all datatypes)\n", NewLayer.Layer);
+							v_printf(1, "Notice: Not showing layer %d (all datatypes)\n", NewLayer.Layer);
 						}else{
-							printf("Notice: Not showing layer %d datatype %d\n", NewLayer.Layer, NewLayer.Datatype);
+							v_printf(1, "Notice: Not showing layer %d datatype %d\n", NewLayer.Layer, NewLayer.Datatype);
 						}
 					}
 
@@ -277,34 +309,7 @@ GDSProcess::GDSProcess(char *processfile)
 			}
 		}
 	}
-	printf("\n");
-}
-
-GDSProcess::~GDSProcess ()
-{
-	if(FirstLayer){
-		struct ProcessLayer *layer1;
-		struct ProcessLayer *layer2;
-
-		layer1 = FirstLayer;
-
-		while(layer1->Next){
-			layer2 = layer1->Next;
-			if(layer1->Name){
-				delete layer1->Name;
-			}
-			if(layer1){
-				delete layer1;
-			}
-			layer1 = layer2;
-		}
-		if(layer1->Name){
-			delete layer1->Name;
-		}
-		if(layer1){
-			delete layer1;
-		}
-	}
+	v_printf(1, "\n");
 }
 
 struct ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
@@ -317,6 +322,21 @@ struct ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 		if(layer->Layer == Number && layer->Datatype == -1){
 			return layer;
 		}else if(layer->Layer == Number && layer->Datatype == Datatype){
+			return layer;
+		}
+		layer = layer->Next;
+	}
+	return NULL;
+}
+
+struct ProcessLayer *GDSProcess::GetLayer(const char *Name)
+{
+	struct ProcessLayer *layer;
+
+	layer = FirstLayer;
+
+	while(layer){
+		if(strcmp(Name, layer->Name) == 0){
 			return layer;
 		}
 		layer = layer->Next;

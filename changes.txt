@@ -1,3 +1,9 @@
+Version 0.8 ( 2005)
+==================================
+
+- Name change to gds23d (gds to 3d)
+- Added support for 3DS output
+
 Version 0.7.3 (23rd November 2004)
 ==================================
 

@@ -5,6 +5,7 @@
 
 #include "gds2pov.h"
 
+/* Win32 specific byte swapping code */
 
 long endian_swap_long(long value)
 {

@@ -5,34 +5,25 @@
 #include <string>
 using namespace std;
 
-#ifdef LINUX
-#include <endian.h>
-#include <byteswap.h>
-#define endian_swap_long(A) bswap_32((A))
-#define endian_swap_short(A) bswap_16((A))
-#endif
-
-#ifdef SOLARIS
-#include <arpa/nameser_compat.h>
-#include <netinet/in.h>
-#define endian_swap_long(A) htonl((A))
-#define endian_swap_short(A) htons((A))
-#endif
-
-#ifdef HPUX
-#endif
-
+#include "config_cfg.h"
 #include "process_cfg.h"
 #include "gds_globals.h"
 #include "gdsobject.h"
 #include "gdsobjects.h"
-
-#ifdef WIN32
 #include "gds_types.h"
-#define __LITTLE_ENDIAN 1234
-#define __BIG_ENDIAN 4321
-#define __BYTE_ORDER __LITTLE_ENDIAN
-#endif
+
+#include <GL/glx.h>
+#include <GL/glu.h>
+#include <GL/gl.h>
+
+struct mhtime
+{
+    unsigned char blob[16];
+};
+struct htime
+{
+    struct timeval start;
+};
 
 typedef enum{
 	cpCentre,
@@ -95,6 +86,7 @@ private:
 	void ParseXYBoundary();
 	void ParseSTrans();
 
+	bool Parse(char *infile, char *topcell);
 	void Parse();
 	void HandleSRef();
 	void HandleARef();
@@ -109,8 +101,58 @@ private:
 
 	void ReportUnsupported(char *Name, enum RecordNumbers rn);
 	
+	/* POV */
 	void OutputPOVHeader();
-	void RecursiveOutput(class GDSObject *Object, FILE *optr);
+	/* End of POV */
+
+	/* 3DS */
+	void Output3DSHeader();
+	void Output3DSFooter();
+	void Output3DSCamera(struct _Boundary *Boundary);
+	void Output3DSLights(struct _Boundary *Boundary);
+	void Output3DSMaterials();
+	/* End of 3DS */
+
+	/* OpenGL */
+	void OutputOGLHeader();
+	void OutputOGLFooter();
+	void gl_draw(class GDSObject *Object);
+	int gl_main(class GDSObject *Object);
+	void gl_printf( GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha,
+                GLint x, GLint y, GLuint font, const char *format, ... );
+	void gl_event( int event, int data, int xpos, int ypos );
+	void gl_resize( void );
+	int gl_init( void );
+	int gl_data( void );
+	int glx_init( int fullscreen );
+	void hide_mouse( void );
+	void move_mouse( int x, int y );
+	float timer( struct htime *t, int reset );
+
+int width, height;
+
+int info;
+int frames;
+GLuint font;
+GLfloat fps;
+GLfloat rx, ry;
+GLfloat x, y, z;
+GLfloat vx, vy, vz;
+struct htime tv, mt;
+
+Display *dpy;
+Window win;
+Atom wmDelete;
+GLXContext ctx;
+Cursor null_cursor;
+
+int modeswitch;
+int active;
+int run;
+	/* End of OpenGL */
+
+	void GDSParse::Output3DSCameraLightPos(struct _Boundary *Boundary, BoundaryPos bp, float XMod, float YMod, float ZMod);
+	void RecursiveOutput(class GDSObject *Object, FILE *optr, float offx, float offy, long *objectid);
 public:
 	GDSParse (char *infile, char *outfile, char *configfile, char *processfile, char *topcell);
 	~GDSParse ();

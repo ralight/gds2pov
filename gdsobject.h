@@ -2,117 +2,29 @@
 #define __GDSOBJECT_H__
 
 #include <stdarg.h>
-#include <string>
 using namespace std;
+#include <string>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 
 #include "process_cfg.h"
-
-typedef struct {
-	float X;
-	float Y;
-} Point;
-
-typedef struct {
-	float X;
-	float Y;
-	float Z;
-} Transform;
-
-typedef struct {
-	float R;
-	float G;
-	float B;
-	float F;
-	int Metal;
-} ElementColour;
-
-typedef struct _Prism {
-	struct _Prism *Next;
-	float Height;
-	float Thickness;
-	int Points;
-	Point *Coords;
-	Transform Rotate;
-	ElementColour Colour;
-	char *LayerName;
-} Prism;
-
-typedef struct _Path {
-	struct _Path *Next;
-	int Type;
-	float Height;
-	float Thickness;
-	int Points;
-	float Width;
-	float BgnExtn;
-	float EndExtn;
-	Point *Coords;
-	Transform Rotate;
-	ElementColour Colour;
-	char *LayerName;
-} Path;
-
-typedef struct _TextElement {
-	struct _TextElement *Next;
-	float X;
-	float Y;
-	float Z;
-	float Mag;
-	int VJust;
-	int HJust;
-	ElementColour Colour;
-	char *LayerName;
-	char *String;
-	Transform Rotate;
-	int Flipped;
-} TextElement;
-
-typedef struct _SRefElement {
-	struct _SRefElement *Next;
-	float X;
-	float Y;
-	float Mag;
-	char *Name;
-	Transform Rotate;
-	int Flipped;
-} SRefElement;
-
-typedef struct _ARefElement {
-	struct _ARefElement *Next;
-	float X1;
-	float Y1;
-	float X2;
-	float Y2;
-	float X3;
-	float Y3;
-	float Mag;
-	int Columns;
-	int Rows;
-	char *Name;
-	Transform Rotate;
-	int Flipped;
-} ARefElement;
-
-struct _Boundary {
-	float XMin;
-	float XMax;
-	float YMin;
-	float YMax;
-};
+#include "gdselements.h"
+#include "gdspath.h"
+#include "gdstext.h"
+#include "gdspolygon.h"
 
 class GDSObject
 {
 private:
-	TextElement *FirstText;
-	TextElement *LastText;
+	vector<class GDSPath*> PathItems;
+	vector<class GDSText*> TextItems;
+	vector<class GDSPolygon*> PolygonItems;
+
 	SRefElement *FirstSRef;
 	SRefElement *LastSRef;
 	ARefElement *FirstARef;
 	ARefElement *LastARef;
-	Prism *FirstPrism;
-	Prism *LastPrism;
-	Path *FirstPath;
-	Path *LastPath;
 	bool GotBoundary;
 	bool IsOutput;
 	int SRefCount, ARefCount;
@@ -121,19 +33,17 @@ private:
 
 	struct _Boundary Boundary;
 
+	class GDSObject **SRefs;
+	class GDSObject **ARefs;
 public:
 	GDSObject(char *Name);
 	~GDSObject();
 
-	void AddPrism(float Height, float Thickness, int Points, char *LayerName);
-	void AddPrismPoint(int Index, float X, float Y);
-	void SetPrismColour(float R, float G, float B, float F, int Metal);
-	void SetPrismRotation(float X, float Y, float Z);
+	void AddText(float newX, float newY, float newZ, bool newFlipped, float newMag, int newVJust, int newHJust, struct ProcessLayer *newlayer);
+	class GDSText *GetCurrentText();
 
-	void AddText(float X, float Y, float Z, int Flipped, float Mag, int VJust, int HJust, char *LayerName);
-	void SetTextColour(float R, float G, float B, float F, int Metal);
-	void SetTextString(char *String);
-	void SetTextRotation(float X, float Y, float Z);
+	void AddPolygon(float Height, float Thickness, int Points, struct ProcessLayer *layer);
+	class GDSPolygon *GetCurrentPolygon();
 
 	void AddSRef(char *Name, float X, float Y, int Flipped, float Mag);
 	void SetSRefRotation(float X, float Y, float Z);
@@ -141,16 +51,38 @@ public:
 	void AddARef(char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag);
 	void SetARefRotation(float X, float Y, float Z);
 
-	void AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, char *LayerName);
-	void AddPathPoint(int Index, float X, float Y);
-	void SetPathColour(float R, float G, float B, float F, int Metal);
-	void SetPathRotation(float X, float Y, float Z);
+	void AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *layer);
+	class GDSPath *GetCurrentPath();
 
 	char *GetName();
-	void OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font);
+
+	/* POV */
+	void OutputToPOV(FILE *fptr, class GDSObjects *Objects, char *Font);
+	void DecomposePOVPolygons(FILE *fptr);
+	/* End of POV */
+
+	/* 3DS */
+	void OutputTo3DS(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
+	void Output3DSVertices(FILE *fptr, float offx, float offy, unsigned long *facecount);
+	void Output3DSFaces(FILE *fptr, unsigned long *facecount, struct ProcessLayer *firstlayer);
+	void Output3DSFaceMaterials(FILE *fptr, unsigned long facecount, struct ProcessLayer *firstlayer);
+	void Output3DSSRefs(FILE *fptr, GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
+	void Output3DSARefs(FILE *fptr, GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
+	/* End of 3DS */
+
+	/* OpenGL */
+	void OutputToOGL(FILE *optr, class GDSObjects *Objects, char *Font, float offx, float offy, class GDSProcess *process);
+	void OutputOGLVertices(FILE *optr, float offx, float offy, class GDSProcess *process);
+	void OutputOGLFaceMaterials(unsigned long facecount, struct ProcessLayer *firstlayer);
+	void OutputOGLSRefs(FILE *optr, class GDSObjects *Objects, char *Font, float offx, float offy, class GDSProcess *process);
+	void OutputOGLARefs(FILE *optr, class GDSObjects *Objects, char *Font, float offx, float offy, class GDSProcess *process);
+	/* End of OpenGL */
+
 	int HasASRef();
-	char *GetSRefName(int Index);
-	char *GetARefName(int Index);
+	class GDSObject *GetSRef(class GDSObjects *Objects, int Index);
+	class GDSObject *GetARef(class GDSObjects *Objects, int Index);
+	void IndexSRefs(class GDSObjects *Objects);
+	void IndexARefs(class GDSObjects *Objects);
 
 	struct _Boundary *GetBoundary(struct ObjectList *objectlist);
 
@@ -158,3 +90,4 @@ public:
 };
 
 #endif // __GDSOBJECT_H__
+

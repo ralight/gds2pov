@@ -105,11 +105,23 @@ SOURCE=.\gdsobject.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\gdsobject_3ds.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\gdsobject_pov.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\gdsobjects.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\gdsparse.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\gdsparse_3ds.cpp
 # End Source File
 # Begin Source File
 

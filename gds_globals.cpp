@@ -2,12 +2,15 @@
 #include <stdarg.h>
 #include "gds_globals.h"
 
-bool verbose_output;
+int verbose_output;
 bool bounding_output;
+output_type output_format;
+bool decompose;
+unsigned int render_mode; /* GLenum */
 
-void v_printf(const char *fmt, ...)
+void v_printf(const int level, const char *fmt, ...)
 {
-	if(verbose_output){
+	if(verbose_output>=level){
 		va_list va;
 		va_start(va, fmt);
 		vprintf(fmt, va);

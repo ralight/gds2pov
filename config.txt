@@ -122,9 +122,9 @@ PositionEnd
 
 PositionStart
 Type: Light
-Position: TopRight
-XMod: 1
-YMod: 1
+Position: TopLeft
+XMod: 10
+YMod: 10
 ZMod: 0.1
 PositionEnd
 

@@ -1,10 +1,12 @@
 #ifndef _GDS_GLOBALS_H
 #define _GDS_GLOBALS_H
 
-extern bool verbose_output;
+extern int verbose_output;
 extern bool bounding_output;
+extern bool decompose;
+extern unsigned int render_mode; /* GLenum */
 
-void v_printf(const char *fmt, ...);
+void v_printf(const int level, const char *fmt, ...);
 
 typedef enum{
 	elBoundary,
@@ -19,6 +21,15 @@ typedef enum{
 	modeRecordNames,
 	modeParse
 } parse_mode;
+
+typedef enum{
+	opPOV,
+	op3DS,
+	opOGL/*,
+	opDXF*/
+} output_type;
+
+extern output_type output_format;
 
 /* Two consecutive zero bytes are a null word */
 

@@ -2,3 +2,8 @@ gds2pov.ncb
 gds2pov.opt
 gds2pov.plg
 Debug
+*.bb
+*.bbg
+*.da
+*.gcov
+gmon.out

@@ -1,5 +1,15 @@
-This release
-============
+Done
+====
+
+- Set path parsing and prisms parsing so that the Layer struct item points to
+  the appropriate layer rather than the LayerName.
+- Replace GetARefName() and GetSRefName() with a more efficient GetARef() and
+  GetSRef()
+- Extensive refactoring of path, polygon, aref and sref code which should lead
+  to increased robustness as well as being easier to maintain.
+
+To Do
+=====
 
 - Need to deal with Text/SRef/ARef rotation issues for boundary calculation 
 	(relevant to auto placement of camera)
@@ -15,33 +25,10 @@ This release
 - Code coverage testing
 - Incorrect process/config file testing
 - Compile examples and other files for distribution.
-- Fix path BgnExtn EndExtn things
-
-Tasks: 11
-
-
-Next release
-============
-
+- Fix invalid display segfaults
 - Support for octagonal paths
-
-Tasks: 1
-
-
-Unlikely
-========
-
 - Write structures to individual .inc files to reduce memory usage?
 - Convert Boundaries into mesh2 objects?
-
-Tasks: 2
-
-
-Ideas
-=====
-
 - Camera include file?
 - Consider how best to store dimensions in process file - scaled or not?
 - Animations
-
-Tasks: 3

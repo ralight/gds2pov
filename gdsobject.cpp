@@ -2,20 +2,13 @@
 #include <stdlib.h>
 #include <math.h>
 
-
 #include "gds_globals.h"
 #include "gdsobject.h"
 #include "gdsobjects.h"
-#include "process_cfg.h"
+//#include "process_cfg.h"
 
 GDSObject::GDSObject(char *NewName)
 {
-	FirstPrism = NULL;
-	LastPrism = NULL;
-	FirstPath = NULL;
-	LastPath = NULL;
-	FirstText = NULL;
-	LastText = NULL;
 	FirstSRef = NULL;
 	LastSRef = NULL;
 	FirstARef = NULL;
@@ -23,6 +16,8 @@ GDSObject::GDSObject(char *NewName)
 
 	SRefCount = 0;
 	ARefCount = 0;
+	SRefs = NULL;
+	ARefs = NULL;
 
 	Name = new char[strlen(NewName)+1];
 	strcpy(Name, NewName);
@@ -36,85 +31,19 @@ GDSObject::GDSObject(char *NewName)
 
 GDSObject::~GDSObject()
 {
-	if(FirstPrism){
-		Prism *prism1;
-		Prism *prism2;
-
-		prism1 = FirstPrism;
-		while(prism1->Next){
-			prism2 = prism1->Next;
-			if(prism1->Coords){
-				delete prism1->Coords;
-			}
-			if(prism1->LayerName){
-				delete prism1->LayerName;
-			}
-			delete prism1;
-			prism1 = prism2;
-		}
-		if(prism1){
-			if(prism1->Coords){
-				delete prism1->Coords;
-			}
-			if(prism1->LayerName){
-				delete prism1->LayerName;
-			}
-			delete prism1;
-		}
+	while(!PolygonItems.empty()){
+		delete PolygonItems[PolygonItems.size()-1];
+		PolygonItems.pop_back();
 	}
 
-	if(FirstPath){
-		Path *path1;
-		Path *path2;
-
-		path1 = FirstPath;
-		while(path1->Next){
-			path2 = path1->Next;
-			if(path1->Coords){
-				delete path1->Coords;
-			}
-			if(path1->LayerName){
-				delete path1->LayerName;
-			}
-			delete path1;
-			path1 = path2;
-		}
-		if(path1){
-			if(path1->Coords){
-				delete path1->Coords;
-			}
-			if(path1->LayerName){
-				delete path1->LayerName;
-			}
-			delete path1;
-		}
+	while(!PathItems.empty()){
+		delete PathItems[PathItems.size()-1];
+		PathItems.pop_back();
 	}
 
-	if(FirstText){
-		TextElement *text1;
-		TextElement *text2;
-
-		text1 = FirstText;
-		while(text1->Next){
-			text2 = text1->Next;
-			if(text1->String){
-				delete text1->String;
-			}
-			if(text1->LayerName){
-				delete text1->LayerName;
-			}
-			delete text1;
-			text1 = text2;
-		}
-		if(text1){
-			if(text1->String){
-				delete text1->String;
-			}
-			if(text1->LayerName){
-				delete text1->LayerName;
-			}
-			delete text1;
-		}
+	while(!TextItems.empty()){
+		delete TextItems[TextItems.size()-1];
+		TextItems.pop_back();
 	}
 
 	if(FirstSRef){
@@ -124,16 +53,12 @@ GDSObject::~GDSObject()
 		sref1 = FirstSRef;
 		while(sref1->Next){
 			sref2 = sref1->Next;
-			if(sref1->Name){
-				delete sref1->Name;
-			}
+			if(sref1->Name) delete sref1->Name;
 			delete sref1;
 			sref1 = sref2;
 		}
 		if(sref1){
-			if(sref1->Name){
-				delete sref1->Name;
-			}
+			if(sref1->Name) delete sref1->Name;
 			delete sref1;
 		}
 	}
@@ -145,387 +70,35 @@ GDSObject::~GDSObject()
 		aref1 = FirstARef;
 		while(aref1->Next){
 			aref2 = aref1->Next;
-			if(aref1->Name){
-				delete aref1->Name;
-			}
+			if(aref1->Name) delete aref1->Name;
 			delete aref1;
 			aref1 = aref2;
 		}
 		if(aref1){
-			if(aref1->Name){
-				delete aref1->Name;
-			}
+			if(aref1->Name) delete aref1->Name;
 			delete aref1;
 		}
+	}
+
+	if(SRefs){
+		delete SRefs;
+	}
+
+	if(ARefs){
+		delete ARefs;
 	}
 
 	delete Name;
 }
 
-void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font)
+void GDSObject::AddText(float newX, float newY, float newZ, bool newFlipped, float newMag, int newVJust, int newHJust, struct ProcessLayer *newlayer)
 {
-	if(fptr && !IsOutput){
+	TextItems.push_back(new class GDSText(newX, newY, newZ, newFlipped, newMag, newVJust, newHJust, newlayer));
+}
 
-		fprintf(fptr, "#declare str_%s = union {\n", Name);
-		if(FirstPrism){
-			Prism dummyprism;
-			dummyprism.Next = FirstPrism;
-
-			Prism *prism = &dummyprism;
-
-			while(prism->Next){
-				prism = prism->Next;
-				fprintf(fptr, "prism{%.2f,%.2f,%d",prism->Height, prism->Height+prism->Thickness, prism->Points);
-				for(int i=0; i<prism->Points; i++){
-					fprintf(fptr, ",<%.2f,%.2f>", prism->Coords[i].X, prism->Coords[i].Y);
-				}
-				fprintf(fptr, " rotate<-90,0,0> ");
-				//if(!prism->Colour.Metal){
-				//	fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}}", prism->Colour.R, prism->Colour.G, prism->Colour.B, prism->Colour.F);
-				//}else{
-				//	fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>} finish{F_MetalA}}", prism->Colour.R, prism->Colour.G, prism->Colour.B, prism->Colour.F);
-				//}
-				fprintf(fptr, "texture{t%s}", prism->LayerName);
-				fprintf(fptr, "}\n");
-			}
-		}
-
-		if(FirstPath){
-			Path dummypath;
-			dummypath.Next = FirstPath;
-
-			Path *path = &dummypath;
-
-			int i;
-			float angleX, angleY;
-
-			while(path->Next){
-				path = path->Next;
-
-				if(path->Width){
-					fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->Points-1));
-
-					float BgnExtn;
-					float EndExtn;
-
-					switch(path->Type){
-						case 1:
-						case 2:
-							BgnExtn = path->Width; /* Width has already been scaled to half */
-							EndExtn = path->Width;
-							break;
-						case 4:
-							BgnExtn = path->BgnExtn;
-							EndExtn = path->EndExtn;
-							break;
-						default:
-							BgnExtn = 0.0;
-							EndExtn = 0.0;
-							break;
-					}
-					for(i=0; i<path->Points-1; i++){
-						angleX = cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y));
-						angleY = sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y));
-
-						if(i==0){
-							// 1
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i].X + path->Width * angleX + EndExtn * angleY,
-								path->Coords[i].Y + path->Width * angleY - EndExtn * angleX,
-								-path->Height - path->Thickness
-								);
-							// 2
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i].X - path->Width * angleX + EndExtn * angleY,
-								path->Coords[i].Y - path->Width * angleY - EndExtn * angleX,
-								-path->Height - path->Thickness
-								);
-							// 3
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i].X + path->Width * angleX + EndExtn * angleY,
-								path->Coords[i].Y + path->Width * angleY - EndExtn * angleX,
-								-path->Height
-								);
-							// 4
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i].X - path->Width * angleX + EndExtn * angleY,
-								path->Coords[i].Y - path->Width * angleY - EndExtn * angleX,
-								-path->Height
-								);
-						}else{
-							// 1
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i].X + (path->Width) * angleX,
-								path->Coords[i].Y + (path->Width) * angleY,
-								-path->Height - path->Thickness
-								);
-							// 2
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i].X - path->Width * angleX,
-								path->Coords[i].Y - path->Width * angleY,
-								-path->Height - path->Thickness
-								);
-							// 3
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i].X + path->Width * angleX,
-								path->Coords[i].Y + path->Width * angleY,
-								-path->Height
-								);
-							// 4
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i].X - path->Width * angleX,
-								path->Coords[i].Y - path->Width * angleY,
-								-path->Height
-								);
-						}
-
-						if(i==path->Points-2){
-							// 5
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i+1].X + path->Width * angleX - EndExtn * angleY,
-								path->Coords[i+1].Y + path->Width * angleY - EndExtn * angleX,
-								-path->Height - path->Thickness
-								);
-
-							// 6
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i+1].X - path->Width * angleX - EndExtn * angleY,
-								path->Coords[i+1].Y - path->Width * angleY - EndExtn * angleX,
-								-path->Height - path->Thickness
-								);
-
-							// 7
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i+1].X + path->Width * angleX - EndExtn * angleY,
-								path->Coords[i+1].Y + path->Width * angleY - EndExtn * angleX,
-								-path->Height
-								);
-
-							// 8
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i+1].X - path->Width * angleX - EndExtn * angleY,
-								path->Coords[i+1].Y - path->Width * angleY - EndExtn * angleX,
-								-path->Height
-								);
-						}else{
-							// 5
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i+1].X + path->Width * angleX,
-								path->Coords[i+1].Y + path->Width * angleY,
-								-path->Height - path->Thickness
-								);
-
-							// 6
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i+1].X - path->Width * angleX,
-								path->Coords[i+1].Y - path->Width * angleY,
-								-path->Height - path->Thickness
-								);
-
-							// 7
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i+1].X + path->Width * angleX,
-								path->Coords[i+1].Y + path->Width * angleY,
-								-path->Height
-								);
-
-							// 8
-							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-								path->Coords[i+1].X - path->Width * angleX,
-								path->Coords[i+1].Y - path->Width * angleY,
-								-path->Height
-								);
-						}
-					}
-					fprintf(fptr, "} face_indices { %d", 12*(path->Points-1));
-					for(i=0; i<path->Points-1; i++){
-						// print ,faces now
-						fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 1+8*i, 2+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 2+8*i, 3+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 4+8*i, 5+8*i, 6+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 5+8*i, 6+8*i, 7+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 1+8*i, 5+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 4+8*i, 5+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 2+8*i, 3+8*i, 6+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 3+8*i, 6+8*i, 7+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 3+8*i, 7+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 5+8*i, 7+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 2+8*i, 4+8*i);
-						fprintf(fptr, ",<%d,%d,%d>", 2+8*i, 4+8*i, 6+8*i);
-					}
-					fprintf(fptr, "} ");
-					//if(!path->Colour.Metal){
-					//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-					//}else{
-					//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-					//}
-					fprintf(fptr, "texture{t%s}",path->LayerName);
-					fprintf(fptr, "}\n");
-				}
-			}
-		}
-
-		if(FirstSRef){
-			SRefElement dummysref;
-			dummysref.Next = FirstSRef;
-
-			SRefElement *sref = &dummysref;
-
-			while(sref->Next){
-				sref = sref->Next;
-
-				fprintf(fptr, "object{str_%s ", sref->Name);
-				if(sref->Mag!=1.0){
-					fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
-				}
-				if(sref->Flipped){
-					fprintf(fptr, "scale <1,-1,1> ");
-				}
-				fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
-				if(sref->Rotate.Y){
-					fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
-				}
-				fprintf(fptr, "}\n");
-			}
-		}
-
-		if(FirstText){
-			TextElement dummytext;
-			dummytext.Next = FirstText;
-
-			TextElement *text = &dummytext;
-
-			while(text->Next){
-				text = text->Next;
-				if(text->String){
-					if(Font){
-						fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->String);
-					}else{
-						fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->String);
-					}
-					//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-					fprintf(fptr, "texture{t%s}",text->LayerName);
-					if(text->Mag!=1.0){
-						fprintf(fptr, "scale <%.2f,%.2f,1> ", text->Mag, text->Mag);
-					}
-					if(text->Flipped){
-						fprintf(fptr, "scale <1,-1,1> ");
-					}
-					fprintf(fptr, "translate <%.2f,%.2f,%.2f> ", text->X, text->Y, -text->Z);
-					if(text->Rotate.Y){
-						fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,%.2f>)", -text->Rotate.Y, text->X, text->Y, -text->Z);
-					}
-					float htrans = 0.0, vtrans = 0.0;
-					switch(text->HJust){
-						case 0:
-							htrans = -0.5*strlen(text->String);
-							break;
-						case 1:
-							htrans = -0.25*strlen(text->String);
-							break;
-						case 2:
-							htrans = 0;
-							break;
-					}
-					switch(text->VJust){
-						case 0:
-							vtrans = 0.0;
-							break;
-						case 1:
-							vtrans = -0.5;
-							break;
-						case 2:
-							vtrans = -1.0;
-							break;
-					}
-					if(htrans || vtrans){
-						if(text->Rotate.Y){
-							fprintf(fptr, "translate <%.2f,%.2f,0> ", vtrans, htrans);
-						}else{
-							fprintf(fptr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
-						}
-					}
-					fprintf(fptr, "}\n");
-				}
-			}
-		}
-
-		if(FirstARef){
-			ARefElement dummyaref;
-			dummyaref.Next = FirstARef;
-			ARefElement *aref = &dummyaref;
-
-			float dx, dy;
-
-			while(aref->Next){
-				aref = aref->Next;
-				if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
-					if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
-						dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
-						dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
-
-						fprintf(fptr, "#declare dx = %.2f;\n", dx);
-						fprintf(fptr, "#declare dy = %.2f;\n", dy);
-
-						fprintf(fptr, "#declare colcount = 0;\n");
-						fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-						fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-						fprintf(fptr, "#while (colcount < cols)\n");
-						fprintf(fptr, "\t#declare rowcount = 0;");
-						fprintf(fptr, "\t#while (rowcount < rows)\n");
-						fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
-						if(aref->Mag!=1.0){
-							fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
-						}
-						if(aref->Flipped){
-							fprintf(fptr, "scale <1,-1,1> ");
-						}
-						fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-						if(aref->Rotate.Y){
-							fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
-						}
-						fprintf(fptr, "}\n");
-
-						fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-						fprintf(fptr, "\t#end\n");
-						fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-						fprintf(fptr, "#end\n");
-					}
-				}else{
-					if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
-						dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
-						dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
-
-						fprintf(fptr, "#declare dx = %.2f;\n", dx);
-						fprintf(fptr, "#declare dy = %.2f;\n", dy);
-
-						fprintf(fptr, "#declare colcount = 0;\n");
-						fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-						fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-						fprintf(fptr, "#while (colcount < cols)\n");
-						fprintf(fptr, "\t#declare rowcount = 0;");
-						fprintf(fptr, "\t#while (rowcount < rows)\n");
-						fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
-						if(aref->Flipped){
-							fprintf(fptr, "scale <1,-1,1> ");
-						}
-						fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-						if(aref->Rotate.Y){
-							fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
-						}
-						fprintf(fptr, "}\n");
-
-						fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-						fprintf(fptr, "\t#end\n");
-						fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-						fprintf(fptr, "#end\n");
-					}
-				}
-			}
-		}
-		fprintf(fptr, "}\n");
-	}
-	IsOutput = true;
+class GDSText *GDSObject::GetCurrentText()
+{
+	return TextItems[TextItems.size()-1];
 }
 
 char *GDSObject::GetName()
@@ -533,118 +106,14 @@ char *GDSObject::GetName()
 	return Name;
 }
 
-void GDSObject::AddPrism(float Height, float Thickness, int Points, char *LayerName)
+void GDSObject::AddPolygon(float Height, float Thickness, int Points, struct ProcessLayer *layer)
 {
-	Prism *NewPrism = new Prism;
-
-	NewPrism->Next = NULL;
-
-	if(LastPrism){
-		LastPrism->Next = NewPrism;
-		LastPrism = NewPrism;
-	}else{
-		FirstPrism = NewPrism;
-		LastPrism = NewPrism;
-	}
-
-	NewPrism->LayerName = new char[strlen(LayerName)+1];
-	strcpy(NewPrism->LayerName, LayerName);
-	NewPrism->Coords = new Point[Points];
-	NewPrism->Height = Height;
-	NewPrism->Thickness = Thickness;
-	NewPrism->Points = Points;
+	PolygonItems.push_back(new class GDSPolygon(Height, Thickness, Points, layer));
 }
 
-void GDSObject::AddPrismPoint(int Index, float X, float Y)
+class GDSPolygon *GDSObject::GetCurrentPolygon()
 {
-	if(LastPrism){
-		if(LastPrism->Points < Index){
-		}else{
-			LastPrism->Coords[Index].X = X;
-			LastPrism->Coords[Index].Y = Y;
-		}
-	}
-}
-
-
-void GDSObject::SetPrismColour(float R, float G, float B, float F, int Metal)
-{
-	if(LastPrism){
-		LastPrism->Colour.R = R;
-		LastPrism->Colour.G = G;
-		LastPrism->Colour.B = B;
-		LastPrism->Colour.F = F;
-		LastPrism->Colour.Metal = Metal;
-	}
-}
-
-void GDSObject::SetPrismRotation(float X, float Y, float Z)
-{
-	if(LastPrism){
-		LastPrism->Rotate.X = X;
-		LastPrism->Rotate.Y = Y;
-		LastPrism->Rotate.Z = Z;
-	}
-}
-
-void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag, int VJust, int HJust, char *LayerName)
-{
-	TextElement *NewText = new TextElement;
-
-	NewText->Next = NULL;
-	NewText->String = NULL;
-
-	if(LastText){
-		LastText->Next = NewText;
-		LastText = NewText;
-	}else{
-		FirstText = NewText;
-		LastText = NewText;
-	}
-
-	NewText->LayerName = new char[strlen(LayerName)+1];
-	strcpy(NewText->LayerName, LayerName);
-	NewText->X = X;
-	NewText->Y = Y;
-	NewText->Z = Z;
-	NewText->Rotate.X = 0.0;
-	NewText->Rotate.Y = 0.0;
-	NewText->Rotate.Z = 0.0;
-	NewText->Flipped = Flipped;
-	NewText->Mag = Mag;
-	NewText->HJust = HJust;
-	NewText->VJust = VJust;
-}
-
-void GDSObject::SetTextColour(float R, float G, float B, float F, int Metal)
-{
-	if(LastText){
-		LastText->Colour.R = R;
-		LastText->Colour.G = G;
-		LastText->Colour.B = B;
-		LastText->Colour.F = F;
-		LastText->Colour.Metal = Metal;
-	}
-}
-
-void GDSObject::SetTextString(char *String)
-{
-	if(LastText){
-		if(LastText->String){
-			delete LastText->String;
-		}
-		LastText->String = new char[strlen(String)+1];
-		strcpy(LastText->String, String);
-	}
-}
-
-void GDSObject::SetTextRotation(float X, float Y, float Z)
-{
-	if(LastText){
-		LastText->Rotate.X = X;
-		LastText->Rotate.Y = Y;
-		LastText->Rotate.Z = Z;
-	}
+	return PolygonItems[PolygonItems.size()-1];
 }
 
 void GDSObject::AddSRef(char *Name, float X, float Y, int Flipped, float Mag)
@@ -671,6 +140,7 @@ void GDSObject::AddSRef(char *Name, float X, float Y, int Flipped, float Mag)
 	NewSRef->Rotate.Z = 0.0;
 	NewSRef->Flipped = Flipped;
 	NewSRef->Mag = Mag;
+	NewSRef->object = NULL;
 
 	SRefCount++;
 }
@@ -714,6 +184,7 @@ void GDSObject::AddARef(char *Name, float X1, float Y1, float X2, float Y2, floa
 	NewARef->Rotate.Z = 0.0;
 	NewARef->Flipped = Flipped;
 	NewARef->Mag = Mag;
+	NewARef->object = NULL;
 
 	ARefCount++;
 }
@@ -735,51 +206,44 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 
 	struct ObjectList dummyobject;
 
-	if(FirstPrism){
-		Prism dummyprism;
-		dummyprism.Next = FirstPrism;
-
-		Prism *prism = &dummyprism;
-
-		while(prism->Next){
-			prism = prism->Next;
-			for(int i=0; i<prism->Points; i++){
-				if(prism->Coords[i].X > Boundary.XMax){
-					Boundary.XMax = prism->Coords[i].X;
+	if(!PolygonItems.empty()){
+		class GDSPolygon *polygon;
+		for(unsigned long i=0; i<PolygonItems.size(); i++){
+			polygon = PolygonItems[i];
+			for(unsigned int j=0; j<polygon->GetPoints(); j++){
+				if(polygon->GetXCoords(j) > Boundary.XMax){
+					Boundary.XMax = polygon->GetXCoords(j);
 				}
-				if(prism->Coords[i].X < Boundary.XMin){
-					Boundary.XMin = prism->Coords[i].X;
+				if(polygon->GetXCoords(j) < Boundary.XMin){
+					Boundary.XMin = polygon->GetXCoords(j);
 				}
-				if(prism->Coords[i].Y > Boundary.YMax){
-					Boundary.YMax = prism->Coords[i].Y;
+				if(polygon->GetYCoords(j) > Boundary.YMax){
+					Boundary.YMax = polygon->GetYCoords(j);
 				}
-				if(prism->Coords[i].Y < Boundary.YMin){
-					Boundary.YMin = prism->Coords[i].Y;
+				if(polygon->GetYCoords(j) < Boundary.YMin){
+					Boundary.YMin = polygon->GetYCoords(j);
 				}
 			}
 		}
 	}
 
-	if(FirstPath){ /* FIXME - need to take width into account? */
-		Path dummypath;
-		dummypath.Next = FirstPath;
-
-		Path *path = &dummypath;
-
-		while(path->Next){
-			path = path->Next;
-			for(int i=0; i<path->Points; i++){
-				if(path->Coords[i].X > Boundary.XMax){
-					Boundary.XMax = path->Coords[i].X;
+	/* FIXME - need to take width into account? */
+	if(!PathItems.empty()){
+		class GDSPath *path;
+		for(unsigned long i=0; i<PathItems.size(); i++){
+			path = PathItems[i];
+			for(unsigned int j=0; j<path->GetPoints(); j++){
+				if(path->GetXCoords(j) > Boundary.XMax){
+					Boundary.XMax = path->GetXCoords(j);
 				}
-				if(path->Coords[i].X < Boundary.XMin){
-					Boundary.XMin = path->Coords[i].X;
+				if(path->GetXCoords(j) < Boundary.XMin){
+					Boundary.XMin = path->GetXCoords(j);
 				}
-				if(path->Coords[i].Y > Boundary.YMax){
-					Boundary.YMax = path->Coords[i].Y;
+				if(path->GetYCoords(j) > Boundary.YMax){
+					Boundary.YMax = path->GetYCoords(j);
 				}
-				if(path->Coords[i].Y < Boundary.YMin){
-					Boundary.YMin = path->Coords[i].Y;
+				if(path->GetYCoords(j) < Boundary.YMin){
+					Boundary.YMin = path->GetYCoords(j);
 				}
 			}
 		}
@@ -860,72 +324,24 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		}
 	}
 
-	if(!FirstPath && !FirstPrism && !FirstSRef && !FirstARef){
+	if(PathItems.empty() && PolygonItems.empty() && !FirstSRef && !FirstARef){
 		Boundary.XMax = Boundary.XMin = Boundary.YMax = Boundary.YMin = 0;
 	}
 
-	v_printf("%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
+	v_printf(1, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
 	GotBoundary = true;
 
 	return &Boundary;
 }
 
-void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, char *LayerName)
+void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *layer)
 {
-	Path *NewPath = new Path;
-
-	NewPath->Next = NULL;
-
-	if(LastPath){
-		LastPath->Next = NewPath;
-		LastPath = NewPath;
-	}else{
-		FirstPath = NewPath;
-		LastPath = NewPath;
-	}
-
-	NewPath->LayerName = new char[strlen(LayerName)+1];
-	strcpy(NewPath->LayerName, LayerName);
-	NewPath->Type = PathType;
-	NewPath->Coords = new Point[Points];
-	NewPath->Height = Height;
-	NewPath->Thickness = Thickness;
-	NewPath->Points = Points;
-	NewPath->Width = Width;
-	NewPath->BgnExtn = BgnExtn;
-	NewPath->EndExtn = EndExtn;
+	PathItems.push_back(new class GDSPath(PathType, Height, Thickness, Points, Width, BgnExtn, EndExtn, layer));
 }
 
-void GDSObject::AddPathPoint(int Index, float X, float Y)
+class GDSPath *GDSObject::GetCurrentPath()
 {
-	if(LastPath){
-		if(LastPath->Points < Index){
-		}else{
-			LastPath->Coords[Index].X = X;
-			LastPath->Coords[Index].Y = Y;
-		}
-	}
-}
-
-
-void GDSObject::SetPathColour(float R, float G, float B, float F, int Metal)
-{
-	if(LastPath){
-		LastPath->Colour.R = R;
-		LastPath->Colour.G = G;
-		LastPath->Colour.B = B;
-		LastPath->Colour.F = F;
-		LastPath->Colour.Metal = Metal;
-	}
-}
-
-void GDSObject::SetPathRotation(float X, float Y, float Z)
-{
-	if(LastPath){
-		LastPath->Rotate.X = X;
-		LastPath->Rotate.Y = Y;
-		LastPath->Rotate.Z = Z;
-	}
+	return PathItems[PathItems.size()-1];
 }
 
 int GDSObject::HasASRef()
@@ -933,42 +349,68 @@ int GDSObject::HasASRef()
 	return (LastARef || LastSRef);
 }
 
-char *GDSObject::GetSRefName(int Index)
+void GDSObject::IndexSRefs(class GDSObjects *Objects)
 {
+	if(!FirstSRef) return;
+
+	SRefElement *sref;
+	if(SRefs){
+		delete SRefs;
+		SRefs = NULL;
+	}
+
+	SRefs = new (class GDSObject *)[SRefCount];
+
+	sref = FirstSRef;
+	int i=0;
+	while(sref->Next){
+		SRefs[i] = Objects->GetObject(sref->Name);
+		i++;
+		sref = sref->Next;
+	}
+	SRefs[i] = Objects->GetObject(sref->Name);
+}
+
+void GDSObject::IndexARefs(class GDSObjects *Objects)
+{
+	if(!FirstARef) return;
+
+	ARefElement *aref;
+	if(ARefs){
+		delete ARefs;
+		ARefs = NULL;
+	}
+
+	ARefs = new (class GDSObject *)[ARefCount];
+
+	aref = FirstARef;
+	int i=0;
+	while(aref->Next){
+		ARefs[i] = Objects->GetObject(aref->Name);
+		i++;
+		aref = aref->Next;
+	}
+	ARefs[i] = Objects->GetObject(aref->Name);
+}
+
+class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, int Index)
+{
+	if(!SRefs && FirstSRef){
+		IndexSRefs(Objects);
+	}
 	if(FirstSRef && Index<SRefCount){
-		int i = 0;
-		SRefElement *sref;
-		sref = FirstSRef;
-		while(sref->Next){
-			if(i==Index){
-				return sref->Name;
-			}
-			i++;
-			sref = sref->Next;
-		}
-		if(i==Index){
-			return sref->Name;
-		}
+		return SRefs[Index];
 	}
 	return NULL;
 }
 
-char *GDSObject::GetARefName(int Index)
+class GDSObject *GDSObject::GetARef(class GDSObjects *Objects, int Index)
 {
+	if(!ARefs && FirstARef){
+		IndexARefs(Objects);
+	}
 	if(FirstARef && Index<ARefCount){
-		int i = 0;
-		ARefElement *aref;
-		aref = FirstARef;
-		while(aref->Next){
-			if(i==Index){
-				return aref->Name;
-			}
-			i++;
-			aref = aref->Next;
-		}
-		if(i==Index){
-			return aref->Name;
-		}
+		return ARefs[Index];
 	}
 	return NULL;
 }
