@@ -2,16 +2,15 @@ Definite
 ========
 
 - Fix text positioning
-- Auto/defined placement of lights.
-- Better command line options including being able to specify the process file.
 - Suitable code for endian decisions. What is there available on Solaris/BSD? Would hton* functions be suitable?
 - Replace invalid characters in structure names ($)
 - Need to deal with Text/SRef/ARef rotation issues for boundary calculation 
 	(relevant to auto placement of camera)
 	Also for flipped objects.
 - Documentation (source and usage)
+- Improve error reporting. Mark where the errors come from for process/config!
 
-Tasks: 7
+Tasks: 6
 
 
 Possible
@@ -21,9 +20,10 @@ Possible
 - Deal with concave polygons. Either implement horrid algo to fill them or
   detect and don't fill.
 - Detect text for boundary calculation
-- Text scaling with units needs fixing, especially the depth.
+- Text scaling with units needs fixing, especially the depth!
+- Reorientate axes so that they make sense.
 
-Tasks: 4
+Tasks: 5
 
 
 Unlikely

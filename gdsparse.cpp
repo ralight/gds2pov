@@ -39,6 +39,9 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 	}else{
 		config = new GDSConfig(); // Start with default positions
 	}
+	if(!config->IsValid()){
+		return;
+	}
 	//if(){
 	//	printf("
 	// return'
@@ -60,11 +63,11 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 	}
 
 	process = new GDSProcess(processfile);
-	if(process->LayerCount()==0){
-		printf("Error: No layers found in \"%s\".\n", processfile);
-		return;
-	}else if(!process->IsValid()){
+	if(!process->IsValid()){
 		printf("Error: Invalid process file\n");
+		return;
+	}else if(process->LayerCount()==0){
+		printf("Error: No layers found in \"%s\".\n", processfile);
 		return;
 	}
 
@@ -167,54 +170,90 @@ void GDSParse::OutputPOVHeader()
 		fprintf(optr, "// BottomRight: %.2f, %.2f\n", Boundary->XMax, Boundary->YMin);
 		fprintf(optr, "// Centre: %.2f, %.2f\n", centreX, centreY);
 
-		CameraPosition cp;
-		cp = cpCentre;
 
 		float modifier = (float)1.0;
 
-		switch(cp){
-			case cpCentre:
+		float XMod = config->GetCameraPos()->XMod;
+		float YMod = config->GetCameraPos()->YMod;
+		float ZMod = config->GetCameraPos()->ZMod;
+
+		switch(config->GetCameraPos()->boundarypos){
+			case bpCentre:
 				// Default camera angle = 67.38
 				// Half of this is 33.69
 				// tan(33.69) = 0.66666 = 1/1.5
 				// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
 
 				fprintf(optr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n", centreX, distance, centreY);
-				fprintf(optr, "\tlook_at <%.2f,0,%.2f>\n}", centreX, centreY);
 				break;
-			case cpTopLeft:
-				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*modifier, distance*0.4, Boundary->YMax*modifier);
-				fprintf(optr, "\tlook_at <%.2f,0, %.2f>\n}", Boundary->XMax/modifier, Boundary->YMin/modifier);
-				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMax*2, distance*2, Boundary->YMin*2);
+			case bpTopLeft:
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, distance*ZMod, Boundary->YMax*YMod);
 				break;
-			case cpTopRight:
-				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*modifier, distance*0.4, Boundary->YMax*modifier);
-				fprintf(optr, "\tlook_at <%.2f,0,%.2f>\n}", Boundary->XMin/modifier, Boundary->YMin/modifier);
-				fprintf(optr, "light_source { <%.2f,%.2f,%.2f> White }\n", Boundary->XMin*2, distance*2, Boundary->YMin*2);
+			case bpTopRight:
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, distance*ZMod, Boundary->YMax*YMod);
 				break;
-			case cpBottomLeft:
-				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*modifier, distance*0.4, Boundary->YMin*modifier);
-				fprintf(optr, "\tlook_at <%.2f,0,%.2f>\n}", Boundary->XMax/modifier, Boundary->YMax/modifier);
-				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMax*2, distance*2, Boundary->YMax*2);
+			case bpBottomLeft:
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, distance*ZMod, Boundary->YMin*YMod);
 				break;
-			case cpBottomRight:
-				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*modifier, distance*0.4, Boundary->YMin*modifier);
-				fprintf(optr, "\tlook_at <%.2f,0,%.2f>\n}", Boundary->XMin/modifier, Boundary->YMax/modifier);
-				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMin*2, distance*2, Boundary->YMax*2);
+			case bpBottomRight:
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, distance*ZMod, Boundary->YMin*YMod);
 				break;
 		}
 
-		fprintf(optr, "background { color Black }\n");
-		fprintf(optr, "global_settings { ambient_light rgb <1.2,1.2,1.2> }\n");
+		XMod = config->GetLookAtPos()->XMod;
+		YMod = config->GetLookAtPos()->YMod;
+		ZMod = config->GetLookAtPos()->ZMod;
 
-		// Place camera far above in centre
-		fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", centreX, distance*20, centreY);
-//		fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMin*2, distance*2, Boundary->YMax*2);
-//		fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMax, distance*2, Boundary->YMin);
-//		fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMin, distance*2, Boundary->YMin);
-//		fprintf(optr, "light_source { <2000, 2000, -30000> White }\n");
-//		fprintf(optr, "light_source { <10000, 20000, -10000> White }\n");
-//		fprintf(optr, "light_source { <30000, 20000, 10000> White }\n");
+		switch(config->GetLookAtPos()->boundarypos){
+			case bpCentre:
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", centreX*XMod, distance*ZMod, centreY*YMod);
+				break;
+			case bpTopLeft:
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, distance*ZMod, Boundary->YMax*YMod);
+				break;
+			case bpTopRight:
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, distance*ZMod, Boundary->YMax*YMod);
+				break;
+			case bpBottomLeft:
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, distance*ZMod, Boundary->YMin*YMod);
+				break;
+			case bpBottomRight:
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, distance*ZMod, Boundary->YMin*YMod);
+				break;
+		}
+
+		Position dummypos;
+		dummypos.Next = config->GetLightPos();
+
+		Position *LightPos = &dummypos;
+
+		while(LightPos->Next){
+			LightPos = LightPos->Next;
+			XMod = LightPos->XMod;
+			YMod = LightPos->YMod;
+			ZMod = LightPos->ZMod;
+
+			switch(LightPos->boundarypos){
+				case bpCentre:
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", centreX*XMod, distance*ZMod, centreY*YMod);
+					break;
+				case bpTopLeft:
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, distance*ZMod, Boundary->YMax*YMod);
+					break;
+				case bpTopRight:
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, distance*ZMod, Boundary->YMax*YMod);
+					break;
+				case bpBottomLeft:
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, distance*ZMod, Boundary->YMin*YMod);
+					break;
+				case bpBottomRight:
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, distance*ZMod, Boundary->YMin*YMod);
+					break;
+			}
+		}
+
+		fprintf(optr, "background { color Black }\n");
+		fprintf(optr, "global_settings { ambient_light rgb <%.2f,%.2f,%.2f> }\n", config->GetAmbient(), config->GetAmbient(), config->GetAmbient());
 	}
 }
 

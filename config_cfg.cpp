@@ -5,294 +5,375 @@
 
 GDSConfig::GDSConfig()
 {
-	char *ProcessFile = NULL;
-	float Ambient = 1.0;
+	ProcessFile = NULL;
+	Ambient = 1.0;
 
-	int posstart_cnt = 0;
-	int posend_cnt = 0;
-	char line[1024];
-	int current_line = 0;
-	int current_element = -1;
+	CameraPos.postype = ptCamera;
+	CameraPos.boundarypos = bpCentre;
+	CameraPos.XMod = 1.0;
+	CameraPos.YMod = 1.0;
+	CameraPos.ZMod = 1.0;
 
-	FILE *pptr = NULL;
+	LookAtPos.postype = ptLookAt;
+	LookAtPos.boundarypos = bpCentre;
+	CameraPos.XMod = 1.0;
+	CameraPos.YMod = 1.0;
+	CameraPos.ZMod = 0.0;
 
+	FirstLight = NULL;
+	LastLight = NULL;
 	LightCount = 0;
 }
 
 GDSConfig::GDSConfig(char *configfile)
 {
-	char *ProcessFile = NULL;
-	float Ambient = 1.0;
+	ProcessFile = NULL;
+	Ambient = 1.0;
 
 	int posstart_cnt = 0;
 	int posend_cnt = 0;
+	int globalstart_cnt = 0;
+	int globalend_cnt = 0;
 	char line[1024];
 	int current_line = 0;
 	int current_element = -1;
 
-	FILE *pptr = NULL;
+	PosType current_type;
+
+	FILE *cptr = NULL;
 
 	LightCount = 0;
 	Valid = 1;
 
-	/* State variables */
-	char in_layer = 0;
-	char got_layer = 0;
-	char got_datatype = 0;
-	char got_height = 0;
-	char got_thickness = 0;
-	char got_red = 0;
-	char got_green = 0;
-	char got_blue = 0;
-	char got_filter = 0;
-	char got_metal = 0;
-	char got_show = 0;
-	/* End State variables */
-	char showing;
+	bool in_global = false;
+	bool got_ambient = false;
+	bool got_processfile = false;
 
-	FirstLayer = NULL;
+	bool in_position = false;
+	bool got_type = false;
+	bool got_position = false;
+	bool got_xmod = false;
+	bool got_ymod = false;
+	bool got_zmod = false;
 
-	struct ProcessLayer NewLayer;
-	NewLayer.Name = NULL;
+	int i;
 
-	pptr = fopen(processfile, "rt");
+	FirstLight = NULL;
+	LastLight = NULL;
+
+	cptr = fopen(configfile, "rt");
 	
-	if(!pptr){
+	if(!cptr){
+		fprintf(stderr, "Error: Unable to open \"%s\"\n", configfile);
 		Valid = 0;
 		return;
 	}
 
-	while(!feof(pptr) && fgets(line, 1024, pptr)){
+
+	while(!feof(cptr) && fgets(line, 1024, cptr)){
 		if(line[0]!='#'){
-			if(strstr(line, "LayerStart")){			
-				layerstart_cnt++;
-			}else if(strstr(line, "LayerEnd")){
-				layerend_cnt++;
+			if(strstr(line, "PositionStart")){			
+				posstart_cnt++;
+			}else if(strstr(line, "PositionEnd")){
+				posend_cnt++;
+			}else if(strstr(line, "GlobalStart")){
+				globalstart_cnt++;
+			}else if(strstr(line, "GlobalEnd")){
+				globalend_cnt++;
 			}
 		}
 	}
-	if(layerstart_cnt!=layerend_cnt){
-		printf("Invalid process file. ");
-		printf("There should be equal numbers of LayerStart and LayerEnd elements! ");
-		printf("(%d and %d found respectively)\n", layerstart_cnt, layerend_cnt);
+	if(posstart_cnt!=posend_cnt){
+		printf("Invalid config file. ");
+		printf("There should be equal numbers of PositionStart and PositionEnd elements! ");
+		printf("(%d and %d found respectively)\n", posstart_cnt, posend_cnt);
 		Valid = 0;
 		return;
 	}
 
-	Count = layerstart_cnt;
+	if(globalstart_cnt!=globalend_cnt || globalstart_cnt > 1 || globalend_cnt > 1){
+		printf("Invalid config file. ");
+		printf("There should be either 1 or 0 of both of GlobalStart and GlobalEnd elements! ");
+		printf("(%d and %d found respectively)\n", globalstart_cnt, globalend_cnt);
+		Valid = 0;
+		return;
+	}
 
-	fseek(pptr, 0, SEEK_SET);
-	while(!feof(pptr) && fgets(line, 1024, pptr)){
+//	PosCount = posstart_cnt;
+
+	fseek(cptr, 0, SEEK_SET);
+	while(!feof(cptr) && fgets(line, 1024, cptr)){
 		current_line++;
 		if(line[0]!='#'){
-			if(strstr(line, "LayerStart:")){
-				if(in_layer){
-					printf("Error: LayerStart without LayerEnd not allowed. LayerEnd should appear before line %d.\n", current_line);
+			if(strstr(line, "GlobalStart")){
+				if(in_position){
+					printf("Error: GlobalStart inside PositionStart on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
-				in_layer = 1;
-				got_layer = 0;
-				got_datatype = 0;
-				got_height = 0;
-				got_thickness = 0;
-				got_red = 0;
-				got_green = 0;
-				got_blue = 0;
-				got_filter = 0;
-				got_metal = 0;
-				got_show = 0;				
-				current_element++;
-
-				if(NewLayer.Name){
-					delete NewLayer.Name;
-					NewLayer.Name = NULL;
-				}
-				NewLayer.Layer = 0;
-				NewLayer.Datatype = 0;
-				NewLayer.Height = 0.0;
-				NewLayer.Thickness = 0.0;
-				NewLayer.Red = 0.0;
-				NewLayer.Green = 0.0;
-				NewLayer.Blue = 0.0;
-				NewLayer.Filter = 0.0;
-				NewLayer.Metal = 0;
-				NewLayer.Show = 0;
-				NewLayer.Next = NULL;
-			}else if(strstr(line, "Layer:")){
-				if(!in_layer){
-					printf("Error: Layer definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
+				in_global = true;
+				got_ambient = false;
+				got_processfile = false;
+			}else if(strstr(line, "Ambient:")){
+				if(!in_global){
+					printf("Error: Ambient definition outside of GlobalStart and GlobalEnd on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
-				if(got_layer){
-					printf("Error: Duplicate Layer definition on line %d.\n", current_line);
+				if(got_ambient){
+					printf("Warning: Duplicate Ambient definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Ambient: %f", &Ambient);
+				}
+				got_ambient = true;
+			}else if(strstr(line, "ProcessFile:")){
+				if(!in_global){
+					printf("Error: ProcessFile definition outside of GlobalStart and GlobalEnd on line %d.\n", current_line);
 					Valid = 0;
 					return;
 				}
-				sscanf(line, "Layer: %d", &NewLayer.Layer);
-				got_layer = 1;
-			}else if(strstr(line, "Datatype:")){
-				if(!in_layer){
-					printf("Error: Datatype definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				if(got_datatype){
-					printf("Error: Duplicate Datatype definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				sscanf(line, "Datatype: %d", &NewLayer.Datatype);
-				got_datatype = 1;
-			}else if(strstr(line, "Height:")){
-				if(!in_layer){
-					printf("Error: Height definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				if(got_height){
-					printf("Error: Duplicate Height definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				sscanf(line, "Height: %f", &NewLayer.Height);
-				got_height = 1;
-			}else if(strstr(line, "Thickness:")){
-				if(!in_layer){
-					printf("Error: Thickness definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				if(got_thickness){
-					printf("Error: Duplicate Thickness definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				sscanf(line, "Thickness: %f", &NewLayer.Thickness);
-				got_thickness = 1;
-			}else if(strstr(line, "Red:")){
-				if(!in_layer){
-					printf("Error: Red definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				if(got_red){
-					printf("Error: Duplicate Red definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				sscanf(line, "Red: %f", &NewLayer.Red);
-				got_red = 1;
-			}else if(strstr(line, "Green:")){
-				if(!in_layer){
-					printf("Error: Green definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				if(got_green){
-					printf("Error: Duplicate Green definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				sscanf(line, "Green: %f", &NewLayer.Green);
-				got_green = 1;
-			}else if(strstr(line, "Blue:")){
-				if(!in_layer){
-					printf("Error: Blue definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				if(got_blue){
-					printf("Error: Duplicate Blue definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				sscanf(line, "Blue: %f", &NewLayer.Blue);
-				got_blue = 1;
-			}else if(strstr(line, "Filter:")){
-				if(!in_layer){
-					printf("Error: Filter definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				if(got_filter){
-					printf("Error: Duplicate Filter definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				sscanf(line, "Filter: %f", &NewLayer.Filter);
-				got_filter = 1;
-			}else if(strstr(line, "Metal:")){
-				if(!in_layer){
-					printf("Error: Metal definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				if(got_metal){
-					printf("Error: Duplicate Metal definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				sscanf(line, "Metal: %d", &NewLayer.Metal);
-				got_metal = 1;
-			}else if(strstr(line, "Show:")){
-				if(!in_layer){
-					printf("Error: Show definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				if(got_show){
-					printf("Error: Duplicate Show definition on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}
-				sscanf(line, "Show: %d", &NewLayer.Show);
-				got_show = 1;
-			}else if(strstr(line, "LayerEnd")){
-				showing = NewLayer.Show;
-				if(!in_layer){
-					printf("Error: LayerEnd without LayerStart on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}else if(!got_layer){
-					printf("Error: LayerEnd without Layer on line %d.\n", current_line);
-					Valid = 0;
-					return;
-				}else if(!got_height){
-					//printf("Error: LayerEnd without Height on line %d.\n", current_line);
-					showing = 0;
-				}else if(!got_thickness){
-//					printf("Error: LayerEnd without Thickness on line %d.\n", current_line);
-					showing = 0;
-				}else if(!got_red){
-//					printf("Error: LayerEnd without Red on line %d.\n", current_line);
-					showing = 0;
-				}else if(!got_green){
-//					printf("Error: LayerEnd without Green on line %d.\n", current_line);
-					showing = 0;
-				}else if(!got_blue){
-//					printf("Error: LayerEnd without Blue on line %d.\n", current_line);
-					showing = 0;
-				}else if(!got_filter){
-//					printf("Error: LayerEnd without Filter on line %d.\n", current_line);
-					showing = 0;
-				}
-				AddLayer(&NewLayer);
-				//if(NewLayer.Name){
-					if(!showing){
-						printf("Not showing layer %d\n", NewLayer.Layer);
+				if(got_processfile){
+					printf("Warning: Duplicate ProcessFile definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					if(ProcessFile){
+						delete ProcessFile;
+						ProcessFile = NULL;
 					}
-				//	delete NewLayer.Name;
-				//	NewLayer.Name = NULL;
-				//}
-				in_layer = 0;
+					ProcessFile = new char[256];
+				
+					strncpy(ProcessFile, &line[13], 256);
+					for(i=strlen(ProcessFile)-1; i>=0; i--){
+						if(ProcessFile[i] == '\n'){
+							ProcessFile[i] = '\0';
+							break;
+						}
+					}
+				}
+				got_processfile = true;
+			}else if(strstr(line, "GlobalEnd")){
+				in_global = false;
+			}else if(strstr(line, "PositionStart")){
+				if(in_position){
+					printf("Error: PositionStart without PositionEnd not allowed. PositionEnd should appear before line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}else if(in_global){
+					printf("Error: PositionStart inside GlobalStart on line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}
+				in_position = true;
+				got_type = false;
+				got_position = false;
+				got_xmod = false;
+				got_ymod = false;
+				got_zmod = false;
+				current_type = ptNone;
+			}else if(strstr(line, "Type:")){
+				if(!in_position){
+					printf("Error: Type definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}
+				if(got_type){
+					printf("Warning: Duplicate Type definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					if(strstr(line, "Type: Camera")){
+						current_type = ptCamera;
+					}else if(strstr(line, "Type: LookAt")){
+						current_type = ptLookAt;
+					}else if(strstr(line, "Type: Light")){
+						current_type = ptLight;
+						if(LastLight){
+							LastLight->Next = new Position;
+							LastLight = LastLight->Next;
+							LastLight->Next = NULL;
+							LastLight->boundarypos = bpCentre;
+							LastLight->XMod = 1.0;
+							LastLight->YMod = 1.0;
+							LastLight->ZMod = 1.0;
+						}else{
+							FirstLight = new Position;
+							LastLight = FirstLight;
+							LastLight->Next = NULL;
+							LastLight->boundarypos = bpCentre;
+							LastLight->XMod = 1.0;
+							LastLight->YMod = 1.0;
+							LastLight->ZMod = 1.0;
+						}
+					}else{
+						printf("Error: Unknown position type \"%s\" on line %d.\n", line, current_line);
+						Valid = 0;
+						return;
+					}
+					got_type = true;
+				}
+			}else if(strstr(line, "Position:")){
+				if(!in_position){
+					printf("Error: Position definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}
+				if(!got_type){
+					printf("Error: Type must be defined before any other elements in a Position block.\n");
+					Valid = 0;
+					return;
+				}
+				if(got_position){
+					printf("Warning: Duplicate Position definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					BoundaryPos thispos;
+					if(strstr(line, "Position: Centre")){
+						thispos = bpCentre;
+					}else if(strstr(line, "Position: TopLeft")){
+						thispos = bpTopLeft;
+					}else if(strstr(line, "Position: TopRight")){
+						thispos = bpTopRight;
+					}else if(strstr(line, "Position: BottomLeft")){
+						thispos = bpBottomLeft;
+					}else if(strstr(line, "Position: BottomRight")){
+						thispos = bpBottomRight;
+					}else{
+						printf("Error: Unknown Position \"%s\" on line %d.\n", line, current_line);
+						Valid = 0;
+						return;
+					}
+					switch(current_type){
+						case ptCamera:
+							CameraPos.boundarypos = thispos;
+							break;
+						case ptLookAt:
+							LookAtPos.boundarypos = thispos;
+							break;
+						case ptLight:
+							if(LastLight){
+								LastLight->boundarypos = thispos;
+							}else{
+								printf("Error: Position found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								Valid = 0;
+								return;
+							}
+							break;
+					}
+					got_position = true;
+				}
+				
+			}else if(strstr(line, "XMod:")){
+				if(!in_position){
+					printf("Error: XMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}
+				if(!got_type){
+					printf("Error: Type must be defined before any other elements in a Position block.\n");
+					Valid = 0;
+					return;
+				}
+				if(got_xmod){
+					printf("Error: Duplicate XMod definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					switch(current_type){
+						case ptCamera:
+							sscanf(line, "XMod: %f", &CameraPos.XMod);
+							break;
+						case ptLookAt:
+							sscanf(line, "XMod: %f", &LookAtPos.XMod);
+							break;
+						case ptLight:
+							if(LastLight){
+								sscanf(line, "XMod: %f", &LastLight->XMod);
+							}else{
+								printf("Error: XMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								Valid = 0;
+								return;
+							}
+							break;
+					}
+					got_xmod = true;
+				}
+			}else if(strstr(line, "YMod:")){
+				if(!in_position){
+					printf("Error: YMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}
+				if(!got_type){
+					printf("Error: Type must be defined before any other elements in a Position block.\n");
+					Valid = 0;
+					return;
+				}
+				if(got_ymod){
+					printf("Error: Duplicate YMod definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					switch(current_type){
+						case ptCamera:
+							sscanf(line, "YMod: %f", &CameraPos.YMod);
+							break;
+						case ptLookAt:
+							sscanf(line, "YMod: %f", &LookAtPos.YMod);
+							break;
+						case ptLight:
+							if(LastLight){
+								sscanf(line, "YMod: %f", &LastLight->YMod);
+							}else{
+								printf("Error: YMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								Valid = 0;
+								return;
+							}
+							break;
+					}
+					got_ymod = true;
+				}
+			}else if(strstr(line, "ZMod:")){
+				if(!in_position){
+					printf("Error: ZMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}
+				if(!got_type){
+					printf("Error: Type must be defined before any other elements in a Position block.\n");
+					Valid = 0;
+					return;
+				}
+				if(got_zmod){
+					printf("Error: Duplicate ZMod definition on line %d. Ignoring new definition.\n", current_line);
+				}else{
+					switch(current_type){
+						case ptCamera:
+							sscanf(line, "ZMod: %f", &CameraPos.ZMod);
+							break;
+						case ptLookAt:
+							sscanf(line, "ZMod: %f", &LookAtPos.ZMod);
+							break;
+						case ptLight:
+							if(LastLight){
+								sscanf(line, "ZMod: %f", &LastLight->ZMod);
+							}else{
+								printf("Error: ZMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								Valid = 0;
+								return;
+							}
+							break;
+					}
+					got_zmod = true;
+				}
+			}else if(strstr(line, "PositionEnd")){
+				if(!in_position){
+					printf("Error: PositionEnd without PositionStart on line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}else if(!got_type){
+					printf("Error: PositionEnd without Type on line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}else if(!got_position){
+					printf("Error: PositionEnd without Position on line %d.\n", current_line);
+					Valid = 0;
+					return;
+				}
+				in_position = false;
 			}
 		}
-	}
-	if(in_layer){
-		printf("Error: Missing final LayerEnd.\n");
-		return;
 	}
 }
 
@@ -302,84 +383,50 @@ GDSConfig::~GDSConfig()
 		delete ProcessFile;
 	}
 
-	struct ProcessLayer *layer1;
-	struct ProcessLayer *layer2;
+	Position *pos1;
+	Position *pos2;
 
-	layer1 = FirstLayer;
+	pos1 = FirstLight;
 
-	while(layer1->Next){
-		layer2 = layer1->Next;
-		if(layer1->Name){
-			delete layer1->Name;
+	while(pos1->Next){
+		pos2 = pos1->Next;
+		if(pos1){
+			delete pos1;
 		}
-		if(layer1){
-			delete layer1;
-		}
-		layer1 = layer2;
+		pos1 = pos2;
 	}
-	if(layer1->Name){
-		delete layer1->Name;
-	}
-	if(layer1){
-		delete layer1;
+	if(pos1){
+		delete pos1;
 	}
 }
 
-struct ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
-{
-	struct ProcessLayer *layer;
-
-	layer = FirstLayer;
-
-	while(layer){
-		if(layer->Layer == Number && layer->Datatype == Datatype){
-			return layer;
-		}
-		layer = layer->Next;
-	}
-	return NULL;
-}
-
-int GDSProcess::LayerCount()
-{
-	return Count;
-}
-
-void GDSProcess::AddLayer(struct ProcessLayer *NewLayer)
-{
-	struct ProcessLayer *layer;
-
-	layer = FirstLayer;
-
-	if(FirstLayer){
-		while(layer->Next){
-			layer = layer->Next;
-		}
-		layer->Next = new struct ProcessLayer;
-		layer = layer->Next;
-		layer->Next = NULL;
-	}else{
-		FirstLayer = new struct ProcessLayer;
-		layer = FirstLayer;
-		layer->Next = NULL;
-	}
-
-	layer->Name = NULL;
-	//layer->Name = new char[strlen(NewLayer->Name)+1];
-	//strncpy(layer->Name, NewLayer->Name, strlen(NewLayer->Name)+1);
-	layer->Layer = NewLayer->Layer;
-	layer->Datatype = NewLayer->Datatype;
-	layer->Height = NewLayer->Height;
-	layer->Thickness = NewLayer->Thickness;
-	layer->Show = NewLayer->Show;
-	layer->Red = NewLayer->Red;
-	layer->Green = NewLayer->Green;
-	layer->Blue = NewLayer->Blue;
-	layer->Filter = NewLayer->Filter;
-	layer->Metal = NewLayer->Metal;
-}
-
-int GDSProcess::IsValid()
+int GDSConfig::IsValid()
 {
 	return Valid;
 }
+
+float GDSConfig::GetAmbient()
+{
+	return Ambient;
+}
+
+char *GDSConfig::GetProcessFile()
+{
+	return ProcessFile;
+}
+
+Position *GDSConfig::GetLookAtPos()
+{
+	return &LookAtPos;
+}
+
+Position *GDSConfig::GetCameraPos()
+{
+	return &CameraPos;
+}
+
+Position *GDSConfig::GetLightPos()
+{
+	return FirstLight;
+}
+

@@ -4,24 +4,27 @@
 #include <string>
 
 typedef enum {
+	ptNone,
 	ptCamera,
 	ptLookAt,
 	ptLight
 } PosType;
 
+typedef enum {
+	bpCentre,
+	bpTopLeft,
+	bpTopRight,
+	bpBottomLeft,
+	bpBottomRight
+} BoundaryPos;
+
 typedef struct _Position{
 	struct _Position *Next;
-	char *Name;
-	int Layer;
-	int Datatype;
-	float Height;
-	float Thickness;
-	int Show;
-	float Red;
-	float Green;
-	float Blue;
-	float Filter;
-	int Metal;
+	PosType postype;
+	BoundaryPos boundarypos;
+	float XMod;
+	float YMod;
+	float ZMod;
 } Position;
 
 class GDSConfig
@@ -29,7 +32,8 @@ class GDSConfig
 private:
 	Position CameraPos;
 	Position LookAtPos;
-	Position *LightPos;
+	Position *FirstLight;
+	Position *LastLight;
 
 	int LightCount;
 
@@ -44,6 +48,11 @@ public:
 
 	char *GetProcessFile();
 	float GetAmbient();
+	int IsValid();
+
+	Position *GetLookAtPos();
+	Position *GetCameraPos();
+	Position *GetLightPos();
 };
 
 #endif // _PROCESS_CFG_H

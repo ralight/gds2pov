@@ -15,10 +15,10 @@
 # process.txt is used as the default.
 # Note that if the -p switch is used with gds2pov it will override the ProcessFile setting.
 #
-# StartGlobal
+# GlobalStart
 # Ambient: 1.0
 # ProcessFile: process.txt
-# EndGlobal
+# GlobalEnd
 #
 #
 # Positions
@@ -58,13 +58,13 @@
 # Only one camera position is allowed!
 # If none is specified, the camera will be placed in the Centre with all modifiers equal to 1.0.
 #
-# StartPosition
+# PositionStart
 # Type: Camera
 # Position: Centre
 # XMod: 1.0
 # YMod: 1.0
 # ZMod: 1.0
-# EndPosition
+# PositionEnd
 #
 #
 # Look At Position
@@ -73,13 +73,13 @@
 # This position defines where the camera will look. Only one Look At position is allowed!
 # If none is specified, the camera will look at the Centre with the Z modifier equal to 0.0.
 #
-# StartPosition
+# PositionStart
 # Type: LookAt
 # Position: Centre
 # XMod: 1.0
 # YMod: 1.0
 # ZMod: 0.0
-# EndPosition
+# PositionEnd
 #
 #
 # Light Positions
@@ -88,36 +88,41 @@
 # This type of position defines any additional lights. All lights are white. Any number of lights can be 
 # specified, including none.
 #
-# StartPosition
+# PositionStart
 # Type: Light
 # Position: TopLeft
 # XMod: 1.0
 # YMod: 1.0
 # ZMod: 1.0
-# EndPosition
+# PositionEnd
 
-StartPosition
+GlobalStart
+Ambient: 1.2
+ProcessFile: process.txt
+GlobalEnd
+
+PositionStart
 Type: Camera
 Position: Centre
 XMod: 1.0
 YMod: 1.0
 ZMod: 1.0
-EndPosition
+PositionEnd
 
 
-StartPosition
+PositionStart
 Type: LookAt
-Pos: Centre
+Position: Centre
 XMod: 1.0
 YMod: 1.0
 ZMod: 0.0
-EndPosition
+PositionEnd
 
 
-StartPosition
+PositionStart
 Type: Light
-Pos: TopRight
+Position: TopRight
 XMod: 1
 YMod: 1
 ZMod: 0.1
-EndPosition
+PositionEnd
