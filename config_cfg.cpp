@@ -36,7 +36,6 @@ GDSConfig::GDSConfig(char *configfile)
 	int globalend_cnt = 0;
 	char line[1024];
 	int current_line = 0;
-	int current_element = -1;
 
 	PosType current_type;
 
@@ -68,7 +67,6 @@ GDSConfig::GDSConfig(char *configfile)
 		Valid = 0;
 		return;
 	}
-
 
 	while(!feof(cptr) && fgets(line, 1024, cptr)){
 		if(line[0]!='#'){
@@ -254,6 +252,10 @@ GDSConfig::GDSConfig(char *configfile)
 								return;
 							}
 							break;
+						case ptNone:
+						default:
+							printf("Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
+							break;
 					}
 					got_position = true;
 				}
@@ -288,6 +290,10 @@ GDSConfig::GDSConfig(char *configfile)
 								return;
 							}
 							break;
+						case ptNone:
+						default:
+							printf("Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
+							break;
 					}
 					got_xmod = true;
 				}
@@ -321,6 +327,10 @@ GDSConfig::GDSConfig(char *configfile)
 								return;
 							}
 							break;
+						case ptNone:
+						default:
+							printf("Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
+							break;
 					}
 					got_ymod = true;
 				}
@@ -353,6 +363,10 @@ GDSConfig::GDSConfig(char *configfile)
 								Valid = 0;
 								return;
 							}
+							break;
+						case ptNone:
+						default:
+							printf("Error: Unknown position type found (this shouldn't happen, please contact the author)\n");
 							break;
 					}
 					got_zmod = true;

@@ -6,9 +6,11 @@
 #include "gds_globals.h"
 #include "process_cfg.h"
 
+#define VERSION 0.5
+
 void printusage()
 {
-		printf("gds2pov version 0.5\n\nUsage:\n");
+		printf("gds2pov version %.1f\n\nUsage:\n", VERSION);
 		printf("\tgds2pov input.gds output.pov [-c config.txt] [-p process.txt]\n");
 }
 

@@ -170,9 +170,6 @@ void GDSParse::OutputPOVHeader()
 		fprintf(optr, "// BottomRight: %.2f, %.2f\n", Boundary->XMax, Boundary->YMin);
 		fprintf(optr, "// Centre: %.2f, %.2f\n", centreX, centreY);
 
-
-		float modifier = (float)1.0;
-
 		float XMod = config->GetCameraPos()->XMod;
 		float YMod = config->GetCameraPos()->YMod;
 		float ZMod = config->GetCameraPos()->ZMod;
