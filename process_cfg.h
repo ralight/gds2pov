@@ -3,11 +3,6 @@
 
 #include <string>
 
-#ifdef WIN32
-#define __BYTE_ORDER 1
-#define __LITTLE_ENDIAN 1
-#endif
-
 struct ProcessLayer{
 	struct ProcessLayer *Next;
 	char *Name;

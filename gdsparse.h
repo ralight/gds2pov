@@ -8,6 +8,8 @@ using namespace std;
 #ifdef LINUX
 #include <endian.h>
 #include <byteswap.h>
+#define endian_swap_long(A) bswap_32((A))
+#define endian_swap_short(A) bswap_16((A))
 #endif
 
 #include "process_cfg.h"
@@ -18,19 +20,8 @@ using namespace std;
 #ifdef WIN32
 #include "gds_types.h"
 #define __LITTLE_ENDIAN 1234
+#define __BIG_ENDIAN 4321
 #define __BYTE_ORDER __LITTLE_ENDIAN
-#endif
-
-#ifdef LINUX
-//#if __BYTE_ORDER != __LITTLE_ENDIAN
-////#define endian_swap_long(value) (bswap_32(value))
-////#define endian_swap_short(value) (bswap_16(value))
-#define endian_swap_long(A) bswap_32((A))
-#define endian_swap_short(A) bswap_16((A))
-//#else
-//#define endian_swap_long bswap_32(A) (A)
-//#define endian_swap_short bswap_16(A) (A)
-//#endif
 #endif
 
 typedef enum{
