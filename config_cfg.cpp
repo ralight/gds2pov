@@ -6,7 +6,7 @@
 GDSConfig::GDSConfig()
 {
 	ProcessFile = NULL;
-	Ambient = 1.0;
+	Ambient = 1.2;
 
 	CameraPos.postype = ptCamera;
 	CameraPos.boundarypos = bpCentre;
@@ -30,7 +30,7 @@ GDSConfig::GDSConfig()
 GDSConfig::GDSConfig(char *configfile)
 {
 	ProcessFile = NULL;
-	Ambient = 1.0;
+	Ambient = 1.2;
 
 	int posstart_cnt = 0;
 	int posend_cnt = 0;
