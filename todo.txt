@@ -1,30 +1,31 @@
-Definite
-========
+This release
+============
 
 - Fix text positioning
-- Suitable code for endian decisions. What is there available on Solaris/BSD? Would hton* functions be suitable?
+- Documentation (usage)
+- Code coverage testing
+- Incorrect process/config file testing
+- Reorientate axes so that they make sense.
+
+Tasks: 5
+
+
+Next release
+============
+
 - Replace invalid characters in structure names ($)
 - Need to deal with Text/SRef/ARef rotation issues for boundary calculation 
 	(relevant to auto placement of camera)
 	Also for flipped objects.
-- Documentation (source and usage)
-- Code coverage testing
-- Incorrect process/config file testing
-
-Tasks: 7
-
-
-Possible
-========
-
+- Suitable code for endian decisions. What is there available on Solaris/BSD? Would hton* functions be suitable?
 - Fix non-orthogonal paths - look at corners
 - Deal with concave polygons. Either implement horrid algo to fill them or
   detect and don't fill.
 - Detect text for boundary calculation
 - Text scaling with units needs fixing, especially the depth!
-- Reorientate axes so that they make sense.
+- Documentation (source)
 
-Tasks: 5
+Tasks: 8
 
 
 Unlikely
