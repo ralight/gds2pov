@@ -4,6 +4,9 @@
 #include "process_cfg.h"
 
 void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count);
+void Parse(FILE *infile, FILE *outfile, layers *all_layers, int layer_count);
+void FindStructures(FILE *infile, FILE *outfile, layers *all_layers, int layer_count);
+
 
 void ParseHeader(FILE *infile, FILE *outfile, short recordlen);
 void ParseBgnLib(FILE *infile, FILE *outfile, short recordlen);

@@ -9,6 +9,12 @@ typedef enum{
 	elText
 } element_type;
 
+typedef enum{
+	modeFindNames,
+	modeRecordNames,
+	modeParse
+} parse_mode;
+
 extern char *libname;
 extern char *textstring;
 extern short currentlayer;
@@ -22,5 +28,9 @@ extern short arrayrows, arraycols;
 extern float units;
 extern unsigned short currentstrans;
 extern float currentangle;
+extern parse_mode Mode;
+extern char **StrNames;
+extern int StrCount;
+extern int CurrentStr;
 
 #endif

@@ -20,6 +20,10 @@ short arrayrows, arraycols;
 float units;
 unsigned short currentstrans;
 float currentangle;
+parse_mode Mode;
+char **StrNames;
+int StrCount;
+int CurrentStr;
 
 void debug_printf(char *string)
 {
@@ -104,6 +108,14 @@ int main(int argc, char *argv[])
 	}
 	if(all_layers){
 		free(all_layers);
+	}
+	if(StrNames){
+		for(i=0; i<StrCount; i++){
+			if(StrNames[i]){
+				free(StrNames[i]);
+			}
+		}
+		free(StrNames);
 	}
 	return 0;
 }

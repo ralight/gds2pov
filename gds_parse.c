@@ -10,9 +10,33 @@
 
 void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 {
+	FindStructures(infile, outfile, all_layers, layer_count);
+	Parse(infile, outfile, all_layers, layer_count);
+}
+
+void FindStructures(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
+{
+
+	StrCount = 0;
+	
+	Mode = modeFindNames;
+	Parse(infile, outfile, all_layers, layer_count);
+	Mode = modeRecordNames;
+	StrNames = (char **)calloc(StrCount, sizeof(char*));
+	Parse(infile, outfile, all_layers, layer_count);
+#ifdef DEBUG
+	for(int i=0; i<StrCount; i++){
+		printf("%d %s\n", i, StrNames[i]);
+	}
+#endif
+}
+
+void Parse(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
+{
 	short recordlen;
 	byte recordtype, datatype;
 
+	fseek(infile, 0, SEEK_SET);
 	while(!feof(infile)){
 		recordlen = GetTwoByteSignedInt(infile, NULL);
 		fread(&recordtype, 1, 1, infile);
@@ -47,7 +71,9 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 				break;
 			case rnEndStr:
 				debug_printf("ENDSTR");
-				fprintf(outfile, "}\n");
+				if(Mode == modeParse){
+					fprintf(outfile, "}\n");
+				}
 				/* Empty, no need to parse */
 				break;
 			case rnBoundary:
@@ -328,7 +354,18 @@ void ParseStrName(FILE *infile, FILE *outfile, short recordlen)
 {
 	char *str;
 	str = GetAsciiString(infile, &recordlen);
-	fprintf(outfile, "#declare str_%s = union {\n", str);
+	
+	if(Mode == modeFindNames){
+		StrCount++;
+	}else if(Mode == modeRecordNames){
+		if(str){
+			StrNames[CurrentStr] = (char *)malloc(strlen(str)+1);
+			strncpy(StrNames[CurrentStr],str, strlen(str)+1);
+			CurrentStr++;
+		}
+	}else if(Mode == modeParse){
+		fprintf(outfile, "#declare str_%s = union {\n", str);
+	}
 	free(str);
 }
 
@@ -364,7 +401,7 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 
 	switch(currentelement){
 		case elBoundary:
-			if(all_layers[thislayer].height && all_layers[thislayer].show){
+			if(all_layers[thislayer].height && all_layers[thislayer].show && Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
 				fprintf(outfile, "prism { ");
 				fprintf(outfile, "%d,%d,%d", all_layers[thislayer].height, all_layers[thislayer].height+all_layers[thislayer].thickness, points);
 			}else{
@@ -372,16 +409,16 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 			}
 
 			for(i=0; i<points; i++){
-				if(all_layers[thislayer].height && all_layers[thislayer].show){
+				if(all_layers[thislayer].height && all_layers[thislayer].show && Mode == modeParse){
 					fprintf(outfile, ",");
 				}
 				X = units * (float)GetFourByteSignedInt(infile, &recordlen);
 				Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
-				if(all_layers[thislayer].height && all_layers[thislayer].show){
+				if(all_layers[thislayer].height && all_layers[thislayer].show && Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
 					fprintf(outfile, "<%.2f, %.2f>", X, Y);
 				}
 			}
-			if(all_layers[thislayer].height && all_layers[thislayer].show){
+			if(all_layers[thislayer].height && all_layers[thislayer].show && Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
 				if(all_layers[thislayer].transparent){
 					fprintf(outfile, " texture { pigment { rgbf %s }", all_layers[thislayer].colour);
 				}else{
@@ -397,7 +434,7 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 		case elPath:
 			if(currentwidth){
 				/* FIXME - need to check for -ve value and then not scale */
-				if(all_layers[thislayer].height && all_layers[thislayer].show){
+				if(all_layers[thislayer].height && all_layers[thislayer].show && Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
 					fprintf(outfile, "prism { ");
 					fprintf(outfile, " %d, %d, %d", all_layers[thislayer].height, all_layers[thislayer].height+all_layers[thislayer].thickness, points*2+1);
 				}else{
@@ -416,7 +453,7 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 						secondX = nextX;
 						secondY = nextY;
 					}
-					if(all_layers[thislayer].height && all_layers[thislayer].show){
+					if(all_layers[thislayer].height && all_layers[thislayer].show && Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
 						fprintf(outfile, ",");
  						if(i<points){
 							fprintf(outfile, "<%.2f, ", X - (float)currentwidth * cos(atan2(X-nextX, nextY-Y)));
@@ -442,7 +479,7 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 			}else{
 				printf("!CurrentWidth\n");
 			}
-			if(all_layers[thislayer].height && all_layers[thislayer].show){
+			if(all_layers[thislayer].height && all_layers[thislayer].show && Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
 				fprintf(outfile, " texture { pigment { rgb %s }", all_layers[thislayer].colour);
 
 				if(all_layers[thislayer].metal){
@@ -459,12 +496,14 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 			if((unsigned short)(currentstrans & 0x8000) == (unsigned short)0x8000){
 				printf("SREF objects not supported when flipped/mirrored.\n");
 			}else{
-			fprintf(outfile, "object { str_%s ", sname);
-			fprintf(outfile, "translate <%.2f, 0, %.2f> ", X, Y);
-			if(currentangle){
-				fprintf(outfile, "Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, X, Y);
-			}
-			fprintf(outfile, "}\n");
+				if(Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
+					fprintf(outfile, "object { str_%s ", sname);
+					fprintf(outfile, "translate <%.2f, 0, %.2f> ", X, Y);
+					if(currentangle){
+						fprintf(outfile, "Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, X, Y);
+					}
+					fprintf(outfile, "}\n");
+				}
 			}
 			break;
 		case elARef:
@@ -483,14 +522,16 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 					if(arraycols && arrayrows && (X - firstX) && (secondY - firstY)){
 						dx = (float)(X - firstX) / (float)arraycols;
 						dy = (float)(secondY - firstY) / (float)arrayrows;
-						for(X=0; X<arraycols; X++){
-							for(Y=0; Y<arrayrows; Y++){
-								fprintf(outfile, "object { str_%s ", sname);
-								fprintf(outfile, "translate <%.2f, 0, %.2f>", firstX + dx*X, firstY + dy*Y);
-								if(currentangle){
-									fprintf(outfile, " Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, firstX + dx*X, firstY + dy*Y);
+						if(Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
+							for(X=0; X<arraycols; X++){
+								for(Y=0; Y<arrayrows; Y++){
+									fprintf(outfile, "object { str_%s ", sname);
+									fprintf(outfile, "translate <%.2f, 0, %.2f>", firstX + dx*X, firstY + dy*Y);
+									if(currentangle){
+										fprintf(outfile, " Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, firstX + dx*X, firstY + dy*Y);
+									}
+									fprintf(outfile, "}\n");
 								}
-								fprintf(outfile, "}\n");
 							}
 						}
 					}
@@ -498,14 +539,16 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 					if(arraycols && arrayrows && (secondX - firstX) && (Y - firstY)){
 						dx = (float)(secondX - firstX) / (float)arraycols;
 						dy = (float)(Y - firstY) / (float)arrayrows;
-						for(X=0; X<arraycols; X++){
-							for(Y=0; Y<arrayrows; Y++){
-								fprintf(outfile, "object { str_%s ", sname);
-								fprintf(outfile, "translate <%.2f, 0, %.2f>", firstX + dx*X, firstY + dy*Y);
-								if(currentangle){
-									fprintf(outfile, "Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, firstX + dx*X, firstY + dy*Y);
+						if(Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
+							for(X=0; X<arraycols; X++){
+								for(Y=0; Y<arrayrows; Y++){
+									fprintf(outfile, "object { str_%s ", sname);
+									fprintf(outfile, "translate <%.2f, 0, %.2f>", firstX + dx*X, firstY + dy*Y);
+									if(currentangle){
+										fprintf(outfile, "Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, firstX + dx*X, firstY + dy*Y);
+									}
+									fprintf(outfile, "}\n");
 								}
-								fprintf(outfile, "}\n");
 							}
 						}
 					}
@@ -518,13 +561,15 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 			X = units * (float)GetFourByteSignedInt(infile, &recordlen);
 			Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
 			if(textstring){
-				fprintf(outfile, "text { ttf \"arial.ttf\" \"%s\" 1,0.1*x ", textstring);
-				fprintf(outfile, "texture { pigment { rgb %s } } ", all_layers[thislayer].colour);
-				fprintf(outfile, "scale <1000,1000,10> rotate <90,0,0> translate <%.2f, %d, %.2f> ", X, all_layers[thislayer].height, Y);
-				if(currentangle){
-					fprintf(outfile, "Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, X, Y);
+				if(Mode == modeParse && strncmp(StrNames[CurrentStr], sname, strlen(sname)+1)==0){
+					fprintf(outfile, "text { ttf \"arial.ttf\" \"%s\" 1,0.1*x ", textstring);
+					fprintf(outfile, "texture { pigment { rgb %s } } ", all_layers[thislayer].colour);
+					fprintf(outfile, "scale <1000,1000,10> rotate <90,0,0> translate <%.2f, %d, %.2f> ", X, all_layers[thislayer].height, Y);
+					if(currentangle){
+						fprintf(outfile, "Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, X, Y);
+					}
+					fprintf(outfile, "}\n");
 				}
-				fprintf(outfile, "}\n");
 				free(textstring);
 			}
 			textstring = NULL;
