@@ -208,19 +208,19 @@ void GDSParse::OutputPOVHeader()
 
 		switch(config->GetLookAtPos()->boundarypos){
 			case bpCentre:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", centreX*XMod, centreY*YMod, -distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", centreX*XMod, centreY*YMod, -distance*ZMod);
 				break;
 			case bpTopLeft:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
 				break;
 			case bpTopRight:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
 				break;
 			case bpBottomLeft:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
 				break;
 			case bpBottomRight:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
 				break;
 		}
 
