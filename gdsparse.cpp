@@ -371,7 +371,7 @@ void GDSParse::Parse()
 				// subtracting
 				break;
 			case rnXY:
-				v_printf("XY\n");
+				v_printf("XY ");
 				switch(currentelement){
 					case elBoundary:
 						BoundaryElements++;
@@ -490,57 +490,51 @@ Not Used	case rnUString:
 				break;
 			case rnElFlags:
 				ReportUnsupported("ELFLAGS", rnElFlags);
-				v_printf("ELFLAGS\n");
-				v_printf("\t");
+				v_printf("ELFLAGS (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnElKey:
 				ReportUnsupported("ELKEY", rnElKey);
-				v_printf("ELKEY\n");
-				v_printf("\t");
+				v_printf("ELKEY (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnLinkType:
 				ReportUnsupported("LINKTYPE", rnLinkType);
-				v_printf("LINKTYPE\n");
-				v_printf("\t");
+				v_printf("LINKTYPE (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnLinkKeys:
 				ReportUnsupported("LINKKEYS", rnLinkKeys);
-				v_printf("LINKKEYS\n");
-				v_printf("\t");
+				v_printf("LINKKEYS (");
 				while(recordlen){
 					v_printf("%ld ", GetFourByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnNodeType:
 				ReportUnsupported("NODETYPE", rnNodeType);
-				v_printf("NODETYPE\n");
-				v_printf("\t");
+				v_printf("NODETYPE (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnPropAttr:
 				ReportUnsupported("PROPATTR", rnPropAttr);
-				v_printf("PROPATTR\n");
-				v_printf("\t");
+				v_printf("PROPATTR (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnPropValue:
 				ReportUnsupported("PROPVALUE", rnPropValue);
@@ -555,21 +549,19 @@ Not Used	case rnUString:
 				break;
 			case rnBoxType:
 				ReportUnsupported("BOXTYPE", rnBoxType);
-				v_printf("BOXTYPE\n");
-				v_printf("\t");
+				v_printf("BOXTYPE (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnPlex:
 				ReportUnsupported("PLEX", rnPlex);
-				v_printf("PLEX\n");
-				v_printf("\t");
+				v_printf("PLEX (");
 				while(recordlen){
 					v_printf("%ld ", GetFourByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnBgnExtn:
 				ReportUnsupported("BGNEXTN", rnBgnExtn);
@@ -601,12 +593,11 @@ Not Used	case rnUString:
 				break;
 			case rnStrClass:
 				ReportUnsupported("STRCLASS", rnStrClass);
-				v_printf("STRCLASS\n");
-				v_printf("\t");
+				v_printf("STRCLASS (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnReserved:
 				ReportUnsupported("RESERVED", rnReserved);
@@ -615,12 +606,11 @@ Not Used	case rnUString:
 				break;
 			case rnFormat:
 				ReportUnsupported("FORMAT", rnFormat);
-				v_printf("FORMAT\n");
-				v_printf("\t");
+				v_printf("FORMAT (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnMask:
 				ReportUnsupported("MASK", rnMask);
@@ -635,12 +625,11 @@ Not Used	case rnUString:
 				break;
 			case rnLibDirSize:
 				ReportUnsupported("LIBDIRSIZE", rnLibDirSize);
-				v_printf("LIBDIRSIZE\n");
-				v_printf("\t");
+				v_printf("LIBDIRSIZE (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnSrfName:
 				ReportUnsupported("SRFNAME", rnSrfName);
@@ -650,12 +639,11 @@ Not Used	case rnUString:
 				break;
 			case rnLibSecur:
 				ReportUnsupported("LIBSECUR", rnLibSecur);
-				v_printf("LIBSECUR\n");
-				v_printf("\t");
+				v_printf("LIBSECUR (");
 				while(recordlen){
 					v_printf("%d ", GetTwoByteSignedInt());
 				}
-				v_printf("\n");
+				v_printf(")\n");
 				break;
 			case rnBorder:
 				ReportUnsupported("BORDER", rnBorder);
