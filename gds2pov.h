@@ -1,6 +1,7 @@
 #ifndef _GDS2POV_H
 #define _GDS2POV_H
 
+void debug_printf(char *string);
 
 /* Two consecutive zero bytes are a null word */
 

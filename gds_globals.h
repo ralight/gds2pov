@@ -5,10 +5,12 @@ typedef enum{
 	elBoundary,
 	elPath,
 	elSRef,
-	elARef
+	elARef,
+	elText
 } element_type;
 
 extern char *libname;
+extern char *textstring;
 extern short currentlayer;
 extern float currentwidth;
 extern short currentpathtype;
@@ -18,5 +20,7 @@ extern short currentpresentation;
 extern char *sname;
 extern short arrayrows, arraycols;
 extern float units;
+extern unsigned short currentstrans;
+extern float currentangle;
 
 #endif

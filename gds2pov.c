@@ -9,6 +9,7 @@
 
 char *libname;
 char *sname;
+char *textstring;
 short currentlayer;
 float currentwidth;
 element_type currentelement;
@@ -17,6 +18,13 @@ short currenttexttype;
 short currentpresentation;
 short arrayrows, arraycols;
 float units;
+unsigned short currentstrans;
+float currentangle;
+
+void debug_printf(char *string)
+{
+	//printf("%s\n", string);
+}
 
 int main(int argc, char *argv[])
 {
@@ -75,14 +83,16 @@ int main(int argc, char *argv[])
 
 	fprintf(outfile, "#include \"colors.inc\"\n");
 	fprintf(outfile, "#include \"metals.inc\"\n");
-	fprintf(outfile, "camera {\n\tlocation <2000, 20000, 2000>\n");
-	fprintf(outfile, "\tlook_at <2000, 2000, 2000>\n}");
+	fprintf(outfile, "#include \"transforms.inc\"\n");
+	fprintf(outfile, "camera {\n\tlocation <22000, 70000, 18000>\n");
+	fprintf(outfile, "\tlook_at <22000, 2000, 18000>\n}");
 	fprintf(outfile, "background { color Black }\n");
 	fprintf(outfile, "light_source { <2000, 2000, -30000> White }\n");
-	fprintf(outfile, "light_source { <2000, 20000, -0000> White }\n");
+	fprintf(outfile, "light_source { <10000, 20000, -10000> White }\n");
+	fprintf(outfile, "light_source { <30000, 20000, 10000> White }\n");
 	GDStoPOV(infile, outfile, all_layers, layer_count);
 
-	fprintf(outfile, "object { str_path }\n");
+	fprintf(outfile, "object { str_gds2example }\n");
 	fclose(infile);
 	fclose(outfile);
 

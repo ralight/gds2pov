@@ -45,27 +45,34 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 				/* Empty, no need to parse */
 				break;
 			case rnBoundary:
+				debug_printf("BOUNDARY");
 				currentelement = elBoundary;
 				break;
 			case rnPath:
+				debug_printf("PATH");
 				currentelement = elPath;
 				break;
 			case rnSRef:
+				debug_printf("SREF");
 				currentelement = elSRef;
 				break;
 			case rnARef:
+				debug_printf("AREF");
 				currentelement = elARef;
 				break;
 			case rnText:
-				/* Empty, no need to parse */
+				debug_printf("TEXT");
+				currentelement = elText;
 				break;
 			case rnLayer:
+				debug_printf("LAYER");
 				currentlayer = GetTwoByteSignedInt(infile, &recordlen);
 				break;
 			case rnDataType:
 				ParseDataType(infile, outfile, recordlen);
 				break;
 			case rnWidth:
+				debug_printf("WIDTH");
 				currentwidth = (float)(GetFourByteSignedInt(infile, &recordlen)/2);
 //				if(currentwidth > 0){
 ///					currentwidth *= units;
@@ -74,6 +81,7 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 				// subtracting
 				break;
 			case rnXY:
+				debug_printf("XY");
 				ParseXY(infile, outfile, recordlen, all_layers, layer_count);
 				break;
 			case rnEndEl:
@@ -88,26 +96,27 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 				ParseSName(infile, outfile, recordlen);
 				break;
 			case rnPathType:
+				printf("PATHTYPE\n");
 				currentpathtype = GetTwoByteSignedInt(infile, &recordlen);
 				break;
 			case rnTextType:
+				printf("TEXTTYPE\n");
 				currenttexttype = GetTwoByteSignedInt(infile, &recordlen);
 				break;
 			case rnPresentation:
+				printf("PRESENTATION\n");
 				currentpresentation = GetTwoByteSignedInt(infile, &recordlen);
 				break;
 			case rnString:
 				printf("STRING\n");
 				//FIXME
-				free(GetAsciiString(infile, &recordlen));
+				textstring = GetAsciiString(infile, &recordlen);
 				break;
 			case rnSTrans:
 				printf("STRANS\n");
 				//FIXME
 				/*currentpresentation = */
-				while(recordlen){
-					GetTwoByteSignedInt(infile, &recordlen);
-				}
+				currentstrans = GetTwoByteSignedInt(infile, &recordlen);
 				break;
 			case rnMag:
 				printf("MAG\n");
@@ -118,12 +127,9 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 				}
 				break;
 			case rnAngle:
-				printf("ANGLE\n");
+				currentangle = (float)GetEightByteReal(infile, &recordlen);
+				printf("ANGLE (%.2f)\n", currentangle);
 				//FIXME
-				/*currentpresentation = */
-				while(recordlen){
-					GetEightByteReal(infile, &recordlen);
-				}
 				break;
 			case rnAttrTable:
 				printf("ATTRTABLE\n");
@@ -325,6 +331,7 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 {
 	float X, Y, nextX=0.0, nextY=0.0, prevX=0.0, prevY=0.0;
 	float firstX=0.0, firstY=0.0, secondX=0.0, secondY=0.0;
+	float dx, dy;
 	int points = recordlen/8;
 	int i;
 	int thislayer;
@@ -344,7 +351,6 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 
 	switch(currentelement){
 		case elBoundary:
-			//if(all_layers[i].height && all_layers[i].show){
 			if(all_layers[thislayer].height && all_layers[thislayer].show){
 				fprintf(outfile, "prism { ");
 				fprintf(outfile, "%d,%d,%d", all_layers[thislayer].height, all_layers[thislayer].height+all_layers[thislayer].thickness, points);
@@ -363,12 +369,14 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 				}
 			}
 			if(all_layers[thislayer].height && all_layers[thislayer].show){
-				fprintf(outfile, " texture { pigment { rgb %s }", all_layers[thislayer].colour);
+				if(all_layers[thislayer].transparent){
+					fprintf(outfile, " texture { pigment { rgbf %s }", all_layers[thislayer].colour);
+				}else{
+					fprintf(outfile, " texture { pigment { rgb %s }", all_layers[thislayer].colour);
+				}
 
 				if(all_layers[thislayer].metal){
 					fprintf(outfile, " finish { F_MetalC }");
-				}else if(all_layers[thislayer].transparent){
-				//	fprintf(outfile, "finish { F_MetalC }");
 				}
 				fprintf(outfile, " } }\n");
 			}
@@ -398,15 +406,15 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 					if(all_layers[thislayer].height && all_layers[thislayer].show){
 						fprintf(outfile, ",");
  						if(i<points){
-							fprintf(outfile, "<%.2f, ", X + (float)currentwidth * cos(atan2(X-nextX, nextY-Y)));
-							fprintf(outfile, "%.2f>,", Y + (float)currentwidth * sin(atan2(X-nextX, nextY-Y)));
 							fprintf(outfile, "<%.2f, ", X - (float)currentwidth * cos(atan2(X-nextX, nextY-Y)));
-							fprintf(outfile, "%.2f>", Y - (float)currentwidth * sin(atan2(X-nextX, nextY-Y)));
+							fprintf(outfile, "%.2f>,", Y - (float)currentwidth * sin(atan2(X-nextX, nextY-Y)));
+							fprintf(outfile, "<%.2f, ", X + (float)currentwidth * cos(atan2(X-nextX, nextY-Y)));
+							fprintf(outfile, "%.2f>", Y + (float)currentwidth * sin(atan2(X-nextX, nextY-Y)));
 						}else{
-							fprintf(outfile, "<%.2f, ", X + (float)currentwidth * cos(atan2(X-firstX, firstY-Y)));
-							fprintf(outfile, "%.2f>,", Y + (float)currentwidth * sin(atan2(X-firstX, firstY-Y)));
 							fprintf(outfile, "<%.2f, ", X - (float)currentwidth * cos(atan2(X-firstX, firstY-Y)));
 							fprintf(outfile, "%.2f>,", Y - (float)currentwidth * sin(atan2(X-firstX, firstY-Y)));
+							fprintf(outfile, "<%.2f, ", X + (float)currentwidth * cos(atan2(X-firstX, firstY-Y)));
+							fprintf(outfile, "%.2f>,", Y + (float)currentwidth * sin(atan2(X-firstX, firstY-Y)));
 
 							fprintf(outfile, "<%.2f, ", X - (float)currentwidth * cos(atan2(firstX-secondX, secondY-firstY)));
 							fprintf(outfile, "%.2f>", Y - (float)currentwidth * sin(atan2(firstX-secondX, secondY-firstY)));
@@ -431,24 +439,85 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 			}
 			break;
 		case elSRef:
-			fprintf(outfile, "object { str_%s ", sname);
 			X = units * (float)GetFourByteSignedInt(infile, &recordlen);
 			Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
-			fprintf(outfile, "translate <%.2f, %.2f, 0>}\n", X, Y);
+			printf("flip (%d) %d, %d\n", currentstrans & 0x8000, currentstrans, 0x8000);
+			if((unsigned short)(currentstrans & 0x8000) == (unsigned short)0x8000){
+				printf("SREF objects not supported when flipped/mirrored.\n");
+			}else{
+			fprintf(outfile, "object { str_%s ", sname);
+			fprintf(outfile, "translate <%.2f, 0, %.2f> ", X, Y);
+			if(currentangle){
+				fprintf(outfile, "Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, X, Y);
+			}
+			fprintf(outfile, "}\n");
+			}
 			break;
 		case elARef:
 			//FIXME
-//			fprintf(outfile, "object {\n\t%s\n\t", sname);
+			firstX = units * (float)GetFourByteSignedInt(infile, &recordlen);
+			firstY = units * (float)GetFourByteSignedInt(infile, &recordlen);
+			secondX = units * (float)GetFourByteSignedInt(infile, &recordlen);
+			secondY = units * (float)GetFourByteSignedInt(infile, &recordlen);
 			X = units * (float)GetFourByteSignedInt(infile, &recordlen);
 			Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
+
+			if((unsigned short)(currentstrans & 0x8000) == (unsigned short)0x8000){
+				printf("AREF (array/tiled/mosaic) objects not supported when flipped/mirrored.\n");
+			}else{
+				if(currentangle == 90.0 || currentangle == -90.0){
+					if(arraycols && arrayrows && (X - firstX) && (secondY - firstY)){
+						dx = (float)(X - firstX) / (float)arraycols;
+						dy = (float)(secondY - firstY) / (float)arrayrows;
+						for(X=0; X<arraycols; X++){
+							for(Y=0; Y<arrayrows; Y++){
+								fprintf(outfile, "object { str_%s ", sname);
+								fprintf(outfile, "translate <%.2f, 0, %.2f>", firstX + dx*X, firstY + dy*Y);
+								if(currentangle){
+									fprintf(outfile, " Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, firstX + dx*X, firstY + dy*Y);
+								}
+								fprintf(outfile, "}\n");
+							}
+						}
+					}
+				}else{
+					if(arraycols && arrayrows && (secondX - firstX) && (Y - firstY)){
+						dx = (float)(secondX - firstX) / (float)arraycols;
+						dy = (float)(Y - firstY) / (float)arrayrows;
+						for(X=0; X<arraycols; X++){
+							for(Y=0; Y<arrayrows; Y++){
+								fprintf(outfile, "object { str_%s ", sname);
+								fprintf(outfile, "translate <%.2f, 0, %.2f>", firstX + dx*X, firstY + dy*Y);
+								if(currentangle){
+									fprintf(outfile, "Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, firstX + dx*X, firstY + dy*Y);
+								}
+								fprintf(outfile, "}\n");
+							}
+						}
+					}
+				}
+			}
+			break;
+		case elText:
+			debug_printf("TEXT XY");
+			printf("TEXT not yet supported.\n");
 			X = units * (float)GetFourByteSignedInt(infile, &recordlen);
 			Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
-			X = units * (float)GetFourByteSignedInt(infile, &recordlen);
-			Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
-//			fprintf(outfile, "translate <%ld, %ld, 0>\n}", X, Y);
+			if(textstring){
+				fprintf(outfile, "text { ttf \"arial.ttf\" \"%s\" 1,0.1*x ", textstring);
+				fprintf(outfile, "texture { pigment { rgb %s } } ", all_layers[thislayer].colour);
+				fprintf(outfile, "scale <1000,1000,10> rotate <90,0,0> translate <%.2f, %d, %.2f> ", X, all_layers[thislayer].height, Y);
+				if(currentangle){
+					fprintf(outfile, "Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", -currentangle, X, Y);
+				}
+				fprintf(outfile, "}\n");
+				free(textstring);
+			}
+			textstring = NULL;
 			break;
 	}
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
+	currentangle = 0.0;
 }
 

@@ -135,6 +135,7 @@ char *GetAsciiString(FILE *fptr, short *length)
 		if(!str){
 			printf("Unable to allocate memory for ascii string (%d)\n", (*length));
 			fclose(fptr);
+			// FIXME - need to cleanup properly.
 			exit(1);
 		}
 		fread(str, 1, (*length), fptr);
