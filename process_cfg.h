@@ -10,7 +10,7 @@ struct ProcessLayer{
 	int Datatype;
 	float Height;
 	float Thickness;
-	bool Show;
+	int Show;
 	float Red;
 	float Green;
 	float Blue;
