@@ -16,9 +16,9 @@ GDSConfig::GDSConfig()
 
 	LookAtPos.postype = ptLookAt;
 	LookAtPos.boundarypos = bpCentre;
-	CameraPos.XMod = 1.0;
-	CameraPos.YMod = 1.0;
-	CameraPos.ZMod = 0.0;
+	LookAtPos.XMod = 1.0;
+	LookAtPos.YMod = 1.0;
+	LookAtPos.ZMod = 0.0;
 
 	FirstLight = NULL;
 	LastLight = NULL;
