@@ -10,8 +10,13 @@
 
 void printusage()
 {
-		printf("gds2pov version %.1f\n\nUsage:\n", VERSION);
-		printf("\tgds2pov input.gds output.pov [-c config.txt] [-p process.txt]\n");
+		printf("gds2pov  version %.1f\n", VERSION);
+		printf("Copyright (C) 2004 by Roger Light\nhttp://www.atchoo.org/gds2pov/\n\n");
+		printf("gds2pov comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2pov freely as described in the readme.txt distributed with this file.\n\n");
+		printf("gds2pov is a program for converting a GDS2 file to a POV-Ray scene file.\n\n");
+		printf("Usage: gds2pov input.gds output.pov [-c config.txt] [-p process.txt]\n\n");
+		printf("Options\n -c\t\tSpecify config file\n -p\t\tSpecify process file\n\n");
+		printf("See http://www.atchoo.org/gds2pov/ for updates.\n");
 }
 
 int main(int argc, char *argv[])
