@@ -8,14 +8,15 @@
 # 
 # Only one global block is supported of the following format:
 #
-# Use Ambient to specify the amount of ambient light in the scene. 1.2 is the default if not specified. 
+# Use Ambient to specify the amount of ambient light in the scene. 1.0 is the default if not specified. 
+# 1.2 gives reasonable results if no other lights are specified.
 #
 # ProcessFile sets the file from which the process configuration will be read. If it is not specified, 
 # process.txt is used as the default.
 # Note that if the -p switch is used with gds2pov it will override the ProcessFile setting.
 #
 # GlobalStart
-# Ambient: 1.2
+# Ambient: 1.0
 # ProcessFile: process.txt
 # GlobalEnd
 #
@@ -98,6 +99,7 @@
 GlobalStart
 Ambient: 1.2
 ProcessFile: process.txt
+Font: crystal.ttf
 GlobalEnd
 
 PositionStart
@@ -114,7 +116,7 @@ Type: LookAt
 Position: Centre
 XMod: 1.0
 YMod: 1.0
-ZMod: 0.0
+ZMod: -0.5
 PositionEnd
 
 
@@ -124,4 +126,20 @@ Position: TopRight
 XMod: 1
 YMod: 1
 ZMod: 0.1
+PositionEnd
+
+PositionStart
+Type: Light
+Position: Centre
+XMod: 1
+YMod: 1
+ZMod: 1
+PositionEnd
+
+PositionStart
+Type: Light
+Position: TopLeft
+XMod: 1
+YMod: 1
+ZMod: 1
 PositionEnd

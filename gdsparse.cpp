@@ -103,10 +103,11 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 			if(!bounding_output){
 				if(topcellname){
 					RecursiveOutput(Objects->GetObject(topcell), optr);
+					fprintf(optr, "object { str_%s }\n", topcell);
 				}else{
 					RecursiveOutput(Objects->GetObject(0), optr);
+					fprintf(optr, "object { str_%s }\n", Objects->GetObject(0)->GetName());
 				}
-				fprintf(optr, "object { str_%s }\n", Objects->GetObject(0)->GetName());
 			}
 			fclose(optr);
 			optr = NULL;

@@ -223,34 +223,19 @@ Green: 0
 Blue: 1
 Filter: 0
 Metal: 1
-Show: 1
+Show: 0
 LayerEnd
 
 LayerStart: TEXT
 Layer: 61
-Height: 9000
+Height: 7000
 Thickness: 1000
 Red: 1
 Green: 1
 Blue: 1
 Filter: 0
 Metal: 0
-Show: 1
-LayerEnd
-
-LayerStart: POLY1PIN
-Layer: 61
-Datatype: 1
-LayerEnd
-
-LayerStart: MET1PIN
-Layer: 61
-Datatype: 2
-LayerEnd
-
-LayerStart: CELBOX
-Layer: 62
-Datatype: 1
+Show: 0
 LayerEnd
 
 LayerStart: DIODE
@@ -261,7 +246,7 @@ Thickness: 28
 Red: 0.4
 Green: 0.4
 Blue: 0.08
-Filter: 0.5
+Filter: 0
 Metal: 0
 Show: 1
 LayerEnd
@@ -276,12 +261,7 @@ Green: 1.0
 Blue: 1.0
 Filter: 0.5
 Metal: 0
-Show: 1
-LayerEnd
-
-LayerStart: RESTRM
-Layer: 62
-Datatype: 14
+Show: 0
 LayerEnd
 
 LayerStart: ERROR

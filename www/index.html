@@ -5,7 +5,7 @@
 </head><body>
 
 <div>
-<h1>gds2pov v0.6</h1>
+<h1>gds2pov v0.7</h1>
 <h2>What is gds2pov?</h2>
 <p>GDS2POV is a program to take a GDS2 layout file and output a POV-Ray scene 
 description file of the GDS2 data. This allows the creation of attractive 3D pictures of a layout.</p>
@@ -19,12 +19,12 @@ from <a href="http://www.povray.org/">http://www.povray.org/</a></p>
 
 <h2>Download</h2>
 <p>gds2pov is currently available in binary format for Windows, Linux (x86) and Solaris (Sparc). It should compile on just about anything though.
-I don't have access to other types of machines. If you want it for you machine, get in touch.</p>
+I don't have access to other types of machines. If you want it for your machine, get in touch.</p>
 
 <ul>
-<li><a href="files/gds2pov_win32.zip">Windows</a> (95.6KB)</li>
-<li><a href="files/gds2pov_lnx86.tar.gz">Linux x86</a> (71.8KB)</li>
-<li><a href="files/gds2pov_solsparc.tar.gz">Solaris Sparc</a> (74.1KB)</li>
+<li><a href="files/gds2pov_0.7_win32.zip">Windows</a> (95.6KB)</li>
+<li><a href="files/gds2pov_0.7_lnx86.tar.gz">Linux x86</a> (71.8KB)</li>
+<li><a href="files/gds2pov_0.7_solsparc.tar.gz">Solaris Sparc</a> (74.1KB)</li>
 </ul>
 
 <h2>License</h2>
@@ -45,6 +45,15 @@ at some point.</p>
 </p>
 
 <h2>Changes</h2>
+<p>Since 0.6:</p>
+<ul>
+<li>Added option to specify the top cell name as suggested by Markus Dorn.</li>
+<li>Added option to output a bounding box the same size and shape as the layout 
+  instead of the layout. This renders almost instantaneously so can be used to
+  place the camera more effectively.</li>
+<li>Empty cells no longer break the boundary detection.</li>
+<li>Fixed bug causing the wrong cell to be selected in boundary calculation which was leading to crashes in certain situations (Guenter Grau).</li>
+</ul>
 <p>Since 0.5:</p>
 <ul>
 <li>Added verbose output option for helping debug problems with gds2 files.</li>

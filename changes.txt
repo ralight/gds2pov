@@ -1,3 +1,14 @@
+version 0.7 (  2004)
+==============================
+
+- Added option to specify the top cell name as suggested by Markus Dorn.
+- Added option to output a bounding box the same size and shape as the layout 
+  instead of the layout. This renders almost instantaneously so can be used to
+  place the camera more effectively.
+- Empty cells no longer break the boundary detection.
+- Fixed bug causing the wrong cell to be selected in boundary calculation which
+  was leading to crashes in certain situations (Guenter Grau).
+
 Version 0.6 (17th August 2004)
 ==============================
 

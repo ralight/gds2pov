@@ -1,4 +1,4 @@
-GDS2POV 0.6
+GDS2POV 0.7
 ===========
 
 Introduction
@@ -22,8 +22,14 @@ section at the bottom of this document.
 Usage
 -----
 
-gds2pov input.gds output.pov [-c config.txt] [-p process.txt] [-v]
+gds2pov input.gds output.pov [-b] [-c config.txt] [-p process.txt] [-t topcell] [-v]
 
+ -b	Output bounding box instead of the layout to allow easier and quicker
+	placing of the camera. It is much quicker to render a box than an IC!
+ -c	Specify config file
+ -p	Specify process file
+ -t	Specify top cell name
+ -v	Verbose output
 
 First steps - what do you need at the absolute minimum? This program, a GDS2 
 file and a file describing your process to GDS2POV.
@@ -50,7 +56,7 @@ This will produce a POV file with the camera directly above the centre of the
 layout looking down. No extra lights are defined.
 
 
-If you want a more complicated arrangement there are two options.
+If you want a more complicated arrangement there are further options.
 
 Firstly, you can edit the camera and lighting settings in the POV file by hand. 
 GDS2POV outputs a number of comments at the start of the POV file which give 
@@ -65,6 +71,8 @@ gds2pov input.gds output.pov -c config.txt
 The config file allows you to set the ambient light level, a process file and 
 the position of the camera, where the camera is looking as well as defining 
 any number of additional lights. See config.txt for more information.
+
+If gds2pov does not find your top cell correctly, use the -t option to specify the top cell name.
 
 
 Using the POV File
@@ -90,6 +98,7 @@ Or to set it on the command line, use
 If you have suggestions for other useful settings, please send them to me for
 inclusion.
 
+
 Known Problems
 --------------
 
@@ -108,10 +117,10 @@ avoid merging multiple polygons/paths.
 * Summary only considers a single instance of each object.
 
 * Big files take a long time and a lot of memory to render. Yes... try 
-reducing the quality and size of your output picture in POV-Ray. I don't 
-really envisage GDS2POV being used on complete chips - POV-Ray is limited 
-to 2GB of RAM on 32 bit machines and it is quite possible to use that with 
-a complicated GDS2 file.
+  reducing the quality and size of your output picture in POV-Ray. I don't 
+  really envisage GDS2POV being used on complete chips - POV-Ray is limited 
+  to 2GB of RAM on 32 bit machines and it is quite possible to use that with 
+  a complicated GDS2 file.
 
 * Lack of support for other platforms. Coming as I get chance. 
 
@@ -139,5 +148,3 @@ support for the GDS2 format) are very welcome.
 Contact me on roger@atchoo.org
 
 Updates to GDS2POV should be at http://www.atchoo.org/gds2pov
-
-
