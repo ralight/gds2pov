@@ -6,6 +6,7 @@
 using namespace std;
 
 #ifdef LINUX
+#include <endian.h>
 #include <byteswap.h>
 #endif
 
@@ -16,11 +17,20 @@ using namespace std;
 
 #ifdef WIN32
 #include "gds_types.h"
+#define __LITTLE_ENDIAN 1234
+#define __BYTE_ORDER __LITTLE_ENDIAN
 #endif
 
 #ifdef LINUX
-#define endian_swap_long bswap_32
-#define endian_swap_short bswap_16
+//#if __BYTE_ORDER != __LITTLE_ENDIAN
+////#define endian_swap_long(value) (bswap_32(value))
+////#define endian_swap_short(value) (bswap_16(value))
+#define endian_swap_long(A) bswap_32((A))
+#define endian_swap_short(A) bswap_16((A))
+//#else
+//#define endian_swap_long bswap_32(A) (A)
+//#define endian_swap_short bswap_16(A) (A)
+//#endif
 #endif
 
 typedef enum{

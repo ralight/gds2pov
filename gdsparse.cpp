@@ -790,7 +790,11 @@ long GDSParse::GetFourByteSignedInt()
 	
 	recordlen-=4;
 
+#if __BYTE_ORDER == __LITTLE_ENDIAN
 	return endian_swap_long(value);
+#else
+	return value;
+#endif
 }
 
 short GDSParse::GetTwoByteSignedInt()
@@ -801,7 +805,11 @@ short GDSParse::GetTwoByteSignedInt()
 
 	recordlen-=2;
 
+#if __BYTE_ORDER == __LITTLE_ENDIAN
 	return endian_swap_short(value);
+#else
+	return value;
+#endif
 }
 
 char *GDSParse::GetAsciiString()
