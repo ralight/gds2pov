@@ -45,6 +45,7 @@ typedef struct _TextElement {
 	ElementColour Colour;
 	char *String;
 	Transform Rotate;
+	int Flipped;
 } TextElement;
 
 typedef struct _SRefElement {
@@ -106,7 +107,7 @@ public:
 	void SetPrismColour(float R, float G, float B, float F, int Metal);
 	void SetPrismRotation(float X, float Y, float Z);
 
-	void AddText(float X, float Y, float Z);
+	void AddText(float X, float Y, float Z, int Flipped);
 	void SetTextColour(float R, float G, float B, float F, int Metal);
 	void SetTextString(char *String);
 	void SetTextRotation(float X, float Y, float Z);

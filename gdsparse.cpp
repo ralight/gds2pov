@@ -658,13 +658,13 @@ void GDSParse::ParseXY()
 	int Flipped;
 
 	thislayer = process->GetLayer(currentlayer, currentdatatype);
+	Flipped = ((unsigned short)(currentstrans & 0x8000) == (unsigned short)0x8000) ? 1 : 0;
 
 	switch(currentelement){
 		case elSRef:
 			SRefElements++;
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
-			Flipped = ((unsigned short)(currentstrans & 0x8000) == (unsigned short)0x8000) ? 1 : 0;
 
 			if(CurrentObject){
 				CurrentObject->AddSRef(sname, X, Y, Flipped);
@@ -682,8 +682,6 @@ void GDSParse::ParseXY()
 			secondY = units * (float)GetFourByteSignedInt();
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
-
-			Flipped = ((unsigned short)(currentstrans & 0x8000) == (unsigned short)0x8000) ? 1 : 0;
 
 			if(CurrentObject){
 				CurrentObject->AddARef(sname, firstX, firstY, secondX, secondY, X, Y, arraycols, arrayrows, Flipped);
@@ -715,7 +713,7 @@ void GDSParse::ParseXY()
 			Y = units * (float)GetFourByteSignedInt();
 
 			if(CurrentObject){
-				CurrentObject->AddText(X, Y, thislayer->Height);
+				CurrentObject->AddText(X, Y, thislayer->Height, Flipped);
 				CurrentObject->SetTextColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 				if(currentangle){
 					CurrentObject->SetTextRotation(0.0, -currentangle, 0.0);

@@ -1,6 +1,5 @@
 - Better command line options including being able to specify the process file.
 - Write structures to individual .inc files to reduce memory usage?
-- Implement mirrored objects (text)
 - Suitable code for endian decisions. What is there available on Solaris/BSD? Would hton* functions be suitable?
 - Auto placement of lights.
 - Deal with concave polygons. Either implement horrid algo to fill them or
@@ -19,4 +18,4 @@
 - Camera include file?
 - Need to test rotated and flipped ARefs
 
-Total tasks: 17
+Total tasks: 16

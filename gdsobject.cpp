@@ -315,7 +315,12 @@ void GDSObject::OutputToFile(FILE *fptr)
 				if(text->String){
 					fprintf(fptr, "text{ttf \"arial.ttf\" \"%s\" 1,0.1*x ", text->String);
 					fprintf(fptr, "texture{pigment{rgb <%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-					fprintf(fptr, "scale <1000,1000,10> rotate <90,0,0> translate <%.2f,%.2f,%.2f> ", text->X, text->Z, text->Y);
+					if(text->Flipped){
+						fprintf(fptr, "scale <1000,1000,-10> ");
+					}else{
+						fprintf(fptr, "scale <1000,1000,10> ");
+					}
+					fprintf(fptr, "rotate <90,0,0> translate <%.2f,%.2f,%.2f> ", text->X, text->Z, text->Y);
 					if(text->Rotate.Y){
 						fprintf(fptr, "Rotate_Around_Trans(<0,%.2f,0>,<%.2f,0,%.2f>)", text->Rotate.Y, text->X, text->Y);
 					}
@@ -435,7 +440,7 @@ void GDSObject::SetPrismRotation(float X, float Y, float Z)
 	}
 }
 
-void GDSObject::AddText(float X, float Y, float Z)
+void GDSObject::AddText(float X, float Y, float Z, int Flipped)
 {
 	TextElement *NewText = new TextElement;
 
@@ -456,6 +461,7 @@ void GDSObject::AddText(float X, float Y, float Z)
 	NewText->Rotate.X = 0.0;
 	NewText->Rotate.Y = 0.0;
 	NewText->Rotate.Z = 0.0;
+	NewText->Flipped = Flipped;
 }
 
 void GDSObject::SetTextColour(float R, float G, float B, float F, int Metal)
