@@ -12,6 +12,13 @@ using namespace std;
 #define endian_swap_short(A) bswap_16((A))
 #endif
 
+#ifdef SOLARIS
+#include <arpa/nameser_compat.h>
+#include <netinet/in.h>
+#define endian_swap_long(A) htonl((A))
+#define endian_swap_short(A) htons((A))
+#endif
+
 #include "process_cfg.h"
 #include "gds_globals.h"
 #include "gdsobject.h"
