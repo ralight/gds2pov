@@ -143,7 +143,7 @@ GDSObject::~GDSObject()
 	delete Name;
 }
 
-void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
+void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font)
 {
 	if(fptr && !IsOutput){
 
@@ -380,7 +380,11 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
 			while(text->Next){
 				text = text->Next;
 				if(text->String){
-					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->String);
+					if(Font){
+						fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->String);
+					}else{
+						fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->String);
+					}
 					fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
 					if(text->Mag!=1.0){
 						fprintf(fptr, "scale <%.2f,%.2f,1> ", text->Mag, text->Mag);

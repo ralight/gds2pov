@@ -39,6 +39,7 @@ private:
 
 	int Valid;
 
+	char *Font;
 	char *ProcessFile;
 	float Ambient;
 public:
@@ -49,6 +50,7 @@ public:
 	char *GetProcessFile();
 	float GetAmbient();
 	int IsValid();
+	char *GetFont();
 
 	Position *GetLookAtPos();
 	Position *GetCameraPos();

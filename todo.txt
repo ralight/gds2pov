@@ -11,7 +11,6 @@ This release
 - Detect text for boundary calculation
 - Text scaling with units needs fixing, especially the depth!
 - Documentation (source)
-- Font specifiable in config.txt
 - If datatype not specified, use layer definition for all datatypes
 - Debug/verbose output
 - Exception handling
@@ -19,6 +18,7 @@ This release
 - Incorrect process/config file testing
 - Compile examples and other files for distribution.
 - Proper command line option parsing
+- XY handlers for unsupported elements
 
 Tasks: 15
 

@@ -134,7 +134,7 @@ public:
 	void SetPathRotation(float X, float Y, float Z);
 
 	char *GetName();
-	void OutputToFile(FILE *fptr, class GDSObjects *Objects);
+	void OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font);
 	int HasASRef();
 	char *GetSRefName(int Index);
 	char *GetARefName(int Index);

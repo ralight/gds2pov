@@ -145,7 +145,7 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *optr)
 		}while(child);
 
 	}
-	Object->OutputToFile(optr, Objects);
+	Object->OutputToFile(optr, Objects, config->GetFont());
 }
 
 void GDSParse::OutputPOVHeader()

@@ -6,6 +6,7 @@
 GDSConfig::GDSConfig()
 {
 	ProcessFile = NULL;
+	Font = NULL;
 	Ambient = 1.2;
 
 	CameraPos.postype = ptCamera;
@@ -30,6 +31,7 @@ GDSConfig::GDSConfig()
 GDSConfig::GDSConfig(char *configfile)
 {
 	ProcessFile = NULL;
+	Font = NULL;
 	Ambient = 1.2;
 
 	int posstart_cnt = 0;
@@ -49,6 +51,7 @@ GDSConfig::GDSConfig(char *configfile)
 	bool in_global = false;
 	bool got_ambient = false;
 	bool got_processfile = false;
+	bool got_font = false;
 
 	bool in_position = false;
 	bool got_type = false;
@@ -150,6 +153,30 @@ GDSConfig::GDSConfig(char *configfile)
 					}
 				}
 				got_processfile = true;
+			}else if(strstr(line, "Font:")){
+				if(!in_global){
+					fprintf(stderr, "Error: Font definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
+					Valid = 0;
+					return;
+				}
+				if(got_font){
+					fprintf(stderr, "Warning: Duplicate Font definition on line %d of config file. Ignoring new definition.\n", current_line);
+				}else{
+					if(Font){
+						delete Font;
+						Font = NULL;
+					}
+					Font = new char[256];
+				
+					strncpy(Font, &line[6], 256);
+					for(i=strlen(Font)-1; i>=0; i--){
+						if(Font[i] == '\n'){
+							Font[i] = '\0';
+							break;
+						}
+					}
+				}
+				got_font = true;
 			}else if(strstr(line, "GlobalEnd")){
 				in_global = false;
 			}else if(strstr(line, "PositionStart")){
@@ -416,6 +443,9 @@ GDSConfig::~GDSConfig()
 			delete pos1;
 		}
 	}
+	if(Font){
+		delete Font;
+	}
 }
 
 int GDSConfig::IsValid()
@@ -431,6 +461,11 @@ float GDSConfig::GetAmbient()
 char *GDSConfig::GetProcessFile()
 {
 	return ProcessFile;
+}
+
+char *GDSConfig::GetFont()
+{
+	return Font;
 }
 
 Position *GDSConfig::GetLookAtPos()
