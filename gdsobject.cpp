@@ -57,8 +57,8 @@ GDSObject::~GDSObject()
 	}
 
 	if(FirstPath){
-		Prism *path1;
-		Prism *path2;
+		Path *path1;
+		Path *path2;
 
 		path1 = FirstPath;
 		while(path1->Next){
@@ -171,10 +171,10 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font)
 		}
 
 		if(FirstPath){
-			Prism dummypath;
+			Path dummypath;
 			dummypath.Next = FirstPath;
 
-			Prism *path = &dummypath;
+			Path *path = &dummypath;
 
 			int i;
 			float angleX, angleY;
@@ -735,10 +735,10 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 	}
 
 	if(FirstPath){ /* FIXME - need to take width into account? */
-		Prism dummypath;
+		Path dummypath;
 		dummypath.Next = FirstPath;
 
-		Prism *path = &dummypath;
+		Path *path = &dummypath;
 
 		while(path->Next){
 			path = path->Next;
@@ -836,7 +836,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 
 void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn)
 {
-	Prism *NewPath = new Prism;
+	Path *NewPath = new Path;
 
 	NewPath->Next = NULL;
 

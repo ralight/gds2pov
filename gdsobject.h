@@ -28,17 +28,27 @@ typedef struct {
 
 typedef struct _Prism {
 	struct _Prism *Next;
-	int Type;				/* For paths only */
 	float Height;
 	float Thickness;
 	int Points;
-	float Width;			/* For paths only */
-	float BgnExtn;			/* For paths only */
-	float EndExtn; 			/* For paths only */
 	Point *Coords;
 	Transform Rotate;
 	ElementColour Colour;
 } Prism;
+
+typedef struct _Path {
+	struct _Path *Next;
+	int Type;
+	float Height;
+	float Thickness;
+	int Points;
+	float Width;
+	float BgnExtn;
+	float EndExtn;
+	Point *Coords;
+	Transform Rotate;
+	ElementColour Colour;
+} Path;
 
 typedef struct _TextElement {
 	struct _TextElement *Next;
@@ -98,8 +108,8 @@ private:
 	ARefElement *LastARef;
 	Prism *FirstPrism;
 	Prism *LastPrism;
-	Prism *FirstPath;
-	Prism *LastPath;
+	Path *FirstPath;
+	Path *LastPath;
 	bool GotBoundary;
 	bool IsOutput;
 	int SRefCount, ARefCount;
