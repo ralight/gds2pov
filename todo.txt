@@ -1,11 +1,10 @@
 This release
 ============
 
-- Documentation (usage)
 - Code coverage testing
 - Incorrect process/config file testing
 
-Tasks: 3
+Tasks: 2
 
 
 Next release
