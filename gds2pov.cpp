@@ -23,9 +23,9 @@ int main(int argc, char *argv[])
 {
 	bool verbose=false;
 
-	if(argc<3 || argc==4 || argc==6 || argc>8){
+	if(argc<3 || argc>8){
 		printusage();
-		return 0;
+		return 1;
 	}
 
 	char *gdsfile=argv[1];
@@ -34,42 +34,30 @@ int main(int argc, char *argv[])
 	char *configfile=NULL;
 	char *processfile=NULL;
 
-	if(argc>4){
-		if(strncmp(argv[3], "-c",strlen("-c"))!=0 
-				&& strncmp(argv[3], "-p",strlen("-p"))!=0
-				&& strncmp(argv[3], "-v",strlen("-v"))!=0
-				){
-			printusage();
-			return 0;
-		}else{
-			if(strncmp(argv[3], "-c", strlen("-c"))==0){
-				configfile = argv[4];
-			}else if(strncmp(argv[3], "-p", strlen("-p"))==0){
-				processfile = argv[4];
-			}else if(strncmp(argv[3], "-v", strlen("-v"))==0 || strncmp(argv[3], "-v", strlen("-v"))==0){
+	for(int i=3; i<argc; i++){
+		if(argv[i][0] == '-'){
+			if(strncmp(argv[i], "-c", strlen("-c"))!=0){
+				if(i==argc-1){
+					printusage();
+					return 1;
+				}else{
+					configfile = argv[i+1];
+				}
+			}else if(strncmp(argv[i], "-p", strlen("-p"))!=0){
+				if(i==argc-1){
+					printusage();
+					return 1;
+				}else{
+					processfile = argv[4];
+				}
+			}else if(strncmp(argv[i], "-v", strlen("-v"))!=0){
 				verbose = true;
 			}else{
 				printusage();
+				return 1;
 			}
-
-		}
-	}
-	// FIXME - need to consider just >5 arguments (so (-c or -p ) and -v)
-	if(argc>6){
-		if( (strncmp(argv[5], "-c",strlen("-c"))!=0 && strncmp(argv[5], "-p",strlen("-p"))!=0) || strncmp(argv[3], argv[5], strlen(argv[3]))==0){
-			printusage();
-			return 0;
-		}else{
-			if(strncmp(argv[5], "-c", strlen("-c"))==0){
-				configfile = argv[6];
-			}else if(strncmp(argv[5], "-p", strlen("-p"))==0){
-				processfile = argv[6];
-			}else if(strncmp(argv[5], "-v", strlen("-v"))==0 || strncmp(argv[6], "-v", strlen("-v"))==0){
-				verbose = true;
-			}else{
-				printusage();
-			}
-
+		//}else{
+		// Assume it is a process/config file specified on a previous arg
 		}
 	}
 
