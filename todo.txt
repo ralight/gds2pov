@@ -22,7 +22,6 @@
 - Camera include file?
 - Add support for datatype or rnDataType to allow eg. RESDEF, DIODE, CAPDEF which are all layer 62!
 - Need to test rotated and flipped ARefs, SRefs
-- Group paths as a single mesh2 object?
 - Parse ignored gds2 records so that the file itself can be parsed.
 
 Total tasks: 22

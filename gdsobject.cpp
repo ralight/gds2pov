@@ -169,11 +169,12 @@ void GDSObject::OutputToFile(FILE *fptr)
 
 			Prism *path = &dummypath;
 
+			int i;
 			while(path->Next){
 				path = path->Next;
 
-				for(int i=0; i<path->Points-1; i++){
-					fprintf(fptr, "mesh2 { vertex_vectors { 8");
+				fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->Points-1));
+				for(i=0; i<path->Points-1; i++){
 
 					// 1
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
@@ -231,28 +232,31 @@ void GDSObject::OutputToFile(FILE *fptr)
 						path->Coords[i+1].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y))
 						);
 
-					fprintf(fptr, "} face_indices { 12");
-					// print ,faces now
-					fprintf(fptr, ",<%d,%d,%d>", 0, 1, 2);
-					fprintf(fptr, ",<%d,%d,%d>", 1, 2, 3);
-					fprintf(fptr, ",<%d,%d,%d>", 4, 5, 6);
-					fprintf(fptr, ",<%d,%d,%d>", 5, 6, 7);
-					fprintf(fptr, ",<%d,%d,%d>", 0, 1, 5);
-					fprintf(fptr, ",<%d,%d,%d>", 0, 4, 5);
-					fprintf(fptr, ",<%d,%d,%d>", 2, 3, 6);
-					fprintf(fptr, ",<%d,%d,%d>", 3, 6, 7);
-					fprintf(fptr, ",<%d,%d,%d>", 1, 3, 7);
-					fprintf(fptr, ",<%d,%d,%d>", 1, 5, 7);
-					fprintf(fptr, ",<%d,%d,%d>", 0, 2, 4);
-					fprintf(fptr, ",<%d,%d,%d>", 2, 4, 6);
-					fprintf(fptr, "} ");
-					if(!path->Colour.Metal){
-						fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-					}else{
-						fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-					}
-				fprintf(fptr, "}\n");
 				}
+				fprintf(fptr, "} face_indices { %d", 12*(path->Points-1));
+				for(i=0; i<path->Points-1; i++){
+					// print ,faces now
+					fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 1+8*i, 2+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 2+8*i, 3+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 4+8*i, 5+8*i, 6+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 5+8*i, 6+8*i, 7+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 1+8*i, 5+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 4+8*i, 5+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 2+8*i, 3+8*i, 6+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 3+8*i, 6+8*i, 7+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 3+8*i, 7+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 5+8*i, 7+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 2+8*i, 4+8*i);
+					fprintf(fptr, ",<%d,%d,%d>", 2+8*i, 4+8*i, 6+8*i);
+				}
+				fprintf(fptr, "} ");
+				if(!path->Colour.Metal){
+					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+				}else{
+					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+				}
+				fprintf(fptr, "}\n");
+	//			}
 			}
 		}
 
