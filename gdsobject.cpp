@@ -327,7 +327,7 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
 			while(text->Next){
 				text = text->Next;
 				if(text->String){
-					fprintf(fptr, "text{ttf \"arial.ttf\" \"%s\" 0.2,0.1*x ", text->String);
+					fprintf(fptr, "text{ttf \"arial.ttf\" \"%s\" 0.2, 0 ", text->String);
 					fprintf(fptr, "texture{pigment{rgb <%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
 					if(text->Mag!=1.0){
 						fprintf(fptr, "scale <%.2f,%.2f,1> ", text->Mag, text->Mag);
@@ -338,6 +338,36 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
 					fprintf(fptr, "translate <%.2f,%.2f,%.2f> ", text->X, text->Y, -text->Z);
 					if(text->Rotate.Y){
 						fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,%.2f>)", -text->Rotate.Y, text->X, text->Y, -text->Z);
+					}
+					float htrans = 0.0, vtrans = 0.0;
+					switch(text->HJust){
+						case 0:
+							htrans = -0.5*strlen(text->String);
+							break;
+						case 1:
+							htrans = -0.25*strlen(text->String);
+							break;
+						case 2:
+							htrans = 0;
+							break;
+					}
+					switch(text->VJust){
+						case 0:
+							vtrans = 0.0;
+							break;
+						case 1:
+							vtrans = -0.5;
+							break;
+						case 2:
+							vtrans = -1.0;
+							break;
+					}
+					if(htrans || vtrans){
+						if(text->Rotate.Y){
+							fprintf(fptr, "translate <%.2f,%.2f,0> ", vtrans, htrans);
+						}else{
+							fprintf(fptr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
+						}
 					}
 					fprintf(fptr, "}\n");
 				}
@@ -479,7 +509,7 @@ void GDSObject::SetPrismRotation(float X, float Y, float Z)
 	}
 }
 
-void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag)
+void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag, int VJust, int HJust)
 {
 	TextElement *NewText = new TextElement;
 
@@ -502,6 +532,8 @@ void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag)
 	NewText->Rotate.Z = 0.0;
 	NewText->Flipped = Flipped;
 	NewText->Mag = Mag;
+	NewText->HJust = HJust;
+	NewText->VJust = VJust;
 }
 
 void GDSObject::SetTextColour(float R, float G, float B, float F, int Metal)

@@ -1,12 +1,11 @@
 This release
 ============
 
-- Fix text positioning
 - Documentation (usage)
 - Code coverage testing
 - Incorrect process/config file testing
 
-Tasks: 4
+Tasks: 3
 
 
 Next release
@@ -23,6 +22,7 @@ Next release
 - Detect text for boundary calculation
 - Text scaling with units needs fixing, especially the depth!
 - Documentation (source)
+- Fix text positioning for rotated text
 
 Tasks: 8
 

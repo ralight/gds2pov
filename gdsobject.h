@@ -43,6 +43,8 @@ typedef struct _TextElement {
 	float Y;
 	float Z;
 	float Mag;
+	int VJust;
+	int HJust;
 	ElementColour Colour;
 	char *String;
 	Transform Rotate;
@@ -112,7 +114,7 @@ public:
 	void SetPrismColour(float R, float G, float B, float F, int Metal);
 	void SetPrismRotation(float X, float Y, float Z);
 
-	void AddText(float X, float Y, float Z, int Flipped, float Mag);
+	void AddText(float X, float Y, float Z, int Flipped, float Mag, int VJust, int HJust);
 	void SetTextColour(float R, float G, float B, float F, int Metal);
 	void SetTextString(char *String);
 	void SetTextRotation(float X, float Y, float Z);

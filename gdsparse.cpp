@@ -371,10 +371,6 @@ void GDSParse::Parse()
 				currenttexttype = GetTwoByteSignedInt();
 				break;
 			case rnPresentation:
-				if(!unsupported[rnPresentation]){
-					printf("Unsupported GDS2 record type: PRESENTATION\n");
-					unsupported[rnPresentation] = true;
-				}
 				currentpresentation = GetTwoByteSignedInt();
 				break;
 			case rnString:
@@ -932,7 +928,12 @@ void GDSParse::ParseXY()
 			Y = units * (float)GetFourByteSignedInt();
 
 			if(CurrentObject){
-				CurrentObject->AddText(X, Y, units*thislayer->Height, Flipped, currentmag);
+				int vert_just, horiz_just;
+
+				vert_just = (((((unsigned long)currentpresentation & 0x8 ) == (unsigned long)0x8 ) ? 2 : 0) + (((((unsigned long)currentpresentation & 0x4 ) == (unsigned long)0x4 ) ? 1 : 0)));
+				horiz_just = (((((unsigned long)currentpresentation & 0x2 ) == (unsigned long)0x2 ) ? 2 : 0) + (((((unsigned long)currentpresentation & 0x1 ) == (unsigned long)0x1 ) ? 1 : 0)));
+
+				CurrentObject->AddText(X, Y, units*thislayer->Height, Flipped, currentmag, vert_just, horiz_just);
 				CurrentObject->SetTextColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 				if(currentangle){
 					CurrentObject->SetTextRotation(0.0, -currentangle, 0.0);
@@ -945,6 +946,7 @@ void GDSParse::ParseXY()
 	currentangle = 0.0;
 	currentdatatype = 0;
 	currentmag = 1.0;
+	currentpresentation = 0;
 }
 
 short GDSParse::GetBitArray()
