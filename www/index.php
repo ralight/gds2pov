@@ -1,11 +1,15 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?php
+	require("/home/atchoo/php/logging.php");
+	dolog();
+	print("<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n");
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
 <html><head><title>gds2pov</title>
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head><body>
 
 <div>
-<h1>gds2pov v0.7</h1>
+<h1>gds2pov v0.7.1</h1>
 <h2>What is gds2pov?</h2>
 <p>GDS2POV is a program to take a GDS2 layout file and output a POV-Ray scene 
 description file of the GDS2 data. This allows the creation of attractive 3D pictures of a layout.</p>
@@ -18,13 +22,18 @@ description file of the GDS2 data. This allows the creation of attractive 3D pic
 from <a href="http://www.povray.org/">http://www.povray.org/</a></p>
 
 <h2>Download</h2>
-<p>gds2pov is currently available in binary format for Windows, Linux (x86) and Solaris (Sparc). It should compile on just about anything though.
+<p>gds2pov is currently available in binary format for Windows (x86), Linux (x86, x86_64), Solaris (Sparc), FreeBSD (x86) and HP-UX (PA-RISC). It should compile on just about anything though.
 I don't have access to other types of machines. If you want it for your machine, get in touch.</p>
 
 <ul>
-<li><a href="files/gds2pov_win32_0.7.zip">Windows</a> (96.6KB)</li>
-<li><a href="files/gds2pov_lnx86_0.7.tar.gz">Linux x86</a> (74.1KB)</li>
-<li><a href="files/gds2pov_solsparc_0.7.tar.gz">Solaris Sparc</a> (75.6KB)</li>
+<li><a href="files/gds2pov_win32_0.7.1.zip">Windows</a> (97.2KB)</li>
+<li><a href="files/gds2pov_lnx86_0.7.1.tar.gz">Linux x86</a> (73.3KB)</li>
+<li><a href="files/gds2pov_lnx86_64_0.7.1.tar.gz">Linux x86_64</a> (74.89B)</li>
+<li><a href="files/gds2pov_solsparc32_0.7.1.tar.gz">Solaris Sparc (32 bit executable)</a> (76KB)</li>
+<li><a href="files/gds2pov_solsparc64_0.7.1.tar.gz">Solaris Sparc (64 bit executable)</a> (78KB)</li>
+<li><a href="files/gds2pov_hpux_pa_risc_0.7.1.tar.gz">HP-UX PA-RISC</a> (79.4KB)</li>
+<li><a href="files/gds2pov_fbsd_x86_0.7.1.tar.gz">FreeBSD x86</a> (73.5KB)</li>
+<!-- <li><a href="files/gds2pov__0.7.tar.gz"></a> (KB)</li> -->
 </ul>
 
 <h2>License</h2>
@@ -45,6 +54,10 @@ at some point.</p>
 </p>
 
 <h2>Changes</h2>
+<p>Since 0.7:</p>
+<ul>
+<li>Fixed command line parsing problem. Thanks to S. Lin for spotting the problem.</li>
+</ul>
 <p>Since 0.6:</p>
 <ul>
 <li>Added option to specify the top cell name as suggested by Markus Dorn.</li>
