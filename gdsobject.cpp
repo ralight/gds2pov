@@ -549,7 +549,7 @@ void GDSObject::AddPrism(float Height, float Thickness, int Points, char *LayerN
 
 	NewPrism->LayerName = new char[strlen(LayerName)+1];
 	strcpy(NewPrism->LayerName, LayerName);
-=	NewPrism->Coords = new Point[Points];
+	NewPrism->Coords = new Point[Points];
 	NewPrism->Height = Height;
 	NewPrism->Thickness = Thickness;
 	NewPrism->Points = Points;

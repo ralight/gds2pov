@@ -10,7 +10,7 @@
 </head><body>
 
 <div>
-<h1>gds2pov v0.7.2</h1>
+<h1>gds2pov v0.7.3</h1>
 <h2>What is gds2pov?</h2>
 <p>GDS2POV is a program to take a GDS2 layout file and output a POV-Ray scene 
 description file of the GDS2 data. This allows the creation of attractive 3D pictures of a layout.</p>
@@ -25,13 +25,13 @@ from <a href="http://www.povray.org/">http://www.povray.org/</a></p>
 <p>gds2pov is currently available in binary format for Windows (x86), Linux (x86, x86_64), Solaris (Sparc), FreeBSD (x86) and HP-UX (PA-RISC). It should compile on just about anything though. I don't have access to other types of machines. If you want it for your machine, get in touch.</p>
 
 <ul>
-<li><a href="files/gds2pov_win32_0.7.2.zip">Windows</a> (97KB)</li>
-<li><a href="files/gds2pov_lnx86_0.7.2.tar.gz">Linux x86</a> (73KB)</li>
-<li><a href="files/gds2pov_lnx86_64_0.7.2.tar.gz">Linux x86_64</a> (74.9KB)</li>
-<li><a href="files/gds2pov_solsparc32_0.7.2.tar.gz">Solaris Sparc (32 bit executable)</a> (75.6KB)</li>
-<li><a href="files/gds2pov_solsparc64_0.7.2.tar.gz">Solaris Sparc (64 bit executable)</a> (77.5KB)</li>
-<li><a href="files/gds2pov_hpux_pa_risc_0.7.2.tar.gz">HP-UX PA-RISC</a> (79.1KB)</li>
-<li><a href="files/gds2pov_fbsd_x86_0.7.2.tar.gz">FreeBSD x86</a> (73.1KB)</li>
+<li><a href="files/gds2pov_win32_0.7.3.zip">Windows</a> (97.1KB)</li>
+<li><a href="files/gds2pov_lnx86_0.7.3.tar.gz">Linux x86</a> (73KB)</li>
+<li>Linux x86_64 (not currently available) (xx.xKB)</li>
+<li><a href="files/gds2pov_solsparc32_0.7.3.tar.gz">Solaris Sparc (32 bit executable)</a> (75.7KB)</li>
+<li><a href="files/gds2pov_solsparc64_0.7.3.tar.gz">Solaris Sparc (64 bit executable)</a> (77.8KB)</li>
+<li><a href="files/gds2pov_hpux_pa_risc_0.7.3.tar.gz">HP-UX PA-RISC</a> (79.3KB)</li>
+<li><a href="files/gds2pov_fbsd_x86_0.7.3.tar.gz">FreeBSD x86</a> (73.3KB)</li>
 <!-- <li><a href="files/gds2pov__0.7.tar.gz"></a> (KB)</li> -->
 </ul>
 
@@ -51,6 +51,12 @@ at some point.</p>
 <a href="images/fullexample.jpg"><img src="images/thumbs/t_fullexample.jpg" width="101" height="78" alt="Full Example"/></a>  
 <a href="images/complex.jpg"><img src="images/thumbs/t_complex.jpg" width="101" height="76" alt="Complex Example"/></a>  </p>
 <h2>Changes</h2>
+<p>Since 0.7.2:</p>
+<ul>
+<li>Fixed occasional problem with invalid characters being printed in layer names. Thanks to Scott Lin.</li>
+<li>Fixed boundary calculation when an SREF only contained other SREFs. Thanks to Scott Lin.</li>
+<li>SREF boundaries are now output when the -v option is given.</li>
+</ul>
 <p>Since 0.7.1:</p>
 <ul>
 <li>Fixed texture definition problem under Windows.</li>
