@@ -175,7 +175,7 @@ Green: 0.75
 Blue: 0.75
 Filter: 0
 Metal: 0
-Show: 0
+Show: 1
 LayerEnd
 
 LayerStart: MET4
@@ -187,7 +187,7 @@ Green: 0
 Blue: 1
 Filter: 0
 Metal: 1
-Show: 0
+Show: 1
 LayerEnd
 
 LayerStart: TEXT
@@ -209,7 +209,7 @@ Thickness: 280
 Red: 0.4
 Green: 0.7
 Blue: 0.08
-Filter: 0
+Filter: 0.8
 Metal: 0
 Show: 1
 LayerEnd

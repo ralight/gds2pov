@@ -38,8 +38,26 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 			Parse();
 
 			OutputPOVHeader();
-			for(int i=Objects->GetCount()-1; i>=0; i--){
-				Objects->GetObject(i)->OutputToFile(optr);
+
+			/* FIXME - need a better solution than this.
+			**			all this does is to output the objects
+			**			that have no SREFs or AREFs first and
+			**			hope that the rest of the hierarchy works
+			**			out ok.
+			**		It is also inefficient with multiple calls to
+			**			GetObject.
+			*/
+
+			int i;
+			for(i=Objects->GetCount()-1; i>=0; i--){
+				if(!Objects->GetObject(i)->HasASRef()){
+					Objects->GetObject(i)->OutputToFile(optr);
+				}
+			}
+			for(i=Objects->GetCount()-1; i>=0; i--){
+				if(Objects->GetObject(i)->HasASRef()){
+					Objects->GetObject(i)->OutputToFile(optr);
+				}
 			}
 			fprintf(optr, "object { str_%s }\n", Objects->GetObject(0)->GetName());
 
@@ -89,9 +107,9 @@ void GDSParse::OutputPOVHeader()
 		}
 
 		CameraPosition cp;
-		cp = cpTopRight;
+		cp = cpCentre;
 
-		float modifier = (float)1.2;
+		float modifier = (float)1.0;
 
 		switch(cp){
 			case cpCentre:

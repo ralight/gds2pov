@@ -124,6 +124,7 @@ public:
 
 	char *GetName();
 	void OutputToFile(FILE *fptr);
+	int HasASRef();
 
 	struct _Boundary *GetBoundary(struct ObjectList *);
 };

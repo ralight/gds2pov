@@ -713,3 +713,8 @@ void GDSObject::SetPathRotation(float X, float Y, float Z)
 		LastPath->Rotate.Z = Z;
 	}
 }
+
+int GDSObject::HasASRef()
+{
+	return (LastARef || LastSRef);
+}
