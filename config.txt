@@ -1,0 +1,123 @@
+# This file describes the arrangement of the scene - where the camera will be placed and where it will 
+# look at, as well as any light sources.
+# Global settings can also be set here.
+# Lines with the first character as a # are comments.
+#
+# Global settings
+# ===============
+# 
+# Only one global block is supported of the following format:
+#
+# Use Ambient to specify the amount of ambient light in the scene. 1.0 is the default if not specified. 
+# 1.2 gives reasonable results if no other lights are specified.
+#
+# ProcessFile sets the file from which the process configuration will be read. If it is not specified, 
+# process.txt is used as the default.
+# Note that if the -p switch is used with gds2pov it will override the ProcessFile setting.
+#
+# StartGlobal
+# Ambient: 1.0
+# ProcessFile: process.txt
+# EndGlobal
+#
+#
+# Positions
+# =========
+#
+# Position blocks are used for the camera and the lights. You can define the position of the item with one
+# of the following keywords:
+#
+# Centre
+# TopLeft
+# TopRight
+# BottomLeft
+# BottomRight
+#
+# These are defined with respect to the way you view your layout. TopLeft is the top left of your layout as 
+# you view it in your editor.
+#
+# The item will by default be placed at the height such that if it were the camera in the centre looking down 
+# on the layout it would be able to see the entire layout.
+#
+# Note also that the Centre, TopLeft etc. positions will be added to the start of the POV file as comments to
+# make hand modifying easier.
+#
+# You can also specify a modifier for each dimension in the position. The position will be multiplied by this 
+# modifier. So, if you want something very close to the surface you could specify:
+#
+# ZMod: 0.1
+#
+# X and Y are the dimensions you use on the screen. Z goes into/out of your screen. Negative values are allowed!
+#
+# The default value is 1.0 for modifiers.
+#
+#
+# Camera Position
+# ===============
+#
+# Only one camera position is allowed!
+# If none is specified, the camera will be placed in the Centre with all modifiers equal to 1.0.
+#
+# StartPosition
+# Type: Camera
+# Position: Centre
+# XMod: 1.0
+# YMod: 1.0
+# ZMod: 1.0
+# EndPosition
+#
+#
+# Look At Position
+# ================
+#
+# This position defines where the camera will look. Only one Look At position is allowed!
+# If none is specified, the camera will look at the Centre with the Z modifier equal to 0.0.
+#
+# StartPosition
+# Type: LookAt
+# Position: Centre
+# XMod: 1.0
+# YMod: 1.0
+# ZMod: 0.0
+# EndPosition
+#
+#
+# Light Positions
+# ===============
+#
+# This type of position defines any additional lights. All lights are white. Any number of lights can be 
+# specified, including none.
+#
+# StartPosition
+# Type: Light
+# Position: TopLeft
+# XMod: 1.0
+# YMod: 1.0
+# ZMod: 1.0
+# EndPosition
+
+StartPosition
+Type: Camera
+Position: Centre
+XMod: 1.0
+YMod: 1.0
+ZMod: 1.0
+EndPosition
+
+
+StartPosition
+Type: LookAt
+Pos: Centre
+XMod: 1.0
+YMod: 1.0
+ZMod: 0.0
+EndPosition
+
+
+StartPosition
+Type: Light
+Pos: TopRight
+XMod: 1
+YMod: 1
+ZMod: 0.1
+EndPosition

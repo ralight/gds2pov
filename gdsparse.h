@@ -57,6 +57,7 @@ private:
 	FILE *iptr;
 	FILE *optr;
 	class GDSProcess *process;
+	class GDSConfig *config;
 	
 	short recordlen;
 
@@ -95,7 +96,7 @@ private:
 	void OutputPOVHeader();
 	void RecursiveOutput(class GDSObject *Object, FILE *optr);
 public:
-	GDSParse (char *infile, char *outfile, char *processfile);
+	GDSParse (char *infile, char *outfile, char *configfile, char *processfile);
 	~GDSParse ();
 };
 

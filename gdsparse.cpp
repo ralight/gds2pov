@@ -3,11 +3,12 @@
 #include <math.h>
 
 #include "gdsparse.h"
+#include "config_cfg.h"
 #include "process_cfg.h"
 #include "gds_globals.h"
 #include "gds2pov.h"
 
-GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
+GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *processfile)
 {
 	iptr = NULL;
 	optr = NULL;
@@ -28,7 +29,35 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 	currentpathtype = 0;
 	currentdatatype = 0;
 
+	process = NULL;
+	config = NULL;
+
 	mirror=0;
+
+	if(configfile){
+		config = new GDSConfig(configfile);
+	}else{
+		config = new GDSConfig(); // Start with default positions
+	}
+	//if(){
+	//	printf("
+	// return'
+	//}
+
+	/* 
+	** Order of precedence for process.txt:
+	** -p switch (given as an argument to this function)
+	** Specified in config file
+	** Use process.txt if none others specified.
+	*/
+	if(processfile == NULL){
+		if(config->GetProcessFile()!=NULL){
+			processfile = config->GetProcessFile();
+		}else{
+			processfile = new char[13];
+			strncpy(processfile, "process.txt", strlen("process.txt"));
+		}
+	}
 
 	process = new GDSProcess(processfile);
 	if(process->LayerCount()==0){
@@ -67,6 +96,12 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 
 GDSParse::~GDSParse ()
 {
+	if(config){
+		delete config;
+	}
+	if(process){
+		delete process;
+	}
 	if(iptr){
 		fclose(iptr);
 	}
