@@ -1,9 +1,14 @@
 # Define LINUX or SOLARIS as appropriate
 #COMPILE=g++ -Wall 
-#COMPILE=g++ -Wall -DLINUX
-COMPILE=g++ -Wall -pg -fprofile-arcs -ftest-coverage -DLINUX
+COMPILE=g++ -Wall -DLINUX -O2 -ggdb
+#COMPILE=g++ -Wall -pg -fprofile-arcs -ftest-coverage -DLINUX
 
 all : run
+
+help : targets
+
+targets:
+	echo "All gds2pov clean clean_profile run test bench"
 
 clean : clean_gds2pov
 
@@ -34,6 +39,9 @@ gds_globals.o : gds_globals.h gds_globals.cpp
 clean_gds2pov :
 	rm -f gds2pov
 	rm -f *.o
+
+clean_profile :
+	rm -f *.bb *.bbg *.da
 
 run : gds2pov
 	./gds2pov layers.gds layers.pov -v

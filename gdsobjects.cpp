@@ -105,6 +105,7 @@ struct _Boundary *GDSObjects::GetBoundary()
 		struct _Boundary *object_bound;
 
 		while(objectlist->Prev){
+			printf("\nNew objectlist\n");
 			object_bound = objectlist->Object->GetBoundary(FirstObject);
 
 			if(object_bound->XMax > Boundary->XMax){
@@ -122,6 +123,8 @@ struct _Boundary *GDSObjects::GetBoundary()
 
 			objectlist = objectlist->Prev;
 		}
+		printf("\nLast objectlist\n");
+		printf("olname=%s\n", objectlist->Object->GetName());
 		object_bound = objectlist->Object->GetBoundary(FirstObject);
 
 		if(object_bound->XMax > Boundary->XMax){

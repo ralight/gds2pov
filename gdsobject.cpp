@@ -703,6 +703,12 @@ void GDSObject::SetARefRotation(float X, float Y, float Z)
 
 struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 {
+	printf("Getting boundary for %s", this->Name);
+	if(GotBoundary){
+		printf(" (gb=true)\n");
+	}else{
+		printf(" (gb=false)\n");
+	}
 	if(GotBoundary){
 		return &Boundary;
 	}
@@ -765,15 +771,16 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		SRefElement *sref = &dummysref;
 
 		struct ObjectList *object;
-		dummyobject.Prev = objectlist;
+		dummyobject.Next = objectlist;
 		struct _Boundary *NewBound;
 
 		while(sref->Next){
 			sref = sref->Next;
+			printf("\tProcessing sref %s\n", sref->Name);
 			object = &dummyobject;
 
-			while(object->Prev){
-				object = object->Prev;
+			while(object->Next){
+				object = object->Next;
 				if(strncmp(object->Object->GetName(), sref->Name, strlen(sref->Name))==0){
 					NewBound = object->Object->GetBoundary(objectlist);
 					if(sref->X + NewBound->XMax > Boundary.XMax){
@@ -806,6 +813,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		struct _Boundary *NewBound;
 		while(aref->Next){
 			aref = aref->Next;
+			printf("\tProcessing aref %s\n", aref->Name);
 			object = &dummyobject;
 			while(object->Next){
 				object = object->Next;
