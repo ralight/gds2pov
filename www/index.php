@@ -1,8 +1,9 @@
 <?php
-	require("/home/atchoo/php/logging.php");
-	dolog();
-	print("<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n");
+ 	require("/home/atchoo/php/logging.php");
+ 	dolog();
+ 	print("<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n");
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
 <html><head><title>gds2pov</title>
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -16,14 +17,12 @@ description file of the GDS2 data. This allows the creation of attractive 3D pic
 <p>Look at an example (click to enlarge):</p>
 <p>
 <a href="images/example_2D.png"><img src="images/thumbs/t_example_2D.png" width="100" height="76" alt="2D Example"/></a> 
-<a href="images/example_3D.png"><img src="images/thumbs/t_example_3D.png" width="100" height="76" alt="3D Example"/></a> 
-</p>
+<a href="images/example_3D.png"><img src="images/thumbs/t_example_3D.png" width="100" height="76" alt="3D Example"/></a>  </p>
 <p>POV-Ray is a completely free, cross platform ray tracer. It can be obtained 
 from <a href="http://www.povray.org/">http://www.povray.org/</a></p>
 
 <h2>Download</h2>
-<p>gds2pov is currently available in binary format for Windows (x86), Linux (x86, x86_64), Solaris (Sparc), FreeBSD (x86) and HP-UX (PA-RISC). It should compile on just about anything though.
-I don't have access to other types of machines. If you want it for your machine, get in touch.</p>
+<p>gds2pov is currently available in binary format for Windows (x86), Linux (x86, x86_64), Solaris (Sparc), FreeBSD (x86) and HP-UX (PA-RISC). It should compile on just about anything though. I don't have access to other types of machines. If you want it for your machine, get in touch.</p>
 
 <ul>
 <li><a href="files/gds2pov_win32_0.7.2.zip">Windows</a> (97KB)</li>
@@ -49,10 +48,8 @@ at some point.</p>
 <p>Please forgive - these images have been resized and saved as jpg to save on file size. It hasn't done them much good!</p>
 <p>
 <a href="images/look_down.jpg"><img src="images/thumbs/t_look_down.jpg" width="101" height="76" alt="Look Down"/></a> 
-<a href="images/fullexample.jpg"><img src="images/thumbs/t_fullexample.jpg" width="101" height="78" alt="Full Example"/></a> 
-<a href="images/complex.jpg"><img src="images/thumbs/t_complex.jpg" width="101" height="76" alt="Complex Example"/></a> 
-</p>
-
+<a href="images/fullexample.jpg"><img src="images/thumbs/t_fullexample.jpg" width="101" height="78" alt="Full Example"/></a>  
+<a href="images/complex.jpg"><img src="images/thumbs/t_complex.jpg" width="101" height="76" alt="Complex Example"/></a>  </p>
 <h2>Changes</h2>
 <p>Since 0.7.1:</p>
 <ul>
@@ -66,9 +63,7 @@ at some point.</p>
 <p>Since 0.6:</p>
 <ul>
 <li>Added option to specify the top cell name as suggested by Markus Dorn.</li>
-<li>Added option to output a bounding box the same size and shape as the layout 
-  instead of the layout. This renders almost instantaneously so can be used to
-  place the camera more effectively.</li>
+<li>Added option to output a bounding box the same size and shape as the layout instead of the layout. This renders almost instantaneously so can be used to place the camera more effectively.</li>
 <li>Empty cells no longer break the boundary detection.</li>
 <li>Fixed bug causing the wrong cell to be selected in boundary calculation which was leading to crashes in certain situations (Guenter Grau).</li>
 </ul>
@@ -79,17 +74,13 @@ at some point.</p>
 <li>Invalid characters in structure names are replaced with _. Thanks to Guenter Grau for highlighting this problem.</li>
 <li>Support for offset and variable paths added. Octagonal paths are treated as offset paths.</li>
 <li>XY records for unsupported elements (BOX, NODE) will now be parsed completely so the whole file can be parsed.</li>
-<li>If Datatype is not specified in a layer definition in the process file, the 
-  layer definition will be used for all datatypes in that layer. Thanks to 
-  Guenter Grau for this suggestion.</li>
+<li>If Datatype is not specified in a layer definition in the process file, the layer definition will be used for all datatypes in that layer. Thanks to Guenter Grau for this suggestion.</li>
 </ul>
-<h2>Contact</h2>
-<p>gds2pov was written by Roger Light. Questions, bug reports, suggestions 
-or requests for new features (especially if they concern the incomplete 
-support for the GDS2 format) are very welcome.</p>
 
+<h2>Contact</h2>
+<p>gds2pov was written by Roger Light. Questions, bug reports, suggestions or requests for new features (especially if they concern the incomplete  support for the GDS2 format) are very welcome.</p>
 <p>I am also very interested in seeing any pretty pictures made with gds2pov!</p>
 
 <p>Contact me on roger_atchoo_org. Replace the _ with @ and . respectively.</p>
 </div>
-</body></html>
+</body></html> 
