@@ -17,3 +17,5 @@
 - Detect text for boundary calculation
 - Convert Boundaries into mesh2 objects?
 - Check non-orthogonal paths are correct
+- Group unused gds2 elements together based on data type so that parsing of a
+  file can be done ignoring the unsupported elements.
