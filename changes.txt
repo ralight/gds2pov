@@ -1,5 +1,11 @@
-version 0.7 (28th September 2004)
-==============================
+Version 0.7.1 (16th November 2004)
+==================================
+
+- Fixed command line parsing problem. Thanks to S. Lin for spotting the
+  problem.
+
+Version 0.7 (28th September 2004)
+=================================
 
 - Added option to specify the top cell name as suggested by Markus Dorn.
 - Added option to output a bounding box the same size and shape as the layout 

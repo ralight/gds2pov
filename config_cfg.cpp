@@ -45,7 +45,7 @@ GDSConfig::GDSConfig(char *configfile)
 	char line[1024];
 	int current_line = 0;
 
-	PosType current_type;
+	PosType current_type = ptNone;
 
 	FILE *cptr = NULL;
 

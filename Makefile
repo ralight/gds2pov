@@ -1,6 +1,6 @@
 # Define LINUX or SOLARIS as appropriate
 #COMPILE=g++ -Wall 
-COMPILE=g++ -Wall -DLINUX -O2 -ggdb
+COMPILE=g++ -Wall -DLINUX -O2 
 #COMPILE=g++ -Wall -pg -fprofile-arcs -ftest-coverage -DLINUX
 
 all : run
@@ -54,3 +54,15 @@ test : run
 bench : gds2pov
 	./gds2pov dh_adc.gds dh_adc.pov
 	gprof ./gds2pov | more
+
+dist : gds2pov
+	strip gds2pov
+	mkdir -p dist/gds2pov
+	cp -f gds2pov dist/gds2pov/
+	cp -f example_2D.png dist/gds2pov/
+	cp -f example_3D.png dist/gds2pov/
+	cp -f changes.txt dist/gds2pov/
+	cp -f example.gds dist/gds2pov/
+	cp -f example_config.txt dist/gds2pov/
+	cp -f example_process.txt dist/gds2pov/
+	cp -f readme.txt dist/gds2pov/
