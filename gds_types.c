@@ -128,7 +128,7 @@ short GetTwoByteSignedInt(FILE *fptr, short *length)
 char *GetAsciiString(FILE *fptr, short *length)
 {
 	char *str=NULL;
-
+	
 	if(length && (*length)>0){
 		(*length) += (*length)%2; /* Make sure length is even */
 		str = (char *)malloc((*length)+1);
@@ -142,7 +142,9 @@ char *GetAsciiString(FILE *fptr, short *length)
 		str[(*length)] = 0;
 		(*length) = 0;
 	}
-
+	if(!str){
+		printf("eek!\n");
+	}
 	return str;
 }
 

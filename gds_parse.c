@@ -17,6 +17,9 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 		recordlen = GetTwoByteSignedInt(infile, NULL);
 		fread(&recordtype, 1, 1, infile);
 		fread(&datatype, 1, 1, infile);
+		if(!recordlen){
+			printf("recordtype=%d, datatype=%d\n", recordtype, datatype);
+		}
 		recordlen -= 4;
 		switch(recordtype){
 			case rnHeader:
@@ -35,12 +38,15 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 				/* Empty, no need to parse */
 				break;
 			case rnBgnStr:
+				debug_printf("BGNSTR");
 				ParseBgnStr(infile, outfile, recordlen);
 				break;
 			case rnStrName:
+				debug_printf("STRNAME");
 				ParseStrName(infile, outfile, recordlen);
 				break;
 			case rnEndStr:
+				debug_printf("ENDSTR");
 				fprintf(outfile, "}\n");
 				/* Empty, no need to parse */
 				break;
@@ -65,8 +71,8 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 				currentelement = elText;
 				break;
 			case rnLayer:
-				debug_printf("LAYER");
 				currentlayer = GetTwoByteSignedInt(infile, &recordlen);
+				//debug_printf("LAYER (%ld)\n", currentlayer);
 				break;
 			case rnDataType:
 				ParseDataType(infile, outfile, recordlen);
@@ -85,14 +91,16 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 				ParseXY(infile, outfile, recordlen, all_layers, layer_count);
 				break;
 			case rnEndEl:
+				debug_printf("ENDEL");
 				/* Empty, no need to parse */
 				break;
 			case rnColRow:
-				printf("COLROW\n");
+				debug_printf("COLROW\n");
 				arraycols = GetTwoByteSignedInt(infile, &recordlen);
 				arrayrows = GetTwoByteSignedInt(infile, &recordlen);
 				break;
 			case rnSName:
+				debug_printf("ENDEL");
 				ParseSName(infile, outfile, recordlen);
 				break;
 			case rnPathType:
@@ -110,10 +118,14 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 			case rnString:
 				printf("STRING\n");
 				//FIXME
+				if(textstring){
+					free(textstring);
+					textstring = NULL;
+				}
 				textstring = GetAsciiString(infile, &recordlen);
 				break;
 			case rnSTrans:
-				printf("STRANS\n");
+				debug_printf("STRANS\n");
 				//FIXME
 				/*currentpresentation = */
 				currentstrans = GetTwoByteSignedInt(infile, &recordlen);
@@ -237,7 +249,8 @@ void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 				printf("CONTACT\n");
 				break;
 			default:
-				printf("Unknown record type (%d)", recordtype);
+				printf("Unknown record type (%d) at position %ld.", recordtype, ftell(infile));
+
 				return;
 				break;
 	
@@ -426,6 +439,8 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 					prevY = Y;
 					Y = nextY;
 				}
+			}else{
+				printf("!CurrentWidth\n");
 			}
 			if(all_layers[thislayer].height && all_layers[thislayer].show){
 				fprintf(outfile, " texture { pigment { rgb %s }", all_layers[thislayer].colour);
@@ -441,7 +456,6 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 		case elSRef:
 			X = units * (float)GetFourByteSignedInt(infile, &recordlen);
 			Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
-			printf("flip (%d) %d, %d\n", currentstrans & 0x8000, currentstrans, 0x8000);
 			if((unsigned short)(currentstrans & 0x8000) == (unsigned short)0x8000){
 				printf("SREF objects not supported when flipped/mirrored.\n");
 			}else{

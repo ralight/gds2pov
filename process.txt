@@ -1,3 +1,13 @@
+LayerStart: ERROR
+Layer: 0
+Height: 0
+Thickness: 0
+Colour <0, 0, 0>
+Metal: 0
+Transparent: 0
+Show: 0
+LayerEnd
+
 LayerStart: NTUB
 Layer: 5
 Height: -2000
@@ -46,6 +56,16 @@ Colour: <1, 0, 1>
 Metal: 0
 Transparent: 0
 Show: 1
+LayerEnd
+
+LayerStart: HRES
+Layer: 29
+Height: 0
+Thickness: 0
+Colour: <0, 0, 0>
+Metal: 0
+Transparent: 0
+Show: 0
 LayerEnd
 
 LayerStart: POLY2
@@ -146,4 +166,24 @@ Colour: <1, 1, 1>
 Metal: 0
 Transparent: 0
 Show: 1
+LayerEnd
+
+LayerStart: RESDEF
+Layer: 62
+Height: 0
+Thickness: 0
+Colour: <0, 0, 0>
+Metal: 0
+Transparent: 0
+Show: 0
+LayerEnd
+
+LayerStart: ERROR
+Layer: 63
+Height: 0
+Thickness: 0
+Colour <0, 0, 0>
+Metal: 0
+Transparent: 0
+Show: 0
 LayerEnd
