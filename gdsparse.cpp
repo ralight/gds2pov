@@ -143,7 +143,7 @@ GDSParse::~GDSParse ()
 
 void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *optr)
 {
-	if(Object->GetIsOutput()){
+	if(!Object || Object->GetIsOutput()){
 		return;
 	}
 	if(Object->HasASRef()){

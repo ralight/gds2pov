@@ -1,6 +1,6 @@
 # Define LINUX or SOLARIS as appropriate
 #COMPILE=g++ -Wall 
-COMPILE=g++ -Wall -DLINUX -O2 
+COMPILE=g++ -Wall -DLINUX -O2 -ggdb
 GDS2POV_VERSION=0.7.2
 DISTDIR=release/gds2pov_${GDS2POV_VERSION}
 #COMPILE=g++ -Wall -pg -fprofile-arcs -ftest-coverage -DLINUX
@@ -71,3 +71,6 @@ dist : gds2pov
 	cp -f readme.txt ${DISTDIR}/
 	tar -cf ${DISTDIR}.tar ${DISTDIR}
 	gzip ${DISTDIR}.tar
+
+destroy : gds2pov
+	./gds2pov /dev/random random.pov -c config.txt -p process.txt
