@@ -568,7 +568,7 @@ void GDSParse::ParseXYPath()
 	thislayer = process->GetLayer(currentlayer, currentdatatype);
 
 	if(thislayer==NULL){
-		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
+		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", currentlayer, currentdatatype);
 		printf("\tIgnoring this path\n.");
 		while(recordlen){
 			GetFourByteSignedInt();
@@ -611,7 +611,7 @@ void GDSParse::ParseXYBoundary()
 	thislayer = process->GetLayer(currentlayer, currentdatatype);
 
 	if(thislayer==NULL){
-		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
+		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", currentlayer, currentdatatype);
 		printf("\tIgnoring this boundary\n.");
 		while(recordlen){
 			GetFourByteSignedInt();
