@@ -5,9 +5,8 @@ This release
 - Documentation (usage)
 - Code coverage testing
 - Incorrect process/config file testing
-- Mag support
 
-Tasks: 5
+Tasks: 4
 
 
 Next release

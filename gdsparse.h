@@ -47,6 +47,7 @@ private:
 	unsigned short currentstrans;
 	float currentangle;
 	short currentdatatype;
+	float currentmag;
 
 	char *sname;
 	short arrayrows, arraycols;

@@ -302,7 +302,10 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
 			while(sref->Next){
 				sref = sref->Next;
 
-				fprintf(fptr, "object{str_%s ", sref->Name);				
+				fprintf(fptr, "object{str_%s ", sref->Name);
+				if(sref->Mag!=1.0){
+					fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
+				}
 				if(sref->Flipped){
 					fprintf(fptr, "scale <1,-1,1> ");
 				}
@@ -326,6 +329,9 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
 				if(text->String){
 					fprintf(fptr, "text{ttf \"arial.ttf\" \"%s\" 0.2,0.1*x ", text->String);
 					fprintf(fptr, "texture{pigment{rgb <%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
+					if(text->Mag!=1.0){
+						fprintf(fptr, "scale <%.2f,%.2f,1> ", text->Mag, text->Mag);
+					}
 					if(text->Flipped){
 						fprintf(fptr, "scale <1,-1,1> ");
 					}
@@ -362,6 +368,9 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
 						fprintf(fptr, "\t#declare rowcount = 0;");
 						fprintf(fptr, "\t#while (rowcount < rows)\n");
 						fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
+						if(aref->Mag!=1.0){
+							fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
+						}
 						if(aref->Flipped){
 							fprintf(fptr, "scale <1,-1,1> ");
 						}
@@ -470,7 +479,7 @@ void GDSObject::SetPrismRotation(float X, float Y, float Z)
 	}
 }
 
-void GDSObject::AddText(float X, float Y, float Z, int Flipped)
+void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag)
 {
 	TextElement *NewText = new TextElement;
 
@@ -492,6 +501,7 @@ void GDSObject::AddText(float X, float Y, float Z, int Flipped)
 	NewText->Rotate.Y = 0.0;
 	NewText->Rotate.Z = 0.0;
 	NewText->Flipped = Flipped;
+	NewText->Mag = Mag;
 }
 
 void GDSObject::SetTextColour(float R, float G, float B, float F, int Metal)
@@ -525,7 +535,7 @@ void GDSObject::SetTextRotation(float X, float Y, float Z)
 	}
 }
 
-void GDSObject::AddSRef(char *Name, float X, float Y, int Flipped)
+void GDSObject::AddSRef(char *Name, float X, float Y, int Flipped, float Mag)
 {
 	SRefElement *NewSRef = new SRefElement;
 
@@ -548,6 +558,7 @@ void GDSObject::AddSRef(char *Name, float X, float Y, int Flipped)
 	NewSRef->Rotate.Y = 0.0;
 	NewSRef->Rotate.Z = 0.0;
 	NewSRef->Flipped = Flipped;
+	NewSRef->Mag = Mag;
 
 	SRefCount++;
 }
@@ -561,7 +572,7 @@ void GDSObject::SetSRefRotation(float X, float Y, float Z)
 	}
 }
 
-void GDSObject::AddARef(char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped)
+void GDSObject::AddARef(char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag)
 {
 	ARefElement *NewARef = new ARefElement;
 
@@ -590,6 +601,7 @@ void GDSObject::AddARef(char *Name, float X1, float Y1, float X2, float Y2, floa
 	NewARef->Rotate.Y = 0.0;
 	NewARef->Rotate.Z = 0.0;
 	NewARef->Flipped = Flipped;
+	NewARef->Mag = Mag;
 
 	ARefCount++;
 }

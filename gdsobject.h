@@ -42,6 +42,7 @@ typedef struct _TextElement {
 	float X;
 	float Y;
 	float Z;
+	float Mag;
 	ElementColour Colour;
 	char *String;
 	Transform Rotate;
@@ -52,6 +53,7 @@ typedef struct _SRefElement {
 	struct _SRefElement *Next;
 	float X;
 	float Y;
+	float Mag;
 	char *Name;
 	Transform Rotate;
 	int Flipped;
@@ -65,6 +67,7 @@ typedef struct _ARefElement {
 	float Y2;
 	float X3;
 	float Y3;
+	float Mag;
 	int Columns;
 	int Rows;
 	char *Name;
@@ -109,15 +112,15 @@ public:
 	void SetPrismColour(float R, float G, float B, float F, int Metal);
 	void SetPrismRotation(float X, float Y, float Z);
 
-	void AddText(float X, float Y, float Z, int Flipped);
+	void AddText(float X, float Y, float Z, int Flipped, float Mag);
 	void SetTextColour(float R, float G, float B, float F, int Metal);
 	void SetTextString(char *String);
 	void SetTextRotation(float X, float Y, float Z);
 
-	void AddSRef(char *Name, float X, float Y, int Flipped);
+	void AddSRef(char *Name, float X, float Y, int Flipped, float Mag);
 	void SetSRefRotation(float X, float Y, float Z);
 
-	void AddARef(char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped);
+	void AddARef(char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag);
 	void SetARefRotation(float X, float Y, float Z);
 
 	void AddPath(float Height, float Thickness, int Points, float Width);

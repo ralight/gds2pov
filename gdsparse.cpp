@@ -28,6 +28,7 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 	currentstrans = 0;
 	currentpathtype = 0;
 	currentdatatype = 0;
+	currentmag = 1.0;
 
 	process = NULL;
 	config = NULL;
@@ -397,14 +398,7 @@ void GDSParse::Parse()
 				currentstrans = GetTwoByteSignedInt();
 				break;
 			case rnMag:
-				if(!unsupported[rnMag]){
-					printf("Unsupported GDS2 record type: MAG\n");
-					unsupported[rnMag] = true;
-				}
-				//FIXME
-				while(recordlen){
-					GetEightByteReal();
-				}
+				currentmag = GetEightByteReal();
 				break;
 			case rnAngle:
 				currentangle = (float)GetEightByteReal();
@@ -800,6 +794,7 @@ void GDSParse::ParseXYPath()
 		currentpathtype = 0;
 		currentangle = 0.0;
 		currentdatatype = 0;
+		currentmag = 1.0;
 		return;
 	}
 
@@ -821,6 +816,7 @@ void GDSParse::ParseXYPath()
 	currentpathtype = 0;
 	currentangle = 0.0;
 	currentdatatype = 0;
+	currentmag = 1.0;
 }
 
 void GDSParse::ParseXYBoundary()
@@ -843,6 +839,7 @@ void GDSParse::ParseXYBoundary()
 		currentpathtype = 0;
 		currentangle = 0.0;
 		currentdatatype = 0;
+		currentmag = 1.0;
 		return;
 	}
 
@@ -869,6 +866,7 @@ void GDSParse::ParseXYBoundary()
 	currentpathtype = 0;
 	currentangle = 0.0;
 	currentdatatype = 0;
+	currentmag = 1.0;
 }
 
 void GDSParse::ParseXY()
@@ -888,7 +886,7 @@ void GDSParse::ParseXY()
 			Y = units * (float)GetFourByteSignedInt();
 
 			if(CurrentObject){
-				CurrentObject->AddSRef(sname, X, Y, Flipped);
+				CurrentObject->AddSRef(sname, X, Y, Flipped, currentmag);
 				if(currentangle){
 					CurrentObject->SetSRefRotation(0, -currentangle, 0);
 				}
@@ -905,7 +903,7 @@ void GDSParse::ParseXY()
 			Y = units * (float)GetFourByteSignedInt();
 
 			if(CurrentObject){
-				CurrentObject->AddARef(sname, firstX, firstY, secondX, secondY, X, Y, arraycols, arrayrows, Flipped);
+				CurrentObject->AddARef(sname, firstX, firstY, secondX, secondY, X, Y, arraycols, arrayrows, Flipped, currentmag);
 				if(currentangle){
 					CurrentObject->SetARefRotation(0, -currentangle, 0);
 				}
@@ -925,6 +923,7 @@ void GDSParse::ParseXY()
 				currentpathtype = 0;
 				currentangle = 0.0;
 				currentdatatype = 0;
+				currentmag = 1.0;
 				return;
 			}
 
@@ -933,7 +932,7 @@ void GDSParse::ParseXY()
 			Y = units * (float)GetFourByteSignedInt();
 
 			if(CurrentObject){
-				CurrentObject->AddText(X, Y, units*thislayer->Height, Flipped);
+				CurrentObject->AddText(X, Y, units*thislayer->Height, Flipped, currentmag);
 				CurrentObject->SetTextColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 				if(currentangle){
 					CurrentObject->SetTextRotation(0.0, -currentangle, 0.0);
@@ -945,6 +944,7 @@ void GDSParse::ParseXY()
 	currentpathtype = 0;
 	currentangle = 0.0;
 	currentdatatype = 0;
+	currentmag = 1.0;
 }
 
 short GDSParse::GetBitArray()
