@@ -1,13 +1,45 @@
+# Process configuration file for gds2pov
+#
+# Lines starting with a # are comments.
+#
+# This file *roughly* describes the AMS C35 process.
+#
+# This file consists of Layer entries in the following format:
+#
+# LayerStart: LayerName
+# Layer: LayerNumber (integer)
+# Datatype: (integer)
+# Height: (float, microns)
+# Thickness: (float, microns)
+# Red: (float, between 0,1 with 1 being full)
+# Green: (float, between 0,1 with 1 being full)
+# Blue: (float, between 0,1 with 1 being full)
+# Filter: (float, between 0,1 with 1 being full)
+# Metal: (boolean, 0 or 1)
+# Show: (boolean, 0 or 1)
+# LayerEnd
+#
+# Filter defines the transparency of the layer, with 1 being the most transparent.
+# Metal, when set to 1, will make the layer slightly reflective.
+# Show defines whether the layer is shown or not.
+#
+# The only compulsory items are LayerStart, Layer and LayerEnd. If any value is ommitted, the default will be used. The defaults are:
+#
+# Datatype: 0
+# Height: 0
+# Thickness: 0       (thickness of 0 means the layer will not be shown)
+# Red: 0.0
+# Green: 0.0
+# Blue: 0.0
+# Filter: 0.0
+# Metal: 0
+# Show: 0            (do *not* show by default)
+# 
+# 
+# If any layer is not listed in this file it will be ignored in the gds2 file.
+
 LayerStart: ERROR
 Layer: 0
-Height: 0
-Thickness: 0
-Red: 0
-Green: 0
-Blue: 0
-Filter: 0
-Metal: 0
-Show: 0
 LayerEnd
 
 LayerStart: NTUB
