@@ -3,6 +3,7 @@
 #include <math.h>
 
 
+#include "gds_globals.h"
 #include "gdsobject.h"
 #include "gdsobjects.h"
 #include "process_cfg.h"
@@ -24,7 +25,7 @@ GDSObject::GDSObject(char *NewName)
 	ARefCount = 0;
 
 	Name = new char[strlen(NewName)+1];
-	strncpy(Name, NewName, strlen(NewName)+1);
+	strcpy(Name, NewName);
 
 	GotBoundary = false;
 	Boundary.XMax = Boundary.YMax = -1000000.0;
@@ -547,8 +548,8 @@ void GDSObject::AddPrism(float Height, float Thickness, int Points, char *LayerN
 	}
 
 	NewPrism->LayerName = new char[strlen(LayerName)+1];
-	strncpy(NewPrism->LayerName, LayerName, strlen(LayerName));
-	NewPrism->LayerName[strlen(LayerName)] = '\0';
+	strcpy(NewPrism->LayerName, LayerName);
+//	NewPrism->LayerName[strlen(LayerName)-1] = '\0';
 	NewPrism->Coords = new Point[Points];
 	NewPrism->Height = Height;
 	NewPrism->Thickness = Thickness;
@@ -603,7 +604,8 @@ void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag, int V
 	}
 
 	NewText->LayerName = new char[strlen(LayerName)+1];
-	strncpy(NewText->LayerName, LayerName, strlen(LayerName));
+	strcpy(NewText->LayerName, LayerName);
+//	NewText->LayerName[strlen(LayerName)-1] = '\0';
 	NewText->X = X;
 	NewText->Y = Y;
 	NewText->Z = Z;
@@ -634,7 +636,7 @@ void GDSObject::SetTextString(char *String)
 			delete LastText->String;
 		}
 		LastText->String = new char[strlen(String)+1];
-		strncpy(LastText->String, String, strlen(String)+1);
+		strcpy(LastText->String, String);
 	}
 }
 
@@ -663,7 +665,7 @@ void GDSObject::AddSRef(char *Name, float X, float Y, int Flipped, float Mag)
 	}
 
 	NewSRef->Name = new char[strlen(Name)+1];
-	strncpy(NewSRef->Name, Name, strlen(Name)+1);
+	strcpy(NewSRef->Name, Name);
 	NewSRef->X = X;
 	NewSRef->Y = Y;
 	NewSRef->Rotate.X = 0.0;
@@ -700,7 +702,7 @@ void GDSObject::AddARef(char *Name, float X1, float Y1, float X2, float Y2, floa
 	}
 
 	NewARef->Name = new char[strlen(Name)+1];
-	strncpy(NewARef->Name, Name, strlen(Name)+1);
+	strcpy(NewARef->Name, Name);
 	NewARef->X1 = X1;
 	NewARef->Y1 = Y1;
 	NewARef->X2 = X2;
@@ -733,6 +735,11 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		return &Boundary;
 	}
 
+
+//	if(strcmp(Name, "ml_mixer_pad")==0){
+//		printf("\tFirst %s\t%.2f\t%.2f\t%.2f\t%.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
+//	}
+
 	struct ObjectList dummyobject;
 
 	if(FirstPrism){
@@ -760,6 +767,11 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		}
 	}
 
+//	if(strcmp(Name, "ml_mixer_pad")==0){
+//		printf("\tPost Prism %s\t%.2f\t%.2f\t%.2f\t%.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
+//	}
+
+
 	if(FirstPath){ /* FIXME - need to take width into account? */
 		Path dummypath;
 		dummypath.Next = FirstPath;
@@ -784,6 +796,10 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 			}
 		}
 	}
+
+//	if(strcmp(Name, "ml_mixer_pad")==0){
+//		printf("\tPost Path %s\t%.2f\t%.2f\t%.2f\t%.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
+//	}
 
 	if(FirstSRef){
 		SRefElement dummysref;
@@ -834,10 +850,10 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 //							}
 						}
 						if(sref->Y + NewBound->YMax > Boundary.YMax){
-							Boundary.XMax = sref->Y + NewBound->YMax;
+							Boundary.YMax = sref->Y + NewBound->YMax;
 						}
 						if(sref->Y - NewBound->YMin < Boundary.YMin){
-							Boundary.XMin = sref->Y - NewBound->YMin;
+							Boundary.YMin = sref->Y - NewBound->YMin;
 						}
 						break;
 					}
@@ -845,6 +861,11 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 			}
 		}
 	}
+
+//	if(strcmp(Name, "ml_mixer_pad")==0){
+//		printf("\tPost SREF %s\t%.2f\t%.2f\t%.2f\t%.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
+//	}
+
 
 	if(FirstARef){
 		ARefElement dummyaref;
@@ -888,6 +909,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		Boundary.XMax = Boundary.XMin = Boundary.YMax = Boundary.YMin = 0;
 	}
 
+	v_printf("%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
 	GotBoundary = true;
 
 	return &Boundary;
@@ -908,7 +930,8 @@ void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points,
 	}
 
 	NewPath->LayerName = new char[strlen(LayerName)+1];
-	strncpy(NewPath->LayerName, LayerName, strlen(LayerName));
+	strcpy(NewPath->LayerName, LayerName);
+	//NewPath->LayerName[strlen(LayerName)-1] = '\0';
 	NewPath->Type = PathType;
 	NewPath->Coords = new Point[Points];
 	NewPath->Height = Height;

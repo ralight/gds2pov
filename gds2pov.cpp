@@ -6,7 +6,7 @@
 #include "gds_globals.h"
 #include "process_cfg.h"
 
-#define VERSION "0.7.2"
+#define VERSION "0.7.3"
 
 extern bool verbose_output;
 

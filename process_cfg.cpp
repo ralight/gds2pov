@@ -355,7 +355,7 @@ void GDSProcess::AddLayer(struct ProcessLayer *NewLayer)
 
 	layer->Name = NULL;
 	layer->Name = new char[strlen(NewLayer->Name)+1];
-	strncpy(layer->Name, NewLayer->Name, strlen(NewLayer->Name)+1);
+	strcpy(layer->Name, NewLayer->Name);
 	layer->Layer = NewLayer->Layer;
 	layer->Datatype = NewLayer->Datatype;
 	layer->Height = NewLayer->Height;
