@@ -1,0 +1,139 @@
+LayerStart: NTUB
+Layer: 5
+Height: -2000
+Thickness: 2000
+Colour: <0, 0, 1>
+Metal: 0
+Transparent: 1
+Show: 1
+LayerEnd
+
+LayerStart: DIFF
+Layer: 10
+Height: 10
+Thickness: 10
+Colour: <0, 1, 1>
+Metal: 0
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: POLY1
+Layer: 20
+Height: 28
+Thickness: 280 
+Colour: <1, 1, 0>
+Metal: 0
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: NPLUS
+Layer: 23
+Height: -195
+Thickness: 200
+Colour: <0.5, 0.25, 0>
+Metal: 0
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: PPLUS
+Layer: 24
+Height: -195
+Thickness: 200
+Colour: <1, 0, 1>
+Metal: 0
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: POLY2
+Layer: 30
+Height: 0
+Thickness: 280
+Colour: <0, 0, 0>
+Metal: 0
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: CONT
+Layer: 34
+Height: 10
+Thickness: 1598 
+Colour: <0, 1, 0>
+Metal: 0
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET1
+Layer: 35
+Height: 1598
+Thickness: 665
+Colour: <1, 0, 0>
+Metal: 1
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: VIA1
+Layer: 36
+Height: 2263
+Thickness: 1000
+Colour: <1, 0.75, 1>
+Metal: 1
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET2
+Layer: 37
+Height: 3263
+Thickness: 640
+Colour: <1, 0.75, 0>
+Metal: 1
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: VIA2
+Layer: 38
+Height: 3903
+Thickness: 1000
+Colour: <1, 0.5, 0.5>
+Metal: 1
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET3
+Layer: 39
+Height: 4903
+Thickness: 925
+Colour: <0, 0.5, 0.5>
+Metal: 1
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: VIA3
+Layer: 41
+Height: 5828
+Thickness: 1000
+Colour: <1, 0.75, 0.75>
+Metal: 1
+Transparent: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET4
+Layer: 42
+Height: 6828
+Thickness: 925
+Colour: <0.75, 0, 1>
+Metal: 1
+Transparent: 0
+Show: 1
+LayerEnd

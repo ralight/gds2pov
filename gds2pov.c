@@ -5,6 +5,7 @@
 #include "gds_types.h"
 #include "gds_parse.h"
 #include "gds_globals.h"
+#include "process_cfg.h"
 
 char *libname;
 char *sname;
@@ -21,6 +22,8 @@ int main(int argc, char *argv[])
 {
 	FILE *infile=NULL;
 	FILE *outfile=NULL;
+	layers **all_layers=NULL;
+	int i, layer_count;
 
 	libname = NULL;
 	sname = NULL;
@@ -29,6 +32,28 @@ int main(int argc, char *argv[])
 		printf("Usage: gds2pov infile.gds outfile.pov\n");
 		return 0;
 	}
+
+	/* FOR TESTING ReadProcessFile */
+	infile = fopen("process.txt", "rt");
+	if(!infile){
+		printf("Unable to read %s\n", argv[1]);
+		return 0;
+	}
+	if(ReadProcessFile(infile, all_layers, &layer_count)==1){
+		if(all_layers){
+			for(i=0; i<layer_count; i++){
+				if(all_layers[i]){
+					free(all_layers[i]);
+				}
+			}
+			free(all_layers);
+		}
+	}
+
+	fclose(infile);
+	infile = NULL;
+	/* END FOR TESTING ReadProcessFile */
+
 
 	infile = fopen(argv[1], "rb");
 	if(!infile){
