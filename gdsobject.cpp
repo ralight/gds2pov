@@ -193,8 +193,8 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font)
 					switch(path->Type){
 						case 1:
 						case 2:
-							BgnExtn = 1.5*path->Width;
-							EndExtn = 1.5*path->Width;
+							BgnExtn = path->Width; /* Width has already been scaled to half */
+							EndExtn = path->Width;
 							break;
 						case 4:
 							BgnExtn = path->BgnExtn;
