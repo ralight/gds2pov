@@ -1,0 +1,171 @@
+# Test process file.
+#
+#
+
+LayerStart: NTUB
+Layer: 1
+Height: -2000
+Thickness: 2000
+Red: 0
+Green: 0
+Blue: 1
+Filter: 0.2
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: DIFF
+Layer: 2
+Height: 10
+Thickness: 10
+Red: 0
+Green: 1
+Blue: 1
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: POLY
+Layer: 3
+Height: 50
+Thickness: 300 
+Red: 1
+Green: 1
+Blue: 0
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: NPLUS
+Layer: 4
+Height: -200
+Thickness: 210
+Red: 0.5
+Green: 0.25
+Blue: 0
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: PPLUS
+Layer: 5
+Height: -205
+Thickness: 210
+Red: 1
+Green: 0
+Blue: 1
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: CONT
+Layer: 6
+Height: 10
+Thickness: 990 
+Red: 0
+Green: 1
+Blue: 0
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET1
+Layer: 7
+Height: 990
+Thickness: 1010
+Red: 1
+Green: 0
+Blue: 0
+Filter: 0
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: VIA1
+Layer: 8
+Height: 1990
+Thickness: 1010
+Red: 1
+Green: 0.75
+Blue: 1
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET2
+Layer: 9
+Height: 2990
+Thickness: 1010
+Red: 1
+Green: 0.75
+Blue: 0
+Filter: 0
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: VIA2
+Layer: 10
+Height: 3990
+Thickness: 1010
+Red: 1
+Green: 0.5
+Blue: 0.5
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET3
+Layer: 11
+Height: 4990
+Thickness: 1010
+Red: 0
+Green: 0.5
+Blue: 0.5
+Filter: 0
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: VIA3
+Layer: 12
+Height: 5990
+Thickness: 1010
+Red: 1
+Green: 0.75
+Blue: 0.75
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET4
+Layer: 13
+Height: 6990
+Thickness: 1010
+Red: 0.75
+Green: 0
+Blue: 1
+Filter: 0
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: TEXT
+Layer: 14
+Height: 8000
+Thickness: 10
+Red: 1
+Green: 1
+Blue: 1
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
