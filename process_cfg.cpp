@@ -57,6 +57,7 @@ GDSProcess::GDSProcess(char *processfile)
 	pptr = fopen(processfile, "rt");
 	
 	if(!pptr){
+		fprintf(stderr, "Unable to open process file \"%s\".\n", processfile);
 		Valid = false;
 		return;
 	}
