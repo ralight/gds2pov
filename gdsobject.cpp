@@ -549,8 +549,7 @@ void GDSObject::AddPrism(float Height, float Thickness, int Points, char *LayerN
 
 	NewPrism->LayerName = new char[strlen(LayerName)+1];
 	strcpy(NewPrism->LayerName, LayerName);
-//	NewPrism->LayerName[strlen(LayerName)-1] = '\0';
-	NewPrism->Coords = new Point[Points];
+=	NewPrism->Coords = new Point[Points];
 	NewPrism->Height = Height;
 	NewPrism->Thickness = Thickness;
 	NewPrism->Points = Points;
@@ -605,7 +604,6 @@ void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag, int V
 
 	NewText->LayerName = new char[strlen(LayerName)+1];
 	strcpy(NewText->LayerName, LayerName);
-//	NewText->LayerName[strlen(LayerName)-1] = '\0';
 	NewText->X = X;
 	NewText->Y = Y;
 	NewText->Z = Z;
@@ -735,11 +733,6 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		return &Boundary;
 	}
 
-
-//	if(strcmp(Name, "ml_mixer_pad")==0){
-//		printf("\tFirst %s\t%.2f\t%.2f\t%.2f\t%.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
-//	}
-
 	struct ObjectList dummyobject;
 
 	if(FirstPrism){
@@ -767,11 +760,6 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		}
 	}
 
-//	if(strcmp(Name, "ml_mixer_pad")==0){
-//		printf("\tPost Prism %s\t%.2f\t%.2f\t%.2f\t%.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
-//	}
-
-
 	if(FirstPath){ /* FIXME - need to take width into account? */
 		Path dummypath;
 		dummypath.Next = FirstPath;
@@ -797,10 +785,6 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		}
 	}
 
-//	if(strcmp(Name, "ml_mixer_pad")==0){
-//		printf("\tPost Path %s\t%.2f\t%.2f\t%.2f\t%.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
-//	}
-
 	if(FirstSRef){
 		SRefElement dummysref;
 		dummysref.Next=FirstSRef;
@@ -823,31 +807,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 							Boundary.XMax = sref->X + NewBound->XMax;
 						}
 						if(sref->X - NewBound->XMin < Boundary.XMin){
-//							if(strcmp(Name, "col8x_pc3")==0){
-//								printf("col8x Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-//							}
-//							if(strcmp(object->Object->GetName(), "col8x_pc3")==0){
-//								printf("col8x GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-//							}
-//							if(strcmp(Name, "colx_pc3")==0){
-//								printf("colx Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-//							}
-//							if(strcmp(object->Object->GetName(), "colx_pc3")==0){
-//								printf("colx GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-//							}
 							Boundary.XMin = sref->X - NewBound->XMin;
-//							if(strcmp(Name, "col8x_pc3")==0){
-//								printf("scol8x Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-//							}
-//							if(strcmp(object->Object->GetName(), "col8x_pc3")==0){
-//								printf("scol8x GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-//							}
-//							if(strcmp(Name, "colx_pc3")==0){
-//								printf("scolx Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-//							}
-//							if(strcmp(object->Object->GetName(), "colx_pc3")==0){
-//								printf("scolx GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-//							}
 						}
 						if(sref->Y + NewBound->YMax > Boundary.YMax){
 							Boundary.YMax = sref->Y + NewBound->YMax;
@@ -861,11 +821,6 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 			}
 		}
 	}
-
-//	if(strcmp(Name, "ml_mixer_pad")==0){
-//		printf("\tPost SREF %s\t%.2f\t%.2f\t%.2f\t%.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
-//	}
-
 
 	if(FirstARef){
 		ARefElement dummyaref;
@@ -931,7 +886,6 @@ void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points,
 
 	NewPath->LayerName = new char[strlen(LayerName)+1];
 	strcpy(NewPath->LayerName, LayerName);
-	//NewPath->LayerName[strlen(LayerName)-1] = '\0';
 	NewPath->Type = PathType;
 	NewPath->Coords = new Point[Points];
 	NewPath->Height = Height;
