@@ -60,7 +60,7 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 			processfile = config->GetProcessFile();
 		}else{
 			processfile = new char[13];
-			strncpy(processfile, "process.txt", strlen("process.txt"));
+			strncpy(processfile, "process.txt", strlen("process.txt")+1);
 		}
 	}
 
@@ -786,7 +786,7 @@ void GDSParse::ParseXYPath()
 
 	if(thislayer==NULL){
 		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", currentlayer, currentdatatype);
-		printf("\tIgnoring this path\n.");
+		printf("\tIgnoring this path.\n");
 		while(recordlen){
 			GetFourByteSignedInt();
 		}
@@ -829,7 +829,7 @@ void GDSParse::ParseXYBoundary()
 
 	if(thislayer==NULL){
 		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", currentlayer, currentdatatype);
-		printf("\tIgnoring this boundary\n.");
+		printf("\tIgnoring this boundary.\n");
 		while(recordlen){
 			GetFourByteSignedInt();
 		}
@@ -911,7 +911,7 @@ void GDSParse::ParseXY()
 
 			if(thislayer==NULL){
 				printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", currentlayer, currentdatatype);
-				printf("\tIgnoring this string\n.");
+				printf("\tIgnoring this string.\n");
 				while(recordlen){
 					GetFourByteSignedInt();
 				}

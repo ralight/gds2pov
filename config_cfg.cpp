@@ -23,6 +23,8 @@ GDSConfig::GDSConfig()
 	FirstLight = NULL;
 	LastLight = NULL;
 	LightCount = 0;
+	Valid = 1;
+
 }
 
 GDSConfig::GDSConfig(char *configfile)

@@ -284,26 +284,28 @@ GDSProcess::GDSProcess(char *processfile)
 
 GDSProcess::~GDSProcess ()
 {
-	struct ProcessLayer *layer1;
-	struct ProcessLayer *layer2;
+	if(FirstLayer){
+		struct ProcessLayer *layer1;
+		struct ProcessLayer *layer2;
 
-	layer1 = FirstLayer;
+		layer1 = FirstLayer;
 
-	while(layer1->Next){
-		layer2 = layer1->Next;
+		while(layer1->Next){
+			layer2 = layer1->Next;
+			if(layer1->Name){
+				delete layer1->Name;
+			}
+			if(layer1){
+				delete layer1;
+			}
+			layer1 = layer2;
+		}
 		if(layer1->Name){
 			delete layer1->Name;
 		}
 		if(layer1){
 			delete layer1;
 		}
-		layer1 = layer2;
-	}
-	if(layer1->Name){
-		delete layer1->Name;
-	}
-	if(layer1){
-		delete layer1;
 	}
 }
 
