@@ -15,6 +15,7 @@ This release
 - Code coverage testing
 - Incorrect process/config file testing
 - Compile examples and other files for distribution.
+- Fix path BgnExtn EndExtn things
 
 Tasks: 11
 
