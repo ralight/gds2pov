@@ -113,7 +113,7 @@ Thickness: 660
 Red: 1
 Green: 0
 Blue: 0
-Filter: 1
+Filter: 0
 Metal: 1
 Show: 1
 LayerEnd
@@ -225,3 +225,4 @@ Filter: 0
 Metal: 0
 Show: 0
 LayerEnd
+
