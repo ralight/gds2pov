@@ -1,3 +1,9 @@
+Version 0.7.2 (17th November 2004)
+==================================
+
+- Fixed texture definition problem under Windows.
+- Fixed texture definition when texture is a metal.
+
 Version 0.7.1 (16th November 2004)
 ==================================
 

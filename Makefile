@@ -1,7 +1,7 @@
 # Define LINUX or SOLARIS as appropriate
 #COMPILE=g++ -Wall 
 COMPILE=g++ -Wall -DLINUX -O2 
-GDS2POV_VERSION=0.7.1
+GDS2POV_VERSION=0.7.2
 DISTDIR=release/gds2pov_${GDS2POV_VERSION}
 #COMPILE=g++ -Wall -pg -fprofile-arcs -ftest-coverage -DLINUX
 
@@ -47,6 +47,7 @@ clean_profile :
 
 run : gds2pov
 	./gds2pov layers.gds layers.pov 
+	./gds2pov example.gds example.pov -c example_config.txt -p example_process.txt
 	#./gds2pov layers.gds layers.pov -c config.txt -p process.txt
 	#./gds2pov fullexample.gds fullexample.pov -c config.txt -p process.txt
 
