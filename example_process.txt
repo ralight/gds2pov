@@ -9,8 +9,8 @@
 # LayerStart: LayerName
 # Layer: LayerNumber (integer)
 # Datatype: (integer)
-# Height: (float, microns)
-# Thickness: (float, microns)
+# Height: (float) - See NOTE below
+# Thickness: (float) - See NOTE below
 # Red: (float, between 0,1 with 1 being full)
 # Green: (float, between 0,1 with 1 being full)
 # Blue: (float, between 0,1 with 1 being full)
@@ -37,6 +37,13 @@
 # 
 # 
 # If any layer is not listed in this file it will be ignored in the gds2 file.
+#
+# NOTE
+# ====
+#
+# The numbers given here for Height and Thickness are specified in DB units. This is defined in your GDS2 file
+# (not the process!), which is why the Height and Thickness must use them. To find the DB units for your GDS2 
+# file, just run the file through GDS2POV and it will provide the information.
 
 LayerStart: NTUB
 Layer: 1
