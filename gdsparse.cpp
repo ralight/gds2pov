@@ -932,9 +932,6 @@ char *GDSParse::GetAsciiString()
 		str[recordlen] = 0;
 		recordlen = 0;
 	}
-	if(!str){
-		printf("eek!\n");
-	}
 	return str;
 }
 
