@@ -270,7 +270,7 @@ GDSProcess::GDSProcess(char *processfile)
 				AddLayer(&NewLayer);
 				//if(NewLayer.Name){
 					if(!showing){
-						printf("Notice: Not showing layer %d\n", NewLayer.Layer);
+						printf("Notice: Not showing layer %d datatype %d\n", NewLayer.Layer, NewLayer.Datatype);
 					}
 				//	delete NewLayer.Name;
 				//	NewLayer.Name = NULL;
