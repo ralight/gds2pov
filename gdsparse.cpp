@@ -586,6 +586,7 @@ void GDSParse::ParseXYPath()
 		/* FIXME - need to check for -ve value and then not scale */
 		if(thislayer->Height && thislayer->Show && CurrentObject){
 			CurrentObject->AddPath(thislayer->Height, thislayer->Thickness, points, currentwidth);
+			CurrentObject->SetPathColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 		}
 		for(i=0; i<points; i++){
 			X = units * (float)GetFourByteSignedInt();
@@ -594,9 +595,6 @@ void GDSParse::ParseXYPath()
 				CurrentObject->AddPathPoint(i, X, Y);
 			}
 		}
-	}
-	if(thislayer->Height && thislayer->Show && CurrentObject){
-		CurrentObject->SetPathColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 	}
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
