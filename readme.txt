@@ -52,6 +52,8 @@ Known Problems
 
 * Concave polygons will not be created properly in POV-Ray. This is a *hard* and well recognised problem in general. Papers do exist describing how to deal with the problem but I am not yet ready to delve into it. My advice: avoid merging multiple polygons/paths.
 
+* Summary only considers the top level layout.
+
 * Big files take a long time and a lot of memory to render. Yes... try reducing the quality and size of your output picture in POV-Ray. I don't really envisage GDS2POV being used on complete chips - POV-Ray is limited to 2GB of RAM on 32 bit machines and it is quite possible to use that with a complicated GDS2 file.
 
 * Lack of support for other platforms. This is really quite simple but requires further research.
