@@ -28,6 +28,7 @@ public:
 	class GDSObject *AddObject(char *Name);
 	class GDSObject *GetObject(int Index);
 	class GDSObject *GetObject(char *Name);
+	struct ObjectList *GetObjectList();
 	struct _Boundary *GetBoundary();
 	int GetCount();
 };

@@ -228,7 +228,7 @@ LayerEnd
 
 LayerStart: TEXT
 Layer: 61
-Height: 7000
+Height: 9000
 Thickness: 1000
 Red: 1
 Green: 1

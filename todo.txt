@@ -5,7 +5,8 @@ This release
 - Documentation (usage)
 - Code coverage testing
 - Incorrect process/config file testing
-- Reorientate axes so that they make sense.
+- Mag support
+- Sort camera normal
 
 Tasks: 5
 

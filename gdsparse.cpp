@@ -142,7 +142,7 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *optr)
 		}while(child);
 
 	}
-	Object->OutputToFile(optr);
+	Object->OutputToFile(optr, Objects);
 }
 
 void GDSParse::OutputPOVHeader()
@@ -205,50 +205,54 @@ void GDSParse::OutputPOVHeader()
 
 		switch(config->GetLookAtPos()->boundarypos){
 			case bpCentre:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", centreX*XMod, centreY*YMod, distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", centreX*XMod, centreY*YMod, -distance*ZMod);
 				break;
 			case bpTopLeft:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, Boundary->YMax*YMod, distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
 				break;
 			case bpTopRight:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, Boundary->YMax*YMod, distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
 				break;
 			case bpBottomLeft:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, Boundary->YMin*YMod, distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
 				break;
 			case bpBottomRight:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, Boundary->YMin*YMod, distance*ZMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
 				break;
 		}
 
-		Position dummypos;
-		dummypos.Next = config->GetLightPos();
+		if(config->GetLightPos()!=NULL){
+			Position dummypos;
+			dummypos.Next = config->GetLightPos();
 
-		Position *LightPos = &dummypos;
+			Position *LightPos = &dummypos;
 
-		while(LightPos->Next){
-			LightPos = LightPos->Next;
-			XMod = LightPos->XMod;
-			YMod = LightPos->YMod;
-			ZMod = LightPos->ZMod;
+			while(LightPos->Next){
+				LightPos = LightPos->Next;
+				XMod = LightPos->XMod;
+				YMod = LightPos->YMod;
+				ZMod = LightPos->ZMod;
 
-			switch(LightPos->boundarypos){
-				case bpCentre:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", centreX*XMod, centreY*YMod, distance*ZMod);
-					break;
-				case bpTopLeft:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMax*YMod, distance*ZMod);
-					break;
-				case bpTopRight:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMax*YMod, distance*ZMod);
-					break;
-				case bpBottomLeft:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMin*YMod, distance*ZMod);
-					break;
-				case bpBottomRight:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMin*YMod, distance*ZMod);
-					break;
+				switch(LightPos->boundarypos){
+					case bpCentre:
+						fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", centreX*XMod, centreY*YMod, -distance*ZMod);
+						break;
+					case bpTopLeft:
+						fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
+						break;
+					case bpTopRight:
+						fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
+						break;
+					case bpBottomLeft:
+						fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
+						break;
+					case bpBottomRight:
+						fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
+						break;
+				}
 			}
+		}else{
+			fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", centreX, centreY, -distance);
 		}
 
 		fprintf(optr, "background { color Black }\n");

@@ -143,9 +143,12 @@ GDSObject::~GDSObject()
 	delete Name;
 }
 
-void GDSObject::OutputToFile(FILE *fptr)
+void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
 {
 	if(fptr && !IsOutput){
+
+		struct _Boundary *thisBound;
+
 		fprintf(fptr, "#declare str_%s = union {\n", Name);
 		if(FirstPrism){
 			Prism dummyprism;
@@ -208,7 +211,7 @@ void GDSObject::OutputToFile(FILE *fptr)
 //					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
 						path->Coords[i].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
 						path->Coords[i].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height + 0.0
+						-path->Height
 //						,dia
 						);
 //					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
@@ -218,7 +221,7 @@ void GDSObject::OutputToFile(FILE *fptr)
 //					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
 						path->Coords[i].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
 						path->Coords[i].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height + 0.0
+						-path->Height
 //						,dia
 						);
 //					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
@@ -228,7 +231,7 @@ void GDSObject::OutputToFile(FILE *fptr)
 //					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
 						path->Coords[i+1].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
 						path->Coords[i+1].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height -+ path->Thickness
+						-path->Height - path->Thickness
 //						,dia
 						);
 //					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
@@ -248,7 +251,7 @@ void GDSObject::OutputToFile(FILE *fptr)
 //					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
 						path->Coords[i+1].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
 						path->Coords[i+1].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height + 0.0
+						-path->Height
 //						,dia
 						);
 //					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
@@ -258,7 +261,7 @@ void GDSObject::OutputToFile(FILE *fptr)
 //					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
 						path->Coords[i+1].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
 						path->Coords[i+1].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height + 0.0
+						-path->Height
 //						,dia
 						);
 //					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
@@ -298,19 +301,15 @@ void GDSObject::OutputToFile(FILE *fptr)
 
 			while(sref->Next){
 				sref = sref->Next;
+
 				fprintf(fptr, "object{str_%s ", sref->Name);				
 				if(sref->Flipped){
-					fprintf(fptr, "scale <-1,1,1> ");
+					fprintf(fptr, "scale <1,-1,1> ");
 				}
-//				fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
-//				if(sref->Rotate.Y){
-//					fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
-//				}
+				fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
 				if(sref->Rotate.Y){
-					fprintf(fptr, "rotate <0,0,%.2f>", sref->Rotate.Y);
-					fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
-				}else{
-					fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
+					thisBound = Objects->GetObject(sref->Name)->GetBoundary(Objects->GetObjectList());
+					fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
 				}
 				fprintf(fptr, "}\n");
 			}
@@ -328,13 +327,11 @@ void GDSObject::OutputToFile(FILE *fptr)
 					fprintf(fptr, "text{ttf \"arial.ttf\" \"%s\" 0.2,0.1*x ", text->String);
 					fprintf(fptr, "texture{pigment{rgb <%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
 					if(text->Flipped){
-						fprintf(fptr, "scale <-1,1,1> ");
+						fprintf(fptr, "scale <1,-1,1> ");
 					}
-					fprintf(fptr, "rotate <90,0,0> translate <%.2f,%.2f,%.2f> ", text->X, text->Y, text->Z);
+					fprintf(fptr, "translate <%.2f,%.2f,%.2f> ", text->X, text->Y, -text->Z);
 					if(text->Rotate.Y){
-						fprintf(fptr, "Rotate_Around_Trans(<-90,0,%.2f>,<%.2f,%.2f,%.2f>)", text->Rotate.Y, text->X, text->Y, text->Z);
-					}else{
-						fprintf(fptr, "Rotate_Around_Trans(<-90,0,0>,<%.2f,%.2f,%.2f>)", text->X, text->Y, text->Z);
+						fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,%.2f>)", -text->Rotate.Y, text->X, text->Y, -text->Z);
 					}
 					fprintf(fptr, "}\n");
 				}
@@ -366,14 +363,11 @@ void GDSObject::OutputToFile(FILE *fptr)
 						fprintf(fptr, "\t#while (rowcount < rows)\n");
 						fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
 						if(aref->Flipped){
-							fprintf(fptr, "scale <-1,1,1> ");
+							fprintf(fptr, "scale <1,-1,1> ");
 						}
 						fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
 						if(aref->Rotate.Y){
-							fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", 90-aref->Rotate.Y, aref->X1, aref->Y1);
-//						}else{
-						//	fprintf(fptr, " Rotate_Around_Trans(<-90,0,0>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", aref->X1, aref->Y1);
-//							fprintf(fptr, " rotate x*-90");
+							fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
 						}
 						fprintf(fptr, "}\n");
 
@@ -398,11 +392,11 @@ void GDSObject::OutputToFile(FILE *fptr)
 						fprintf(fptr, "\t#while (rowcount < rows)\n");
 						fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
 						if(aref->Flipped){
-							fprintf(fptr, "scale <-1,1,1> ");
+							fprintf(fptr, "scale <1,-1,1> ");
 						}
 						fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
 						if(aref->Rotate.Y){
-							fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", 180-aref->Rotate.Y, aref->X1, aref->Y1);
+							fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
 						}
 						fprintf(fptr, "}\n");
 

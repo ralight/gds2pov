@@ -139,3 +139,9 @@ struct _Boundary *GDSObjects::GetBoundary()
 	}
 	return Boundary;
 }
+
+struct ObjectList *GDSObjects::GetObjectList()
+{
+	return FirstObject;
+}
+

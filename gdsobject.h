@@ -126,12 +126,12 @@ public:
 	void SetPathRotation(float X, float Y, float Z);
 
 	char *GetName();
-	void OutputToFile(FILE *fptr);
+	void OutputToFile(FILE *fptr, class GDSObjects *Objects);
 	int HasASRef();
 	char *GetSRefName(int Index);
 	char *GetARefName(int Index);
 
-	struct _Boundary *GetBoundary(struct ObjectList *);
+	struct _Boundary *GetBoundary(struct ObjectList *objectlist);
 };
 
 #endif // __GDSOBJECT_H__
