@@ -397,20 +397,22 @@ GDSConfig::~GDSConfig()
 		delete ProcessFile;
 	}
 
-	Position *pos1;
-	Position *pos2;
+	if(FirstLight){
+		Position *pos1;
+		Position *pos2;
 
-	pos1 = FirstLight;
+		pos1 = FirstLight;
 
-	while(pos1->Next){
-		pos2 = pos1->Next;
+		while(pos1->Next){
+			pos2 = pos1->Next;
+			if(pos1){
+				delete pos1;
+			}
+			pos1 = pos2;
+		}
 		if(pos1){
 			delete pos1;
 		}
-		pos1 = pos2;
-	}
-	if(pos1){
-		delete pos1;
 	}
 }
 
