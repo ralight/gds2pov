@@ -179,94 +179,145 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
 			Prism *path = &dummypath;
 
 			int i;
+			float angleX, angleY;
+
 			while(path->Next){
 				path = path->Next;
 
 				if(path->Width){
 					fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->Points-1));
-	//				int dia=100;
+
+					float BgnExtn;
+					float EndExtn;
+
+					switch(path->Type){
+						case 1:
+						case 2:
+							BgnExtn = 1.5*path->Width;
+							EndExtn = 1.5*path->Width;
+							break;
+						case 4:
+							BgnExtn = path->BgnExtn;
+							EndExtn = path->EndExtn;
+							break;
+						default:
+							BgnExtn = 0.0;
+							EndExtn = 0.0;
+							break;
+					}
 					for(i=0; i<path->Points-1; i++){
+						angleX = cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y));
+						angleY = sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y));
 
-						// 1
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-							path->Coords[i].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							path->Coords[i].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							-path->Height - path->Thickness
-	//						,dia
-							);
-	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						if(i==0){
+							// 1
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i].X + path->Width * angleX + EndExtn * angleY,
+								path->Coords[i].Y + path->Width * angleY - EndExtn * angleX,
+								-path->Height - path->Thickness
+								);
+							// 2
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i].X - path->Width * angleX + EndExtn * angleY,
+								path->Coords[i].Y - path->Width * angleY - EndExtn * angleX,
+								-path->Height - path->Thickness
+								);
+							// 3
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i].X + path->Width * angleX + EndExtn * angleY,
+								path->Coords[i].Y + path->Width * angleY - EndExtn * angleX,
+								-path->Height
+								);
+							// 4
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i].X - path->Width * angleX + EndExtn * angleY,
+								path->Coords[i].Y - path->Width * angleY - EndExtn * angleX,
+								-path->Height
+								);
+						}else{
+							// 1
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i].X + (path->Width) * angleX,
+								path->Coords[i].Y + (path->Width) * angleY,
+								-path->Height - path->Thickness
+								);
+							// 2
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i].X - path->Width * angleX,
+								path->Coords[i].Y - path->Width * angleY,
+								-path->Height - path->Thickness
+								);
+							// 3
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i].X + path->Width * angleX,
+								path->Coords[i].Y + path->Width * angleY,
+								-path->Height
+								);
+							// 4
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i].X - path->Width * angleX,
+								path->Coords[i].Y - path->Width * angleY,
+								-path->Height
+								);
+						}
 
-						// 2
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-							path->Coords[i].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							path->Coords[i].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							-path->Height - path->Thickness
-	//						,dia
-							);
-	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						if(i==path->Points-2){
+							// 5
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i+1].X + path->Width * angleX - EndExtn * angleY,
+								path->Coords[i+1].Y + path->Width * angleY - EndExtn * angleX,
+								-path->Height - path->Thickness
+								);
 
-						// 3
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-							path->Coords[i].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							path->Coords[i].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							-path->Height
-	//						,dia
-							);
-	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+							// 6
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i+1].X - path->Width * angleX - EndExtn * angleY,
+								path->Coords[i+1].Y - path->Width * angleY - EndExtn * angleX,
+								-path->Height - path->Thickness
+								);
 
-						// 4
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-							path->Coords[i].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							path->Coords[i].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							-path->Height
-	//						,dia
-							);
-	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+							// 7
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i+1].X + path->Width * angleX - EndExtn * angleY,
+								path->Coords[i+1].Y + path->Width * angleY - EndExtn * angleX,
+								-path->Height
+								);
 
-						// 5
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-							path->Coords[i+1].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							path->Coords[i+1].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							-path->Height - path->Thickness
-	//						,dia
-							);
-	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+							// 8
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i+1].X - path->Width * angleX - EndExtn * angleY,
+								path->Coords[i+1].Y - path->Width * angleY - EndExtn * angleX,
+								-path->Height
+								);
+						}else{
+							// 5
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i+1].X + path->Width * angleX,
+								path->Coords[i+1].Y + path->Width * angleY,
+								-path->Height - path->Thickness
+								);
 
-						// 6
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-							path->Coords[i+1].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							path->Coords[i+1].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							-path->Height - path->Thickness
-	//						,dia
-							);
-	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+							// 6
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i+1].X - path->Width * angleX,
+								path->Coords[i+1].Y - path->Width * angleY,
+								-path->Height - path->Thickness
+								);
 
-						// 7
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-							path->Coords[i+1].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							path->Coords[i+1].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							-path->Height
-	//						,dia
-							);
-	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+							// 7
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i+1].X + path->Width * angleX,
+								path->Coords[i+1].Y + path->Width * angleY,
+								-path->Height
+								);
 
-						// 8
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-							path->Coords[i+1].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							path->Coords[i+1].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-							-path->Height
-	//						,dia
-							);
-	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-
+							// 8
+							fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+								path->Coords[i+1].X - path->Width * angleX,
+								path->Coords[i+1].Y - path->Width * angleY,
+								-path->Height
+								);
+						}
 					}
 					fprintf(fptr, "} face_indices { %d", 12*(path->Points-1));
 					for(i=0; i<path->Points-1; i++){
@@ -780,7 +831,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 	return &Boundary;
 }
 
-void GDSObject::AddPath(float Height, float Thickness, int Points, float Width)
+void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn)
 {
 	Prism *NewPath = new Prism;
 
@@ -794,11 +845,14 @@ void GDSObject::AddPath(float Height, float Thickness, int Points, float Width)
 		LastPath = NewPath;
 	}
 
+	NewPath->Type = PathType;
 	NewPath->Coords = new Point[Points];
 	NewPath->Height = Height;
 	NewPath->Thickness = Thickness;
 	NewPath->Points = Points;
 	NewPath->Width = Width;
+	NewPath->BgnExtn = BgnExtn;
+	NewPath->EndExtn = EndExtn;
 }
 
 void GDSObject::AddPathPoint(int Index, float X, float Y)

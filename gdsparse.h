@@ -55,6 +55,8 @@ private:
 	float currentangle;
 	short currentdatatype;
 	float currentmag;
+	float currentbgnextn;
+	float currentendextn;
 
 	char *sname;
 	short arrayrows, arraycols;

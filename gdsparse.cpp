@@ -29,6 +29,8 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 	currentpathtype = 0;
 	currentdatatype = 0;
 	currentmag = 1.0;
+	currentbgnextn = 0.0;
+	currentendextn = 0.0;
 
 	process = NULL;
 	config = NULL;
@@ -357,7 +359,11 @@ void GDSParse::Parse()
 				ParseSName();
 				break;
 			case rnPathType:
-				ReportUnsupported("PATHTYPE", rnPathType);
+				if(!unsupported[rnPathType]){
+					printf("Incomplete support for GDS2 record type: PATHTYPE\n");
+					unsupported[rnPathType] = true;
+				}
+				//FIXME
 				currentpathtype = GetTwoByteSignedInt();
 				break;
 			case rnTextType:
@@ -482,15 +488,11 @@ Not Used	case rnUString:
 				break;
 			case rnBgnExtn:
 				ReportUnsupported("BGNEXTN", rnBgnExtn);
-				while(recordlen){
-					GetFourByteSignedInt();
-				}
+				currentbgnextn = GetFourByteSignedInt();
 				break;
 			case rnEndExtn:
 				ReportUnsupported("ENDEXTN", rnEndExtn);
-				while(recordlen){
-					GetFourByteSignedInt();
-				}
+				currentendextn = GetFourByteSignedInt();
 				break;
 			case rnTapeNum:
 				ReportUnsupported("TAPENUM", rnTapeNum);
@@ -691,7 +693,7 @@ void GDSParse::ParseXYPath()
 	if(currentwidth){
 		/* FIXME - need to check for -ve value and then not scale */
 		if(thislayer->Height && thislayer->Show && CurrentObject){
-			CurrentObject->AddPath(units*thislayer->Height, units*thislayer->Thickness, points, currentwidth);
+			CurrentObject->AddPath(currentpathtype, units*thislayer->Height, units*thislayer->Thickness, points, currentwidth, currentbgnextn, currentendextn);
 			CurrentObject->SetPathColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 		}
 		for(i=0; i<points; i++){
@@ -707,6 +709,8 @@ void GDSParse::ParseXYPath()
 	currentangle = 0.0;
 	currentdatatype = 0;
 	currentmag = 1.0;
+	currentbgnextn = 0.0;
+	currentendextn = 0.0;
 }
 
 void GDSParse::ParseXYBoundary()
@@ -757,6 +761,8 @@ void GDSParse::ParseXYBoundary()
 	currentangle = 0.0;
 	currentdatatype = 0;
 	currentmag = 1.0;
+	currentbgnextn = 0.0;
+	currentendextn = 0.0;
 }
 
 void GDSParse::ParseXY()

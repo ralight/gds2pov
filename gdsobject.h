@@ -28,10 +28,13 @@ typedef struct {
 
 typedef struct _Prism {
 	struct _Prism *Next;
+	int Type;				/* For paths only */
 	float Height;
 	float Thickness;
 	int Points;
 	float Width;			/* For paths only */
+	float BgnExtn;			/* For paths only */
+	float EndExtn; 			/* For paths only */
 	Point *Coords;
 	Transform Rotate;
 	ElementColour Colour;
@@ -125,7 +128,7 @@ public:
 	void AddARef(char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag);
 	void SetARefRotation(float X, float Y, float Z);
 
-	void AddPath(float Height, float Thickness, int Points, float Width);
+	void AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn);
 	void AddPathPoint(int Index, float X, float Y);
 	void SetPathColour(float R, float G, float B, float F, int Metal);
 	void SetPathRotation(float X, float Y, float Z);
