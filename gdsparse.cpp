@@ -74,7 +74,7 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 	}else{
 		printf("Unable to read %s\n", infile);
 	}
-	printf("Summary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
+	printf("\nSummary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
 		PathElements, BoundaryElements, TextElements, SRefElements, ARefElements);
 }
 
@@ -112,7 +112,7 @@ void GDSParse::OutputPOVHeader()
 		}
 
 		CameraPosition cp;
-		cp = cpCentre;
+		cp = cpBottomLeft;
 
 		float modifier = (float)1.0;
 
@@ -129,25 +129,36 @@ void GDSParse::OutputPOVHeader()
 			case cpTopLeft:
 				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*modifier, distance*0.4, Boundary->YMax*modifier);
 				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMax/modifier, Boundary->YMin/modifier);
+				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMax*2, distance*2, Boundary->YMin*2);
 				break;
 			case cpTopRight:
 				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*modifier, distance*0.4, Boundary->YMax*modifier);
 				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMin/modifier, Boundary->YMin/modifier);
+				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMin*2, distance*2, Boundary->YMin*2);
 				break;
 			case cpBottomLeft:
 				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*modifier, distance*0.4, Boundary->YMin*modifier);
 				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMax/modifier, Boundary->YMax/modifier);
+				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMax*2, distance*2, Boundary->YMax*2);
 				break;
 			case cpBottomRight:
 				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*modifier, distance*0.4, Boundary->YMin*modifier);
 				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMin/modifier, Boundary->YMax/modifier);
+				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMin*2, distance*2, Boundary->YMax*2);
 				break;
 		}
 
 		fprintf(optr, "background { color Black }\n");
-		fprintf(optr, "light_source { <2000, 2000, -30000> White }\n");
-		fprintf(optr, "light_source { <10000, 20000, -10000> White }\n");
-		fprintf(optr, "light_source { <30000, 20000, 10000> White }\n");
+		fprintf(optr, "global_settings { ambient_light rgb <1.2,1.2,1.2> }\n");
+
+		// Place camera far above in centre
+		fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", centreX, distance*20, centreY);
+//		fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMin*2, distance*2, Boundary->YMax*2);
+//		fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMax, distance*2, Boundary->YMin);
+//		fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMin, distance*2, Boundary->YMin);
+//		fprintf(optr, "light_source { <2000, 2000, -30000> White }\n");
+//		fprintf(optr, "light_source { <10000, 20000, -10000> White }\n");
+//		fprintf(optr, "light_source { <30000, 20000, 10000> White }\n");
 	}
 }
 
