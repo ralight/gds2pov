@@ -199,6 +199,8 @@ void GDSParse::OutputPOVHeader()
 				break;
 		}
 
+		fprintf(optr, "\tsky <0,0,-1>\n"); //This fixes the look at rotation (hopefully)
+
 		XMod = config->GetLookAtPos()->XMod;
 		YMod = config->GetLookAtPos()->YMod;
 		ZMod = config->GetLookAtPos()->ZMod;

@@ -6,7 +6,6 @@ This release
 - Code coverage testing
 - Incorrect process/config file testing
 - Mag support
-- Sort camera normal
 
 Tasks: 5
 
