@@ -1,4 +1,4 @@
-version 0.7 (  2004)
+version 0.7 (28th September 2004)
 ==============================
 
 - Added option to specify the top cell name as suggested by Markus Dorn.
