@@ -1,6 +1,10 @@
 #ifndef _GDS_GLOBALS_H
 #define _GDS_GLOBALS_H
 
+extern bool verbose_output;
+
+void v_printf(const char *fmt, ...);
+
 typedef enum{
 	elBoundary,
 	elPath,

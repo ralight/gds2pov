@@ -11,13 +11,12 @@ This release
 - Detect text for boundary calculation
 - Text scaling with units needs fixing, especially the depth!
 - Documentation (source)
-- Debug/verbose output
 - Exception handling
 - Code coverage testing
 - Incorrect process/config file testing
 - Compile examples and other files for distribution.
 
-Tasks: 12
+Tasks: 11
 
 
 Next release

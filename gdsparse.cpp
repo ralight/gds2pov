@@ -8,6 +8,8 @@
 #include "gds_globals.h"
 #include "gds2pov.h"
 
+extern bool verbose_output;
+
 GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *processfile)
 {
 	iptr = NULL;
@@ -268,6 +270,7 @@ void GDSParse::OutputPOVHeader()
 void GDSParse::Parse()
 {
 	byte recordtype, datatype;
+	char *tempstr;
 
 	if(!iptr){
 		return;
@@ -281,62 +284,84 @@ void GDSParse::Parse()
 		recordlen -= 4;
 		switch(recordtype){
 			case rnHeader:
+				v_printf("HEADER\n");
 				ParseHeader();
 				break;
 			case rnBgnLib:
+				v_printf("BGNLIB\n");
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnLibName:
+				v_printf("LIBNAME\n");
 				ParseLibName();
 				break;
 			case rnUnits:
+				v_printf("UNITS\n");
 				ParseUnits();
 				break;
 			case rnEndLib:
+				v_printf("ENDLIB\n");
+				fseek(iptr, 0, SEEK_END);
+				return;
+				break;
 			case rnEndStr:
+				v_printf("ENDSTR\n");
+				break;
 			case rnEndEl:
+				v_printf("ENDEL\n\n");
 				/* Empty, no need to parse */
 				break;
 			case rnBgnStr:
+				v_printf("BGNSTR\n");
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnStrName:
+				v_printf("STRNAME\n");
 				ParseStrName();
 				break;
 			case rnBoundary:
+				v_printf("BOUNDARY\n");
 				currentelement = elBoundary;
 				break;
 			case rnPath:
+				v_printf("PATH\n");
 				currentelement = elPath;
 				break;
 			case rnSRef:
+				v_printf("SREF\n");
 				currentelement = elSRef;
 				break;
 			case rnARef:
+				v_printf("AREF\n");
 				currentelement = elARef;
 				break;
 			case rnText:
+				v_printf("TEXT\n");
 				currentelement = elText;
 				break;
 			case rnLayer:
 				currentlayer = GetTwoByteSignedInt();
+				v_printf("LAYER (%d)\n", currentlayer);
 				break;
 			case rnDataType:
 				currentdatatype = GetTwoByteSignedInt();
+				v_printf("DATATYPE (%d)\n", currentdatatype);
 				break;
 			case rnWidth:
 				currentwidth = (float)(GetFourByteSignedInt()/2);
 				if(currentwidth > 0){
 					currentwidth *= units;
 				}
+				v_printf("WIDTH (%.3f)\n", currentwidth*2);
 				// Scale to a half to make width correct when adding and
 				// subtracting
 				break;
 			case rnXY:
+				v_printf("XY\n");
 				switch(currentelement){
 					case elBoundary:
 						BoundaryElements++;
@@ -354,6 +379,7 @@ void GDSParse::Parse()
 			case rnColRow:
 				arraycols = GetTwoByteSignedInt();
 				arrayrows = GetTwoByteSignedInt();
+				v_printf("COLROW\n\tColumns = %dn\n\tRows = %d\n", arraycols, arrayrows);
 				break;
 			case rnSName:
 				ParseSName();
@@ -365,15 +391,19 @@ void GDSParse::Parse()
 				}
 				//FIXME
 				currentpathtype = GetTwoByteSignedInt();
+				v_printf("PATHTYPE (%d)\n", currentpathtype);
 				break;
 			case rnTextType:
 				ReportUnsupported("TEXTTYPE", rnTextType);
 				currenttexttype = GetTwoByteSignedInt();
+				v_printf("TEXTTYPE (%d)\n", currenttexttype);
 				break;
 			case rnPresentation:
 				currentpresentation = GetTwoByteSignedInt();
+				v_printf("PRESENTATION (%d)\n", currentpresentation);
 				break;
 			case rnString:
+				v_printf("STRING\n");
 				if(textstring){
 					delete textstring;
 					textstring = NULL;
@@ -381,6 +411,7 @@ void GDSParse::Parse()
 				textstring = GetAsciiString();
 				if(CurrentObject && textstring){
 					CurrentObject->SetTextString(textstring);
+					v_printf("\t\"%s\"\n", textstring);
 					delete textstring;
 					textstring = NULL;
 				}
@@ -392,12 +423,15 @@ void GDSParse::Parse()
 				}
 				//FIXME
 				currentstrans = GetTwoByteSignedInt();
+				v_printf("STRANS (%d)\n", currentstrans);
 				break;
 			case rnMag:
 				currentmag = GetEightByteReal();
+				v_printf("MAG (%f)\n", currentmag);
 				break;
 			case rnAngle:
 				currentangle = (float)GetEightByteReal();
+				v_printf("ANGLE (%f)\n", currentangle);
 				break;
 /*			case rnUInteger:
 				break;
@@ -406,184 +440,260 @@ Not Used	case rnUString:
 */
 			case rnRefLibs:
 				ReportUnsupported("REFLIBS", rnRefLibs);
-				delete GetAsciiString();
+				tempstr = GetAsciiString();
+				v_printf("REFLIBS (\"%s\")\n", tempstr);
+				delete tempstr;
 				break;
 			case rnFonts:
 				ReportUnsupported("FONTS", rnFonts);
-				delete GetAsciiString();
+				tempstr = GetAsciiString();
+				v_printf("FONTS (\"%s\")\n", tempstr);
+				delete tempstr;
 				break;
 			case rnGenerations:
 				ReportUnsupported("GENERATIONS", rnGenerations);
+				v_printf("GENERATIONS\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnAttrTable:
 				ReportUnsupported("ATTRTABLE", rnAttrTable);
-				delete GetAsciiString();
+				tempstr = GetAsciiString();
+				v_printf("ATTRTABLE (\"%s\")\n", tempstr);
+				delete tempstr;
 				break;
 			case rnStypTable:
 				ReportUnsupported("STYPTABLE", rnStypTable);
-				delete GetAsciiString();
+				tempstr = GetAsciiString();
+				v_printf("STYPTABLE (\"%s\")\n", tempstr);
+				delete tempstr;
 				break;
 			case rnStrType:
 				ReportUnsupported("STRTYPE", rnStrType);
-				delete GetAsciiString();
+				tempstr = GetAsciiString();
+				v_printf("STRTYPE (\"%s\")\n", tempstr);
+				delete tempstr;
 				break;
 			case rnElFlags:
 				ReportUnsupported("ELFLAGS", rnElFlags);
+				v_printf("ELFLAGS\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnElKey:
 				ReportUnsupported("ELKEY", rnElKey);
+				v_printf("ELKEY\n");
+				v_printf("\t");
 				while(recordlen){
-					GetFourByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnLinkType:
 				ReportUnsupported("LINKTYPE", rnLinkType);
+				v_printf("LINKTYPE\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnLinkKeys:
 				ReportUnsupported("LINKKEYS", rnLinkKeys);
+				v_printf("LINKKEYS\n");
+				v_printf("\t");
 				while(recordlen){
-					GetFourByteSignedInt();
+					v_printf("%ld ", GetFourByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnNodeType:
 				ReportUnsupported("NODETYPE", rnNodeType);
+				v_printf("NODETYPE\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnPropAttr:
 				ReportUnsupported("PROPATTR", rnPropAttr);
+				v_printf("PROPATTR\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnPropValue:
 				ReportUnsupported("PROPVALUE", rnPropValue);
-				delete GetAsciiString();
+				tempstr = GetAsciiString();
+				v_printf("PROPVALUE (\"%s\")\n", tempstr);
+				delete tempstr;
 				break;
 			case rnBox:
 				ReportUnsupported("BOX", rnBox);
+				v_printf("BOX\n");
 				/* Empty */
 				break;
 			case rnBoxType:
 				ReportUnsupported("BOXTYPE", rnBoxType);
+				v_printf("BOXTYPE\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnPlex:
 				ReportUnsupported("PLEX", rnPlex);
+				v_printf("PLEX\n");
+				v_printf("\t");
 				while(recordlen){
-					GetFourByteSignedInt();
+					v_printf("%ld ", GetFourByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnBgnExtn:
 				ReportUnsupported("BGNEXTN", rnBgnExtn);
 				currentbgnextn = GetFourByteSignedInt();
+				v_printf("BGNEXTN (%f)\n", currentbgnextn);
 				break;
 			case rnEndExtn:
 				ReportUnsupported("ENDEXTN", rnEndExtn);
 				currentendextn = GetFourByteSignedInt();
+				v_printf("ENDEXTN (%ld)\n", currentendextn);
 				break;
 			case rnTapeNum:
 				ReportUnsupported("TAPENUM", rnTapeNum);
+				v_printf("TAPENUM\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnTapeCode:
 				ReportUnsupported("TAPECODE", rnTapeCode);
+				v_printf("TAPECODE\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnStrClass:
 				ReportUnsupported("STRCLASS", rnStrClass);
+				v_printf("STRCLASS\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnReserved:
 				ReportUnsupported("RESERVED", rnReserved);
+				v_printf("RESERVED\n");
 				/* Empty */
 				break;
 			case rnFormat:
 				ReportUnsupported("FORMAT", rnFormat);
+				v_printf("FORMAT\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnMask:
 				ReportUnsupported("MASK", rnMask);
-				delete GetAsciiString();
+				tempstr = GetAsciiString();
+				v_printf("MASK (\"%s\")\n", tempstr);
+				delete tempstr;
 				break;
 			case rnEndMasks:
 				ReportUnsupported("ENDMASKS", rnEndMasks);
+				v_printf("ENDMASKS\n");
 				/* Empty */
 				break;
 			case rnLibDirSize:
 				ReportUnsupported("LIBDIRSIZE", rnLibDirSize);
+				v_printf("LIBDIRSIZE\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnSrfName:
 				ReportUnsupported("SRFNAME", rnSrfName);
-				delete GetAsciiString();
+				tempstr = GetAsciiString();
+				v_printf("SRFNAME (\"%s\")\n", tempstr);
+				delete tempstr;
 				break;
 			case rnLibSecur:
 				ReportUnsupported("LIBSECUR", rnLibSecur);
+				v_printf("LIBSECUR\n");
+				v_printf("\t");
 				while(recordlen){
-					GetTwoByteSignedInt();
+					v_printf("%d ", GetTwoByteSignedInt());
 				}
+				v_printf("\n");
 				break;
 			case rnBorder:
 				ReportUnsupported("BORDER", rnBorder);
+				v_printf("BORDER\n");
 				/* Empty */
 				break;
 			case rnSoftFence:
 				ReportUnsupported("SOFTFENCE", rnSoftFence);
+				v_printf("SOFTFENCE\n");
 				/* Empty */
 				break;
 			case rnHardFence:
 				ReportUnsupported("HARDFENCE", rnHardFence);
+				v_printf("HARDFENCE\n");
 				/* Empty */
 				break;
 			case rnSoftWire:
 				ReportUnsupported("SOFTWIRE", rnSoftWire);
+				v_printf("SOFTWIRE\n");
 				/* Empty */
 				break;
 			case rnHardWire:
 				ReportUnsupported("HARDWIRE", rnHardWire);
+				v_printf("HARDWIRE\n");
 				/* Empty */
 				break;
 			case rnPathPort:
 				ReportUnsupported("PATHPORT", rnPathPort);
+				v_printf("PATHPORT\n");
 				/* Empty */
 				break;
 			case rnNodePort:
 				ReportUnsupported("NODEPORT", rnNodePort);
+				v_printf("NODEPORT\n");
 				/* Empty */
 				break;
 			case rnUserConstraint:
 				ReportUnsupported("USERCONSTRAINT", rnUserConstraint);
+				v_printf("USERCONSTRAINT\n");
 				/* Empty */
 				break;
 			case rnSpacerError:
 				ReportUnsupported("SPACERERROR", rnSpacerError);
+				v_printf("SPACERERROR\n");
 				/* Empty */
 				break;
 			case rnContact:
 				ReportUnsupported("CONTACT", rnContact);
+				v_printf("CONTACT\n");
 				/* Empty */
 				break;
 			default:
@@ -600,6 +710,7 @@ void GDSParse::ParseHeader()
 {
 	short version;
 	version = GetTwoByteSignedInt();
+	v_printf("\tVersion = %d\n", version);
 }
 
 void GDSParse::ParseLibName()
@@ -613,6 +724,7 @@ void GDSParse::ParseLibName()
 	libname = new char[strlen(str)+1];
 	if(libname){
 		strcpy(libname, str);
+		v_printf("\t\"%s\"\n", libname);
 	}else{
 		fprintf(stderr, "Unable to allocate memory for string (%d)\n", strlen(str)+1);
 	}
@@ -621,6 +733,8 @@ void GDSParse::ParseLibName()
 
 void GDSParse::ParseSName()
 {
+	v_printf("SNAME ");
+
 	char *str;
 	str = GetAsciiString();
 	if(sname){
@@ -635,6 +749,7 @@ void GDSParse::ParseSName()
 				sname[i] = '_';
 			}
 		}
+		v_printf("(\"%s\")\n", sname);
 	}else{
 		fprintf(stderr, "Unable to allocate memory for string (%d)\n", strlen(str)+1);
 	}
@@ -661,6 +776,7 @@ void GDSParse::ParseStrName()
 				str[i] = '_';
 			}
 		}
+		v_printf("\t\"%s\"\n", str);
 
 		CurrentObject = Objects->AddObject(str);
 		delete str;
@@ -696,13 +812,16 @@ void GDSParse::ParseXYPath()
 			CurrentObject->AddPath(currentpathtype, units*thislayer->Height, units*thislayer->Thickness, points, currentwidth, currentbgnextn, currentendextn);
 			CurrentObject->SetPathColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 		}
+		v_printf("\t");
 		for(i=0; i<points; i++){
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
+			v_printf("(%.3f,%.3f) ", X, Y);
 			if(thislayer->Height && thislayer->Show && CurrentObject){
 				CurrentObject->AddPathPoint(i, X, Y);
 			}
 		}
+		v_printf("\n");
 	}
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
@@ -741,9 +860,11 @@ void GDSParse::ParseXYBoundary()
 		CurrentObject->AddPrism(units*thislayer->Height, units*thislayer->Thickness, points+1);
 	}
 
+	v_printf("\t");
 	for(i=0; i<points; i++){
 		X = units * (float)GetFourByteSignedInt();
 		Y = units * (float)GetFourByteSignedInt();
+		v_printf("(%.3f,%.3f) ", X, Y);
 		if(i==0){
 			firstX = X;
 			firstY = Y;
@@ -752,6 +873,7 @@ void GDSParse::ParseXYBoundary()
 			CurrentObject->AddPrismPoint(i, X, Y);
 		}
 	}
+	v_printf("\n");
 	if(thislayer->Height && thislayer->Show && CurrentObject){
 		CurrentObject->AddPrismPoint(i, firstX, firstY);
 		CurrentObject->SetPrismColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
@@ -780,6 +902,7 @@ void GDSParse::ParseXY()
 			SRefElements++;
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
+			v_printf("\t(%.3f,%.3f)\n", X, Y);
 
 			if(CurrentObject){
 				CurrentObject->AddSRef(sname, X, Y, Flipped, currentmag);
@@ -797,6 +920,9 @@ void GDSParse::ParseXY()
 			secondY = units * (float)GetFourByteSignedInt();
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
+			v_printf("\t(%.3f,%.3f) ", firstX, firstY);
+			v_printf("(%.3f,%.3f) ", secondX, secondY);
+			v_printf("(%.3f,%.3f)\n", X, Y);
 
 			if(CurrentObject){
 				CurrentObject->AddARef(sname, firstX, firstY, secondX, secondY, X, Y, arraycols, arrayrows, Flipped, currentmag);
@@ -823,9 +949,9 @@ void GDSParse::ParseXY()
 				return;
 			}
 
-
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
+			v_printf("\t(%.3f,%.3f)\n", X, Y);
 
 			if(CurrentObject){
 				int vert_just, horiz_just;

@@ -8,6 +8,8 @@
 
 #define VERSION 0.6
 
+extern bool verbose_output;
+
 void printusage()
 {
 		printf("gds2pov  version %.1f\n", VERSION);
@@ -21,7 +23,7 @@ void printusage()
 
 int main(int argc, char *argv[])
 {
-	bool verbose=false;
+	verbose_output=false;
 
 	if(argc<3 || argc>8){
 		printusage();
@@ -52,7 +54,7 @@ int main(int argc, char *argv[])
 					processfile = argv[i+1];
 				}
 			}else if(strncmp(argv[i], "-v", strlen("-v"))==0){
-				verbose = true;
+				verbose_output = true;
 			}else{
 				printusage();
 				return 1;
