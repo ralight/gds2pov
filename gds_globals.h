@@ -30,6 +30,7 @@ extern unsigned short currentstrans;
 extern float currentangle;
 extern parse_mode Mode;
 extern char **StrNames;
+extern char *CurrentStrName;
 extern int StrCount;
 extern int CurrentStr;
 

@@ -2,7 +2,7 @@ LayerStart: ERROR
 Layer: 0
 Height: 0
 Thickness: 0
-Colour <0, 0, 0>
+Colour: <0, 0, 0>
 Metal: 0
 Transparent: 0
 Show: 0
@@ -182,7 +182,7 @@ LayerStart: ERROR
 Layer: 63
 Height: 0
 Thickness: 0
-Colour <0, 0, 0>
+Colour: <0, 0, 0>
 Metal: 0
 Transparent: 0
 Show: 0

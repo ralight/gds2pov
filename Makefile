@@ -1,4 +1,4 @@
-COMPILE=gcc -Wall -ggdb
+COMPILE=gcc -Wall -DDEBUG
 
 all : run
 
@@ -25,6 +25,7 @@ clean_gds2pov :
 
 run : gds2pov
 	./gds2pov layers.gds layers.pov
+	./gds2pov fullexample.gds fullexample.pov
 
 test : run
 	diff layers.pov layers_ref.pov

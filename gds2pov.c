@@ -22,6 +22,7 @@ unsigned short currentstrans;
 float currentangle;
 parse_mode Mode;
 char **StrNames;
+char *CurrentStrName;
 int StrCount;
 int CurrentStr;
 
