@@ -357,17 +357,11 @@ void GDSParse::Parse()
 				ParseSName();
 				break;
 			case rnPathType:
-				if(!unsupported[rnPathType]){
-					printf("Unsupported GDS2 record type: PATHTYPE\n");
-					unsupported[rnPathType] = true;
-				}
+				ReportUnsupported("PATHTYPE", rnPathType);
 				currentpathtype = GetTwoByteSignedInt();
 				break;
 			case rnTextType:
-				if(!unsupported[rnTextType]){
-					printf("Unsupported GDS2 record type: TEXTTYPE\n");
-					unsupported[rnTextType] = true;
-				}
+				ReportUnsupported("TEXTTYPE", rnTextType);
 				currenttexttype = GetTwoByteSignedInt();
 				break;
 			case rnPresentation:
@@ -405,303 +399,189 @@ Not Used	case rnUString:
 				break;
 */
 			case rnRefLibs:
-				if(!unsupported[rnRefLibs]){
-					printf("Unsupported GDS2 record type: REFLIBS\n");
-					unsupported[rnRefLibs] = true;
-				}
+				ReportUnsupported("REFLIBS", rnRefLibs);
 				delete GetAsciiString();
 				break;
 			case rnFonts:
-				if(!unsupported[rnFonts]){
-					printf("Unsupported GDS2 record type: FONTS\n");
-					unsupported[rnFonts] = true;
-				}
+				ReportUnsupported("FONTS", rnFonts);
 				delete GetAsciiString();
 				break;
 			case rnGenerations:
-				if(!unsupported[rnGenerations]){
-					printf("Unsupported GDS2 record type: GENERATIONS\n");
-					unsupported[rnGenerations] = true;
-				}
+				ReportUnsupported("GENERATIONS", rnGenerations);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnAttrTable:
-				if(!unsupported[rnAttrTable]){
-					printf("Unsupported GDS2 record type: ATTRTABLE\n");
-					unsupported[rnAttrTable] = true;
-				}
+				ReportUnsupported("ATTRTABLE", rnAttrTable);
 				delete GetAsciiString();
 				break;
 			case rnStypTable:
-				if(!unsupported[rnStypTable]){
-					printf("Unsupported GDS2 record type: STYPTABLE\n");
-					unsupported[rnStypTable] = true;
-				}
+				ReportUnsupported("STYPTABLE", rnStypTable);
 				delete GetAsciiString();
 				break;
 			case rnStrType:
-				if(!unsupported[rnStrType]){
-					printf("Unsupported GDS2 record type: STRTYPE\n");
-					unsupported[rnStrType] = true;
-				}
+				ReportUnsupported("STRTYPE", rnStrType);
 				delete GetAsciiString();
 				break;
 			case rnElFlags:
-				if(!unsupported[rnElFlags]){
-					printf("Unsupported GDS2 record type: ELFLAGS\n");
-					unsupported[rnElFlags] = true;
-				}
+				ReportUnsupported("ELFLAGS", rnElFlags);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnElKey:
-				if(!unsupported[rnElKey]){
-					printf("Unsupported GDS2 record type: ELKEY\n");
-					unsupported[rnElKey] = true;
-				}
+				ReportUnsupported("ELKEY", rnElKey);
 				while(recordlen){
 					GetFourByteSignedInt();
 				}
 				break;
 			case rnLinkType:
-				if(!unsupported[rnLinkType]){
-					printf("Unsupported GDS2 record type: LINKTYPE\n");
-					unsupported[rnLinkType] = true;
-				}
+				ReportUnsupported("LINKTYPE", rnLinkType);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnLinkKeys:
-				if(!unsupported[rnLinkKeys]){
-					printf("Unsupported GDS2 record type: LINKKEYS\n");
-					unsupported[rnLinkKeys] = true;
-				}
+				ReportUnsupported("LINKKEYS", rnLinkKeys);
 				while(recordlen){
 					GetFourByteSignedInt();
 				}
 				break;
 			case rnNodeType:
-				if(!unsupported[rnNodeType]){
-					printf("Unsupported GDS2 record type: NODETYPE\n");
-					unsupported[rnNodeType] = true;
-				}
+				ReportUnsupported("NODETYPE", rnNodeType);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnPropAttr:
-				if(!unsupported[rnPropAttr]){
-					printf("Unsupported GDS2 record type: PROPATTR\n");
-					unsupported[rnPropAttr] = true;
-				}
+				ReportUnsupported("PROPATTR", rnPropAttr);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnPropValue:
-				if(!unsupported[rnPropValue]){
-					printf("Unsupported GDS2 record type: PROPVALUE\n");
-					unsupported[rnPropValue] = true;
-				}
+				ReportUnsupported("PROPVALUE", rnPropValue);
 				delete GetAsciiString();
 				break;
 			case rnBox:
-				if(!unsupported[rnBox]){
-					printf("Unsupported GDS2 record type: BOX\n");
-					unsupported[rnBox] = true;
-				}
+				ReportUnsupported("BOX", rnBox);
 				/* Empty */
 				break;
 			case rnBoxType:
-				if(!unsupported[rnBoxType]){
-					printf("Unsupported GDS2 record type: BOXTYPE\n");
-					unsupported[rnBoxType] = true;
-				}
+				ReportUnsupported("BOXTYPE", rnBoxType);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnPlex:
-				if(!unsupported[rnPlex]){
-					printf("Unsupported GDS2 record type: PLEX\n");
-					unsupported[rnPlex] = true;
-				}
+				ReportUnsupported("PLEX", rnPlex);
 				while(recordlen){
 					GetFourByteSignedInt();
 				}
 				break;
 			case rnBgnExtn:
-				if(!unsupported[rnBgnExtn]){
-					printf("Unsupported GDS2 record type: BGNEXTN\n");
-					unsupported[rnBgnExtn] = true;
-				}
+				ReportUnsupported("BGNEXTN", rnBgnExtn);
 				while(recordlen){
 					GetFourByteSignedInt();
 				}
 				break;
 			case rnEndExtn:
-				if(!unsupported[rnEndExtn]){
-					printf("Unsupported GDS2 record type: ENDEXTN\n");
-					unsupported[rnEndExtn] = true;
-				}
+				ReportUnsupported("ENDEXTN", rnEndExtn);
 				while(recordlen){
 					GetFourByteSignedInt();
 				}
 				break;
 			case rnTapeNum:
-				if(!unsupported[rnTapeNum]){
-					printf("Unsupported GDS2 record type: TAPENUM\n");
-					unsupported[rnTapeNum] = true;
-				}
+				ReportUnsupported("TAPENUM", rnTapeNum);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnTapeCode:
-				if(!unsupported[rnTapeCode]){
-					printf("Unsupported GDS2 record type: TAPECODE\n");
-					unsupported[rnTapeCode] = true;
-				}
+				ReportUnsupported("TAPECODE", rnTapeCode);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnStrClass:
-				if(!unsupported[rnStrClass]){
-					printf("Unsupported GDS2 record type: STRCLASS\n");
-					unsupported[rnStrClass] = true;
-				}
+				ReportUnsupported("STRCLASS", rnStrClass);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnReserved:
-				if(!unsupported[rnReserved]){
-					printf("Unsupported GDS2 record type: RESERVED\n");
-					unsupported[rnReserved] = true;
-				}
+				ReportUnsupported("RESERVED", rnReserved);
 				/* Empty */
 				break;
 			case rnFormat:
-				if(!unsupported[rnFormat]){
-					printf("Unsupported GDS2 record type: FORMAT\n");
-					unsupported[rnFormat] = true;
-				}
+				ReportUnsupported("FORMAT", rnFormat);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnMask:
-				if(!unsupported[rnMask]){
-					printf("Unsupported GDS2 record type: MASK\n");
-					unsupported[rnMask] = true;
-				}
+				ReportUnsupported("MASK", rnMask);
 				delete GetAsciiString();
 				break;
 			case rnEndMasks:
-				if(!unsupported[rnEndMasks]){
-					printf("Unsupported GDS2 record type: ENDMASKS\n");
-					unsupported[rnEndMasks] = true;
-				}
+				ReportUnsupported("ENDMASKS", rnEndMasks);
 				/* Empty */
 				break;
 			case rnLibDirSize:
-				if(!unsupported[rnLibDirSize]){
-					printf("Unsupported GDS2 record type: LIBDIRSIZE\n");
-					unsupported[rnLibDirSize] = true;
-				}
+				ReportUnsupported("LIBDIRSIZE", rnLibDirSize);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnSrfName:
-				if(!unsupported[rnSrfName]){
-					printf("Unsupported GDS2 record type: SRFNAME\n");
-					unsupported[rnSrfName] = true;
-				}
+				ReportUnsupported("SRFNAME", rnSrfName);
 				delete GetAsciiString();
 				break;
 			case rnLibSecur:
-				if(!unsupported[rnLibSecur]){
-					printf("Unsupported GDS2 record type: LIBSECUR\n");
-					unsupported[rnLibSecur] = true;
-				}
+				ReportUnsupported("LIBSECUR", rnLibSecur);
 				while(recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
 			case rnBorder:
-				if(!unsupported[rnBorder]){
-					printf("Unsupported GDS2 record type: BORDER\n");
-					unsupported[rnBorder] = true;
-				}
+				ReportUnsupported("BORDER", rnBorder);
 				/* Empty */
 				break;
 			case rnSoftFence:
-				if(!unsupported[rnSoftFence]){
-					printf("Unsupported GDS2 record type: SOFTFENCE\n");
-					unsupported[rnSoftFence] = true;
-				}
+				ReportUnsupported("SOFTFENCE", rnSoftFence);
 				/* Empty */
 				break;
 			case rnHardFence:
-				if(!unsupported[rnHardFence]){
-					printf("Unsupported GDS2 record type: HARDFENCE\n");
-					unsupported[rnHardFence] = true;
-				}
+				ReportUnsupported("HARDFENCE", rnHardFence);
 				/* Empty */
 				break;
 			case rnSoftWire:
-				if(!unsupported[rnSoftWire]){
-					printf("Unsupported GDS2 record type: SOFTWIRE\n");
-					unsupported[rnSoftWire] = true;
-				}
+				ReportUnsupported("SOFTWIRE", rnSoftWire);
 				/* Empty */
 				break;
 			case rnHardWire:
-				if(!unsupported[rnHardWire]){
-					printf("Unsupported GDS2 record type: HARDWIRE\n");
-					unsupported[rnHardWire] = true;
-				}
+				ReportUnsupported("HARDWIRE", rnHardWire);
 				/* Empty */
 				break;
 			case rnPathPort:
-				if(!unsupported[rnPathPort]){
-					printf("Unsupported GDS2 record type: PATHPORT\n");
-					unsupported[rnPathPort] = true;
-				}
+				ReportUnsupported("PATHPORT", rnPathPort);
 				/* Empty */
 				break;
 			case rnNodePort:
-				if(!unsupported[rnNodePort]){
-					printf("Unsupported GDS2 record type: NODEPORT\n");
-					unsupported[rnNodePort] = true;
-				}
+				ReportUnsupported("NODEPORT", rnNodePort);
 				/* Empty */
 				break;
 			case rnUserConstraint:
-				if(!unsupported[rnUserConstraint]){
-					printf("Unsupported GDS2 record type: USERCONSTRAINT\n");
-					unsupported[rnUserConstraint] = true;
-				}
+				ReportUnsupported("USERCONSTRAINT", rnUserConstraint);
 				/* Empty */
 				break;
 			case rnSpacerError:
-				if(!unsupported[rnSpacerError]){
-					printf("Unsupported GDS2 record type: SPACERERROR\n");
-					unsupported[rnSpacerError] = true;
-				}
+				ReportUnsupported("SPACERERROR", rnSpacerError);
 				/* Empty */
 				break;
 			case rnContact:
-				if(!unsupported[rnContact]){
-					printf("Unsupported GDS2 record type: CONTACT\n");
-					unsupported[rnContact] = true;
-				}
+				ReportUnsupported("CONTACT", rnContact);
 				/* Empty */
 				break;
 			default:
@@ -1056,4 +936,13 @@ char *GDSParse::GetAsciiString()
 		printf("eek!\n");
 	}
 	return str;
+}
+
+void GDSParse::ReportUnsupported(char *Name, enum RecordNumbers rn)
+{
+	if(!unsupported[rn]){
+		printf("Unsupported GDS2 record type: %s\n", Name);
+		unsupported[rn] = true;
+	}
+
 }

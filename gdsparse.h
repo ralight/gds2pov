@@ -93,6 +93,8 @@ private:
 	long GetFourByteSignedInt();
 	short GetTwoByteSignedInt();
 	char *GetAsciiString();
+
+	void ReportUnsupported(char *Name, enum RecordNumbers rn);
 	
 	void OutputPOVHeader();
 	void RecursiveOutput(class GDSObject *Object, FILE *optr);
