@@ -86,7 +86,7 @@ void GDSParse::OutputPOVHeader()
 			distance = half_widthY * 1.8;
 		}
 
-#ifdef ASDF
+#ifndef ASDF
 		float centreX = half_widthX + Boundary->XMin;
 		float centreY = half_widthY + Boundary->YMin;
 

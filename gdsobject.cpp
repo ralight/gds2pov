@@ -264,10 +264,11 @@ void GDSObject::OutputToFile(FILE *fptr)
 
 			while(sref->Next){
 				sref = sref->Next;
+				fprintf(fptr, "object { str_%s ", sref->Name);				
 				if(sref->Flipped){
-					fprintf(fptr, "// ");
+					fprintf(fptr, "scale <1, 1, -1> ");
 				}
-				fprintf(fptr, "object { str_%s translate <%.2f, 0, %.2f> ", sref->Name, sref->X, sref->Y);
+				fprintf(fptr, "translate <%.2f, 0, %.2f> ", sref->X, sref->Y);
 				if(sref->Rotate.Y){
 					fprintf(fptr, "Rotate_Around_Trans(<0, %.2f, 0>, <%.2f, 0, %.2f>)", sref->Rotate.Y, sref->X, sref->Y);
 				}
