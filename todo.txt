@@ -1,7 +1,7 @@
 - Better command line options including being able to specify the process file.
 - Write structures to individual .inc files to reduce memory usage?
 - Suitable code for endian decisions. What is there available on Solaris/BSD? Would hton* functions be suitable?
-- Auto placement of lights.
+- Auto/defined placement of lights.
 - Deal with concave polygons. Either implement horrid algo to fill them or
   detect and don't fill.
 - Make sure correct order structure output is working (see dh_adc).
@@ -16,5 +16,6 @@
 - Camera include file?
 - Text scaling with units needs fixing, especially the depth.
 - Consider how best to store dimensions in process file - scaled or not?
+- Animations
 
-Total tasks: 15
+Total tasks: 16
