@@ -492,6 +492,7 @@ void GDSParse::ParseXYPath()
 		currentwidth = 0.0; // Always reset to default for paths in case width not specified
 		currentpathtype = 0;
 		currentangle = 0.0;
+		currentdatatype = 0;
 		return;
 	}
 
@@ -535,6 +536,7 @@ void GDSParse::ParseXYBoundary()
 		currentwidth = 0.0; // Always reset to default for paths in case width not specified
 		currentpathtype = 0;
 		currentangle = 0.0;
+		currentdatatype = 0;
 		return;
 	}
 
@@ -560,6 +562,7 @@ void GDSParse::ParseXYBoundary()
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
 	currentangle = 0.0;
+	currentdatatype = 0;
 }
 
 void GDSParse::ParseXY()
@@ -618,6 +621,7 @@ void GDSParse::ParseXY()
 				currentwidth = 0.0; // Always reset to default for paths in case width not specified
 				currentpathtype = 0;
 				currentangle = 0.0;
+				currentdatatype = 0;
 				return;
 			}
 
@@ -637,6 +641,7 @@ void GDSParse::ParseXY()
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
 	currentangle = 0.0;
+	currentdatatype = 0;
 }
 
 short GDSParse::GetBitArray()
