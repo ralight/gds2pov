@@ -628,6 +628,11 @@ void GDSParse::ParseSName()
 	sname = new char[strlen(str)+1];
 	if(sname){
 		strcpy(sname, str);
+		for(int i=0; i<strlen(sname); i++){
+			if(sname[i] == '$'){
+				sname[i] = '_';
+			}
+		}
 	}else{
 		fprintf(stderr, "Unable to allocate memory for string (%d)\n", strlen(str)+1);
 	}
@@ -644,11 +649,19 @@ void GDSParse::ParseUnits()
 
 void GDSParse::ParseStrName()
 {
-	char *str;
+	char *str=NULL;
 	str = GetAsciiString();
-	
-	CurrentObject = Objects->AddObject(str);
-	delete str;
+
+	if(str){
+		for(int i=0; i<strlen(str); i++){
+			if(str[i] == '$'){
+				str[i] = '_';
+			}
+		}
+
+		CurrentObject = Objects->AddObject(str);
+		delete str;
+	}
 }
 
 void GDSParse::ParseXYPath()

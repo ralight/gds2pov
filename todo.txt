@@ -1,7 +1,6 @@
 This release
 ============
 
-- Replace invalid characters in structure names ($)
 - Need to deal with Text/SRef/ARef rotation issues for boundary calculation 
 	(relevant to auto placement of camera)
 	Also for flipped objects.
@@ -22,7 +21,7 @@ This release
 - Compile examples and other files for distribution.
 - Proper command line option parsing
 
-Tasks: 17
+Tasks: 16
 
 
 Unlikely
