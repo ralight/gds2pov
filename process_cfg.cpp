@@ -109,7 +109,8 @@ GDSProcess::GDSProcess(char *processfile)
 					NewLayer.Name = NULL;
 				}
 				NewLayer.Name = new char[strlen(line)-strlen("LayerStart: ")+1];
-				strncpy(NewLayer.Name, line+strlen("LayerStart: "), strlen(line)-strlen("LayerStart: "));
+//				strncpy(NewLayer.Name, line+strlen("LayerStart: "), strlen(line)-strlen("LayerStart: "));
+				strcpy(NewLayer.Name, line+strlen("LayerStart: "));
 				NewLayer.Name[strlen(NewLayer.Name)-1] = '\0';
 				NewLayer.Layer = 0;
 				NewLayer.Datatype = -1;

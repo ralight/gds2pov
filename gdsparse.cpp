@@ -294,7 +294,7 @@ void GDSParse::OutputPOVHeader()
 				if(!firstlayer->Metal){
 					fprintf(optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 				}else{
-					fprintf(optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+					fprintf(optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 				}
 			}
 			firstlayer = firstlayer->Next;
@@ -303,7 +303,7 @@ void GDSParse::OutputPOVHeader()
 			if(!firstlayer->Metal){
 				fprintf(optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 			}else{
-				fprintf(optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+				fprintf(optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 			}
 		}
 
