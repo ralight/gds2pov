@@ -1,6 +1,8 @@
 # Define LINUX or SOLARIS as appropriate
 #COMPILE=g++ -Wall 
 COMPILE=g++ -Wall -DLINUX -O2 
+GDS2POV_VERSION=0.7.1
+DISTDIR=release/gds2pov_${GDS2POV_VERSION}
 #COMPILE=g++ -Wall -pg -fprofile-arcs -ftest-coverage -DLINUX
 
 all : run
@@ -57,12 +59,14 @@ bench : gds2pov
 
 dist : gds2pov
 	strip gds2pov
-	mkdir -p dist/gds2pov
-	cp -f gds2pov dist/gds2pov/
-	cp -f example_2D.png dist/gds2pov/
-	cp -f example_3D.png dist/gds2pov/
-	cp -f changes.txt dist/gds2pov/
-	cp -f example.gds dist/gds2pov/
-	cp -f example_config.txt dist/gds2pov/
-	cp -f example_process.txt dist/gds2pov/
-	cp -f readme.txt dist/gds2pov/
+	mkdir -p ${DISTDIR}/
+	cp -f gds2pov ${DISTDIR}/
+	cp -f example_2D.png ${DISTDIR}/
+	cp -f example_3D.png ${DISTDIR}/
+	cp -f changes.txt ${DISTDIR}/
+	cp -f example.gds ${DISTDIR}/
+	cp -f example_config.txt ${DISTDIR}/
+	cp -f example_process.txt ${DISTDIR}/
+	cp -f readme.txt ${DISTDIR}/
+	tar -cf ${DISTDIR}.tar ${DISTDIR}
+	gzip ${DISTDIR}.tar

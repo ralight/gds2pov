@@ -1,5 +1,5 @@
-GDS2POV 0.7
-===========
+GDS2POV 0.7.1
+=============
 
 Introduction
 ------------
@@ -147,4 +147,5 @@ support for the GDS2 format) are very welcome.
 
 Contact me on roger@atchoo.org
 
-Updates to GDS2POV should be at http://www.atchoo.org/gds2pov
+Updates to GDS2POV should be at http://www.atchoo.org/gds2pov/
+
