@@ -183,19 +183,19 @@ void GDSParse::OutputPOVHeader()
 				// tan(33.69) = 0.66666 = 1/1.5
 				// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
 
-				fprintf(optr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n", centreX, distance, centreY);
+				fprintf(optr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n", centreX*XMod, centreY*YMod, -distance*ZMod);
 				break;
 			case bpTopLeft:
-				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, distance*ZMod, Boundary->YMax*YMod);
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
 				break;
 			case bpTopRight:
-				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, distance*ZMod, Boundary->YMax*YMod);
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
 				break;
 			case bpBottomLeft:
-				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, distance*ZMod, Boundary->YMin*YMod);
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
 				break;
 			case bpBottomRight:
-				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, distance*ZMod, Boundary->YMin*YMod);
+				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
 				break;
 		}
 
@@ -205,19 +205,19 @@ void GDSParse::OutputPOVHeader()
 
 		switch(config->GetLookAtPos()->boundarypos){
 			case bpCentre:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", centreX*XMod, distance*ZMod, centreY*YMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", centreX*XMod, centreY*YMod, distance*ZMod);
 				break;
 			case bpTopLeft:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, distance*ZMod, Boundary->YMax*YMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, Boundary->YMax*YMod, distance*ZMod);
 				break;
 			case bpTopRight:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, distance*ZMod, Boundary->YMax*YMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, Boundary->YMax*YMod, distance*ZMod);
 				break;
 			case bpBottomLeft:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, distance*ZMod, Boundary->YMin*YMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMin*XMod, Boundary->YMin*YMod, distance*ZMod);
 				break;
 			case bpBottomRight:
-				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, distance*ZMod, Boundary->YMin*YMod);
+				fprintf(optr, "\tlook_at <%.2f,%.2f,%.2f>\n}", Boundary->XMax*XMod, Boundary->YMin*YMod, distance*ZMod);
 				break;
 		}
 
@@ -234,19 +234,19 @@ void GDSParse::OutputPOVHeader()
 
 			switch(LightPos->boundarypos){
 				case bpCentre:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", centreX*XMod, distance*ZMod, centreY*YMod);
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", centreX*XMod, centreY*YMod, distance*ZMod);
 					break;
 				case bpTopLeft:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, distance*ZMod, Boundary->YMax*YMod);
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMax*YMod, distance*ZMod);
 					break;
 				case bpTopRight:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, distance*ZMod, Boundary->YMax*YMod);
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMax*YMod, distance*ZMod);
 					break;
 				case bpBottomLeft:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, distance*ZMod, Boundary->YMin*YMod);
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMin*YMod, distance*ZMod);
 					break;
 				case bpBottomRight:
-					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, distance*ZMod, Boundary->YMin*YMod);
+					fprintf(optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMin*YMod, distance*ZMod);
 					break;
 			}
 		}
