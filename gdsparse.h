@@ -93,6 +93,7 @@ private:
 	char *GetAsciiString();
 	
 	void OutputPOVHeader();
+	void RecursiveOutput(class GDSObject *Object, FILE *optr);
 public:
 	GDSParse (char *infile, char *outfile, char *processfile);
 	~GDSParse ();

@@ -56,12 +56,35 @@ class GDSObject *GDSObjects::AddObject(char *Name)
 
 class GDSObject *GDSObjects::GetObject(int Index)
 {
-	struct ObjectList *object = FirstObject;
-	for(int i=0; i<Index && object; i++){
-		object = object->Next;
+	if(FirstObject && Index<Count){
+		struct ObjectList *object = FirstObject;
+		for(int i=0; i<Index && object; i++){
+			object = object->Next;
+		}
+		return object->Object;
+	}else{
+		return NULL;
 	}
-	return object->Object;
 }
+
+class GDSObject *GDSObjects::GetObject(char *Name)
+{
+	if(FirstObject && Name){	
+		struct ObjectList *object = FirstObject;
+
+		while(object->Next){
+			if(strncmp(Name, object->Object->GetName(), strlen(Name))==0){
+				return object->Object;
+			}
+			object = object->Next;
+		}
+		if(strncmp(Name, object->Object->GetName(), strlen(Name))==0){
+			return object->Object;
+		}
+	}
+	return NULL;
+}
+
 
 int GDSObjects::GetCount()
 {

@@ -20,12 +20,17 @@ GDSObject::GDSObject(char *NewName)
 	FirstARef = NULL;
 	LastARef = NULL;
 
+	SRefCount = 0;
+	ARefCount = 0;
+
 	Name = new char[strlen(NewName)+1];
 	strncpy(Name, NewName, strlen(NewName)+1);
 
 	GotBoundary = 0;
 	Boundary.XMax = Boundary.YMax = -10000.0;
 	Boundary.XMin = Boundary.YMin = 10000.0;
+
+	IsOutput = 0;
 }
 
 GDSObject::~GDSObject()
@@ -140,7 +145,7 @@ GDSObject::~GDSObject()
 
 void GDSObject::OutputToFile(FILE *fptr)
 {
-	if(fptr){
+	if(fptr && !IsOutput){
 		fprintf(fptr, "#declare str_%s = union {\n", Name);
 		if(FirstPrism){
 			Prism dummyprism;
@@ -401,6 +406,7 @@ void GDSObject::OutputToFile(FILE *fptr)
 		}
 		fprintf(fptr, "}\n");
 	}
+	IsOutput = 1;
 }
 
 char *GDSObject::GetName()
@@ -538,6 +544,8 @@ void GDSObject::AddSRef(char *Name, float X, float Y, int Flipped)
 	NewSRef->Rotate.Y = 0.0;
 	NewSRef->Rotate.Z = 0.0;
 	NewSRef->Flipped = Flipped;
+
+	SRefCount++;
 }
 
 void GDSObject::SetSRefRotation(float X, float Y, float Z)
@@ -578,6 +586,8 @@ void GDSObject::AddARef(char *Name, float X1, float Y1, float X2, float Y2, floa
 	NewARef->Rotate.Y = 0.0;
 	NewARef->Rotate.Z = 0.0;
 	NewARef->Flipped = Flipped;
+
+	ARefCount++;
 }
 
 void GDSObject::SetARefRotation(float X, float Y, float Z)
@@ -777,3 +787,44 @@ int GDSObject::HasASRef()
 {
 	return (LastARef || LastSRef);
 }
+
+char *GDSObject::GetSRefName(int Index)
+{
+	if(FirstSRef && Index<SRefCount){
+		int i = 0;
+		SRefElement *sref;
+		sref = FirstSRef;
+		while(sref->Next){
+			if(i==Index){
+				return sref->Name;
+			}
+			i++;
+			sref = sref->Next;
+		}
+		if(i==Index){
+			return sref->Name;
+		}
+	}
+	return NULL;
+}
+
+char *GDSObject::GetARefName(int Index)
+{
+	if(FirstARef && Index<ARefCount){
+		int i = 0;
+		ARefElement *aref;
+		aref = FirstARef;
+		while(aref->Next){
+			if(i==Index){
+				return aref->Name;
+			}
+			i++;
+			aref = aref->Next;
+		}
+		if(i==Index){
+			return aref->Name;
+		}
+	}
+	return NULL;
+}
+

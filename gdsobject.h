@@ -93,6 +93,8 @@ private:
 	Prism *FirstPath;
 	Prism *LastPath;
 	int GotBoundary;
+	int IsOutput;
+	int SRefCount, ARefCount;
 
 	char *Name;
 
@@ -126,6 +128,8 @@ public:
 	char *GetName();
 	void OutputToFile(FILE *fptr);
 	int HasASRef();
+	char *GetSRefName(int Index);
+	char *GetARefName(int Index);
 
 	struct _Boundary *GetBoundary(struct ObjectList *);
 };

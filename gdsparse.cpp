@@ -49,26 +49,7 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 
 			OutputPOVHeader();
 
-			/* FIXME - need a better solution than this.
-			**			all this does is to output the objects
-			**			that have no SREFs or AREFs first and
-			**			hope that the rest of the hierarchy works
-			**			out ok.
-			**		It is also inefficient with multiple calls to
-			**			GetObject.
-			*/
-
-			int i;
-			for(i=Objects->GetCount()-1; i>=0; i--){
-				if(!Objects->GetObject(i)->HasASRef()){
-					Objects->GetObject(i)->OutputToFile(optr);
-				}
-			}
-			for(i=Objects->GetCount()-1; i>=0; i--){
-				if(Objects->GetObject(i)->HasASRef()){
-					Objects->GetObject(i)->OutputToFile(optr);
-				}
-			}
+			RecursiveOutput(Objects->GetObject(0), optr);
 			fprintf(optr, "object { str_%s }\n", Objects->GetObject(0)->GetName());
 
 			fclose(optr);
@@ -95,6 +76,33 @@ GDSParse::~GDSParse ()
 	if(Objects){
 		delete Objects;
 	}
+}
+
+void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *optr)
+{
+	if(Object->HasASRef()){
+		GDSObject *child;
+
+		int i=0;
+		do{
+			child=Objects->GetObject(Object->GetSRefName(i));
+			i++;
+			if(child){
+				RecursiveOutput(child, optr);
+			}
+		}while(child);
+
+		i = 0;
+		do{
+			child=Objects->GetObject(Object->GetARefName(i));
+			i++;
+			if(child){
+				RecursiveOutput(child, optr);
+			}
+		}while(child);
+
+	}
+	Object->OutputToFile(optr);
 }
 
 void GDSParse::OutputPOVHeader()
@@ -673,6 +681,7 @@ void GDSParse::ParseXY()
 				}
 			}
 			break;
+
 		case elARef:
 			ARefElements++;
 			firstX = units * (float)GetFourByteSignedInt();
@@ -688,9 +697,8 @@ void GDSParse::ParseXY()
 					CurrentObject->SetARefRotation(0, -currentangle, 0);
 				}
 			}
-
-
 			break;
+
 		case elText:
 			TextElements++;
 

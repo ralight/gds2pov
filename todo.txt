@@ -4,7 +4,6 @@
 - Auto/defined placement of lights.
 - Deal with concave polygons. Either implement horrid algo to fill them or
   detect and don't fill.
-- Make sure correct order structure output is working (see dh_adc).
 - Replace invalid characters in structure names ($)
 - Fix text positioning
 - Need to deal with Text/SRef/ARef rotation issues for boundary calculation 
@@ -17,5 +16,6 @@
 - Text scaling with units needs fixing, especially the depth.
 - Consider how best to store dimensions in process file - scaled or not?
 - Animations
+- Documentation (source and usage)
 
 Total tasks: 16
