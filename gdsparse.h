@@ -43,6 +43,7 @@ class GDSParse
 {
 private:
 	char *libname;
+	char *topcellname;
 
 	short currentlayer;
 	float currentwidth;
@@ -108,7 +109,7 @@ private:
 	void OutputPOVHeader();
 	void RecursiveOutput(class GDSObject *Object, FILE *optr);
 public:
-	GDSParse (char *infile, char *outfile, char *configfile, char *processfile);
+	GDSParse (char *infile, char *outfile, char *configfile, char *processfile, char *topcell);
 	~GDSParse ();
 };
 

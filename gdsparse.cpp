@@ -10,8 +10,10 @@
 
 extern bool verbose_output;
 
-GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *processfile)
+GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *processfile, char *topcell)
 {
+	topcellname = topcell;
+
 	iptr = NULL;
 	optr = NULL;
 	libname = NULL;
@@ -98,7 +100,11 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 
 			OutputPOVHeader();
 
-			RecursiveOutput(Objects->GetObject(0), optr);
+			if(topcellname){
+				RecursiveOutput(Objects->GetObject(topcell), optr);
+			}else{
+				RecursiveOutput(Objects->GetObject(0), optr);
+			}
 			fprintf(optr, "object { str_%s }\n", Objects->GetObject(0)->GetName());
 
 			fclose(optr);
