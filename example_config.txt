@@ -14,9 +14,13 @@
 # process.txt is used as the default.
 # Note that if the -p switch is used with gds2pov it will override the ProcessFile setting.
 #
+# The Font option allows the font to be used to be specified. The default is crystal.ttf (supplied with
+# POV-Ray).
+#
 # GlobalStart
 # Ambient: 1.2
 # ProcessFile: process.txt
+# Font: crystal.ttf
 # GlobalEnd
 #
 #
