@@ -182,114 +182,116 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects)
 			while(path->Next){
 				path = path->Next;
 
-				fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->Points-1));
-//				int dia=100;
-				for(i=0; i<path->Points-1; i++){
+				if(path->Width){
+					fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->Points-1));
+	//				int dia=100;
+					for(i=0; i<path->Points-1; i++){
 
-					// 1
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-						path->Coords[i].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						path->Coords[i].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height - path->Thickness
-//						,dia
-						);
-//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						// 1
+						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
+							path->Coords[i].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							path->Coords[i].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							-path->Height - path->Thickness
+	//						,dia
+							);
+	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 
-					// 2
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-						path->Coords[i].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						path->Coords[i].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height - path->Thickness
-//						,dia
-						);
-//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						// 2
+						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
+							path->Coords[i].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							path->Coords[i].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							-path->Height - path->Thickness
+	//						,dia
+							);
+	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 
-					// 3
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-						path->Coords[i].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						path->Coords[i].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height
-//						,dia
-						);
-//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						// 3
+						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
+							path->Coords[i].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							path->Coords[i].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							-path->Height
+	//						,dia
+							);
+	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 
-					// 4
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-						path->Coords[i].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						path->Coords[i].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height
-//						,dia
-						);
-//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						// 4
+						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
+							path->Coords[i].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							path->Coords[i].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							-path->Height
+	//						,dia
+							);
+	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 
-					// 5
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-						path->Coords[i+1].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						path->Coords[i+1].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height - path->Thickness
-//						,dia
-						);
-//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						// 5
+						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
+							path->Coords[i+1].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							path->Coords[i+1].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							-path->Height - path->Thickness
+	//						,dia
+							);
+	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 
-					// 6
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-						path->Coords[i+1].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						path->Coords[i+1].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height - path->Thickness
-//						,dia
-						);
-//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						// 6
+						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
+							path->Coords[i+1].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							path->Coords[i+1].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							-path->Height - path->Thickness
+	//						,dia
+							);
+	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 
-					// 7
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-						path->Coords[i+1].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						path->Coords[i+1].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height
-//						,dia
-						);
-//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						// 7
+						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
+							path->Coords[i+1].X + path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							path->Coords[i+1].Y + path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							-path->Height
+	//						,dia
+							);
+	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 
-					// 8
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
-						path->Coords[i+1].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						path->Coords[i+1].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
-						-path->Height
-//						,dia
-						);
-//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+						// 8
+						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+	//					fprintf(fptr, "sphere {<%.2f,%.2f,%.2f>,%d ",
+							path->Coords[i+1].X - path->Width * cos(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							path->Coords[i+1].Y - path->Width * sin(atan2(path->Coords[i].X - path->Coords[i+1].X, path->Coords[i+1].Y - path->Coords[i].Y)),
+							-path->Height
+	//						,dia
+							);
+	//					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } }\n", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 
+					}
+					fprintf(fptr, "} face_indices { %d", 12*(path->Points-1));
+					for(i=0; i<path->Points-1; i++){
+						// print ,faces now
+						fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 1+8*i, 2+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 2+8*i, 3+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 4+8*i, 5+8*i, 6+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 5+8*i, 6+8*i, 7+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 1+8*i, 5+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 4+8*i, 5+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 2+8*i, 3+8*i, 6+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 3+8*i, 6+8*i, 7+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 3+8*i, 7+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 5+8*i, 7+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 2+8*i, 4+8*i);
+						fprintf(fptr, ",<%d,%d,%d>", 2+8*i, 4+8*i, 6+8*i);
+					}
+					fprintf(fptr, "} ");
+					if(!path->Colour.Metal){
+						fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+					}else{
+						fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+					}
+					fprintf(fptr, "}\n");
 				}
-				fprintf(fptr, "} face_indices { %d", 12*(path->Points-1));
-				for(i=0; i<path->Points-1; i++){
-					// print ,faces now
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 1+8*i, 2+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 2+8*i, 3+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 4+8*i, 5+8*i, 6+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 5+8*i, 6+8*i, 7+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 1+8*i, 5+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 4+8*i, 5+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 2+8*i, 3+8*i, 6+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 3+8*i, 6+8*i, 7+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 3+8*i, 7+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 1+8*i, 5+8*i, 7+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*i, 2+8*i, 4+8*i);
-					fprintf(fptr, ",<%d,%d,%d>", 2+8*i, 4+8*i, 6+8*i);
-				}
-				fprintf(fptr, "} ");
-				if(!path->Colour.Metal){
-					fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-				}else{
-					fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-				}
-				fprintf(fptr, "}\n");
 			}
 		}
 
