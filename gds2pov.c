@@ -97,7 +97,11 @@ int main(int argc, char *argv[])
 	fprintf(outfile, "light_source { <30000, 20000, 10000> White }\n");
 	GDStoPOV(infile, outfile, all_layers, layer_count);
 
-	fprintf(outfile, "object { str_gds2example }\n");
+	if(StrNames && StrNames[StrCount-1]){
+		fprintf(outfile, "object { str_%s }\n", StrNames[StrCount-1]);
+	}else{
+		printf("Unable to find any structures!\n");
+	}
 	fclose(infile);
 	fclose(outfile);
 
