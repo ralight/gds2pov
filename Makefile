@@ -5,7 +5,7 @@ all : run
 
 clean : clean_gds2pov
 
-gds2pov : process_cfg.o gdsparse.o gds2pov.o gdsobjects.o gdsobject.o gds_types.o
+gds2pov : process_cfg.o gdsparse.o gds2pov.o gdsobjects.o gdsobject.o
 	$(COMPILE) -DLINUX -o gds2pov gds2pov.o gdsparse.o process_cfg.o gdsobject.o gdsobjects.o -lm
 
 process_cfg.o : process_cfg.cpp process_cfg.h
