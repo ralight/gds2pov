@@ -46,6 +46,7 @@ private:
 	char *textstring;
 	unsigned short currentstrans;
 	float currentangle;
+	short currentdatatype;
 
 	char *sname;
 	short arrayrows, arraycols;

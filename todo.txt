@@ -1,6 +1,6 @@
 - Better command line options including being able to specify the process file.
 - Write structures to individual .inc files to reduce memory usage?
-- Implement mirrored objects.
+- Implement mirrored objects (text)
 - Suitable code for endian decisions. What is there available on Solaris/BSD? Would hton* functions be suitable?
 - Auto placement of lights.
 - Deal with concave polygons. Either implement horrid algo to fill them or
@@ -16,8 +16,12 @@
 	Also for flipped objects.
 - Detect text for boundary calculation
 - Convert Boundaries into mesh2 objects?
-- Check non-orthogonal paths are correct
+- Fix non-orthogonal paths
 - Group unused gds2 elements together based on data type so that parsing of a
   file can be done ignoring the unsupported elements.
 - Camera include file?
 - Add support for datatype or rnDataType to allow eg. RESDEF, DIODE, CAPDEF which are all layer 62!
+- Need to test rotated and flipped ARefs, SRefs
+- Group paths as a single mesh2 object?
+
+Total tasks: 21

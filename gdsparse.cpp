@@ -25,6 +25,7 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 	currentwidth = 0.0;
 	currentstrans = 0;
 	currentpathtype = 0;
+	currentdatatype = 0;
 
 	mirror=0;
 
@@ -112,7 +113,7 @@ void GDSParse::OutputPOVHeader()
 		}
 
 		CameraPosition cp;
-		cp = cpBottomLeft;
+		cp = cpCentre;
 
 		float modifier = (float)1.0;
 
@@ -223,9 +224,7 @@ void GDSParse::Parse()
 				currentlayer = GetTwoByteSignedInt();
 				break;
 			case rnDataType:
-				while(recordlen){
-					GetTwoByteSignedInt();
-				}
+				currentdatatype = GetTwoByteSignedInt();
 				break;
 			case rnWidth:
 				currentwidth = (float)(GetFourByteSignedInt()/2);
@@ -598,9 +597,12 @@ void GDSParse::ParseXY()
 
 			Flipped = ((unsigned short)(currentstrans & 0x8000) == (unsigned short)0x8000) ? 1 : 0;
 
-			CurrentObject->AddARef(sname, firstX, firstY, secondX, secondY, X, Y, arraycols, arrayrows, Flipped);
-			printf("ca=%.2f\n", -currentangle);
-			CurrentObject->SetARefRotation(0, -currentangle, 0);
+			if(CurrentObject){
+				CurrentObject->AddARef(sname, firstX, firstY, secondX, secondY, X, Y, arraycols, arrayrows, Flipped);
+				if(currentangle){
+					CurrentObject->SetARefRotation(0, -currentangle, 0);
+				}
+			}
 
 
 			break;

@@ -306,9 +306,6 @@ void GDSObject::OutputToFile(FILE *fptr)
 
 			while(aref->Next){
 				aref = aref->Next;
-				if(aref->Flipped){
-					fprintf(fptr, "// ");
-				}
 				if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
 					if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
 						dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
@@ -316,7 +313,11 @@ void GDSObject::OutputToFile(FILE *fptr)
 
 						for(X=0; X<aref->Columns; X++){
 							for(Y=0; Y<aref->Rows; Y++){
-								fprintf(fptr, "object { str_%s translate <%.2f, 0, %.2f>", aref->Name, aref->X1 + dx*X, aref->Y1 + dy*Y);
+								fprintf(fptr, "object { str_%s ", aref->Name);
+								if(aref->Flipped){
+									fprintf(fptr, "scale <1, 1, -1> ");
+								}
+								fprintf(fptr, "translate <%.2f, 0, %.2f>", aref->X1 + dx*X, aref->Y1 + dy*Y);
 								if(aref->Rotate.Y){
 									fprintf(fptr, " Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", aref->Rotate.Y, aref->X1 + dx*X, aref->Y1 + dy*Y);
 								}
@@ -330,7 +331,11 @@ void GDSObject::OutputToFile(FILE *fptr)
 						dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
 						for(X=0; X<aref->Columns; X++){
 							for(Y=0; Y<aref->Rows; Y++){
-								fprintf(fptr, "object { str_%s translate <%.2f, 0, %.2f>", aref->Name, aref->X1 + dx*X, aref->Y1 + dy*Y);
+								fprintf(fptr, "object { str_%s ", aref->Name);
+								if(aref->Flipped){
+									fprintf(fptr, "scale <1, 1, -1> ");
+								}
+								fprintf(fptr, "translate <%.2f, 0, %.2f>", aref->X1 + dx*X, aref->Y1 + dy*Y);
 								if(aref->Rotate.Y){
 									fprintf(fptr, " Rotate_Around_Trans(<0, %.2f, 0>, <%0.2f, 0, %0.2f>)", aref->Rotate.Y, aref->X1 + dx*X, aref->Y1 + dy*Y);
 								}
