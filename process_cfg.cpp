@@ -52,6 +52,7 @@ GDSProcess::GDSProcess(char *processfile)
 	FirstLayer = NULL;
 
 	struct ProcessLayer NewLayer;
+	NewLayer.Name = NULL;
 
 	pptr = fopen(processfile, "rt");
 	
@@ -61,10 +62,12 @@ GDSProcess::GDSProcess(char *processfile)
 	}
 
 	while(!feof(pptr) && fgets(line, 1024, pptr)){
-		if(strstr(line, "LayerStart")){			
-			layerstart_cnt++;
-		}else if(strstr(line, "LayerEnd")){
-			layerend_cnt++;
+		if(line[0]!='#'){
+			if(strstr(line, "LayerStart")){			
+				layerstart_cnt++;
+			}else if(strstr(line, "LayerEnd")){
+				layerend_cnt++;
+			}
 		}
 	}
 	if(layerstart_cnt!=layerend_cnt){
@@ -114,6 +117,7 @@ GDSProcess::GDSProcess(char *processfile)
 				NewLayer.Filter = 0.0;
 				NewLayer.Metal = 0;
 				NewLayer.Show = 0;
+				NewLayer.Next = NULL;
 			}else if(strstr(line, "Layer:")){
 				if(!in_layer){
 					printf("Error: Layer definition outside of LayerStart and LayerEnd on line %d.\n", current_line);
@@ -274,13 +278,13 @@ GDSProcess::GDSProcess(char *processfile)
 					showing = 0;
 				}
 				AddLayer(&NewLayer);
-				if(NewLayer.Name){
+				//if(NewLayer.Name){
 					if(!showing){
-						printf("Not showing layer %s (%d)\n", NewLayer.Name, NewLayer.Layer);
+						printf("Not showing layer %d\n", NewLayer.Layer);
 					}
-					delete NewLayer.Name;
-					NewLayer.Name = NULL;
-				}
+				//	delete NewLayer.Name;
+				//	NewLayer.Name = NULL;
+				//}
 				in_layer = 0;
 			}
 		}
@@ -316,14 +320,14 @@ GDSProcess::~GDSProcess ()
 	}
 }
 
-struct ProcessLayer *GDSProcess::GetLayer(int Number)
+struct ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 {
 	struct ProcessLayer *layer;
 
 	layer = FirstLayer;
 
 	while(layer){
-		if(layer->Layer == Number){
+		if(layer->Layer == Number && layer->Datatype == Datatype){
 			return layer;
 		}
 		layer = layer->Next;
@@ -359,6 +363,7 @@ void GDSProcess::AddLayer(struct ProcessLayer *NewLayer)
 	//layer->Name = new char[strlen(NewLayer->Name)+1];
 	//strncpy(layer->Name, NewLayer->Name, strlen(NewLayer->Name)+1);
 	layer->Layer = NewLayer->Layer;
+	layer->Datatype = NewLayer->Datatype;
 	layer->Height = NewLayer->Height;
 	layer->Thickness = NewLayer->Thickness;
 	layer->Show = NewLayer->Show;

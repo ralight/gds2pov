@@ -37,7 +37,7 @@ public:
 	~GDSProcess ();
 
 	void AddLayer(struct ProcessLayer *NewLayer);
-	struct ProcessLayer *GetLayer(int Number);
+	struct ProcessLayer *GetLayer(int Number, int Datatype);
 	int LayerCount();
 	int IsValid();
 };

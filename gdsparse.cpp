@@ -567,7 +567,7 @@ void GDSParse::ParseXYPath()
 	int i;
 	struct ProcessLayer *thislayer;
 
-	thislayer = process->GetLayer(currentlayer);
+	thislayer = process->GetLayer(currentlayer, currentdatatype);
 
 	if(thislayer==NULL){
 		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
@@ -601,6 +601,7 @@ void GDSParse::ParseXYPath()
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
 	currentangle = 0.0;
+	currentdatatype = 0;
 }
 
 void GDSParse::ParseXYBoundary()
@@ -611,7 +612,7 @@ void GDSParse::ParseXYBoundary()
 	int i;
 	struct ProcessLayer *thislayer;
 
-	thislayer = process->GetLayer(currentlayer);
+	thislayer = process->GetLayer(currentlayer, currentdatatype);
 
 	if(thislayer==NULL){
 		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
@@ -658,7 +659,7 @@ void GDSParse::ParseXY()
 	struct ProcessLayer *thislayer;
 	int Flipped;
 
-	thislayer = process->GetLayer(currentlayer);
+	thislayer = process->GetLayer(currentlayer, currentdatatype);
 
 	switch(currentelement){
 		case elSRef:

@@ -54,6 +54,10 @@ Metal: 0
 Show: 1
 LayerEnd
 
+LayerStart: FIMP
+Layer: 8
+LayerEnd
+
 LayerStart: DIFF
 Layer: 10
 Height: 10
@@ -234,14 +238,28 @@ Metal: 0
 Show: 1
 LayerEnd
 
+LayerStart: DIODE
+Layer: 62
+Datatype: 11
+Height: 28
+Thickness: 28
+Red: 0.4
+Green: 0.4
+Blue: 0.08
+Filter: 0.5
+Metal: 0
+Show: 1
+LayerEnd
+
 LayerStart: RESDEF
 Layer: 62
-Height: 28
-Thickness: 280
-Red: 0.4
-Green: 0.7
-Blue: 0.08
-Filter: 0.8
+Datatype: 13
+Height: 800
+Thickness: 50
+Red: 1.0
+Green: 1.0
+Blue: 1.0
+Filter: 0.5
 Metal: 0
 Show: 1
 LayerEnd
