@@ -1,27 +1,28 @@
-#ifndef _GDS_PARSE_H
-#define _GDS_PARSE_H
+#ifndef __GDSOBJECT_H__
+#define __GDSOBJECT_H__
+
+#include <stdarg.h>
+#include <string>
+using namespace std;
 
 #include "process_cfg.h"
 
-void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count);
-void Parse(FILE *infile, FILE *outfile, layers *all_layers, int layer_count);
-void FindStructures(FILE *infile, FILE *outfile, layers *all_layers, int layer_count);
+struct Element {
+	struct Element *Next;
+	char *line;
+}
 
+class GDSObject
+{
+private:
+	struct Element *FirstElement;
 
-void ParseHeader(FILE *infile, FILE *outfile, short recordlen);
-void ParseBgnLib(FILE *infile, FILE *outfile, short recordlen);
-void ParseLibName(FILE *infile, FILE *outfile, short recordlen);
-void ParseSName(FILE *infile, FILE *outfile, short recordlen);
-void ParseUnits(FILE *infile, FILE *outfile, short recordlen);
-void ParseBgnStr(FILE *infile, FILE *outfile, short recordlen);
-void ParseStrName(FILE *infile, FILE *outfile, short recordlen);
-void ParseBoundary(FILE *infile, FILE *outfile, short recordlen);
-void ParsePath(FILE *infile, FILE *outfile, short recordlen);
-void ParsePathType(FILE *infile, FILE *outfile, short recordlen);
-void ParseWidth(FILE *infile, FILE *outfile, short recordlen);
-void ParseLayer(FILE *infile, FILE *outfile, short recordlen);
-void ParseDataType(FILE *infile, FILE *outfile, short recordlen);
-void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, int layer_count);
-void ParseEndEl(FILE *infile, FILE *outfile, short recordlen);
+public:
+	GDSObject (char *filename);
+	~GDSObject ();
 
-#endif
+	AddElement(char *line, int size);
+	OutputToFile(FILE *fptr);
+};
+
+#endif // __GDSOBJECT_H__
