@@ -22,8 +22,13 @@ Next release
 - Detect text for boundary calculation
 - Text scaling with units needs fixing, especially the depth!
 - Documentation (source)
+- Use font that is supplied with povray instead of arial
+- Deal with different types of path (not octagonal though...)
+- If datatype not specified, use layer definition for all datatypes
+- Debug/verbose output
+- Exception handling
 
-Tasks: 8
+Tasks: 13
 
 
 Unlikely
