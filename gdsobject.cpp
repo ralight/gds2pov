@@ -807,31 +807,31 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 							Boundary.XMax = sref->X + NewBound->XMax;
 						}
 						if(sref->X - NewBound->XMin < Boundary.XMin){
-							if(strcmp(Name, "col8x_pc3")==0){
-								printf("col8x Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-							}
-							if(strcmp(object->Object->GetName(), "col8x_pc3")==0){
-								printf("col8x GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-							}
-							if(strcmp(Name, "colx_pc3")==0){
-								printf("colx Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-							}
-							if(strcmp(object->Object->GetName(), "colx_pc3")==0){
-								printf("colx GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-							}
+//							if(strcmp(Name, "col8x_pc3")==0){
+//								printf("col8x Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+//							}
+//							if(strcmp(object->Object->GetName(), "col8x_pc3")==0){
+//								printf("col8x GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+//							}
+//							if(strcmp(Name, "colx_pc3")==0){
+//								printf("colx Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+//							}
+//							if(strcmp(object->Object->GetName(), "colx_pc3")==0){
+//								printf("colx GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+//							}
 							Boundary.XMin = sref->X - NewBound->XMin;
-							if(strcmp(Name, "col8x_pc3")==0){
-								printf("scol8x Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-							}
-							if(strcmp(object->Object->GetName(), "col8x_pc3")==0){
-								printf("scol8x GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-							}
-							if(strcmp(Name, "colx_pc3")==0){
-								printf("scolx Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-							}
-							if(strcmp(object->Object->GetName(), "colx_pc3")==0){
-								printf("scolx GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
-							}
+//							if(strcmp(Name, "col8x_pc3")==0){
+//								printf("scol8x Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+//							}
+//							if(strcmp(object->Object->GetName(), "col8x_pc3")==0){
+//								printf("scol8x GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+//							}
+//							if(strcmp(Name, "colx_pc3")==0){
+//								printf("scolx Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+//							}
+//							if(strcmp(object->Object->GetName(), "colx_pc3")==0){
+//								printf("scolx GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+//							}
 						}
 						if(sref->Y + NewBound->YMax > Boundary.YMax){
 							Boundary.XMax = sref->Y + NewBound->YMax;

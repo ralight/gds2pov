@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	verbose_output=false;
 	bounding_output=false;
 
-	if(argc<3 || argc>9){
+	if(argc<3 || argc>11){
 		printf("Error: Invalid number of arguments.\n\n");
 		printusage();
 		return 1;
