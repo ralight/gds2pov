@@ -411,19 +411,19 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 
 	switch(currentelement){
 		case elBoundary:
-			printf("StrNames=%p, CurrentStrName=%p\n", StrNames, CurrentStrName);
-			printf("CurrentStr=%d\n", CurrentStr);
+		//	printf("StrNames=%p, CurrentStrName=%p\n", StrNames, CurrentStrName);
+		//	printf("CurrentStr=%d\n", CurrentStr);
 			if(all_layers[thislayer].height && all_layers[thislayer].show && Mode == modeParse && StrNames && strncmp(StrNames[CurrentStr], CurrentStrName, strlen(CurrentStrName)+1)==0){
 				fprintf(outfile, "prism { ");
 				fprintf(outfile, "%d,%d,%d", all_layers[thislayer].height, all_layers[thislayer].height+all_layers[thislayer].thickness, points);
 			}else{
-				printf("Not adding elBoundary (Height = %d, Show = %d, StrNames=%p, CurrentStrName=%p)\n", all_layers[thislayer].height, all_layers[thislayer].show, StrNames, CurrentStrName);
-				if(CurrentStrName){
-					printf("\tCurrentStrName=%s\n", CurrentStrName);
-				}
-				if(StrNames && StrNames[CurrentStr]){
-					printf("\tStrNames[CurrentStr]=%s\n", StrNames[CurrentStr]);
-				}
+		//		printf("Not adding elBoundary (Height = %d, Show = %d, StrNames=%p, CurrentStrName=%p)\n", all_layers[thislayer].height, all_layers[thislayer].show, StrNames, CurrentStrName);
+		//		if(CurrentStrName){
+		//			printf("\tCurrentStrName=%s\n", CurrentStrName);
+		//		}
+		//		if(StrNames && StrNames[CurrentStr]){
+		//			printf("\tStrNames[CurrentStr]=%s\n", StrNames[CurrentStr]);
+		//		}
 			}
 
 			for(i=0; i<points; i++){
@@ -456,7 +456,7 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, i
 					fprintf(outfile, "prism { ");
 					fprintf(outfile, " %d, %d, %d", all_layers[thislayer].height, all_layers[thislayer].height+all_layers[thislayer].thickness, points*2+1);
 				}else{
-					printf("Not adding elPath (Height = %d, Show = %d)\n", all_layers[thislayer].height, all_layers[thislayer].show);
+		//			printf("Not adding elPath (Height = %d, Show = %d)\n", all_layers[thislayer].height, all_layers[thislayer].show);
 				}
 				X = units * (float)GetFourByteSignedInt(infile, &recordlen);
 				Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
