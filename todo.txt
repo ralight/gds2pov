@@ -20,3 +20,4 @@
 - Group unused gds2 elements together based on data type so that parsing of a
   file can be done ignoring the unsupported elements.
 - Camera include file?
+- Add support for datatype or rnDataType to allow eg. RESDEF, DIODE, CAPDEF which are all layer 62!
