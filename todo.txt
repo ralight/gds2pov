@@ -3,8 +3,9 @@ This release
 
 - Code coverage testing
 - Incorrect process/config file testing
+- Create gds2 file for example_process.txt.
 
-Tasks: 2
+Tasks: 3
 
 
 Next release
