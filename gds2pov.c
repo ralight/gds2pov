@@ -23,7 +23,8 @@ int main(int argc, char *argv[])
 	FILE *infile=NULL;
 	FILE *outfile=NULL;
 	layers *all_layers=NULL;
-	int i, layer_count;
+	int layer_count;
+	int i;
 
 	libname = NULL;
 	sname = NULL;
@@ -39,17 +40,15 @@ int main(int argc, char *argv[])
 		printf("Unable to read %s\n", argv[1]);
 		return 0;
 	}
-	if(ReadProcessFile(infile, all_layers, &layer_count)==1){
-/*		if(all_layers){
+
+	if(ReadProcessFile(infile, &all_layers, &layer_count)==1){
+		printf("Error reading the process information file.\n");
+		if(all_layers){
 			for(i=0; i<layer_count; i++){
-				if(all_layers[i]){
-					free(all_layers[i]);
+				if((&all_layers)[i]){
+					free((&all_layers)[i]);
 				}
 			}
-			free(all_layers);
-		}
-*/
-		if(all_layers){
 			free(all_layers);
 		}
 		fclose(infile);
@@ -81,7 +80,7 @@ int main(int argc, char *argv[])
 	fprintf(outfile, "background { color Black }\n");
 	fprintf(outfile, "light_source { <2000, 2000, -30000> White }\n");
 	fprintf(outfile, "light_source { <2000, 20000, -0000> White }\n");
-	GDStoPOV(infile, outfile);
+	GDStoPOV(infile, outfile, all_layers, layer_count);
 
 	fprintf(outfile, "object { str_path }\n");
 	fclose(infile);

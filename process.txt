@@ -83,7 +83,7 @@ Layer: 36
 Height: 2263
 Thickness: 1000
 Colour: <1, 0.75, 1>
-Metal: 1
+Metal: 0
 Transparent: 0
 Show: 1
 LayerEnd
@@ -103,7 +103,7 @@ Layer: 38
 Height: 3903
 Thickness: 1000
 Colour: <1, 0.5, 0.5>
-Metal: 1
+Metal: 0
 Transparent: 0
 Show: 1
 LayerEnd
@@ -123,7 +123,7 @@ Layer: 41
 Height: 5828
 Thickness: 1000
 Colour: <1, 0.75, 0.75>
-Metal: 1
+Metal: 0
 Transparent: 0
 Show: 1
 LayerEnd

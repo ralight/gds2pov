@@ -1,6 +1,6 @@
-COMPILE=gcc -Wall
+COMPILE=gcc -Wall -ggdb
 
-all : gds2pov
+all : run
 
 clean : clean_gds2pov
 
@@ -22,3 +22,9 @@ gds2pov.o : gds2pov.c gds2pov.h gds_types.o gds_parse.o gds_globals.h process_cf
 clean_gds2pov :
 	rm -f gds2pov
 	rm -f *.o
+
+run : gds2pov
+	./gds2pov layers.gds layers.pov
+
+test : run
+	diff layers.pov layers_ref.pov

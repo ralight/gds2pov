@@ -1,7 +1,9 @@
 #ifndef _GDS_PARSE_H
 #define _GDS_PARSE_H
 
-void GDStoPOV(FILE *infile, FILE *outfile);
+#include "process_cfg.h"
+
+void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count);
 
 void ParseHeader(FILE *infile, FILE *outfile, short recordlen);
 void ParseBgnLib(FILE *infile, FILE *outfile, short recordlen);
@@ -16,7 +18,7 @@ void ParsePathType(FILE *infile, FILE *outfile, short recordlen);
 void ParseWidth(FILE *infile, FILE *outfile, short recordlen);
 void ParseLayer(FILE *infile, FILE *outfile, short recordlen);
 void ParseDataType(FILE *infile, FILE *outfile, short recordlen);
-void ParseXY(FILE *infile, FILE *outfile, short recordlen);
+void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, int layer_count);
 void ParseEndEl(FILE *infile, FILE *outfile, short recordlen);
 
 #endif

@@ -8,7 +8,7 @@
 #include "process_cfg.h"
 #include "gds_globals.h"
 
-void GDStoPOV(FILE *infile, FILE *outfile)
+void GDStoPOV(FILE *infile, FILE *outfile, layers *all_layers, int layer_count)
 {
 	short recordlen;
 	byte recordtype, datatype;
@@ -74,7 +74,7 @@ void GDStoPOV(FILE *infile, FILE *outfile)
 				// subtracting
 				break;
 			case rnXY:
-				ParseXY(infile, outfile, recordlen);
+				ParseXY(infile, outfile, recordlen, all_layers, layer_count);
 				break;
 			case rnEndEl:
 				/* Empty, no need to parse */
@@ -321,43 +321,66 @@ void ParseDataType(FILE *infile, FILE *outfile, short recordlen)
 	}
 }
 
-void ParseXY(FILE *infile, FILE *outfile, short recordlen)
+void ParseXY(FILE *infile, FILE *outfile, short recordlen, layers *all_layers, int layer_count)
 {
 	float X, Y, nextX=0.0, nextY=0.0, prevX=0.0, prevY=0.0;
 	float firstX=0.0, firstY=0.0, secondX=0.0, secondY=0.0;
 	int points = recordlen/8;
 	int i;
-	layers thislayer;
+	int thislayer;
 
-	layertable(currentlayer, &thislayer);
+	thislayer = -1;
+	for(i=0; i<layer_count; i++){
+		if(all_layers[i].layer == currentlayer){
+			thislayer = i;
+			break;
+		}
+	}
+
+	if(thislayer==-1){
+		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
+		return;
+	}
 
 	switch(currentelement){
 		case elBoundary:
-			if(thislayer.height && thislayer.show){
+			//if(all_layers[i].height && all_layers[i].show){
+			if(all_layers[thislayer].height && all_layers[thislayer].show){
 				fprintf(outfile, "prism { ");
-				fprintf(outfile, "%d,%d,%d", thislayer.height, thislayer.height+thislayer.thickness, points);
+				fprintf(outfile, "%d,%d,%d", all_layers[thislayer].height, all_layers[thislayer].height+all_layers[thislayer].thickness, points);
+			}else{
+				printf("Not adding elBoundary (Height = %d, Show = %d)\n", all_layers[thislayer].height, all_layers[thislayer].show);
 			}
+
 			for(i=0; i<points; i++){
-				if(thislayer.height && thislayer.show){
+				if(all_layers[thislayer].height && all_layers[thislayer].show){
 					fprintf(outfile, ",");
 				}
 				X = units * (float)GetFourByteSignedInt(infile, &recordlen);
 				Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
-				if(thislayer.height && thislayer.show){
+				if(all_layers[thislayer].height && all_layers[thislayer].show){
 					fprintf(outfile, "<%.2f, %.2f>", X, Y);
 				}
 			}
-			if(thislayer.height && thislayer.show){
-				fprintf(outfile, " %s ", thislayer.colour);
-				fprintf(outfile, "}\n");
+			if(all_layers[thislayer].height && all_layers[thislayer].show){
+				fprintf(outfile, " texture { pigment { rgb %s }", all_layers[thislayer].colour);
+
+				if(all_layers[thislayer].metal){
+					fprintf(outfile, " finish { F_MetalC }");
+				}else if(all_layers[thislayer].transparent){
+				//	fprintf(outfile, "finish { F_MetalC }");
+				}
+				fprintf(outfile, " } }\n");
 			}
 			break;
 		case elPath:
 			if(currentwidth){
 				/* FIXME - need to check for -ve value and then not scale */
-				if(thislayer.height && thislayer.show){
+				if(all_layers[thislayer].height && all_layers[thislayer].show){
 					fprintf(outfile, "prism { ");
-					fprintf(outfile, " %d, %d, %d", thislayer.height, thislayer.height+thislayer.thickness, points*2+1);
+					fprintf(outfile, " %d, %d, %d", all_layers[thislayer].height, all_layers[thislayer].height+all_layers[thislayer].thickness, points*2+1);
+				}else{
+					printf("Not adding elPath (Height = %d, Show = %d)\n", all_layers[thislayer].height, all_layers[thislayer].show);
 				}
 				X = units * (float)GetFourByteSignedInt(infile, &recordlen);
 				Y = units * (float)GetFourByteSignedInt(infile, &recordlen);
@@ -372,7 +395,7 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen)
 						secondX = nextX;
 						secondY = nextY;
 					}
-					if(thislayer.height && thislayer.show){
+					if(all_layers[thislayer].height && all_layers[thislayer].show){
 						fprintf(outfile, ",");
  						if(i<points){
 							fprintf(outfile, "<%.2f, ", X + (float)currentwidth * cos(atan2(X-nextX, nextY-Y)));
@@ -396,9 +419,15 @@ void ParseXY(FILE *infile, FILE *outfile, short recordlen)
 					Y = nextY;
 				}
 			}
-			if(thislayer.height && thislayer.show){
-				fprintf(outfile, " %s ", thislayer.colour);
-				fprintf(outfile, "}\n");
+			if(all_layers[thislayer].height && all_layers[thislayer].show){
+				fprintf(outfile, " texture { pigment { rgb %s }", all_layers[thislayer].colour);
+
+				if(all_layers[thislayer].metal){
+					fprintf(outfile, " finish { F_MetalC }");
+				}else if(all_layers[thislayer].transparent){
+				//	fprintf(outfile, "finish { F_MetalC }");
+				}
+				fprintf(outfile, " } }\n");
 			}
 			break;
 		case elSRef:
