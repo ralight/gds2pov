@@ -33,6 +33,7 @@ public:
 
 	void AddLayer(struct ProcessLayer *NewLayer);
 	struct ProcessLayer *GetLayer(int Number, int Datatype);
+	struct ProcessLayer *GetLayer();
 	int LayerCount();
 	int IsValid();
 	float GetHighest();

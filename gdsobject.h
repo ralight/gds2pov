@@ -34,6 +34,7 @@ typedef struct _Prism {
 	Point *Coords;
 	Transform Rotate;
 	ElementColour Colour;
+	char *LayerName;
 } Prism;
 
 typedef struct _Path {
@@ -48,6 +49,7 @@ typedef struct _Path {
 	Point *Coords;
 	Transform Rotate;
 	ElementColour Colour;
+	char *LayerName;
 } Path;
 
 typedef struct _TextElement {
@@ -59,6 +61,7 @@ typedef struct _TextElement {
 	int VJust;
 	int HJust;
 	ElementColour Colour;
+	char *LayerName;
 	char *String;
 	Transform Rotate;
 	int Flipped;
@@ -122,12 +125,12 @@ public:
 	GDSObject(char *Name);
 	~GDSObject();
 
-	void AddPrism(float Height, float Thickness, int Points);
+	void AddPrism(float Height, float Thickness, int Points, char *LayerName);
 	void AddPrismPoint(int Index, float X, float Y);
 	void SetPrismColour(float R, float G, float B, float F, int Metal);
 	void SetPrismRotation(float X, float Y, float Z);
 
-	void AddText(float X, float Y, float Z, int Flipped, float Mag, int VJust, int HJust);
+	void AddText(float X, float Y, float Z, int Flipped, float Mag, int VJust, int HJust, char *LayerName);
 	void SetTextColour(float R, float G, float B, float F, int Metal);
 	void SetTextString(char *String);
 	void SetTextRotation(float X, float Y, float Z);
@@ -138,7 +141,7 @@ public:
 	void AddARef(char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag);
 	void SetARefRotation(float X, float Y, float Z);
 
-	void AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn);
+	void AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, char *LayerName);
 	void AddPathPoint(int Index, float X, float Y);
 	void SetPathColour(float R, float G, float B, float F, int Metal);
 	void SetPathRotation(float X, float Y, float Z);

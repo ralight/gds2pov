@@ -108,6 +108,9 @@ GDSProcess::GDSProcess(char *processfile)
 					delete NewLayer.Name;
 					NewLayer.Name = NULL;
 				}
+				NewLayer.Name = new char[strlen(line)-strlen("LayerStart: ")+1];
+				strncpy(NewLayer.Name, line+strlen("LayerStart: "), strlen(line)-strlen("LayerStart: "));
+				NewLayer.Name[strlen(NewLayer.Name)-1] = '\0';
 				NewLayer.Layer = 0;
 				NewLayer.Datatype = -1;
 				NewLayer.Height = 0.0;
@@ -257,7 +260,6 @@ GDSProcess::GDSProcess(char *processfile)
 					showing = false;
 				}
 				AddLayer(&NewLayer);
-				//if(NewLayer.Name){
 					if(!showing){
 						if(NewLayer.Datatype == -1){
 							printf("Notice: Not showing layer %d (all datatypes)\n", NewLayer.Layer);
@@ -265,9 +267,11 @@ GDSProcess::GDSProcess(char *processfile)
 							printf("Notice: Not showing layer %d datatype %d\n", NewLayer.Layer, NewLayer.Datatype);
 						}
 					}
-				//	delete NewLayer.Name;
-				//	NewLayer.Name = NULL;
-				//}
+
+				if(NewLayer.Name){
+					delete NewLayer.Name;
+					NewLayer.Name = NULL;
+				}
 				in_layer = false;
 			}
 		}
@@ -319,6 +323,11 @@ struct ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 	return NULL;
 }
 
+struct ProcessLayer *GDSProcess::GetLayer()
+{
+	return FirstLayer;
+}
+
 int GDSProcess::LayerCount()
 {
 	return Count;
@@ -344,8 +353,8 @@ void GDSProcess::AddLayer(struct ProcessLayer *NewLayer)
 	}
 
 	layer->Name = NULL;
-	//layer->Name = new char[strlen(NewLayer->Name)+1];
-	//strncpy(layer->Name, NewLayer->Name, strlen(NewLayer->Name)+1);
+	layer->Name = new char[strlen(NewLayer->Name)+1];
+	strncpy(layer->Name, NewLayer->Name, strlen(NewLayer->Name)+1);
 	layer->Layer = NewLayer->Layer;
 	layer->Datatype = NewLayer->Datatype;
 	layer->Height = NewLayer->Height;
@@ -385,7 +394,7 @@ float GDSProcess::GetHighest()
 
 float GDSProcess::GetLowest()
 {
-	float Lowest = -10000.0;
+	float Lowest = 10000.0;
 	struct ProcessLayer *layer;
 
 	layer = FirstLayer;

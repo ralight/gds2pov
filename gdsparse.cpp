@@ -286,6 +286,27 @@ void GDSParse::OutputPOVHeader()
 		fprintf(optr, "background { color Black }\n");
 		fprintf(optr, "global_settings { ambient_light rgb <%.2f,%.2f,%.2f> }\n", config->GetAmbient(), config->GetAmbient(), config->GetAmbient());
 
+		/* Output layer texture information */
+		struct ProcessLayer *firstlayer;
+		firstlayer = process->GetLayer();
+		while(firstlayer->Next){
+			if(firstlayer->Show){
+				if(!firstlayer->Metal){
+					fprintf(optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+				}else{
+					fprintf(optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+				}
+			}
+			firstlayer = firstlayer->Next;
+		}
+		if(firstlayer->Show){
+			if(!firstlayer->Metal){
+				fprintf(optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+			}else{
+				fprintf(optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+			}
+		}
+
 		if(bounding_output){
 			fprintf(optr, "box {<%.2f,%.2f,%.2f> <%.2f,%.2f,%.2f> texture { pigment { rgb <0.75, 0.75, 0.75> } } }", Boundary->XMin, Boundary->YMin,units*process->GetLowest(),Boundary->XMax, Boundary->YMax,units*process->GetHighest());
 		}
@@ -824,7 +845,7 @@ void GDSParse::ParseXYPath()
 	if(currentwidth){
 		/* FIXME - need to check for -ve value and then not scale */
 		if(thislayer->Height && thislayer->Show && CurrentObject){
-			CurrentObject->AddPath(currentpathtype, units*thislayer->Height, units*thislayer->Thickness, points, currentwidth, currentbgnextn, currentendextn);
+			CurrentObject->AddPath(currentpathtype, units*thislayer->Height, units*thislayer->Thickness, points, currentwidth, currentbgnextn, currentendextn, thislayer->Name);
 			CurrentObject->SetPathColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 		}
 		for(i=0; i<points; i++){
@@ -871,7 +892,7 @@ void GDSParse::ParseXYBoundary()
 	}
 
 	if(thislayer->Height && thislayer->Show && CurrentObject){
-		CurrentObject->AddPrism(units*thislayer->Height, units*thislayer->Thickness, points+1);
+		CurrentObject->AddPrism(units*thislayer->Height, units*thislayer->Thickness, points+1, thislayer->Name);
 	}
 
 	for(i=0; i<points; i++){
@@ -972,7 +993,7 @@ void GDSParse::ParseXY()
 				vert_just = (((((unsigned long)currentpresentation & 0x8 ) == (unsigned long)0x8 ) ? 2 : 0) + (((((unsigned long)currentpresentation & 0x4 ) == (unsigned long)0x4 ) ? 1 : 0)));
 				horiz_just = (((((unsigned long)currentpresentation & 0x2 ) == (unsigned long)0x2 ) ? 2 : 0) + (((((unsigned long)currentpresentation & 0x1 ) == (unsigned long)0x1 ) ? 1 : 0)));
 
-				CurrentObject->AddText(X, Y, units*thislayer->Height, Flipped, currentmag, vert_just, horiz_just);
+				CurrentObject->AddText(X, Y, units*thislayer->Height, Flipped, currentmag, vert_just, horiz_just, thislayer->Name);
 				CurrentObject->SetTextColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 				if(currentangle){
 					CurrentObject->SetTextRotation(0.0, -currentangle, 0.0);

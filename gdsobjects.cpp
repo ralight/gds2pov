@@ -97,8 +97,8 @@ struct _Boundary *GDSObjects::GetBoundary()
 		Boundary = new struct _Boundary;
 	}
 
-	Boundary->XMax = Boundary->YMax = -1000000.0;
-	Boundary->XMin = Boundary->YMin =  1000000.0;
+	Boundary->XMax = Boundary->YMax = -10000000.0;
+	Boundary->XMin = Boundary->YMin =  10000000.0;
 
 	if(FirstObject){
 		struct ObjectList *objectlist = LastObject;

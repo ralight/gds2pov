@@ -211,7 +211,7 @@ Green: 0.75
 Blue: 0.75
 Filter: 0
 Metal: 0
-Show: 1
+Show: 0
 LayerEnd
 
 LayerStart: MET4

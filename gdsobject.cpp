@@ -27,8 +27,8 @@ GDSObject::GDSObject(char *NewName)
 	strncpy(Name, NewName, strlen(NewName)+1);
 
 	GotBoundary = false;
-	Boundary.XMax = Boundary.YMax = -100000.0;
-	Boundary.XMin = Boundary.YMin = 100000.0;
+	Boundary.XMax = Boundary.YMax = -1000000.0;
+	Boundary.XMin = Boundary.YMin =  1000000.0;
 
 	IsOutput = false;
 }
@@ -45,12 +45,18 @@ GDSObject::~GDSObject()
 			if(prism1->Coords){
 				delete prism1->Coords;
 			}
+			if(prism1->LayerName){
+				delete prism1->LayerName;
+			}
 			delete prism1;
 			prism1 = prism2;
 		}
 		if(prism1){
 			if(prism1->Coords){
 				delete prism1->Coords;
+			}
+			if(prism1->LayerName){
+				delete prism1->LayerName;
 			}
 			delete prism1;
 		}
@@ -66,12 +72,18 @@ GDSObject::~GDSObject()
 			if(path1->Coords){
 				delete path1->Coords;
 			}
+			if(path1->LayerName){
+				delete path1->LayerName;
+			}
 			delete path1;
 			path1 = path2;
 		}
 		if(path1){
 			if(path1->Coords){
 				delete path1->Coords;
+			}
+			if(path1->LayerName){
+				delete path1->LayerName;
 			}
 			delete path1;
 		}
@@ -87,12 +99,18 @@ GDSObject::~GDSObject()
 			if(text1->String){
 				delete text1->String;
 			}
+			if(text1->LayerName){
+				delete text1->LayerName;
+			}
 			delete text1;
 			text1 = text2;
 		}
 		if(text1){
 			if(text1->String){
 				delete text1->String;
+			}
+			if(text1->LayerName){
+				delete text1->LayerName;
 			}
 			delete text1;
 		}
@@ -161,11 +179,12 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font)
 					fprintf(fptr, ",<%.2f,%.2f>", prism->Coords[i].X, prism->Coords[i].Y);
 				}
 				fprintf(fptr, " rotate<-90,0,0> ");
-				if(!prism->Colour.Metal){
-					fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}}", prism->Colour.R, prism->Colour.G, prism->Colour.B, prism->Colour.F);
-				}else{
-					fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>} finish{F_MetalA}}", prism->Colour.R, prism->Colour.G, prism->Colour.B, prism->Colour.F);
-				}
+				//if(!prism->Colour.Metal){
+				//	fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}}", prism->Colour.R, prism->Colour.G, prism->Colour.B, prism->Colour.F);
+				//}else{
+				//	fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>} finish{F_MetalA}}", prism->Colour.R, prism->Colour.G, prism->Colour.B, prism->Colour.F);
+				//}
+				fprintf(fptr, "texture{t%s}", prism->LayerName);
 				fprintf(fptr, "}\n");
 			}
 		}
@@ -334,11 +353,12 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font)
 						fprintf(fptr, ",<%d,%d,%d>", 2+8*i, 4+8*i, 6+8*i);
 					}
 					fprintf(fptr, "} ");
-					if(!path->Colour.Metal){
-						fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-					}else{
-						fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-					}
+					//if(!path->Colour.Metal){
+					//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+					//}else{
+					//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+					//}
+					fprintf(fptr, "texture{t%s}",path->LayerName);
 					fprintf(fptr, "}\n");
 				}
 			}
@@ -382,7 +402,8 @@ void GDSObject::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font)
 					}else{
 						fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->String);
 					}
-					fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
+					//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
+					fprintf(fptr, "texture{t%s}",text->LayerName);
 					if(text->Mag!=1.0){
 						fprintf(fptr, "scale <%.2f,%.2f,1> ", text->Mag, text->Mag);
 					}
@@ -511,7 +532,7 @@ char *GDSObject::GetName()
 	return Name;
 }
 
-void GDSObject::AddPrism(float Height, float Thickness, int Points)
+void GDSObject::AddPrism(float Height, float Thickness, int Points, char *LayerName)
 {
 	Prism *NewPrism = new Prism;
 
@@ -525,6 +546,9 @@ void GDSObject::AddPrism(float Height, float Thickness, int Points)
 		LastPrism = NewPrism;
 	}
 
+	NewPrism->LayerName = new char[strlen(LayerName)+1];
+	strncpy(NewPrism->LayerName, LayerName, strlen(LayerName));
+	NewPrism->LayerName[strlen(LayerName)] = '\0';
 	NewPrism->Coords = new Point[Points];
 	NewPrism->Height = Height;
 	NewPrism->Thickness = Thickness;
@@ -563,7 +587,7 @@ void GDSObject::SetPrismRotation(float X, float Y, float Z)
 	}
 }
 
-void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag, int VJust, int HJust)
+void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag, int VJust, int HJust, char *LayerName)
 {
 	TextElement *NewText = new TextElement;
 
@@ -578,6 +602,8 @@ void GDSObject::AddText(float X, float Y, float Z, int Flipped, float Mag, int V
 		LastText = NewText;
 	}
 
+	NewText->LayerName = new char[strlen(LayerName)+1];
+	strncpy(NewText->LayerName, LayerName, strlen(LayerName));
 	NewText->X = X;
 	NewText->Y = Y;
 	NewText->Z = Z;
@@ -781,7 +807,31 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 							Boundary.XMax = sref->X + NewBound->XMax;
 						}
 						if(sref->X - NewBound->XMin < Boundary.XMin){
+							if(strcmp(Name, "col8x_pc3")==0){
+								printf("col8x Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+							}
+							if(strcmp(object->Object->GetName(), "col8x_pc3")==0){
+								printf("col8x GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+							}
+							if(strcmp(Name, "colx_pc3")==0){
+								printf("colx Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+							}
+							if(strcmp(object->Object->GetName(), "colx_pc3")==0){
+								printf("colx GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+							}
 							Boundary.XMin = sref->X - NewBound->XMin;
+							if(strcmp(Name, "col8x_pc3")==0){
+								printf("scol8x Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+							}
+							if(strcmp(object->Object->GetName(), "col8x_pc3")==0){
+								printf("scol8x GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+							}
+							if(strcmp(Name, "colx_pc3")==0){
+								printf("scolx Name %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+							}
+							if(strcmp(object->Object->GetName(), "colx_pc3")==0){
+								printf("scolx GetName %f, %f, %f\n", sref->X, NewBound->XMin, Boundary.XMin);
+							}
 						}
 						if(sref->Y + NewBound->YMax > Boundary.YMax){
 							Boundary.XMax = sref->Y + NewBound->YMax;
@@ -843,7 +893,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 	return &Boundary;
 }
 
-void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn)
+void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, char *LayerName)
 {
 	Path *NewPath = new Path;
 
@@ -857,6 +907,8 @@ void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points,
 		LastPath = NewPath;
 	}
 
+	NewPath->LayerName = new char[strlen(LayerName)+1];
+	strncpy(NewPath->LayerName, LayerName, strlen(LayerName));
 	NewPath->Type = PathType;
 	NewPath->Coords = new Point[Points];
 	NewPath->Height = Height;

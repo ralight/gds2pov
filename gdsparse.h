@@ -19,6 +19,9 @@ using namespace std;
 #define endian_swap_short(A) htons((A))
 #endif
 
+#ifdef HPUX
+#endif
+
 #include "process_cfg.h"
 #include "gds_globals.h"
 #include "gdsobject.h"
