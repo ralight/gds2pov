@@ -4,6 +4,7 @@ This release
 - Code coverage testing
 - Incorrect process/config file testing
 - Create gds2 file for example_process.txt.
+- Compile examples and other files for distribution.
 
 Tasks: 3
 
