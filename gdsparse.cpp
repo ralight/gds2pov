@@ -125,6 +125,13 @@ void GDSParse::OutputPOVHeader()
 			distance = half_widthY * 1.8;
 		}
 
+
+		fprintf(optr, "// TopLeft: %.2f, %.2f\n", Boundary->XMin, Boundary->YMax);
+		fprintf(optr, "// TopRight: %.2f, %.2f\n", Boundary->XMax, Boundary->YMax);
+		fprintf(optr, "// BottomLeft: %.2f, %.2f\n", Boundary->XMin, Boundary->YMin);
+		fprintf(optr, "// BottomRight: %.2f, %.2f\n", Boundary->XMax, Boundary->YMin);
+		fprintf(optr, "// Centre: %.2f, %.2f\n", centreX, centreY);
+
 		CameraPosition cp;
 		cp = cpCentre;
 
