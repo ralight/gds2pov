@@ -5,3 +5,4 @@ Version 0.6
 - Default font used is crystal.ttf (supplied with POV-Ray) and font is definable in config.txt
 - Invalid characters in structure names are replaced with _.
 - Support for offset and variable paths added. Octagonal paths are treated as offset paths.
+- XY records for unsupported elements will now be parsed completely so the whole file can be parsed.

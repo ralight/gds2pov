@@ -18,9 +18,8 @@ This release
 - Incorrect process/config file testing
 - Compile examples and other files for distribution.
 - Proper command line option parsing
-- XY handlers for unsupported elements
 
-Tasks: 15
+Tasks: 14
 
 Next release
 ============

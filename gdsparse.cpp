@@ -840,6 +840,11 @@ void GDSParse::ParseXY()
 				}
 			}
 			break;
+		default:
+			while(recordlen){
+				GetFourByteSignedInt();
+			}
+			break;
 	}
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
