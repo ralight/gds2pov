@@ -8,10 +8,8 @@ Definite
 	(relevant to auto placement of camera)
 	Also for flipped objects.
 - Documentation (source and usage)
-- Improve error reporting. Mark where the errors come from for process/config!
-- Convert to bools
 
-Tasks: 7
+Tasks: 5
 
 
 Possible

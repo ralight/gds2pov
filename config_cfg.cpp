@@ -105,7 +105,7 @@ GDSConfig::GDSConfig(char *configfile)
 		if(line[0]!='#'){
 			if(strstr(line, "GlobalStart")){
 				if(in_position){
-					fprintf(stderr, "Error: GlobalStart inside PositionStart on line %d.\n", current_line);
+					fprintf(stderr, "Error: GlobalStart inside PositionStart on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
@@ -114,24 +114,24 @@ GDSConfig::GDSConfig(char *configfile)
 				got_processfile = false;
 			}else if(strstr(line, "Ambient:")){
 				if(!in_global){
-					fprintf(stderr, "Error: Ambient definition outside of GlobalStart and GlobalEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: Ambient definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(got_ambient){
-					fprintf(stderr, "Warning: Duplicate Ambient definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Warning: Duplicate Ambient definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					sscanf(line, "Ambient: %f", &Ambient);
 				}
 				got_ambient = true;
 			}else if(strstr(line, "ProcessFile:")){
 				if(!in_global){
-					fprintf(stderr, "Error: ProcessFile definition outside of GlobalStart and GlobalEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: ProcessFile definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(got_processfile){
-					fprintf(stderr, "Warning: Duplicate ProcessFile definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Warning: Duplicate ProcessFile definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					if(ProcessFile){
 						delete ProcessFile;
@@ -152,11 +152,11 @@ GDSConfig::GDSConfig(char *configfile)
 				in_global = false;
 			}else if(strstr(line, "PositionStart")){
 				if(in_position){
-					fprintf(stderr, "Error: PositionStart without PositionEnd not allowed. PositionEnd should appear before line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionStart without PositionEnd not allowed. PositionEnd should appear before line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}else if(in_global){
-					fprintf(stderr, "Error: PositionStart inside GlobalStart on line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionStart inside GlobalStart on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
@@ -169,12 +169,12 @@ GDSConfig::GDSConfig(char *configfile)
 				current_type = ptNone;
 			}else if(strstr(line, "Type:")){
 				if(!in_position){
-					fprintf(stderr, "Error: Type definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: Type definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
 				if(got_type){
-					fprintf(stderr, "Warning: Duplicate Type definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Warning: Duplicate Type definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					if(strstr(line, "Type: Camera")){
 						current_type = ptCamera;
@@ -200,7 +200,7 @@ GDSConfig::GDSConfig(char *configfile)
 							LastLight->ZMod = 1.0;
 						}
 					}else{
-						fprintf(stderr, "Error: Unknown position type \"%s\" on line %d.\n", line, current_line);
+						fprintf(stderr, "Error: Unknown position type \"%s\" on line %d of config file.\n", line, current_line);
 						Valid = 0;
 						return;
 					}
@@ -208,7 +208,7 @@ GDSConfig::GDSConfig(char *configfile)
 				}
 			}else if(strstr(line, "Position:")){
 				if(!in_position){
-					fprintf(stderr, "Error: Position definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: Position definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
@@ -218,7 +218,7 @@ GDSConfig::GDSConfig(char *configfile)
 					return;
 				}
 				if(got_position){
-					fprintf(stderr, "Warning: Duplicate Position definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Warning: Duplicate Position definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					BoundaryPos thispos;
 					if(strstr(line, "Position: Centre")){
@@ -232,7 +232,7 @@ GDSConfig::GDSConfig(char *configfile)
 					}else if(strstr(line, "Position: BottomRight")){
 						thispos = bpBottomRight;
 					}else{
-						fprintf(stderr, "Error: Unknown Position \"%s\" on line %d.\n", line, current_line);
+						fprintf(stderr, "Error: Unknown Position \"%s\" on line %d of config file.\n", line, current_line);
 						Valid = 0;
 						return;
 					}
@@ -262,7 +262,7 @@ GDSConfig::GDSConfig(char *configfile)
 				
 			}else if(strstr(line, "XMod:")){
 				if(!in_position){
-					fprintf(stderr, "Error: XMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: XMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
@@ -272,7 +272,7 @@ GDSConfig::GDSConfig(char *configfile)
 					return;
 				}
 				if(got_xmod){
-					fprintf(stderr, "Error: Duplicate XMod definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate XMod definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
@@ -299,7 +299,7 @@ GDSConfig::GDSConfig(char *configfile)
 				}
 			}else if(strstr(line, "YMod:")){
 				if(!in_position){
-					fprintf(stderr, "Error: YMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: YMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
@@ -309,7 +309,7 @@ GDSConfig::GDSConfig(char *configfile)
 					return;
 				}
 				if(got_ymod){
-					fprintf(stderr, "Error: Duplicate YMod definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate YMod definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
@@ -336,7 +336,7 @@ GDSConfig::GDSConfig(char *configfile)
 				}
 			}else if(strstr(line, "ZMod:")){
 				if(!in_position){
-					fprintf(stderr, "Error: ZMod definition outside of PositionStart and PositionEnd on line %d.\n", current_line);
+					fprintf(stderr, "Error: ZMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
@@ -346,7 +346,7 @@ GDSConfig::GDSConfig(char *configfile)
 					return;
 				}
 				if(got_zmod){
-					fprintf(stderr, "Error: Duplicate ZMod definition on line %d. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate ZMod definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
@@ -373,15 +373,15 @@ GDSConfig::GDSConfig(char *configfile)
 				}
 			}else if(strstr(line, "PositionEnd")){
 				if(!in_position){
-					fprintf(stderr, "Error: PositionEnd without PositionStart on line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionEnd without PositionStart on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}else if(!got_type){
-					fprintf(stderr, "Error: PositionEnd without Type on line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionEnd without Type on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}else if(!got_position){
-					fprintf(stderr, "Error: PositionEnd without Position on line %d.\n", current_line);
+					fprintf(stderr, "Error: PositionEnd without Position on line %d of config file.\n", current_line);
 					Valid = 0;
 					return;
 				}
