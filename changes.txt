@@ -1,6 +1,8 @@
 Version 0.7.1 (16th November 2004)
 ==================================
 
+- Improved the way textures are defined in the .pov file which reduces the
+  size of the file substantially for large designs.
 - Fixed command line parsing problem. Thanks to S. Lin for spotting the
   problem.
 
