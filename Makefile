@@ -1,4 +1,5 @@
 COMPILE=g++ -Wall -DDEBUG -pg
+#COMPILE=g++ -Wall -DDEBUG -pg -fprofile-arcs -ftest-coverage
 
 all : run
 
