@@ -108,7 +108,7 @@ GDSProcess::GDSProcess(char *processfile)
 					NewLayer.Name = NULL;
 				}
 				NewLayer.Layer = 0;
-				NewLayer.Datatype = 0;
+				NewLayer.Datatype = -1;
 				NewLayer.Height = 0.0;
 				NewLayer.Thickness = 0.0;
 				NewLayer.Red = 0.0;
@@ -254,23 +254,15 @@ GDSProcess::GDSProcess(char *processfile)
 				}else if(!got_thickness){
 //					printf("Error: LayerEnd without Thickness on line %d of process file.\n", current_line);
 					showing = false;
-				}else if(!got_red){
-//					printf("Error: LayerEnd without Red on line %d of process file.\n", current_line);
-					showing = false;
-				}else if(!got_green){
-//					printf("Error: LayerEnd without Green on line %d of process file.\n", current_line);
-					showing = false;
-				}else if(!got_blue){
-//					printf("Error: LayerEnd without Blue on line %d of process file.\n", current_line);
-					showing = false;
-				}else if(!got_filter){
-//					printf("Error: LayerEnd without Filter on line %d of process file.\n", current_line);
-					showing = false;
 				}
 				AddLayer(&NewLayer);
 				//if(NewLayer.Name){
 					if(!showing){
-						printf("Notice: Not showing layer %d datatype %d\n", NewLayer.Layer, NewLayer.Datatype);
+						if(NewLayer.Datatype == -1){
+							printf("Notice: Not showing layer %d (all datatypes)\n", NewLayer.Layer);
+						}else{
+							printf("Notice: Not showing layer %d datatype %d\n", NewLayer.Layer, NewLayer.Datatype);
+						}
 					}
 				//	delete NewLayer.Name;
 				//	NewLayer.Name = NULL;
@@ -316,7 +308,9 @@ struct ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 	layer = FirstLayer;
 
 	while(layer){
-		if(layer->Layer == Number && layer->Datatype == Datatype){
+		if(layer->Layer == Number && layer->Datatype == -1){
+			return layer;
+		}else if(layer->Layer == Number && layer->Datatype == Datatype){
 			return layer;
 		}
 		layer = layer->Next;

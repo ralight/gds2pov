@@ -23,9 +23,10 @@
 # Metal, when set to 1, will make the layer slightly reflective.
 # Show defines whether the layer is shown or not.
 #
-# The only compulsory items are LayerStart, Layer and LayerEnd. If any value is ommitted, the default will be used. The defaults are:
+# The only compulsory items are LayerStart, Layer and LayerEnd. If any value is ommitted, the default 
+# will be used. The defaults are:
 #
-# Datatype: 0
+# Datatype: -1	     (meaning all datatypes for this layer)
 # Height: 0
 # Thickness: 0       (thickness of 0 means the layer will not be shown)
 # Red: 0.0

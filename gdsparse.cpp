@@ -27,7 +27,7 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 	currentwidth = 0.0;
 	currentstrans = 0;
 	currentpathtype = 0;
-	currentdatatype = 0;
+	currentdatatype = -1;
 	currentmag = 1.0;
 	currentbgnextn = 0.0;
 	currentendextn = 0.0;
@@ -685,7 +685,7 @@ void GDSParse::ParseXYPath()
 		currentwidth = 0.0; // Always reset to default for paths in case width not specified
 		currentpathtype = 0;
 		currentangle = 0.0;
-		currentdatatype = 0;
+		currentdatatype = -1;
 		currentmag = 1.0;
 		return;
 	}
@@ -707,7 +707,7 @@ void GDSParse::ParseXYPath()
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
 	currentangle = 0.0;
-	currentdatatype = 0;
+	currentdatatype = -1;
 	currentmag = 1.0;
 	currentbgnextn = 0.0;
 	currentendextn = 0.0;
@@ -732,7 +732,7 @@ void GDSParse::ParseXYBoundary()
 		currentwidth = 0.0; // Always reset to default for paths in case width not specified
 		currentpathtype = 0;
 		currentangle = 0.0;
-		currentdatatype = 0;
+		currentdatatype = -1;
 		currentmag = 1.0;
 		return;
 	}
@@ -759,7 +759,7 @@ void GDSParse::ParseXYBoundary()
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
 	currentangle = 0.0;
-	currentdatatype = 0;
+	currentdatatype = -1;
 	currentmag = 1.0;
 	currentbgnextn = 0.0;
 	currentendextn = 0.0;
@@ -849,7 +849,7 @@ void GDSParse::ParseXY()
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
 	currentangle = 0.0;
-	currentdatatype = 0;
+	currentdatatype = -1;
 	currentmag = 1.0;
 	currentpresentation = 0;
 }
@@ -864,7 +864,6 @@ short GDSParse::GetBitArray()
 	recordlen-=2;
 	return 0;
 }
-
 
 double GDSParse::GetEightByteReal()
 {

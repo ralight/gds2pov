@@ -3,6 +3,10 @@ Version 0.6
 
 - Added verbose output option for helping debug problems with gds2 files.
 - Default font used is crystal.ttf (supplied with POV-Ray) and font is definable in config.txt
-- Invalid characters in structure names are replaced with _.
+- Invalid characters in structure names are replaced with _. Thanks to Guenter Grau for highlighting
+  this problem.
 - Support for offset and variable paths added. Octagonal paths are treated as offset paths.
-- XY records for unsupported elements will now be parsed completely so the whole file can be parsed.
+- XY records for unsupported elements (BOX, NODE) will now be parsed completely so the whole file can be
+  parsed.
+- If Datatype is not specified in a layer definition in the process file, the layer definition will be used
+  for all datatypes in that layer. Thanks to Guenter Grau for this suggestion.
