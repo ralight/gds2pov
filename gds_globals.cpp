@@ -3,6 +3,7 @@
 #include "gds_globals.h"
 
 bool verbose_output;
+bool bounding_output;
 
 void v_printf(const char *fmt, ...)
 {

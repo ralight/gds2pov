@@ -2,6 +2,7 @@
 #define _GDS_GLOBALS_H
 
 extern bool verbose_output;
+extern bool bounding_output;
 
 void v_printf(const char *fmt, ...);
 

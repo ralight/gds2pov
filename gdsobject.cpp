@@ -703,12 +703,6 @@ void GDSObject::SetARefRotation(float X, float Y, float Z)
 
 struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 {
-	printf("Getting boundary for %s", this->Name);
-	if(GotBoundary){
-		printf(" (gb=true)\n");
-	}else{
-		printf(" (gb=false)\n");
-	}
 	if(GotBoundary){
 		return &Boundary;
 	}
@@ -776,26 +770,27 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 
 		while(sref->Next){
 			sref = sref->Next;
-			printf("\tProcessing sref %s\n", sref->Name);
-			object = &dummyobject;
+			if(strcmp(sref->Name, this->Name)!=0){
+				object = &dummyobject;
 
-			while(object->Next){
-				object = object->Next;
-				if(strncmp(object->Object->GetName(), sref->Name, strlen(sref->Name))==0){
-					NewBound = object->Object->GetBoundary(objectlist);
-					if(sref->X + NewBound->XMax > Boundary.XMax){
-						Boundary.XMax = sref->X + NewBound->XMax;
+				while(object->Next){
+					object = object->Next;
+					if(strcmp(object->Object->GetName(), sref->Name)==0){
+						NewBound = object->Object->GetBoundary(objectlist);
+						if(sref->X + NewBound->XMax > Boundary.XMax){
+							Boundary.XMax = sref->X + NewBound->XMax;
+						}
+						if(sref->X - NewBound->XMin < Boundary.XMin){
+							Boundary.XMin = sref->X - NewBound->XMin;
+						}
+						if(sref->Y + NewBound->YMax > Boundary.YMax){
+							Boundary.XMax = sref->Y + NewBound->YMax;
+						}
+						if(sref->Y - NewBound->YMin < Boundary.YMin){
+							Boundary.XMin = sref->Y - NewBound->YMin;
+						}
+						break;
 					}
-					if(sref->X - NewBound->XMin < Boundary.XMin){
-						Boundary.XMin = sref->X - NewBound->XMin;
-					}
-					if(sref->Y + NewBound->YMax > Boundary.YMax){
-						Boundary.XMax = sref->Y + NewBound->YMax;
-					}
-					if(sref->Y - NewBound->YMin < Boundary.YMin){
-						Boundary.XMin = sref->Y - NewBound->YMin;
-					}
-					break;
 				}
 			}
 		}
@@ -813,28 +808,34 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		struct _Boundary *NewBound;
 		while(aref->Next){
 			aref = aref->Next;
-			printf("\tProcessing aref %s\n", aref->Name);
-			object = &dummyobject;
-			while(object->Next){
-				object = object->Next;
-				if(strncmp(object->Object->GetName(), aref->Name, strlen(aref->Name))==0){
-					NewBound = object->Object->GetBoundary(objectlist);
-					if(aref->X2 + NewBound->XMax > Boundary.XMax){
-						Boundary.XMax = aref->X2 + NewBound->XMax;
+			if(strcmp(aref->Name, this->Name)!=0){
+				object = &dummyobject;
+				object = &dummyobject;
+				while(object->Next){
+					object = object->Next;
+					if(strcmp(object->Object->GetName(), aref->Name)==0){
+						NewBound = object->Object->GetBoundary(objectlist);
+						if(aref->X2 + NewBound->XMax > Boundary.XMax){
+							Boundary.XMax = aref->X2 + NewBound->XMax;
+						}
+						if(aref->X1 - NewBound->XMin < Boundary.XMin){
+							Boundary.XMin = aref->X1 - NewBound->XMin;
+						}
+						if(aref->Y3 + NewBound->YMax > Boundary.YMax){
+							Boundary.YMax = aref->Y3 + NewBound->YMax;
+						}
+						if(aref->Y1 - NewBound->YMin < Boundary.YMin){
+							Boundary.YMin = aref->Y1 - NewBound->YMin;
+						}
+						break;
 					}
-					if(aref->X1 - NewBound->XMin < Boundary.XMin){
-						Boundary.XMin = aref->X1 - NewBound->XMin;
-					}
-					if(aref->Y3 + NewBound->YMax > Boundary.YMax){
-						Boundary.YMax = aref->Y3 + NewBound->YMax;
-					}
-					if(aref->Y1 - NewBound->YMin < Boundary.YMin){
-						Boundary.YMin = aref->Y1 - NewBound->YMin;
-					}
-					break;
 				}
 			}
 		}
+	}
+
+	if(!FirstPath && !FirstPrism && !FirstSRef && !FirstARef){
+		Boundary.XMax = Boundary.XMin = Boundary.YMax = Boundary.YMin = 0;
 	}
 
 	GotBoundary = true;

@@ -100,13 +100,14 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 
 			OutputPOVHeader();
 
-			if(topcellname){
-				RecursiveOutput(Objects->GetObject(topcell), optr);
-			}else{
-				RecursiveOutput(Objects->GetObject(0), optr);
+			if(!bounding_output){
+				if(topcellname){
+					RecursiveOutput(Objects->GetObject(topcell), optr);
+				}else{
+					RecursiveOutput(Objects->GetObject(0), optr);
+				}
+				fprintf(optr, "object { str_%s }\n", Objects->GetObject(0)->GetName());
 			}
-			fprintf(optr, "object { str_%s }\n", Objects->GetObject(0)->GetName());
-
 			fclose(optr);
 			optr = NULL;
 		}
@@ -141,10 +142,6 @@ GDSParse::~GDSParse ()
 
 void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *optr)
 {
-//	char *s = Object->GetName();
-//	if(strcmp(s, "npnHP1")==0){
-//		printf("j");
-//	}
 	if(Object->GetIsOutput()){
 		return;
 	}
@@ -155,7 +152,7 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *optr)
 		do{
 			child=Objects->GetObject(Object->GetSRefName(i));
 			i++;
-			if(child){
+			if(child && strcmp(Object->GetName(), child->GetName())){
 				RecursiveOutput(child, optr);
 			}
 		}while(child);
@@ -287,6 +284,10 @@ void GDSParse::OutputPOVHeader()
 
 		fprintf(optr, "background { color Black }\n");
 		fprintf(optr, "global_settings { ambient_light rgb <%.2f,%.2f,%.2f> }\n", config->GetAmbient(), config->GetAmbient(), config->GetAmbient());
+
+		if(bounding_output){
+			fprintf(optr, "box {<%.2f,%.2f,%.2f> <%.2f,%.2f,%.2f> texture { pigment { rgb <0.75, 0.75, 0.75> } } }", Boundary->XMin, Boundary->YMin,units*process->GetLowest(),Boundary->XMax, Boundary->YMax,units*process->GetHighest());
+		}
 	}
 }
 

@@ -362,3 +362,45 @@ int GDSProcess::IsValid()
 	return Valid;
 }
 
+float GDSProcess::GetHighest()
+{
+	float Highest = -10000.0;
+	struct ProcessLayer *layer;
+
+	layer = FirstLayer;
+	if(FirstLayer){
+		while(layer->Next){
+			layer = layer->Next;
+			if(layer->Height + layer->Thickness > Highest && layer->Show){
+				Highest = layer->Height + layer->Thickness;
+			}
+		}
+		if(layer->Height + layer->Thickness > Highest && layer->Show){
+			Highest = layer->Height + layer->Thickness;
+		}
+	}
+	return Highest;
+}
+
+float GDSProcess::GetLowest()
+{
+	float Lowest = -10000.0;
+	struct ProcessLayer *layer;
+
+	layer = FirstLayer;
+	if(FirstLayer){
+		while(layer->Next){
+			layer = layer->Next;
+			if(layer->Height < Lowest && layer->Show){
+				Lowest = layer->Height;
+			}
+		}
+		if(layer->Height < Lowest && layer->Show){
+			Lowest = layer->Height;
+		}
+	}
+	return Lowest;
+}
+
+
+

@@ -73,12 +73,12 @@ class GDSObject *GDSObjects::GetObject(char *Name)
 		struct ObjectList *object = FirstObject;
 
 		while(object->Next){
-			if(strncmp(Name, object->Object->GetName(), strlen(Name))==0){
+			if(strcmp(Name, object->Object->GetName())==0){
 				return object->Object;
 			}
 			object = object->Next;
 		}
-		if(strncmp(Name, object->Object->GetName(), strlen(Name))==0){
+		if(strcmp(Name, object->Object->GetName())==0){
 			return object->Object;
 		}
 	}
@@ -97,15 +97,14 @@ struct _Boundary *GDSObjects::GetBoundary()
 		Boundary = new struct _Boundary;
 	}
 
-	Boundary->XMax = Boundary->YMax = -100000.0;
-	Boundary->XMin = Boundary->YMin =  100000.0;
+	Boundary->XMax = Boundary->YMax = -1000000.0;
+	Boundary->XMin = Boundary->YMin =  1000000.0;
 
 	if(FirstObject){
 		struct ObjectList *objectlist = LastObject;
 		struct _Boundary *object_bound;
 
 		while(objectlist->Prev){
-			printf("\nNew objectlist\n");
 			object_bound = objectlist->Object->GetBoundary(FirstObject);
 
 			if(object_bound->XMax > Boundary->XMax){
@@ -123,8 +122,6 @@ struct _Boundary *GDSObjects::GetBoundary()
 
 			objectlist = objectlist->Prev;
 		}
-		printf("\nLast objectlist\n");
-		printf("olname=%s\n", objectlist->Object->GetName());
 		object_bound = objectlist->Object->GetBoundary(FirstObject);
 
 		if(object_bound->XMax > Boundary->XMax){

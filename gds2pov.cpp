@@ -14,16 +14,18 @@ void printusage()
 {
 		printf("gds2pov  version %.1f\n", VERSION);
 		printf("Copyright (C) 2004 by Roger Light\nhttp://www.atchoo.org/gds2pov/\n\n");
-		printf("gds2pov comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2pov freely as described in the readme.txt distributed with this file.\n\n");
+		printf("gds2pov comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2pov freely\nas described in the readme.txt distributed with this file.\n\n");
 		printf("gds2pov is a program for converting a GDS2 file to a POV-Ray scene file.\n\n");
-		printf("Usage: gds2pov input.gds output.pov [-c config.txt] [-p process.txt] [-t topcell] [-v]\n\n");
-		printf("Options\n -c\t\tSpecify config file\n -p\t\tSpecify process file\n -t\t\tSpecify top cell name\n -v\t\tVerbose output\n\n");
+		printf("Usage: gds2pov input.gds output.pov [-b] [-c config.txt] [-p process.txt] [-t topcell] [-v]\n\n");
+		printf("Options\n -b\t\tOutput bounding box instead of layout to allow easier and\n\t\tquicker placing of the camera\n -c\t\tSpecify config file\n -p\t\tSpecify process file\n -t\t\tSpecify top cell name\n");
+		printf(" -v\t\tVerbose output\n\n");
 		printf("See http://www.atchoo.org/gds2pov/ for updates.\n");
 }
 
 int main(int argc, char *argv[])
 {
 	verbose_output=false;
+	bounding_output=false;
 
 	if(argc<3 || argc>8){
 		printusage();
@@ -63,6 +65,8 @@ int main(int argc, char *argv[])
 				}
 			}else if(strncmp(argv[i], "-v", strlen("-v"))==0){
 				verbose_output = true;
+			}else if(strncmp(argv[i], "-b", strlen("-b"))==0){
+				bounding_output = true;
 			}else{
 				printusage();
 				return 1;

@@ -35,6 +35,8 @@ public:
 	struct ProcessLayer *GetLayer(int Number, int Datatype);
 	int LayerCount();
 	int IsValid();
+	float GetHighest();
+	float GetLowest();
 };
 
 #endif // _PROCESS_CFG_H
