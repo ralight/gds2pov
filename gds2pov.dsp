@@ -93,6 +93,10 @@ SOURCE=.\gds2pov.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\gds_globals.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\gds_types.cpp
 # End Source File
 # Begin Source File
