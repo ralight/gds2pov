@@ -92,8 +92,8 @@ private:
 	Prism *LastPrism;
 	Prism *FirstPath;
 	Prism *LastPath;
-	int GotBoundary;
-	int IsOutput;
+	bool GotBoundary;
+	bool IsOutput;
 	int SRefCount, ARefCount;
 
 	char *Name;

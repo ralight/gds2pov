@@ -26,11 +26,11 @@ GDSObject::GDSObject(char *NewName)
 	Name = new char[strlen(NewName)+1];
 	strncpy(Name, NewName, strlen(NewName)+1);
 
-	GotBoundary = 0;
+	GotBoundary = false;
 	Boundary.XMax = Boundary.YMax = -10000.0;
 	Boundary.XMin = Boundary.YMin = 10000.0;
 
-	IsOutput = 0;
+	IsOutput = false;
 }
 
 GDSObject::~GDSObject()
@@ -406,7 +406,7 @@ void GDSObject::OutputToFile(FILE *fptr)
 		}
 		fprintf(fptr, "}\n");
 	}
-	IsOutput = 1;
+	IsOutput = true;
 }
 
 char *GDSObject::GetName()
@@ -725,7 +725,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		}
 	}
 
-	GotBoundary = 1;
+	GotBoundary = true;
 
 	return &Boundary;
 }
