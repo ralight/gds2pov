@@ -1,0 +1,22 @@
+#ifndef _GDS_PARSE_H
+#define _GDS_PARSE_H
+
+void GDStoPOV(FILE *infile, FILE *outfile);
+
+void ParseHeader(FILE *infile, FILE *outfile, short recordlen);
+void ParseBgnLib(FILE *infile, FILE *outfile, short recordlen);
+void ParseLibName(FILE *infile, FILE *outfile, short recordlen);
+void ParseSName(FILE *infile, FILE *outfile, short recordlen);
+void ParseUnits(FILE *infile, FILE *outfile, short recordlen);
+void ParseBgnStr(FILE *infile, FILE *outfile, short recordlen);
+void ParseStrName(FILE *infile, FILE *outfile, short recordlen);
+void ParseBoundary(FILE *infile, FILE *outfile, short recordlen);
+void ParsePath(FILE *infile, FILE *outfile, short recordlen);
+void ParsePathType(FILE *infile, FILE *outfile, short recordlen);
+void ParseWidth(FILE *infile, FILE *outfile, short recordlen);
+void ParseLayer(FILE *infile, FILE *outfile, short recordlen);
+void ParseDataType(FILE *infile, FILE *outfile, short recordlen);
+void ParseXY(FILE *infile, FILE *outfile, short recordlen);
+void ParseEndEl(FILE *infile, FILE *outfile, short recordlen);
+
+#endif
