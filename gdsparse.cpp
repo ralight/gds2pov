@@ -21,6 +21,11 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 	SRefElements = 0;
 	ARefElements = 0;
 
+	currentangle = 0.0;
+	currentwidth = 0.0;
+	currentstrans = 0;
+	currentpathtype = 0;
+
 	mirror=0;
 
 	process = new GDSProcess(processfile);
@@ -470,6 +475,13 @@ void GDSParse::ParseXYPath()
 
 	if(thislayer==NULL){
 		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
+		printf("\tIgnoring this path\n.");
+		while(recordlen){
+			GetFourByteSignedInt();
+		}
+		currentwidth = 0.0; // Always reset to default for paths in case width not specified
+		currentpathtype = 0;
+		currentangle = 0.0;
 		return;
 	}
 
@@ -506,6 +518,13 @@ void GDSParse::ParseXYBoundary()
 
 	if(thislayer==NULL){
 		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
+		printf("\tIgnoring this boundary\n.");
+		while(recordlen){
+			GetFourByteSignedInt();
+		}
+		currentwidth = 0.0; // Always reset to default for paths in case width not specified
+		currentpathtype = 0;
+		currentangle = 0.0;
 		return;
 	}
 
@@ -542,11 +561,6 @@ void GDSParse::ParseXY()
 
 	thislayer = process->GetLayer(currentlayer);
 
-	if(thislayer==NULL){
-		printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
-		return;
-	}
-
 	switch(currentelement){
 		case elSRef:
 			SRefElements++;
@@ -574,12 +588,27 @@ void GDSParse::ParseXY()
 			Flipped = ((unsigned short)(currentstrans & 0x8000) == (unsigned short)0x8000) ? 1 : 0;
 
 			CurrentObject->AddARef(sname, firstX, firstY, secondX, secondY, X, Y, arraycols, arrayrows, Flipped);
+			printf("ca=%.2f\n", -currentangle);
 			CurrentObject->SetARefRotation(0, -currentangle, 0);
 
 
 			break;
 		case elText:
 			TextElements++;
+
+			if(thislayer==NULL){
+				printf("Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d.\n", currentlayer);
+				printf("\tIgnoring this element\n.");
+				while(recordlen){
+					GetFourByteSignedInt();
+				}
+				currentwidth = 0.0; // Always reset to default for paths in case width not specified
+				currentpathtype = 0;
+				currentangle = 0.0;
+				return;
+			}
+
+
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
 
