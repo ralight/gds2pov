@@ -1,21 +1,45 @@
-- Better command line options including being able to specify the process file.
-- Write structures to individual .inc files to reduce memory usage?
-- Suitable code for endian decisions. What is there available on Solaris/BSD? Would hton* functions be suitable?
-- Auto/defined placement of lights.
-- Deal with concave polygons. Either implement horrid algo to fill them or
-  detect and don't fill.
-- Replace invalid characters in structure names ($)
+Definite
+========
+
 - Fix text positioning
+- Auto/defined placement of lights.
+- Better command line options including being able to specify the process file.
+- Suitable code for endian decisions. What is there available on Solaris/BSD? Would hton* functions be suitable?
+- Replace invalid characters in structure names ($)
 - Need to deal with Text/SRef/ARef rotation issues for boundary calculation 
 	(relevant to auto placement of camera)
 	Also for flipped objects.
-- Detect text for boundary calculation
-- Convert Boundaries into mesh2 objects?
-- Fix non-orthogonal paths - look at corners
-- Camera include file?
-- Text scaling with units needs fixing, especially the depth.
-- Consider how best to store dimensions in process file - scaled or not?
-- Animations
 - Documentation (source and usage)
 
-Total tasks: 16
+Tasks: 7
+
+
+Possible
+========
+
+- Fix non-orthogonal paths - look at corners
+- Deal with concave polygons. Either implement horrid algo to fill them or
+  detect and don't fill.
+- Detect text for boundary calculation
+- Text scaling with units needs fixing, especially the depth.
+
+Tasks: 4
+
+
+Unlikely
+========
+
+- Write structures to individual .inc files to reduce memory usage?
+- Convert Boundaries into mesh2 objects?
+
+Tasks: 2
+
+
+Ideas
+=====
+
+- Camera include file?
+- Consider how best to store dimensions in process file - scaled or not?
+- Animations
+
+Tasks: 3
