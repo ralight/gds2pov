@@ -26,13 +26,13 @@ from <a href="http://www.povray.org/">http://www.povray.org/</a></p>
 I don't have access to other types of machines. If you want it for your machine, get in touch.</p>
 
 <ul>
-<li><a href="files/gds2pov_win32_0.7.1.zip">Windows</a> (97.2KB)</li>
-<li><a href="files/gds2pov_lnx86_0.7.1.tar.gz">Linux x86</a> (73.3KB)</li>
-<li><a href="files/gds2pov_lnx86_64_0.7.1.tar.gz">Linux x86_64</a> (74.89B)</li>
-<li><a href="files/gds2pov_solsparc32_0.7.1.tar.gz">Solaris Sparc (32 bit executable)</a> (76KB)</li>
-<li><a href="files/gds2pov_solsparc64_0.7.1.tar.gz">Solaris Sparc (64 bit executable)</a> (78KB)</li>
-<li><a href="files/gds2pov_hpux_pa_risc_0.7.1.tar.gz">HP-UX PA-RISC</a> (79.4KB)</li>
-<li><a href="files/gds2pov_fbsd_x86_0.7.1.tar.gz">FreeBSD x86</a> (73.5KB)</li>
+<li><a href="files/gds2pov_win32_0.7.1.zip">Windows</a> (96.9KB)</li>
+<li><a href="files/gds2pov_lnx86_0.7.1.tar.gz">Linux x86</a> (73KB)</li>
+<li><a href="files/gds2pov_lnx86_64_0.7.1.tar.gz">Linux x86_64</a> (74.9KB)</li>
+<li><a href="files/gds2pov_solsparc32_0.7.1.tar.gz">Solaris Sparc (32 bit executable)</a> (75.6KB)</li>
+<li><a href="files/gds2pov_solsparc64_0.7.1.tar.gz">Solaris Sparc (64 bit executable)</a> (77.5KB)</li>
+<li><a href="files/gds2pov_hpux_pa_risc_0.7.1.tar.gz">HP-UX PA-RISC</a> (79.1KB)</li>
+<li><a href="files/gds2pov_fbsd_x86_0.7.1.tar.gz">FreeBSD x86</a> (73.1KB)</li>
 <!-- <li><a href="files/gds2pov__0.7.tar.gz"></a> (KB)</li> -->
 </ul>
 
