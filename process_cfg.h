@@ -12,6 +12,7 @@ struct ProcessLayer{
 	struct ProcessLayer *Next;
 	char *Name;
 	int Layer;
+	int Datatype;
 	float Height;
 	float Thickness;
 	int Show;
@@ -30,6 +31,7 @@ private:
 	struct ProcessLayer *FirstLayer;
 	int Count;
 
+	int Valid;
 public:
 	GDSProcess (char *filename);
 	~GDSProcess ();
@@ -37,6 +39,7 @@ public:
 	void AddLayer(struct ProcessLayer *NewLayer);
 	struct ProcessLayer *GetLayer(int Number);
 	int LayerCount();
+	int IsValid();
 };
 
 #endif // _PROCESS_CFG_H

@@ -6,7 +6,6 @@
 - Deal with concave polygons. Either implement horrid algo to fill them or
   detect and don't fill.
 - Make sure correct order structure output is working (see dh_adc).
-- Implement AREFs as POV for loops.
 - Replace invalid characters in structure names ($)
 - Fix text positioning
 - Use correct unit scaling
@@ -21,7 +20,6 @@
   file can be done ignoring the unsupported elements.
 - Camera include file?
 - Add support for datatype or rnDataType to allow eg. RESDEF, DIODE, CAPDEF which are all layer 62!
-- Need to test rotated and flipped ARefs, SRefs
-- Parse ignored gds2 records so that the file itself can be parsed.
+- Need to test rotated and flipped ARefs
 
-Total tasks: 22
+Total tasks: 19

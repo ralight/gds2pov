@@ -31,7 +31,10 @@ GDSParse::GDSParse (char *infile, char *outfile, char *processfile)
 
 	process = new GDSProcess(processfile);
 	if(process->LayerCount()==0){
-		printf("No layers found in \"%s\".\n", processfile);
+		printf("Error: No layers found in \"%s\".\n", processfile);
+		return;
+	}else if(!process->IsValid()){
+		printf("Error: Invalid process file\n");
 		return;
 	}
 
@@ -193,6 +196,8 @@ void GDSParse::Parse()
 				ParseUnits();
 				break;
 			case rnEndLib:
+			case rnEndStr:
+			case rnEndEl:
 				/* Empty, no need to parse */
 				break;
 			case rnBgnStr:
@@ -202,8 +207,6 @@ void GDSParse::Parse()
 				break;
 			case rnStrName:
 				ParseStrName();
-				break;
-			case rnEndStr:
 				break;
 			case rnBoundary:
 				currentelement = elBoundary;
@@ -248,9 +251,6 @@ void GDSParse::Parse()
 						ParseXY();
 						break;
 				}
-				break;
-			case rnEndEl:
-				/* Empty, no need to parse */
 				break;
 			case rnColRow:
 				arraycols = GetTwoByteSignedInt();
@@ -300,110 +300,196 @@ void GDSParse::Parse()
 				currentangle = (float)GetEightByteReal();
 				//FIXME
 				break;
+/*			case rnUInteger:
+				break;
+Not Used	case rnUString:
+				break;
+*/
+			case rnRefLibs:
+				printf("REFLIBS\n");
+				delete GetAsciiString();
+				break;
+			case rnFonts:
+				printf("FONTS\n");
+				delete GetAsciiString();
+				break;
+			case rnGenerations:
+				printf("GENERATIONS\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
+				break;
 			case rnAttrTable:
 				printf("ATTRTABLE\n");
+				delete GetAsciiString();
 				break;
 			case rnStypTable:
 				printf("STYPTABLE\n");
+				delete GetAsciiString();
 				break;
 			case rnStrType:
 				printf("STRTYPE\n");
+				delete GetAsciiString();
 				break;
 			case rnElFlags:
 				printf("ELFLAGS\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnElKey:
 				printf("ELKEY\n");
+				while(recordlen){
+					GetFourByteSignedInt();
+				}
 				break;
 			case rnLinkType:
 				printf("LINKTYPE\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnLinkKeys:
 				printf("LINKKEYS\n");
+				while(recordlen){
+					GetFourByteSignedInt();
+				}
 				break;
 			case rnNodeType:
 				printf("NODETYPE\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnPropAttr:
 				printf("PROPATTR\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnPropValue:
 				printf("PROPVALUE\n");
+				delete GetAsciiString();
 				break;
 			case rnBox:
 				printf("BOX\n");
+				/* Empty */
 				break;
 			case rnBoxType:
 				printf("BOXTYPE\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnPlex:
 				printf("PLEX\n");
+				while(recordlen){
+					GetFourByteSignedInt();
+				}
 				break;
 			case rnBgnExtn:
 				printf("BGNEXTN\n");
+				while(recordlen){
+					GetFourByteSignedInt();
+				}
 				break;
 			case rnEndExtn:
 				printf("ENDEXTN\n");
+				while(recordlen){
+					GetFourByteSignedInt();
+				}
 				break;
 			case rnTapeNum:
 				printf("TAPENUM\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnTapeCode:
 				printf("TAPECODE\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnStrClass:
 				printf("STRCLASS\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnReserved:
 				printf("RESERVED\n");
+				/* Empty */
 				break;
 			case rnFormat:
 				printf("FORMAT\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnMask:
 				printf("MASK\n");
+				delete GetAsciiString();
 				break;
 			case rnEndMasks:
 				printf("ENDMASKS\n");
+				/* Empty */
 				break;
 			case rnLibDirSize:
 				printf("LIBDIRSIZE\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnSrfName:
 				printf("SRFNAME\n");
+				delete GetAsciiString();
 				break;
 			case rnLibSecur:
 				printf("LIBSECUR\n");
+				while(recordlen){
+					GetTwoByteSignedInt();
+				}
 				break;
 			case rnBorder:
 				printf("BORDER\n");
+				/* Empty */
 				break;
 			case rnSoftFence:
 				printf("SOFTFENCE\n");
+				/* Empty */
 				break;
 			case rnHardFence:
 				printf("HARDFENCE\n");
+				/* Empty */
 				break;
 			case rnSoftWire:
 				printf("SOFTWIRE\n");
+				/* Empty */
 				break;
 			case rnHardWire:
 				printf("HARDWIRE\n");
+				/* Empty */
 				break;
 			case rnPathPort:
 				printf("PATHPORT\n");
+				/* Empty */
 				break;
 			case rnNodePort:
 				printf("NODEPORT\n");
+				/* Empty */
 				break;
 			case rnUserConstraint:
 				printf("USERCONSTRAINT\n");
+				/* Empty */
 				break;
 			case rnSpacerError:
 				printf("SPACERERROR\n");
+				/* Empty */
 				break;
 			case rnContact:
 				printf("CONTACT\n");
+				/* Empty */
 				break;
 			default:
 				printf("Unknown record type (%d) at position %ld.", recordtype, ftell(iptr));

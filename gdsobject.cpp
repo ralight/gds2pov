@@ -256,7 +256,6 @@ void GDSObject::OutputToFile(FILE *fptr)
 					fprintf(fptr, "pigment{ rgbf <%.2f, %.2f, %.2f, %.2f>} finish { F_MetalA } ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 				}
 				fprintf(fptr, "}\n");
-	//			}
 			}
 		}
 
