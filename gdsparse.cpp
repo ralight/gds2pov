@@ -33,6 +33,16 @@ GDSParse::GDSParse (char *infile, char *outfile, char *configfile, char *process
 	currentmag = 1.0;
 	currentbgnextn = 0.0;
 	currentendextn = 0.0;
+	currenttexttype = 0;
+	currentpresentation = 0;
+	currentlayer = 0;
+//	currentelement = 0;
+	arrayrows = 0;
+	arraycols = 0;
+	angle = 0.0;
+	units = 0.0;
+	recordlen = 0;
+	CurrentObject = NULL;
 
 	process = NULL;
 	config = NULL;
@@ -294,7 +304,7 @@ void GDSParse::Parse()
 				}
 				break;
 			case rnLibName:
-				v_printf("LIBNAME\n");
+				v_printf("LIBNAME ");
 				ParseLibName();
 				break;
 			case rnUnits:
@@ -320,27 +330,27 @@ void GDSParse::Parse()
 				}
 				break;
 			case rnStrName:
-				v_printf("STRNAME\n");
+				v_printf("STRNAME ");
 				ParseStrName();
 				break;
 			case rnBoundary:
-				v_printf("BOUNDARY\n");
+				v_printf("BOUNDARY ");
 				currentelement = elBoundary;
 				break;
 			case rnPath:
-				v_printf("PATH\n");
+				v_printf("PATH ");
 				currentelement = elPath;
 				break;
 			case rnSRef:
-				v_printf("SREF\n");
+				v_printf("SREF ");
 				currentelement = elSRef;
 				break;
 			case rnARef:
-				v_printf("AREF\n");
+				v_printf("AREF ");
 				currentelement = elARef;
 				break;
 			case rnText:
-				v_printf("TEXT\n");
+				v_printf("TEXT ");
 				currentelement = elText;
 				break;
 			case rnLayer:
@@ -379,7 +389,7 @@ void GDSParse::Parse()
 			case rnColRow:
 				arraycols = GetTwoByteSignedInt();
 				arrayrows = GetTwoByteSignedInt();
-				v_printf("COLROW\n\tColumns = %dn\n\tRows = %d\n", arraycols, arrayrows);
+				v_printf("COLROW (Columns = %d Rows = %d)\n", arraycols, arrayrows);
 				break;
 			case rnSName:
 				ParseSName();
@@ -403,7 +413,7 @@ void GDSParse::Parse()
 				v_printf("PRESENTATION (%d)\n", currentpresentation);
 				break;
 			case rnString:
-				v_printf("STRING\n");
+				v_printf("STRING ");
 				if(textstring){
 					delete textstring;
 					textstring = NULL;
@@ -411,10 +421,11 @@ void GDSParse::Parse()
 				textstring = GetAsciiString();
 				if(CurrentObject && textstring){
 					CurrentObject->SetTextString(textstring);
-					v_printf("\t\"%s\"\n", textstring);
+					v_printf("(\"%s\")", textstring);
 					delete textstring;
 					textstring = NULL;
 				}
+				v_printf("\n");
 				break;
 			case rnSTrans:
 				if(!unsupported[rnSTrans]){
@@ -724,9 +735,9 @@ void GDSParse::ParseLibName()
 	libname = new char[strlen(str)+1];
 	if(libname){
 		strcpy(libname, str);
-		v_printf("\t\"%s\"\n", libname);
+		v_printf(" (\"%s\")\n", libname);
 	}else{
-		fprintf(stderr, "Unable to allocate memory for string (%d)\n", strlen(str)+1);
+		fprintf(stderr, "\nUnable to allocate memory for string (%d)\n", strlen(str)+1);
 	}
 	delete str;
 }
@@ -776,11 +787,12 @@ void GDSParse::ParseStrName()
 				str[i] = '_';
 			}
 		}
-		v_printf("\t\"%s\"\n", str);
+		v_printf("(\"%s\")", str);
 
 		CurrentObject = Objects->AddObject(str);
 		delete str;
 	}
+	v_printf("\n");
 }
 
 void GDSParse::ParseXYPath()
@@ -812,7 +824,6 @@ void GDSParse::ParseXYPath()
 			CurrentObject->AddPath(currentpathtype, units*thislayer->Height, units*thislayer->Thickness, points, currentwidth, currentbgnextn, currentendextn);
 			CurrentObject->SetPathColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 		}
-		v_printf("\t");
 		for(i=0; i<points; i++){
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
@@ -821,8 +832,8 @@ void GDSParse::ParseXYPath()
 				CurrentObject->AddPathPoint(i, X, Y);
 			}
 		}
-		v_printf("\n");
 	}
+	v_printf("\n");
 	currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	currentpathtype = 0;
 	currentangle = 0.0;
@@ -860,7 +871,6 @@ void GDSParse::ParseXYBoundary()
 		CurrentObject->AddPrism(units*thislayer->Height, units*thislayer->Thickness, points+1);
 	}
 
-	v_printf("\t");
 	for(i=0; i<points; i++){
 		X = units * (float)GetFourByteSignedInt();
 		Y = units * (float)GetFourByteSignedInt();
@@ -902,7 +912,7 @@ void GDSParse::ParseXY()
 			SRefElements++;
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
-			v_printf("\t(%.3f,%.3f)\n", X, Y);
+			v_printf("(%.3f,%.3f)\n", X, Y);
 
 			if(CurrentObject){
 				CurrentObject->AddSRef(sname, X, Y, Flipped, currentmag);
@@ -920,7 +930,7 @@ void GDSParse::ParseXY()
 			secondY = units * (float)GetFourByteSignedInt();
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
-			v_printf("\t(%.3f,%.3f) ", firstX, firstY);
+			v_printf("(%.3f,%.3f) ", firstX, firstY);
 			v_printf("(%.3f,%.3f) ", secondX, secondY);
 			v_printf("(%.3f,%.3f)\n", X, Y);
 
@@ -951,7 +961,7 @@ void GDSParse::ParseXY()
 
 			X = units * (float)GetFourByteSignedInt();
 			Y = units * (float)GetFourByteSignedInt();
-			v_printf("\t(%.3f,%.3f)\n", X, Y);
+			v_printf("(%.3f,%.3f)\n", X, Y);
 
 			if(CurrentObject){
 				int vert_just, horiz_just;

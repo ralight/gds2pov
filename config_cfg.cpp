@@ -14,12 +14,14 @@ GDSConfig::GDSConfig()
 	CameraPos.XMod = 1.0;
 	CameraPos.YMod = 1.0;
 	CameraPos.ZMod = 1.0;
+	CameraPos.Next = NULL;
 
 	LookAtPos.postype = ptLookAt;
 	LookAtPos.boundarypos = bpCentre;
 	LookAtPos.XMod = 1.0;
 	LookAtPos.YMod = 1.0;
 	LookAtPos.ZMod = 0.0;
+	LookAtPos.Next = NULL;
 
 	FirstLight = NULL;
 	LastLight = NULL;
@@ -33,6 +35,8 @@ GDSConfig::GDSConfig(char *configfile)
 	ProcessFile = NULL;
 	Font = NULL;
 	Ambient = 1.2;
+	CameraPos.Next = NULL;
+	LookAtPos.Next = NULL;
 
 	int posstart_cnt = 0;
 	int posend_cnt = 0;
