@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 {
 	FILE *infile=NULL;
 	FILE *outfile=NULL;
-	layers **all_layers=NULL;
+	layers *all_layers=NULL;
 	int i, layer_count;
 
 	libname = NULL;
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 	if(ReadProcessFile(infile, all_layers, &layer_count)==1){
-		if(all_layers){
+/*		if(all_layers){
 			for(i=0; i<layer_count; i++){
 				if(all_layers[i]){
 					free(all_layers[i]);
@@ -48,6 +48,12 @@ int main(int argc, char *argv[])
 			}
 			free(all_layers);
 		}
+*/
+		if(all_layers){
+			free(all_layers);
+		}
+		fclose(infile);
+		exit(1);
 	}
 
 	fclose(infile);
@@ -86,6 +92,9 @@ int main(int argc, char *argv[])
 	}
 	if(sname){
 		free(sname);
+	}
+	if(all_layers){
+		free(all_layers);
 	}
 	return 0;
 }
