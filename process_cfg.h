@@ -1,30 +1,42 @@
 #ifndef _PROCESS_CFG_H
 #define _PROCESS_CFG_H
 
-#include <string.h>
+#include <string>
 
 #ifdef WIN32
 #define __BYTE_ORDER 1
 #define __LITTLE_ENDIAN 1
 #endif
 
-typedef struct{
-	int layer;
-	int height;
-	int thickness;
-	int show;
-	int metal;
-	int transparent;
-	char colour[200];
-} layers;
+struct ProcessLayer{
+	struct ProcessLayer *Next;
+	char *Name;
+	int Layer;
+	float Height;
+	float Thickness;
+	int Show;
+	float Red;
+	float Green;
+	float Blue;
+	float Filter;
+	int Metal;
+};
 
-int ReadProcessFile(FILE *fptr, layers **all_layers, int *layer_count);
+typedef struct ProcessLayer layers;
 
-// colour
-// height
-// thickness
+class GDSProcess
+{
+private:
+	struct ProcessLayer *FirstLayer;
+	int Count;
 
-//void layertable(short layer, layers *thislayer);
+public:
+	GDSProcess (char *filename);
+	~GDSProcess ();
 
-#endif
+	void AddLayer(struct ProcessLayer *NewLayer);
+	struct ProcessLayer *GetLayer(int Number);
+	int LayerCount();
+};
 
+#endif // _PROCESS_CFG_H

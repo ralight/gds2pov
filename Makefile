@@ -1,31 +1,34 @@
-COMPILE=gcc -Wall -DDEBUG
+COMPILE=g++ -Wall -DDEBUG -pg
 
 all : run
 
 clean : clean_gds2pov
 
-gds2pov : gds_types.o process_cfg.o gds_parse.o gds2pov.o
-	$(COMPILE) -DLINUX -o gds2pov gds2pov.o gds_parse.o gds_types.o process_cfg.o -lm
+gds2pov : process_cfg.o gdsparse.o gds2pov.o gdsobjects.o gdsobject.o gds_types.o
+	$(COMPILE) -DLINUX -o gds2pov gds2pov.o gdsparse.o process_cfg.o gdsobject.o gdsobjects.o -lm
 
-gds_types.o : gds_types.c gds_types.h gds2pov.h
-	$(COMPILE) -c -DLINUX -o gds_types.o gds_types.c
+process_cfg.o : process_cfg.cpp process_cfg.h
+	$(COMPILE) -c -DLINUX -o process_cfg.o process_cfg.cpp
 
-process_cfg.o : process_cfg.c process_cfg.h
-	$(COMPILE) -c -DLINUX -o process_cfg.o process_cfg.c
+gdsparse.o : gdsparse.cpp gdsparse.h gds2pov.h gds_globals.h process_cfg.o
+	$(COMPILE) -c -DLINUX -o gdsparse.o gdsparse.cpp
 
-gds_parse.o : gds_parse.c gds_parse.h gds2pov.h gds_globals.h gds_types.o process_cfg.o
-	$(COMPILE) -c -DLINUX -o gds_parse.o gds_parse.c
+gdsobject.o : gdsobject.cpp gdsobject.h
+	$(COMPILE) -c -DLINUX -o gdsobject.o gdsobject.cpp
 	
-gds2pov.o : gds2pov.c gds2pov.h gds_types.o gds_parse.o gds_globals.h process_cfg.o
-	$(COMPILE) -c -DLINUX -o gds2pov.o gds2pov.c
+gdsobjects.o : gdsobjects.cpp gdsobjects.h gdsobject.o
+	$(COMPILE) -c -DLINUX -o gdsobjects.o gdsobjects.cpp
+	
+gds2pov.o : gds2pov.cpp gds2pov.h gdsparse.o gds_globals.h process_cfg.o
+	$(COMPILE) -c -DLINUX -o gds2pov.o gds2pov.cpp
 	
 clean_gds2pov :
 	rm -f gds2pov
 	rm -f *.o
 
 run : gds2pov
-	./gds2pov layers.gds layers.pov
-	./gds2pov fullexample.gds fullexample.pov
+	./gds2pov layers.gds layers.pov process.txt
+	./gds2pov fullexample.gds fullexample.pov process.txt
 
 test : run
 	diff layers.pov layers_ref.pov

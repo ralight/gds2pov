@@ -2,9 +2,11 @@ LayerStart: ERROR
 Layer: 0
 Height: 0
 Thickness: 0
-Colour: <0, 0, 0>
+Red: 0
+Green: 0
+Blue: 0
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 0
 LayerEnd
 
@@ -12,9 +14,11 @@ LayerStart: NTUB
 Layer: 5
 Height: -2000
 Thickness: 2000
-Colour: <0, 0, 1, 0.2>
+Red: 0
+Green: 0
+Blue: 1
+Filter: 0.2
 Metal: 0
-Transparent: 1
 Show: 1
 LayerEnd
 
@@ -22,9 +26,11 @@ LayerStart: DIFF
 Layer: 10
 Height: 10
 Thickness: 10
-Colour: <0, 1, 1>
+Red: 0
+Green: 1
+Blue: 1
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -32,9 +38,11 @@ LayerStart: POLY1
 Layer: 20
 Height: 28
 Thickness: 280 
-Colour: <1, 1, 0>
+Red: 1
+Green: 1
+Blue: 0
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -42,9 +50,11 @@ LayerStart: NPLUS
 Layer: 23
 Height: -195
 Thickness: 200
-Colour: <0.5, 0.25, 0>
+Red: 0.5
+Green: 0.25
+Blue: 0
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -52,9 +62,11 @@ LayerStart: PPLUS
 Layer: 24
 Height: -195
 Thickness: 200
-Colour: <1, 0, 1>
+Red: 1
+Green: 0
+Blue: 1
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -62,9 +74,11 @@ LayerStart: HRES
 Layer: 29
 Height: 0
 Thickness: 0
-Colour: <0, 0, 0>
+Red: 0
+Green: 0
+Blue: 0
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 0
 LayerEnd
 
@@ -72,9 +86,11 @@ LayerStart: POLY2
 Layer: 30
 Height: 0
 Thickness: 280
-Colour: <0, 0, 0>
+Red: 0
+Green: 0
+Blue: 0
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -82,9 +98,11 @@ LayerStart: CONT
 Layer: 34
 Height: 10
 Thickness: 1600 
-Colour: <0, 1, 0>
+Red: 0
+Green: 1
+Blue: 0
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -92,9 +110,11 @@ LayerStart: MET1
 Layer: 35
 Height: 1600
 Thickness: 660
-Colour: <1, 0, 0>
+Red: 1
+Green: 0
+Blue: 0
+Filter: 1
 Metal: 1
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -102,9 +122,11 @@ LayerStart: VIA1
 Layer: 36
 Height: 2250
 Thickness: 1000
-Colour: <1, 0.75, 1>
+Red: 1
+Green: 0.75
+Blue: 1
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -112,9 +134,11 @@ LayerStart: MET2
 Layer: 37
 Height: 3240
 Thickness: 640
-Colour: <1, 0.75, 0>
+Red: 1
+Green: 0.75
+Blue: 0
+Filter: 0
 Metal: 1
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -122,9 +146,11 @@ LayerStart: VIA2
 Layer: 38
 Height: 3870
 Thickness: 1000
-Colour: <1, 0.5, 0.5>
+Red: 1
+Green: 0.5
+Blue: 0.5
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -132,9 +158,11 @@ LayerStart: MET3
 Layer: 39
 Height: 4860
 Thickness: 1000
-Colour: <0, 0.5, 0.5>
+Red: 0
+Green: 0.5
+Blue: 0.5
+Filter: 0
 Metal: 1
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -142,9 +170,11 @@ LayerStart: VIA3
 Layer: 41
 Height: 5850
 Thickness: 1000
-Colour: <1, 0.75, 0.75>
+Red: 1
+Green: 0.75
+Blue: 0.75
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -152,9 +182,11 @@ LayerStart: MET4
 Layer: 42
 Height: 6840
 Thickness: 1000
-Colour: <0.75, 0, 1>
+Red: 0.75
+Green: 0
+Blue: 1
+Filter: 0
 Metal: 1
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -162,9 +194,11 @@ LayerStart: TEXT
 Layer: 61
 Height: 7000
 Thickness: 1000
-Colour: <1, 1, 1>
+Red: 1
+Green: 1
+Blue: 1
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 1
 LayerEnd
 
@@ -172,9 +206,11 @@ LayerStart: RESDEF
 Layer: 62
 Height: 0
 Thickness: 0
-Colour: <0, 0, 0>
+Red: 0
+Green: 0
+Blue: 0
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 0
 LayerEnd
 
@@ -182,8 +218,10 @@ LayerStart: ERROR
 Layer: 63
 Height: 0
 Thickness: 0
-Colour: <0, 0, 0>
+Red: 0
+Green: 0
+Blue: 0
+Filter: 0
 Metal: 0
-Transparent: 0
 Show: 0
 LayerEnd

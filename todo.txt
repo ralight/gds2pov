@@ -1,15 +1,19 @@
-- Fix the "open prism" problem.
-- Better comand line options including being able to specify the process file.
-- Parse data into memory and then write out? This would allow the writing out of
-the structures in the correct order and would mean that the file would only
-need parsing once. This would of course require much more memory!
-- To make the above easier, perhaps go to C++?
-- Fix the text displaying in the wrong place problem.
+- Better command line options including being able to specify the process file.
+- Write structures to individual .inc files to reduce memory usage?
 - Implement mirrored objects.
-- Suitable code for endian decisions. What is there available on Solaris/BSD?
- Would hton* functions be suitable?
-- Auto placement of camera.
+- Suitable code for endian decisions. What is there available on Solaris/BSD? Would hton* functions be suitable?
 - Auto placement of lights.
-- Deal with convex polygons. Either implement horrid algo to fill them or
+- Deal with concave polygons. Either implement horrid algo to fill them or
   detect and don't fill.
 - Make sure correct order structure output is working (see dh_adc).
+- Implement AREFs as POV for loops.
+- Replace invalid characters in structure names ($)
+- Fix text positioning
+- Use correct unit scaling
+- Fix errors on missing/incomplete process file
+- Need to deal with Text/SRef/ARef rotation issues for boundary calculation 
+	(relevant to auto placement of camera)
+	Also for flipped objects.
+- Detect text for boundary calculation
+- Convert Boundaries into mesh2 objects?
+- Check non-orthogonal paths are correct

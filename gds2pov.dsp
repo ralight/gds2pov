@@ -85,19 +85,27 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\gds2pov.c
+SOURCE=.\gds2pov.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gds_parse.c
+SOURCE=.\gds_types.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gds_types.c
+SOURCE=.\gdsobject.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\process_cfg.c
+SOURCE=.\gdsobjects.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\gdsparse.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\process_cfg.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -113,11 +121,15 @@ SOURCE=.\gds_globals.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gds_parse.h
+SOURCE=.\gdsobject.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gds_types.h
+SOURCE=.\gdsobjects.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gdsparse.h
 # End Source File
 # Begin Source File
 
