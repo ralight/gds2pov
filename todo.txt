@@ -7,7 +7,6 @@
 - Make sure correct order structure output is working (see dh_adc).
 - Replace invalid characters in structure names ($)
 - Fix text positioning
-- Use correct unit scaling
 - Fix errors on missing/incomplete process file
 - Need to deal with Text/SRef/ARef rotation issues for boundary calculation 
 	(relevant to auto placement of camera)
@@ -16,6 +15,7 @@
 - Convert Boundaries into mesh2 objects?
 - Fix non-orthogonal paths - look at corners
 - Camera include file?
-- Need to test rotated and flipped ARefs
+- Text scaling with units needs fixing, especially the depth.
+- Consider how best to store dimensions in process file - scaled or not?
 
 Total tasks: 16

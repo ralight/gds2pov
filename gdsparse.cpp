@@ -127,27 +127,27 @@ void GDSParse::OutputPOVHeader()
 				// tan(33.69) = 0.66666 = 1/1.5
 				// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
 
-				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", centreX, distance, centreY);
-				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", centreX, centreY);
+				fprintf(optr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n", centreX, distance, centreY);
+				fprintf(optr, "\tlook_at <%.2f,0,%.2f>\n}", centreX, centreY);
 				break;
 			case cpTopLeft:
 				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*modifier, distance*0.4, Boundary->YMax*modifier);
-				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMax/modifier, Boundary->YMin/modifier);
+				fprintf(optr, "\tlook_at <%.2f,0, %.2f>\n}", Boundary->XMax/modifier, Boundary->YMin/modifier);
 				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMax*2, distance*2, Boundary->YMin*2);
 				break;
 			case cpTopRight:
 				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*modifier, distance*0.4, Boundary->YMax*modifier);
-				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMin/modifier, Boundary->YMin/modifier);
-				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMin*2, distance*2, Boundary->YMin*2);
+				fprintf(optr, "\tlook_at <%.2f,0,%.2f>\n}", Boundary->XMin/modifier, Boundary->YMin/modifier);
+				fprintf(optr, "light_source { <%.2f,%.2f,%.2f> White }\n", Boundary->XMin*2, distance*2, Boundary->YMin*2);
 				break;
 			case cpBottomLeft:
 				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*modifier, distance*0.4, Boundary->YMin*modifier);
-				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMax/modifier, Boundary->YMax/modifier);
+				fprintf(optr, "\tlook_at <%.2f,0,%.2f>\n}", Boundary->XMax/modifier, Boundary->YMax/modifier);
 				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMax*2, distance*2, Boundary->YMax*2);
 				break;
 			case cpBottomRight:
 				fprintf(optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*modifier, distance*0.4, Boundary->YMin*modifier);
-				fprintf(optr, "\tlook_at <%.2f, 2000, %.2f>\n}", Boundary->XMin/modifier, Boundary->YMax/modifier);
+				fprintf(optr, "\tlook_at <%.2f,0,%.2f>\n}", Boundary->XMin/modifier, Boundary->YMax/modifier);
 				fprintf(optr, "light_source { <%.2f, %.2f, %.2f> White }\n", Boundary->XMin*2, distance*2, Boundary->YMax*2);
 				break;
 		}
@@ -231,9 +231,9 @@ void GDSParse::Parse()
 				break;
 			case rnWidth:
 				currentwidth = (float)(GetFourByteSignedInt()/2);
-//				if(currentwidth > 0){
-///					currentwidth *= units;
-//				}
+				if(currentwidth > 0){
+					currentwidth *= units;
+				}
 				// Scale to a half to make width correct when adding and
 				// subtracting
 				break;
@@ -543,12 +543,10 @@ void GDSParse::ParseSName()
 
 void GDSParse::ParseUnits()
 {
-	//FIXME - must scale things as floats!
 	double tmp;
 	units = (float)GetEightByteReal();
 	tmp = GetEightByteReal();
-
-	units = 1; // ignore scaling for the mo
+	printf("db units/user units = %g\nsize of db units in metres = %g\nsize of user units in m = %g\n",units, tmp, tmp/units);
 }
 
 void GDSParse::ParseStrName()
@@ -585,7 +583,7 @@ void GDSParse::ParseXYPath()
 	if(currentwidth){
 		/* FIXME - need to check for -ve value and then not scale */
 		if(thislayer->Height && thislayer->Show && CurrentObject){
-			CurrentObject->AddPath(thislayer->Height, thislayer->Thickness, points, currentwidth);
+			CurrentObject->AddPath(units*thislayer->Height, units*thislayer->Thickness, points, currentwidth);
 			CurrentObject->SetPathColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 		}
 		for(i=0; i<points; i++){
@@ -626,7 +624,7 @@ void GDSParse::ParseXYBoundary()
 	}
 
 	if(thislayer->Height && thislayer->Show && CurrentObject){
-		CurrentObject->AddPrism(thislayer->Height, thislayer->Thickness, points+1);
+		CurrentObject->AddPrism(units*thislayer->Height, units*thislayer->Thickness, points+1);
 	}
 
 	for(i=0; i<points; i++){
@@ -675,7 +673,6 @@ void GDSParse::ParseXY()
 			break;
 		case elARef:
 			ARefElements++;
-			//FIXME
 			firstX = units * (float)GetFourByteSignedInt();
 			firstY = units * (float)GetFourByteSignedInt();
 			secondX = units * (float)GetFourByteSignedInt();
@@ -713,7 +710,7 @@ void GDSParse::ParseXY()
 			Y = units * (float)GetFourByteSignedInt();
 
 			if(CurrentObject){
-				CurrentObject->AddText(X, Y, thislayer->Height, Flipped);
+				CurrentObject->AddText(X, Y, units*thislayer->Height, Flipped);
 				CurrentObject->SetTextColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 				if(currentangle){
 					CurrentObject->SetTextRotation(0.0, -currentangle, 0.0);

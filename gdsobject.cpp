@@ -316,9 +316,9 @@ void GDSObject::OutputToFile(FILE *fptr)
 					fprintf(fptr, "text{ttf \"arial.ttf\" \"%s\" 1,0.1*x ", text->String);
 					fprintf(fptr, "texture{pigment{rgb <%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
 					if(text->Flipped){
-						fprintf(fptr, "scale <1000,1000,-10> ");
-					}else{
-						fprintf(fptr, "scale <1000,1000,10> ");
+						fprintf(fptr, "scale <1,1,-1> ");
+//					}else{
+//						fprintf(fptr, "scale <1,1,1> ");
 					}
 					fprintf(fptr, "rotate <90,0,0> translate <%.2f,%.2f,%.2f> ", text->X, text->Z, text->Y);
 					if(text->Rotate.Y){
