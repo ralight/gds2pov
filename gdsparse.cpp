@@ -630,7 +630,7 @@ void GDSParse::ParseSName()
 	sname = new char[strlen(str)+1];
 	if(sname){
 		strcpy(sname, str);
-		for(int i=0; i<strlen(sname); i++){
+		for(unsigned int i=0; i<strlen(sname); i++){
 			if(sname[i] && (sname[i] < 48 || sname[i] > 57) && (sname[i] < 65 || sname[i] > 90) && (sname[i] < 97 || sname[i] > 122)){
 				sname[i] = '_';
 			}
@@ -656,7 +656,7 @@ void GDSParse::ParseStrName()
 
 	if(str){
 		// Disallow invalid characters in POV-Ray names.
-		for(int i=0; i<strlen(str); i++){
+		for(unsigned int i=0; i<strlen(str); i++){
 			if(str[i] && (str[i] < 48 || str[i] > 57) && (str[i] < 65 || str[i] > 90) && (str[i] < 97 || str[i] > 122)){
 				str[i] = '_';
 			}

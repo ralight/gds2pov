@@ -1,6 +1,6 @@
 # Define LINUX or SOLARIS as appropriate
 #COMPILE=g++ -Wall 
-COMPILE=g++ -Wall -pg -DLINUX
+COMPILE=g++ -Wall -DLINUX
 #COMPILE=g++ -Wall -pg -fprofile-arcs -ftest-coverage
 
 all : run
