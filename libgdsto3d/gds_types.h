@@ -13,11 +13,14 @@
 #	define endian_swap_long(A) bswap_32((A))
 #	define endian_swap_short(A) bswap_16((A))
 #elif defined(WIN32)
-#	define __LITTLE_ENDIAN 1234
-#	define __BIG_ENDIAN 4321
-#	define __BYTE_ORDER __LITTLE_ENDIAN
-	long endian_swap_long(long value);
-	short endian_swap_short(short value);
+//#	define __LITTLE_ENDIAN 1234
+//#	define __BIG_ENDIAN 4321
+//#	define __BYTE_ORDER __LITTLE_ENDIAN
+//	long endian_swap_long(long value);
+//	short endian_swap_short(short value);
+#	include <winsock.h>
+#	define endian_swap_long(A) htonl((A))
+#	define endian_swap_short(A) htons((A))
 #else
 	/* Generic includes for Unix-alike systems */
 	/* Includes at least Solaris, FreeBSD, HP-UX */

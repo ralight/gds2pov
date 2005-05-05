@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.am 202 2005-03-17 21:00:11Z roger $
+# $Id: Makefile.am 204 2005-05-05 21:04:44Z roger $
 
 SUBDIRS = .
 
@@ -15,7 +15,6 @@ libgdsto3d_la_LDFLAGS = -version-info 0:0:0
 
 libgdsto3d_la_SOURCES =	config_cfg.cpp \
 			gds_globals.cpp \
-			gds_types.cpp \
 			gdsobject.cpp \
 			gdsobjects.cpp \
 			gdsparse.cpp \
@@ -23,4 +22,6 @@ libgdsto3d_la_SOURCES =	config_cfg.cpp \
 			gdspolygon.cpp \
 			gdstext.cpp \
 			process_cfg.cpp
+
+			//gds_types.cpp 
 
