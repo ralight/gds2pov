@@ -83,9 +83,9 @@ void GDSParse::Output(FILE *optr, char *topcell, bool use_outfile, bool allow_mu
 		if(!bounding_output){
 			long objectid = 0;
 			if(topcell){
-				RecursiveOutput(_Objects->GetObject(topcell), _optr, 0.0, 0.0, &objectid, allow_multiple_output);
+				RecursiveOutput(_Objects->GetObjectRef(topcell), _optr, 0.0, 0.0, &objectid, allow_multiple_output);
 			}else{
-				RecursiveOutput(_Objects->GetObject(0), _optr, 0.0, 0.0, &objectid, allow_multiple_output);
+				RecursiveOutput(_Objects->GetObjectRef(0), _optr, 0.0, 0.0, &objectid, allow_multiple_output);
 			}
 		}
 

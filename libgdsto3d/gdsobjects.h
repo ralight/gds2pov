@@ -22,8 +22,8 @@ public:
 	~GDSObjects();
 
 	class GDSObject *AddObject(char *Name, class GDSObject *newobject);
-	class GDSObject *GetObject(int Index);
-	class GDSObject *GetObject(char *Name);
+	class GDSObject *GetObjectRef(int Index);
+	class GDSObject *GetObjectRef(char *Name);
 	struct ObjectList *GetObjectList();
 	struct _Boundary *GetBoundary();
 	int GetCount();

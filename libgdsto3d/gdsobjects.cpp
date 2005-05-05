@@ -48,7 +48,7 @@ class GDSObject *GDSObjects::AddObject(char *Name, class GDSObject *newobject)
 	return object->Object;
 }
 
-class GDSObject *GDSObjects::GetObject(int Index)
+class GDSObject *GDSObjects::GetObjectRef(int Index)
 {
 	if(FirstObject && Index<Count){
 		struct ObjectList *object = FirstObject;
@@ -61,7 +61,7 @@ class GDSObject *GDSObjects::GetObject(int Index)
 	}
 }
 
-class GDSObject *GDSObjects::GetObject(char *Name)
+class GDSObject *GDSObjects::GetObjectRef(char *Name)
 {
 	if(FirstObject && Name){	
 		struct ObjectList *object = FirstObject;

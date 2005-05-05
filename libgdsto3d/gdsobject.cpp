@@ -359,11 +359,11 @@ void GDSObject::IndexSRefs(class GDSObjects *Objects)
 	sref = FirstSRef;
 	int i=0;
 	while(sref->Next){
-		SRefs[i] = Objects->GetObject(sref->Name);
+		SRefs[i] = Objects->GetObjectRef(sref->Name);
 		i++;
 		sref = sref->Next;
 	}
-	SRefs[i] = Objects->GetObject(sref->Name);
+	SRefs[i] = Objects->GetObjectRef(sref->Name);
 }
 
 void GDSObject::IndexARefs(class GDSObjects *Objects)
@@ -381,11 +381,11 @@ void GDSObject::IndexARefs(class GDSObjects *Objects)
 	aref = FirstARef;
 	int i=0;
 	while(aref->Next){
-		ARefs[i] = Objects->GetObject(aref->Name);
+		ARefs[i] = Objects->GetObjectRef(aref->Name);
 		i++;
 		aref = aref->Next;
 	}
-	ARefs[i] = Objects->GetObject(aref->Name);
+	ARefs[i] = Objects->GetObjectRef(aref->Name);
 }
 
 class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, int Index)
