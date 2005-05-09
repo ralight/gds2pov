@@ -36,7 +36,9 @@ void GDSParse_pov::OutputFooter()
 	if(_topcellname){
 		fprintf(_optr, "object { str_%s }\n", _topcellname);
 	}else{
-		fprintf(_optr, "object { str_%s }\n", _Objects->GetObjectRef(0)->GetName());
+		if(_Objects->GetObjectRef(0)){
+			fprintf(_optr, "object { str_%s }\n", _Objects->GetObjectRef(0)->GetName());
+		}
 	}
 }
 

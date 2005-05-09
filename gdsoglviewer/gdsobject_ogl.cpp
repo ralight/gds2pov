@@ -2,11 +2,20 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <GL/gl.h>
-#include <GL/glu.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
+#ifdef HAVE_GL_GL_H
+#  include <GL/gl.h>
+#endif
+#ifdef HAVE_GL_GLU_H
+#  include <GL/glu.h>
+#endif
 
 #include "gds_globals.h"
-#include "gdsobject.h"
+#include "gdsoglviewer.h"
+#include "gdsobject_ogl.h"
 #include "gdsobjects.h"
 #include "process_cfg.h"
 
@@ -16,7 +25,14 @@ typedef struct{
 	float Z;
 } Point3D;
 
-void GDSObject::OutputOGLVertices(FILE *optr, float offx, float offy, class GDSProcess *process)
+GDSObject_ogl::GDSObject_ogl(char *Name) : GDSObject(Name){
+}
+
+GDSObject_ogl::~GDSObject_ogl()
+{
+}
+
+void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 {
 	float angleX, angleY;
 	float tempf;
@@ -37,14 +53,9 @@ void GDSObject::OutputOGLVertices(FILE *optr, float offx, float offy, class GDSP
 				layer = path->GetLayer();
 				int plist[] = {7,4,5, 5,6,7, 2,1,0, 0,3,2, 6,5,1, 1,2,6, 4,7,3, 3,0,4, 6,2,3, 3,7,6, 4,0,1, 1,5,4};
 				if(path->GetWidth() && layer){
-#ifdef OGLVIEWER
 					glPolygonMode(GL_FRONT_AND_BACK, render_mode);
 					glColor3f(layer->Red, layer->Green, layer->Blue);
 					glBegin(GL_TRIANGLES);
-#else
-					fprintf(optr, "\tglColor3f(%ff,%ff,%ff);\n", layer->Red, layer->Green, layer->Blue);
-					fprintf(optr, "\tglBegin(GL_TRIANGLES);\n");
-#endif
 
 					switch(path->GetType()){
 						case 1:
@@ -137,26 +148,14 @@ void GDSObject::OutputOGLVertices(FILE *optr, float offx, float offy, class GDSP
 						points[7].Z = path->GetHeight();
 
 						for(unsigned int j=0; j<12; j++){
-#ifdef OGLVIEWER
 							glEdgeFlag(GL_TRUE);
 							glVertex3f(points[plist[0+3*j]].X,points[plist[0+3*j]].Y, points[plist[0+3*j]].Z);
 							glVertex3f(points[plist[1+3*j]].X,points[plist[1+3*j]].Y, points[plist[1+3*j]].Z);
 							glEdgeFlag(GL_FALSE);
 							glVertex3f(points[plist[2+3*j]].X,points[plist[2+3*j]].Y, points[plist[2+3*j]].Z);
-#else
-							fprintf(optr, "\tglEdgeFlag(GL_TRUE);\n");
-							fprintf(optr, "\tglVertex3f(%ff,%ff,%ff);\n", points[plist[0+3*j]].X,points[plist[0+3*j]].Y, points[plist[0+3*j]].Z);
-							fprintf(optr, "\tglVertex3f(%ff,%ff,%ff);\n", points[plist[1+3*j]].X,points[plist[1+3*j]].Y, points[plist[1+3*j]].Z);
-							fprintf(optr, "\tglEdgeFlag(GL_FALSE);\n");
-							fprintf(optr, "\tglVertex3f(%ff,%ff,%ff);\n", points[plist[2+3*j]].X,points[plist[2+3*j]].Y, points[plist[2+3*j]].Z);
-#endif
 						}
 					}
-#ifdef OGLVIEWER
 					glEnd();
-#else
-					fprintf(optr, "\tglEnd();\n");
-#endif
 				}
 			}
 		}
@@ -184,7 +183,7 @@ void GDSObject::OutputOGLVertices(FILE *optr, float offx, float offy, class GDSP
 	}
 }
 
-void GDSObject::OutputOGLSRefs(FILE *optr, class GDSObjects *Objects, char *Font, float offx, float offy, class GDSProcess *process)
+void GDSObject_ogl::OutputOGLSRefs(class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	GDSObject *obj;
 
@@ -200,25 +199,25 @@ void GDSObject::OutputOGLSRefs(FILE *optr, class GDSObjects *Objects, char *Font
 			//obj = Objects->GetObject(sref->Name);
 			obj = sref->object;
 			if(obj){
-				obj->OutputToOGL(optr, Objects, Font, offx+sref->X, offy+sref->Y, process);
+				obj->OutputToFile(NULL, Objects, Font, offx+sref->X, offy+sref->Y, objectid, firstlayer);
 			}
 	//		if(sref->Mag!=1.0){
-	//			fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
+	//			fprintf(NULL, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
 	//		}
 	//		if(sref->Flipped){
-	//			fprintf(fptr, "scale <1,-1,1> ");
+	//			fprintf(NULL, "scale <1,-1,1> ");
 	//		}
-	//		fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
+	//		fprintf(NULL, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
 	//		if(sref->Rotate.Y){
-	//			fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
+	//			fprintf(NULL, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
 	//		}
-	//		fprintf(fptr, "}\n");
+	//		fprintf(NULL, "}\n");
 	
 		}
 	}
 }
 
-void GDSObject::OutputOGLARefs(FILE *optr, class GDSObjects *Objects, char *Font, float offx, float offy, class GDSProcess *process)
+void GDSObject_ogl::OutputOGLARefs(class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	GDSObject *obj;
 	int i, j;
@@ -242,37 +241,37 @@ void GDSObject::OutputOGLARefs(FILE *optr, class GDSObjects *Objects, char *Font
 					if(obj){
 						for(i=0; i<aref->Rows; i++){
 							for(j=0; j<aref->Columns; j++){
-								obj->OutputToOGL(optr, Objects, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, process);
+								obj->OutputToFile(NULL, Objects, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
 							}
 						}
 					}
 				/*
-					fprintf(fptr, "#declare dx = %.2f;\n", dx);
-					fprintf(fptr, "#declare dy = %.2f;\n", dy);
+					fprintf(NULL, "#declare dx = %.2f;\n", dx);
+					fprintf(NULL, "#declare dy = %.2f;\n", dy);
 
-					fprintf(fptr, "#declare colcount = 0;\n");
-					fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-					fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-					fprintf(fptr, "#while (colcount < cols)\n");
-					fprintf(fptr, "\t#declare rowcount = 0;");
-					fprintf(fptr, "\t#while (rowcount < rows)\n");
-					fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
+					fprintf(NULL, "#declare colcount = 0;\n");
+					fprintf(NULL, "#declare cols = %d;\n", aref->Columns);
+					fprintf(NULL, "#declare rows = %d;\n", aref->Rows);
+					fprintf(NULL, "#while (colcount < cols)\n");
+					fprintf(NULL, "\t#declare rowcount = 0;");
+					fprintf(NULL, "\t#while (rowcount < rows)\n");
+					fprintf(NULL, "\t\tobject{str_%s ", aref->Name);
 					if(aref->Mag!=1.0){
-						fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
+						fprintf(NULL, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
 					}
 					if(aref->Flipped){
-						fprintf(fptr, "scale <1,-1,1> ");
+						fprintf(NULL, "scale <1,-1,1> ");
 					}
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
+					fprintf(NULL, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
 					if(aref->Rotate.Y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
+						fprintf(NULL, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
 					}
-					fprintf(fptr, "}\n");
+					fprintf(NULL, "}\n");
 
-					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-					fprintf(fptr, "\t#end\n");
-					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-					fprintf(fptr, "#end\n");
+					fprintf(NULL, "\t\t#declare rowcount = rowcount + 1;\n");
+					fprintf(NULL, "\t#end\n");
+					fprintf(NULL, "\t#declare colcount = colcount + 1;\n");
+					fprintf(NULL, "#end\n");
 					*/
 				}
 			}else{
@@ -283,34 +282,34 @@ void GDSObject::OutputOGLARefs(FILE *optr, class GDSObjects *Objects, char *Font
 					if(obj){
 						for(i=0; i<aref->Rows; i++){
 							for(j=0; j<aref->Columns; j++){
-								obj->OutputToOGL(optr, Objects, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, process);
+								obj->OutputToFile(NULL, Objects, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
 							}
 						}
 					}
 					/*
 					fprintf(tr, "#declare dx = %.2f;\n", dx);
-					fprintf(fptr, "#declare dy = %.2f;\n", dy);
+					fprintf(NULL, "#declare dy = %.2f;\n", dy);
 
-					fprintf(fptr, "#declare colcount = 0;\n");
-					fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-					fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-					fprintf(fptr, "#while (colcount < cols)\n");
-					fprintf(fptr, "\t#declare rowcount = 0;");
-					fprintf(fptr, "\t#while (rowcount < rows)\n");
-					fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
+					fprintf(NULL, "#declare colcount = 0;\n");
+					fprintf(NULL, "#declare cols = %d;\n", aref->Columns);
+					fprintf(NULL, "#declare rows = %d;\n", aref->Rows);
+					fprintf(NULL, "#while (colcount < cols)\n");
+					fprintf(NULL, "\t#declare rowcount = 0;");
+					fprintf(NULL, "\t#while (rowcount < rows)\n");
+					fprintf(NULL, "\t\tobject{str_%s ", aref->Name);
 					if(aref->Flipped){
-						fprintf(fptr, "scale <1,-1,1> ");
+						fprintf(NULL, "scale <1,-1,1> ");
 					}
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
+					fprintf(NULL, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
 					if(aref->Rotate.Y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
+						fprintf(NULL, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
 					}
-					fprintf(fptr, "}\n");
+					fprintf(NULL, "}\n");
 
-					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-					fprintf(fptr, "\t#end\n");
-					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-					fprintf(fptr, "#end\n");
+					fprintf(NULL, "\t\t#declare rowcount = rowcount + 1;\n");
+					fprintf(NULL, "\t#end\n");
+					fprintf(NULL, "\t#declare colcount = colcount + 1;\n");
+					fprintf(NULL, "#end\n");
 					*/
 				}
 			}
@@ -318,15 +317,15 @@ void GDSObject::OutputOGLARefs(FILE *optr, class GDSObjects *Objects, char *Font
 	}
 }
 
-void GDSObject::OutputToOGL(FILE *optr, class GDSObjects *Objects, char *Font, float offx, float offy, class GDSProcess *process)
+void GDSObject_ogl::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	OutputOGLVertices(optr, offx, offy, process);
+	OutputOGLVertices(offx, offy);
 
 	if(FirstSRef){
-		OutputOGLSRefs(optr, Objects, Font, offx, offy, process);
+		OutputOGLSRefs(Objects, Font, offx, offy, objectid, firstlayer);
 	}
 	if(FirstARef){
-		OutputOGLARefs(optr, Objects, Font, offx, offy, process);
+		OutputOGLARefs(Objects, Font, offx, offy, objectid, firstlayer);
 	}
 }
 

@@ -29,7 +29,7 @@ esac
 
 # Check for header files
 # ======================
-AC_CHECK_HEADERS([winsock2.h])
+AC_CHECK_HEADERS([X11/keysym.h X11/Xlib.h GL/gl.h GL/glx.h GL/glu.h sys/time.h time.h windows.h winsock2.h])
 
 
 # Add DLL build support
@@ -47,6 +47,11 @@ fi
 if test "$MINGW32" = "yes"; then
 	LDADD="$LDADD -lws2_32"
 fi
+
+AC_CHECK_FUNCS([gettimeofday QueryPerformanceCounter])
+
+
+CFLAGS="${CFLAGS} -ggdb"
 
 AC_SUBST(LDADD)
 

@@ -126,7 +126,6 @@ int main(int argc, char *argv[])
 	if(!process){
 		fprintf(stderr, "Error: Out of memory.\n");
 		delete config;
-		delete process;
 		return -1;
 	}else if(!process->IsValid()){
 		fprintf(stderr, "Error: %s is not a valid process file\n");

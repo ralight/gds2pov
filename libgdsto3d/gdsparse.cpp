@@ -616,7 +616,7 @@ void GDSParse::ParseUnits()
 	double tmp;
 	_units = (float)GetEightByteReal();
 	tmp = GetEightByteReal();
-	v_printf(1, "DB _units/user _units = %g\nSize of DB _units in metres = %g\nSize of user _units in m = %g\n\n", 1/_units, tmp, tmp/_units);
+	v_printf(1, "DB units/user units = %g\nSize of DB units in metres = %g\nSize of user units in m = %g\n\n", 1/_units, tmp, tmp/_units);
 }
 
 void GDSParse::ParseStrName()
@@ -650,7 +650,7 @@ void GDSParse::ParseXYPath()
 	thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 
 	if(thislayer==NULL){
-		v_printf(1, "Notice: Layer found in gds2 file that is not defined in the _process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+		v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
 		v_printf(1, "\tIgnoring this path.\n");
 		while(_recordlen){
 			GetFourByteSignedInt();
@@ -698,7 +698,7 @@ void GDSParse::ParseXYBoundary()
 	thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 
 	if(thislayer==NULL){
-		v_printf(1, "Notice: Layer found in gds2 file that is not defined in the _process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+		v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
 		v_printf(1, "\tIgnoring this boundary.\n");
 		while(_recordlen){
 			GetFourByteSignedInt();
@@ -791,7 +791,7 @@ void GDSParse::ParseXY()
 			_TextElements++;
 
 			if(thislayer==NULL){
-				v_printf(2, "Notice: Layer found in gds2 file that is not defined in the _process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+				v_printf(2, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
 				v_printf(2, "\tIgnoring this string.\n");
 				while(_recordlen){
 					GetFourByteSignedInt();

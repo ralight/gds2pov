@@ -493,6 +493,17 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 			fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name);
 			fprintf(fptr, "}\n");
 
+			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
+				if(polygon->GetAngleCoords(j)>=0){
+					fprintf(fptr,"text{ttf \"crystal.ttf\" \"%d+\" 0.2, 0 ", j);
+				}else{
+					fprintf(fptr,"text{ttf \"crystal.ttf\" \"%d-\" 0.2, 0 ", j);
+				}
+				fprintf(fptr, " scale <1.5,1.5,1.5>");
+				fprintf(fptr, " translate <%.2f,%.2f,%.2f> texture{pigment{rgb <1,1,1>}}}\n", polygon->GetXCoords(j), \
+						polygon->GetYCoords(j), polygon->GetHeight() - 1);
+			}
+
 			printf("+ve %d, -ve %d\n\n", positives, negatives);
 		}
 

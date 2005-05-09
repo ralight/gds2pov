@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.am 202 2005-03-17 21:00:11Z roger $
+# $Id: Makefile.am 209 2005-05-09 18:04:20Z roger $
 
 SUBDIRS = .
 
@@ -10,9 +10,9 @@ bin_PROGRAMS = gdsoglviewer
 #gdsoglviewer_DATA	
 
 gdsoglviewer_SOURCES =	gdsoglviewer.cpp \
-			gdsobject_pov.cpp \
-			gdsparse_pov.cpp
+			gdsobject_ogl.cpp \
+			gdsparse_ogl.cpp
 
-gdsoglviewer_LDADD = -lgdsto3d
+gdsoglviewer_LDADD = -lgdsto3d -lGLU -lGL
 gdsoglviewer_LDFLAGS = -L../libgdsto3d
 
