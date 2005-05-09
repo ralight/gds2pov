@@ -7,17 +7,17 @@
 #include "gds2pov.h"
 #include "gdsparse_pov.h"
 
-#define VERSION "0.8"
+#define GDS2POV_VERSION "0.8"
 
 extern int verbose_output;
 bool decompose;
 
 void printusage()
 {
-		printf("gds2pov  version %s\n", VERSION);
+		printf("gds2pov  version %s\n", GDS2POV_VERSION);
 		printf("Copyright (C) 2004,2005 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
 		printf("gds2pov comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2pov freely\nas described in the readme.txt distributed with this file.\n\n");
-		printf("gds2pov is a program for converting a GDS2 file to a number of 3D formats.\n\n");
+		printf("gds2pov is a program for converting a GDS2 file to a POV-Ray scene file.\n\n");
 		printf("Usage: gds2pov input.gds output.pov [-b] [-c config.txt] [-d] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
 		printf("Options\n");
 		printf(" -b\t\tOutput bounding box instead of layout to allow easier and\n\t\tquicker placing of the camera\n");

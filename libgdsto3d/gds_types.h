@@ -1,6 +1,11 @@
 #ifndef _GDS_TYPES_H
 #define _GDS_TYPES_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+
 /*
  * We need byte swapping functions.
  * If these exist for a particular platform, use the (presumably) optimised
@@ -18,9 +23,11 @@
 //#	define __BYTE_ORDER __LITTLE_ENDIAN
 //	long endian_swap_long(long value);
 //	short endian_swap_short(short value);
-#	include <winsock.h>
+#ifdef HAVE_WINSOCK2_H
+#	include <winsock2.h>
 #	define endian_swap_long(A) htonl((A))
 #	define endian_swap_short(A) htons((A))
+#endif
 #else
 	/* Generic includes for Unix-alike systems */
 	/* Includes at least Solaris, FreeBSD, HP-UX */

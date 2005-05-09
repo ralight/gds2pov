@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.am 204 2005-05-05 21:04:44Z roger $
+# $Id: Makefile.am 206 2005-05-09 09:37:23Z roger $
 
 SUBDIRS = .
 
@@ -9,7 +9,7 @@ lib_LTLIBRARIES = libgdsto3d.la
 
 include_HEADERS = gdsto3d.h
 
-#libgdsto3d_la_LIBADD = $(
+libgdsto3d_la_LIBADD = @LDADD@
 
 libgdsto3d_la_LDFLAGS = -version-info 0:0:0
 
