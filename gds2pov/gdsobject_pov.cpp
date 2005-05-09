@@ -12,310 +12,334 @@ GDSObject_pov::~GDSObject_pov()
 {
 }
 
-void GDSObject_pov::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	if(fptr && !IsOutput){
-		fprintf(fptr, "#declare str_%s = union {\n", Name);
-		if(!PolygonItems.empty()){
-			if(decompose){
-				DecomposePOVPolygons(fptr);
-			}else{
-				class GDSPolygon *polygon;
+	if(!PathItems.empty()){
+		float angleX, angleY;
 
-				for(unsigned long i=0; i<PolygonItems.size(); i++){
-					polygon = PolygonItems[i];
+		class GDSPath *path;
 
-					fprintf(fptr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
-					for(unsigned int j=0; j<polygon->GetPoints(); j++){
-						fprintf(fptr, ",<%.2f,%.2f>", polygon->GetXCoords(j), polygon->GetYCoords(j));
-					}
-					fprintf(fptr, " rotate<-90,0,0> ");
+		for(unsigned long i=0; i<PathItems.size(); i++){
+			path = PathItems[i];
 
-					fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name);
-					fprintf(fptr, "}\n");
+			if(path->GetWidth()){
+				fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->GetPoints()-1));
+
+				float BgnExtn;
+				float EndExtn;
+				float extn_x, extn_y;
+
+				switch(path->GetType()){
+					case 1:
+					case 2:
+						BgnExtn = path->GetWidth(); /* Width has already been scaled to half */
+						EndExtn = path->GetWidth();
+							break;
+					case 4:
+						BgnExtn = path->GetBgnExtn();
+						EndExtn = path->GetEndExtn();
+						break;
+					default:
+						BgnExtn = 0.0;
+						EndExtn = 0.0;
+						break;
 				}
+				for(unsigned int j=0; j<path->GetPoints()-1; j++){
+					angleX = cos(atan2(path->GetXCoords(j) - path->GetXCoords(j+1), path->GetYCoords(j+1) - path->GetYCoords(j)));
+					angleY = sin(atan2(path->GetXCoords(j) - path->GetXCoords(j+1), path->GetYCoords(j+1) - path->GetYCoords(j)));
+
+					if(j==0 || j==path->GetPoints()-2){
+						extn_x = EndExtn * angleY;
+						extn_y = EndExtn * angleX;
+					}else{
+						extn_x = 0.0;
+						extn_y = 0.0;
+					}
+
+					// 1
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+						path->GetXCoords(j) + path->GetWidth() * angleX + extn_x,
+						path->GetYCoords(j) + path->GetWidth() * angleY - extn_y,
+						-path->GetHeight() - path->GetThickness()
+						);
+					// 2
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+						path->GetXCoords(j) - path->GetWidth() * angleX + extn_x,
+						path->GetYCoords(j) - path->GetWidth() * angleY - extn_y,
+						-path->GetHeight() - path->GetThickness()
+						);
+					// 3
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+						path->GetXCoords(j) + path->GetWidth() * angleX + extn_x,
+						path->GetYCoords(j) + path->GetWidth() * angleY - extn_y,
+						-path->GetHeight()
+						);
+					// 4
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+						path->GetXCoords(j) - path->GetWidth() * angleX + extn_x,
+						path->GetYCoords(j) - path->GetWidth() * angleY - extn_y,
+						-path->GetHeight()
+						);
+
+					// 5
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+						path->GetXCoords(j+1) + path->GetWidth() * angleX - extn_x,
+						path->GetYCoords(j+1) + path->GetWidth() * angleY - extn_y,
+						-path->GetHeight() - path->GetThickness()
+						);
+
+					// 6
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+						path->GetXCoords(j+1) - path->GetWidth() * angleX - extn_x,
+						path->GetYCoords(j+1) - path->GetWidth() * angleY - extn_y,
+						-path->GetHeight() - path->GetThickness()
+						);
+
+					// 7
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+						path->GetXCoords(j+1) + path->GetWidth() * angleX - extn_x,
+						path->GetYCoords(j+1) + path->GetWidth() * angleY - extn_y,
+						-path->GetHeight()
+						);
+
+					// 8
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+						path->GetXCoords(j+1) - path->GetWidth() * angleX - extn_x,
+						path->GetYCoords(j+1) - path->GetWidth() * angleY - extn_y,
+						-path->GetHeight()
+						);
+				}
+				fprintf(fptr, "} face_indices { %d", 12*(path->GetPoints()-1));
+				for(unsigned int j=0; j<path->GetPoints()-1; j++){
+					// print ,faces now
+					//int vertexindex[36] = {0, 1, 2, 1, 2, 3, 4, 5, 6, 5, 6, 7, 0, 1, 5, 0, 4, 5, 2, 3, 6, 3, 6, 7, 1, 3, 7, 1, 5, 7, 0, 2, 4, 2, 4, 6};
+					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 1+8*j, 2+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 2+8*j, 3+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 4+8*j, 5+8*j, 6+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 5+8*j, 6+8*j, 7+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 1+8*j, 5+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 4+8*j, 5+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 2+8*j, 3+8*j, 6+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 3+8*j, 6+8*j, 7+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 3+8*j, 7+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 5+8*j, 7+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 2+8*j, 4+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 2+8*j, 4+8*j, 6+8*j);
+				}
+				fprintf(fptr, "} ");
+				//if(!path->Colour.Metal){
+				//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+				//}else{
+				//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+				//}
+				fprintf(fptr, "texture{t%s}",path->GetLayer()->Name);
+				fprintf(fptr, "}\n");
 			}
 		}
+	}
+}
 
-		if(!PathItems.empty()){
-			float angleX, angleY;
+void GDSObject_pov::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+{
+	if(!PolygonItems.empty()){
+		if(decompose){
+			DecomposePOVPolygons(fptr);
+		}else{
+			class GDSPolygon *polygon;
 
-			class GDSPath *path;
+			for(unsigned long i=0; i<PolygonItems.size(); i++){
+				polygon = PolygonItems[i];
 
-			for(unsigned long i=0; i<PathItems.size(); i++){
-				path = PathItems[i];
-
-				if(path->GetWidth()){
-					fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->GetPoints()-1));
-
-					float BgnExtn;
-					float EndExtn;
-					float extn_x, extn_y;
-
-					switch(path->GetType()){
-						case 1:
-						case 2:
-							BgnExtn = path->GetWidth(); /* Width has already been scaled to half */
-							EndExtn = path->GetWidth();
-							break;
-						case 4:
-							BgnExtn = path->GetBgnExtn();
-							EndExtn = path->GetEndExtn();
-							break;
-						default:
-							BgnExtn = 0.0;
-							EndExtn = 0.0;
-							break;
-					}
-					for(unsigned int j=0; j<path->GetPoints()-1; j++){
-						angleX = cos(atan2(path->GetXCoords(j) - path->GetXCoords(j+1), path->GetYCoords(j+1) - path->GetYCoords(j)));
-						angleY = sin(atan2(path->GetXCoords(j) - path->GetXCoords(j+1), path->GetYCoords(j+1) - path->GetYCoords(j)));
-
-						if(j==0 || j==path->GetPoints()-2){
-							extn_x = EndExtn * angleY;
-							extn_y = EndExtn * angleX;
-						}else{
-							extn_x = 0.0;
-							extn_y = 0.0;
-						}
-
-						// 1
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-							path->GetXCoords(j) + path->GetWidth() * angleX + extn_x,
-							path->GetYCoords(j) + path->GetWidth() * angleY - extn_y,
-							-path->GetHeight() - path->GetThickness()
-							);
-						// 2
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-							path->GetXCoords(j) - path->GetWidth() * angleX + extn_x,
-							path->GetYCoords(j) - path->GetWidth() * angleY - extn_y,
-							-path->GetHeight() - path->GetThickness()
-							);
-						// 3
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-							path->GetXCoords(j) + path->GetWidth() * angleX + extn_x,
-							path->GetYCoords(j) + path->GetWidth() * angleY - extn_y,
-							-path->GetHeight()
-							);
-						// 4
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-							path->GetXCoords(j) - path->GetWidth() * angleX + extn_x,
-							path->GetYCoords(j) - path->GetWidth() * angleY - extn_y,
-							-path->GetHeight()
-							);
-
-						// 5
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-							path->GetXCoords(j+1) + path->GetWidth() * angleX - extn_x,
-							path->GetYCoords(j+1) + path->GetWidth() * angleY - extn_y,
-							-path->GetHeight() - path->GetThickness()
-							);
-
-						// 6
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-							path->GetXCoords(j+1) - path->GetWidth() * angleX - extn_x,
-							path->GetYCoords(j+1) - path->GetWidth() * angleY - extn_y,
-							-path->GetHeight() - path->GetThickness()
-							);
-
-						// 7
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-							path->GetXCoords(j+1) + path->GetWidth() * angleX - extn_x,
-							path->GetYCoords(j+1) + path->GetWidth() * angleY - extn_y,
-							-path->GetHeight()
-							);
-
-						// 8
-						fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-							path->GetXCoords(j+1) - path->GetWidth() * angleX - extn_x,
-							path->GetYCoords(j+1) - path->GetWidth() * angleY - extn_y,
-							-path->GetHeight()
-							);
-					}
-					fprintf(fptr, "} face_indices { %d", 12*(path->GetPoints()-1));
-					for(unsigned int j=0; j<path->GetPoints()-1; j++){
-						// print ,faces now
-						//int vertexindex[36] = {0, 1, 2, 1, 2, 3, 4, 5, 6, 5, 6, 7, 0, 1, 5, 0, 4, 5, 2, 3, 6, 3, 6, 7, 1, 3, 7, 1, 5, 7, 0, 2, 4, 2, 4, 6};
-						fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 1+8*j, 2+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 2+8*j, 3+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 4+8*j, 5+8*j, 6+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 5+8*j, 6+8*j, 7+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 1+8*j, 5+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 4+8*j, 5+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 2+8*j, 3+8*j, 6+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 3+8*j, 6+8*j, 7+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 3+8*j, 7+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 5+8*j, 7+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 2+8*j, 4+8*j);
-						fprintf(fptr, ",<%d,%d,%d>", 2+8*j, 4+8*j, 6+8*j);
-					}
-					fprintf(fptr, "} ");
-					//if(!path->Colour.Metal){
-					//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-					//}else{
-					//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-					//}
-					fprintf(fptr, "texture{t%s}",path->GetLayer()->Name);
-					fprintf(fptr, "}\n");
+				fprintf(fptr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
+				for(unsigned int j=0; j<polygon->GetPoints(); j++){
+					fprintf(fptr, ",<%.2f,%.2f>", polygon->GetXCoords(j), polygon->GetYCoords(j));
 				}
+				fprintf(fptr, " rotate<-90,0,0> ");
+
+				fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name);
+				fprintf(fptr, "}\n");
 			}
 		}
+	}
+}
 
-		if(FirstSRef){
-			SRefElement dummysref;
-			dummysref.Next = FirstSRef;
-
-			SRefElement *sref = &dummysref;
-
-			while(sref->Next){
-				sref = sref->Next;
-
-				fprintf(fptr, "object{str_%s ", sref->Name);
-				if(sref->Mag!=1.0){
-					fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
+void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+{
+	if(!TextItems.empty()){
+		class GDSText *text;
+		//for (vector<class GDSText>::const_iterator text=TextItems.begin(); text!=TextItems.end(); ++text){
+		for (unsigned int i=0; i<TextItems.size(); i++){
+			text = TextItems[i];
+			if(text->GetString()){
+				if(Font){
+					fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->GetString());
+				}else{
+					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
 				}
-				if(sref->Flipped){
+				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
+				fprintf(fptr, "texture{t%s}",text->GetLayer()->Name);
+				if(text->GetMag()!=1.0){
+					fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
+				}
+				if(text->GetFlipped()){
 					fprintf(fptr, "scale <1,-1,1> ");
 				}
-				fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
-				if(sref->Rotate.Y){
-					fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
+				fprintf(fptr, "translate <%.2f,%.2f,%.2f> ", text->GetX(), text->GetY(), -text->GetZ());
+				if(text->GetRY()){
+					fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,%.2f>)", -text->GetRY(), text->GetX(), text->GetY(), -text->GetZ());
+				}
+				float htrans = 0.0, vtrans = 0.0;
+				switch(text->GetHJust()){
+					case 0:
+						htrans = -0.5*strlen(text->GetString());
+						break;
+					case 1:
+						htrans = -0.25*strlen(text->GetString());
+						break;
+					case 2:
+						htrans = 0;
+						break;
+				}
+				switch(text->GetVJust()){
+					case 0:
+						vtrans = 0.0;
+						break;
+					case 1:
+						vtrans = -0.5;
+						break;
+					case 2:
+						vtrans = -1.0;
+						break;
+				}
+				if(htrans || vtrans){
+					if(text->GetRY()){
+						fprintf(fptr, "translate <%.2f,%.2f,0> ", vtrans, htrans);
+					}else{
+						fprintf(fptr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
+					}
 				}
 				fprintf(fptr, "}\n");
 			}
 		}
+	}
+}
 
-		if(!TextItems.empty()){
-			class GDSText *text;
-			//for (vector<class GDSText>::const_iterator text=TextItems.begin(); text!=TextItems.end(); ++text){
-			for (unsigned int i=0; i<TextItems.size(); i++){
-				text = TextItems[i];
-				if(text->GetString()){
-					if(Font){
-						fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->GetString());
-					}else{
-						fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
+void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+{
+	if(FirstSRef){
+		SRefElement dummysref;
+		dummysref.Next = FirstSRef;
+
+		SRefElement *sref = &dummysref;
+
+		while(sref->Next){
+			sref = sref->Next;
+
+			fprintf(fptr, "object{str_%s ", sref->Name);
+			if(sref->Mag!=1.0){
+				fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
+			}
+			if(sref->Flipped){
+				fprintf(fptr, "scale <1,-1,1> ");
+			}
+			fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
+			if(sref->Rotate.Y){
+				fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
+			}
+			fprintf(fptr, "}\n");
+		}
+	}
+}
+
+void GDSObject_pov::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+{
+	if(FirstARef){
+		ARefElement dummyaref;
+		dummyaref.Next = FirstARef;
+		ARefElement *aref = &dummyaref;
+
+		float dx, dy;
+
+		while(aref->Next){
+			aref = aref->Next;
+			if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
+				if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
+					dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
+					dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
+
+					fprintf(fptr, "#declare dx = %.2f;\n", dx);
+					fprintf(fptr, "#declare dy = %.2f;\n", dy);
+
+					fprintf(fptr, "#declare colcount = 0;\n");
+					fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
+					fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
+					fprintf(fptr, "#while (colcount < cols)\n");
+					fprintf(fptr, "\t#declare rowcount = 0;");
+					fprintf(fptr, "\t#while (rowcount < rows)\n");
+					fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
+					if(aref->Mag!=1.0){
+						fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
 					}
-					//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-					fprintf(fptr, "texture{t%s}",text->GetLayer()->Name);
-					if(text->GetMag()!=1.0){
-						fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
-					}
-					if(text->GetFlipped()){
+					if(aref->Flipped){
 						fprintf(fptr, "scale <1,-1,1> ");
 					}
-					fprintf(fptr, "translate <%.2f,%.2f,%.2f> ", text->GetX(), text->GetY(), -text->GetZ());
-					if(text->GetRY()){
-						fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,%.2f>)", -text->GetRY(), text->GetX(), text->GetY(), -text->GetZ());
-					}
-					float htrans = 0.0, vtrans = 0.0;
-					switch(text->GetHJust()){
-						case 0:
-							htrans = -0.5*strlen(text->GetString());
-							break;
-						case 1:
-							htrans = -0.25*strlen(text->GetString());
-							break;
-						case 2:
-							htrans = 0;
-							break;
-					}
-					switch(text->GetVJust()){
-						case 0:
-							vtrans = 0.0;
-							break;
-						case 1:
-							vtrans = -0.5;
-							break;
-						case 2:
-							vtrans = -1.0;
-							break;
-					}
-					if(htrans || vtrans){
-						if(text->GetRY()){
-							fprintf(fptr, "translate <%.2f,%.2f,0> ", vtrans, htrans);
-						}else{
-							fprintf(fptr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
-						}
+					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
+					if(aref->Rotate.Y){
+						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
 					}
 					fprintf(fptr, "}\n");
+
+					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
+					fprintf(fptr, "\t#end\n");
+					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
+					fprintf(fptr, "#end\n");
+				}
+			}else{
+				if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
+					dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
+					dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
+
+					fprintf(fptr, "#declare dx = %.2f;\n", dx);
+					fprintf(fptr, "#declare dy = %.2f;\n", dy);
+
+					fprintf(fptr, "#declare colcount = 0;\n");
+					fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
+					fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
+					fprintf(fptr, "#while (colcount < cols)\n");
+					fprintf(fptr, "\t#declare rowcount = 0;");
+					fprintf(fptr, "\t#while (rowcount < rows)\n");
+					fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
+					if(aref->Flipped){
+						fprintf(fptr, "scale <1,-1,1> ");
+					}
+					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
+					if(aref->Rotate.Y){
+						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
+					}
+					fprintf(fptr, "}\n");
+
+					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
+					fprintf(fptr, "\t#end\n");
+					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
+					fprintf(fptr, "#end\n");
 				}
 			}
 		}
+	}
+}
 
-		if(FirstARef){
-			ARefElement dummyaref;
-			dummyaref.Next = FirstARef;
-			ARefElement *aref = &dummyaref;
 
-			float dx, dy;
+void GDSObject_pov::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+{
+	if(fptr && !IsOutput){
+		fprintf(fptr, "#declare str_%s = union {\n", Name);
 
-			while(aref->Next){
-				aref = aref->Next;
-				if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
-					if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
-						dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
-						dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
+		OutputPolygonToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
+		OutputPathToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
+		OutputSRefToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
+		OutputTextToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
+		OutputARefToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
 
-						fprintf(fptr, "#declare dx = %.2f;\n", dx);
-						fprintf(fptr, "#declare dy = %.2f;\n", dy);
-
-						fprintf(fptr, "#declare colcount = 0;\n");
-						fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-						fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-						fprintf(fptr, "#while (colcount < cols)\n");
-						fprintf(fptr, "\t#declare rowcount = 0;");
-						fprintf(fptr, "\t#while (rowcount < rows)\n");
-						fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
-						if(aref->Mag!=1.0){
-							fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
-						}
-						if(aref->Flipped){
-							fprintf(fptr, "scale <1,-1,1> ");
-						}
-						fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-						if(aref->Rotate.Y){
-							fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
-						}
-						fprintf(fptr, "}\n");
-
-						fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-						fprintf(fptr, "\t#end\n");
-						fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-						fprintf(fptr, "#end\n");
-					}
-				}else{
-					if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
-						dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
-						dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
-
-						fprintf(fptr, "#declare dx = %.2f;\n", dx);
-						fprintf(fptr, "#declare dy = %.2f;\n", dy);
-
-						fprintf(fptr, "#declare colcount = 0;\n");
-						fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-						fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-						fprintf(fptr, "#while (colcount < cols)\n");
-						fprintf(fptr, "\t#declare rowcount = 0;");
-						fprintf(fptr, "\t#while (rowcount < rows)\n");
-						fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
-						if(aref->Flipped){
-							fprintf(fptr, "scale <1,-1,1> ");
-						}
-						fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-						if(aref->Rotate.Y){
-							fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
-						}
-						fprintf(fptr, "}\n");
-
-						fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-						fprintf(fptr, "\t#end\n");
-						fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-						fprintf(fptr, "#end\n");
-					}
-				}
-			}
-		}
 		fprintf(fptr, "}\n");
 	}
 	IsOutput = true;

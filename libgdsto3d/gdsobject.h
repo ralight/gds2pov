@@ -53,7 +53,6 @@ public:
 	char *GetName();
 
 	virtual void OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)=0;
-	//virtual void OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 
 	int HasASRef();
 	class GDSObject *GetSRef(class GDSObjects *Objects, int Index);
