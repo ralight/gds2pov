@@ -589,7 +589,7 @@ float GDSParse_ogl::timer( struct htime *t, int reset )
 	}
 
 	if(reset){
-		QueryPerformanceCounter(&t->hfreq);
+		QueryPerformanceFrequency(&t->hfreq);
 		QueryPerformanceCounter(&t->start);
 	}
 #endif

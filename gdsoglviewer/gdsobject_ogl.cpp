@@ -167,7 +167,6 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 				polygon = PolygonItems[i];
 				layer = polygon->GetLayer();
 
-				printf(".");
 				glPolygonMode(GL_FRONT_AND_BACK, render_mode);
 				glColor3f(layer->Red, layer->Green, layer->Blue);
 				glBegin(GL_TRIANGLES);
