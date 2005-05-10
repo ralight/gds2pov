@@ -23,7 +23,6 @@ private:
 
 	int _info;
 	int _frames;
-	GLuint _font;
 	GLfloat _fps;
 	GLfloat _rx, _ry;
 	GLfloat _x, _y, _z;
@@ -33,6 +32,7 @@ private:
 	struct htime _tv, _mt;
 
 public:
+	GLuint _font;
 	int _width, _height;
 #ifdef HAVE_WINDOWS_H
 	HDC _hDC;
@@ -53,9 +53,9 @@ public:
 	void OutputHeader();
 	void OutputFooter();
 
-	int gl_data(void);
-	int gl_init(void);
-	void gl_draw(class GDSObject *Object);
+	int gl_data();
+	int gl_init();
+	void gl_draw();
 	void gl_printf( GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, \
                 GLint x, GLint y, GLuint font, const char *format, ... );
 	void gl_resize(void);

@@ -81,7 +81,7 @@ char *AppTitle = "GDSto3D";
 
 /* data initialization function */
 
-int GDSParse_ogl::gl_data( void )
+int GDSParse_ogl::gl_data()
 {
 	_info = 1;
 
@@ -94,7 +94,7 @@ int GDSParse_ogl::gl_data( void )
 
 /* gl initialization function */
 
-int GDSParse_ogl::gl_init( void )
+int GDSParse_ogl::gl_init()
 {
 	glEnable( GL_LINE_SMOOTH );
 	glLineWidth( 2.0 );
@@ -114,7 +114,7 @@ int GDSParse_ogl::gl_init( void )
 
 /* window drawing function */
 
-void GDSParse_ogl::gl_draw(class GDSObject *Object)
+void GDSParse_ogl::gl_draw()
 {
 	GLfloat M[16];
 	long objectid=0;
@@ -138,9 +138,10 @@ void GDSParse_ogl::gl_draw(class GDSObject *Object)
 		}
 	}
 
-	/*if( _ry >  180.0f ) _ry += -360.0f;
+/*
+	if( _ry >  180.0f ) _ry += -360.0f;
 	if( _ry < -180.0f ) _ry +=  360.0f;
-	*/
+*/
 
 	glRotatef( _ry, 0.0f, 1.0f, 0.0f );
 	glGetFloatv( GL_MODELVIEW_MATRIX, M );
@@ -157,7 +158,8 @@ void GDSParse_ogl::gl_draw(class GDSObject *Object)
 	if( _vz < -40.0f ) _vz = -40.0f;
 	if( _vz >  40.0f ) _vz =  40.0f;
 
-	/*if( _x < -6.0f ) _x += 6.0f;
+/*
+	if( _x < -6.0f ) _x += 6.0f;
 	if( _x >  6.0f ) _x -= 6.0f;
 	if( _z < -6.0f ) _z += 6.0f;
 	if( _z >  6.0f ) _z -= 6.0f;
@@ -166,9 +168,10 @@ void GDSParse_ogl::gl_draw(class GDSObject *Object)
 */
 	glTranslatef( -_x, -_y, -_z );
 
-	RecursiveOutput(Object, NULL, 0.0, 0.0, &objectid, false);
+	//RecursiveOutput(Object, NULL, 0.0, 0.0, &objectid, false);
+	Output(NULL, NULL, false, true, false);
 
-//	glEnd();
+	//glEnd();
 
 	if( _fps && _info )
 	{
@@ -538,7 +541,7 @@ int GDSParse_ogl::glx_init( int fullscreen )
 		return( 1 );
 	}
 
-	font = glGenLists( 256 );
+	_font = glGenLists( 256 );
 
 	fixed = XLoadQueryFont(
 		dpy, "-misc-fixed-medium-r-*-*-20-*-*-*-*-*-*-*" );
@@ -546,7 +549,7 @@ int GDSParse_ogl::glx_init( int fullscreen )
 	null_cursor = XCreateGlyphCursor(
 		dpy, fixed->fid, fixed->fid, ' ', ' ', &black, &black );
 
-	glXUseXFont( fixed->fid, 0, 256, font );
+	glXUseXFont( fixed->fid, 0, 256, _font );
 
 	XFreeFont( dpy, fixed );
 #endif // HAVE_GL_GLX_H

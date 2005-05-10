@@ -165,6 +165,12 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 
 			for(unsigned long i=0; i<PolygonItems.size(); i++){
 				polygon = PolygonItems[i];
+				layer = polygon->GetLayer();
+
+				printf(".");
+				glPolygonMode(GL_FRONT_AND_BACK, render_mode);
+				glColor3f(layer->Red, layer->Green, layer->Blue);
+				glBegin(GL_TRIANGLES);
 
 				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 					tempf = polygon->GetXCoords(j) + offx;
@@ -178,6 +184,29 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 					tempf = polygon->GetYCoords(j) + offy;
 					tempf = polygon->GetHeight();
 				}
+
+				float z1 = polygon->GetHeight();
+				float z2 = polygon->GetHeight() + polygon->GetThickness();
+
+				for(unsigned int j=0; j<polygon->GetPoints()-2; j++){
+					float x1 = polygon->GetXCoords(j) + offx;
+					float y1 = polygon->GetYCoords(j) + offy;
+
+					float x2 = polygon->GetXCoords(j+1) + offx;
+					float y2 = polygon->GetYCoords(j+1) + offy;
+					glEdgeFlag(GL_TRUE);
+					glVertex3f(x1, y1, z1);
+					glVertex3f(x1, y1, z2);
+					glEdgeFlag(GL_FALSE);
+					glVertex3f(x2, y2, z1);
+
+					glEdgeFlag(GL_TRUE);
+					glVertex3f(x2, y2, z2);
+					glVertex3f(x1, y1, z2);
+					glEdgeFlag(GL_FALSE);
+					glVertex3f(x2, y2, z1);
+				}
+				glEnd();
 			}
 		}
 	}

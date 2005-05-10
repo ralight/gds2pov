@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 	char *topcell=NULL;
 
 #ifdef WIN32
-	char *gdsfile = "RF1_Top.gds";
+	char *gdsfile = "polytest.gds";
 	char *configfile = "config.txt";
 #else
 	if(argc<3 || argc>13){
@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 			processfile = config->GetProcessFile();
 		}else{
 			processfile = new char[13];
-			strncpy(processfile, "process.txt", strlen("process.txt")+1);
+			strncpy(processfile, "process.txt", 13);
 		}
 	}
 	process = new GDSProcess(processfile);
@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
 			parser = Parser;
 			RealWinMain(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 #else
-			Parser->Output(NULL, topcell, true, false, false);
+			Parser->Output(NULL, topcell, false, true, false);
 #endif
 		}
 
@@ -287,8 +287,8 @@ int WINAPI RealWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         {
             if( parser->_active )
             {
-                //parser->gl_draw();
-		parser->Output(NULL, NULL, true, false, false);
+                parser->gl_draw();
+		//parser->Output(NULL, NULL, false, true, false);
                 SwapBuffers( parser->_hDC );
             }
             else
@@ -388,7 +388,7 @@ LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
                 break;
             }
 
-            font = glGenLists( 255 );
+            parser->_font = glGenLists( 255 );
 
             {
                 HFONT courier = CreateFont( 20, 0, 0, 0, FW_MEDIUM, FALSE,
@@ -398,7 +398,7 @@ LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
 
                 SelectObject( parser->_hDC, courier );
 
-                if( ! wglUseFontBitmaps( parser->_hDC, 1, 255, font ) )
+                if( ! wglUseFontBitmaps( parser->_hDC, 1, 255, parser->_font ) )
                 {
                     //WinPerror( "wglUseFontBitmaps" );
                     PostQuitMessage( 0 );
