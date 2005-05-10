@@ -388,7 +388,7 @@ LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
                 break;
             }
 
-            parser->_font = glGenLists( 255 );
+            font = glGenLists( 255 );
 
             {
                 HFONT courier = CreateFont( 20, 0, 0, 0, FW_MEDIUM, FALSE,
@@ -398,7 +398,7 @@ LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
 
                 SelectObject( parser->_hDC, courier );
 
-                if( ! wglUseFontBitmaps( parser->_hDC, 1, 255, parser->_font ) )
+                if( ! wglUseFontBitmaps( parser->_hDC, 1, 255, font ) )
                 {
                     //WinPerror( "wglUseFontBitmaps" );
                     PostQuitMessage( 0 );
