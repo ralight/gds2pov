@@ -29,7 +29,7 @@ esac
 
 # Check for header files
 # ======================
-AC_CHECK_HEADERS([X11/keysym.h X11/Xlib.h GL/gl.h GL/glx.h GL/glu.h sys/time.h time.h windows.h winsock2.h])
+AC_CHECK_HEADERS([stdarg.h X11/keysym.h X11/Xlib.h GL/gl.h GL/glx.h GL/glu.h sys/time.h time.h windows.h winsock2.h])
 
 
 # Add DLL build support

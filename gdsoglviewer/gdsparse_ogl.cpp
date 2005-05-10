@@ -6,6 +6,9 @@
 #  include <config.h>
 #endif
 
+#ifdef HAVE_STDARG_H
+#  include <stdarg.h>
+#endif
 #ifdef HAVE_X11_KEYSYM_H
 #  include <X11/keysym.h>
 #endif
@@ -111,6 +114,12 @@ int GDSParse_ogl::gl_init()
 	glEnable(GL_DEPTH_TEST);
 	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
+	glNewList(1, GL_COMPILE);
+	glBegin(GL_TRIANGLES);
+	Output(NULL, NULL, false, true, false);
+	glEnd();
+	glEndList();
+
 	hide_mouse();
 	move_mouse( _width / 2, _height / 2 );
 	timer( &_mt, 1 );
@@ -175,16 +184,18 @@ void GDSParse_ogl::gl_draw()
 	glTranslatef( -_x, -_y, -_z );
 
 	//RecursiveOutput(Object, NULL, 0.0, 0.0, &objectid, false);
-	if(_drawn){
+	//if(_drawn){
 		glCallList(1);
-	}else{
+	//}else{
+		/*
 		glNewList(1, GL_COMPILE);
 		glBegin(GL_TRIANGLES);
 		Output(NULL, NULL, false, true, false);
 		glEnd();
 		glEndList();
 		_drawn = true;
-	}
+		*/
+	//}
 
 	//glEnd();
 
@@ -341,7 +352,7 @@ int GDSParse_ogl::gl_main(class GDSObject *Object)
 
 		while( _run ){
 			if( _active ){
-				gl_draw(Object);
+				gl_draw();
 				glXSwapBuffers( dpy, win );
 			}else{
 				XPeekEvent( dpy, &event );
