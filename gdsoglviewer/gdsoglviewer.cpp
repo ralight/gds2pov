@@ -56,13 +56,15 @@ int main(int argc, char *argv[])
 #endif
 {
 	verbose_output = 1;
+	//render_mode = GL_LINE;
 	render_mode = GL_FILL;
 
 	char *processfile=NULL;
 	char *topcell=NULL;
 
 #ifdef WIN32
-	char *gdsfile = "polytest.gds";
+	char *gdsfile = "RF1_Top.gds";
+	//char *gdsfile = "polytest.gds";
 	char *configfile = "config.txt";
 #else
 	if(argc<3 || argc>13){

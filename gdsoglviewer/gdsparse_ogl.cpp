@@ -44,6 +44,7 @@ extern int verbose_output;
 
 GDSParse_ogl::GDSParse_ogl(class GDSConfig *config, class GDSProcess *process) : GDSParse(config, process)
 {
+	_drawn = false;
 }
 
 GDSParse_ogl::~GDSParse_ogl()
@@ -102,7 +103,12 @@ int GDSParse_ogl::gl_init()
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-	glEnable(GL_DEPTH);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);
+
+	//glHint(GL_CLIP_VOLUME_CLIPPING_HINT_EXT,GL_FASTEST);
+	//glEnable(GL_DEPTH);
+	glEnable(GL_DEPTH_TEST);
 	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
 	hide_mouse();
@@ -119,8 +125,8 @@ void GDSParse_ogl::gl_draw()
 	GLfloat M[16];
 	long objectid=0;
 
-	//glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-	glClear( GL_COLOR_BUFFER_BIT );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	//glClear( GL_COLOR_BUFFER_BIT );
 
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
@@ -169,7 +175,16 @@ void GDSParse_ogl::gl_draw()
 	glTranslatef( -_x, -_y, -_z );
 
 	//RecursiveOutput(Object, NULL, 0.0, 0.0, &objectid, false);
-	Output(NULL, NULL, false, true, false);
+	if(_drawn){
+		glCallList(1);
+	}else{
+		glNewList(1, GL_COMPILE);
+		glBegin(GL_TRIANGLES);
+		Output(NULL, NULL, false, true, false);
+		glEnd();
+		glEndList();
+		_drawn = true;
+	}
 
 	//glEnd();
 
@@ -244,13 +259,13 @@ void GDSParse_ogl::gl_event( int event, int data, int xpos, int ypos )
 		if( data == 0 ) /* left button */
 		{
 			//vx =  40.0f;
-			_vx +=  10.0f;
+			_vx +=  20.0f;
 		}
 
 		if( data == 1 ) /* right button */
 		{
 			//vx = -40.0f;
-			_vx += -10.0f;
+			_vx += -20.0f;
 		}
 	}
 

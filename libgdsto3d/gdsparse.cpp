@@ -614,7 +614,7 @@ void GDSParse::ParseSName()
 void GDSParse::ParseUnits()
 {
 	double tmp;
-	_units = (float)GetEightByteReal();
+	_units = (float)GetEightByteReal()/20;
 	tmp = GetEightByteReal();
 	v_printf(1, "DB units/user units = %g\nSize of DB units in metres = %g\nSize of user units in m = %g\n\n", 1/_units, tmp, tmp/_units);
 }

@@ -55,7 +55,7 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 				if(path->GetWidth() && layer){
 					glPolygonMode(GL_FRONT_AND_BACK, render_mode);
 					glColor3f(layer->Red, layer->Green, layer->Blue);
-					glBegin(GL_TRIANGLES);
+					//glBegin(GL_TRIANGLES);
 
 					switch(path->GetType()){
 						case 1:
@@ -155,7 +155,7 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 							glVertex3f(points[plist[2+3*j]].X,points[plist[2+3*j]].Y, points[plist[2+3*j]].Z);
 						}
 					}
-					glEnd();
+					//glEnd();
 				}
 			}
 		}
@@ -167,9 +167,10 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 				polygon = PolygonItems[i];
 				layer = polygon->GetLayer();
 
-				glPolygonMode(GL_FRONT_AND_BACK, render_mode);
+				//glPolygonMode(GL_FRONT_AND_BACK, render_mode);
+				glPolygonMode(GL_FRONT, render_mode);
 				glColor3f(layer->Red, layer->Green, layer->Blue);
-				glBegin(GL_TRIANGLES);
+				//glBegin(GL_TRIANGLES);
 
 				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 					tempf = polygon->GetXCoords(j) + offx;
@@ -186,26 +187,50 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 
 				float z1 = polygon->GetHeight();
 				float z2 = polygon->GetHeight() + polygon->GetThickness();
+				float x1, y1;
+				float x2, y2;
 
-				for(unsigned int j=0; j<polygon->GetPoints()-2; j++){
-					float x1 = polygon->GetXCoords(j) + offx;
-					float y1 = polygon->GetYCoords(j) + offy;
+				// FIXME - is this correct? 
+				// Surely it should be GetPoints()-2
+				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
+					x1 = polygon->GetXCoords(j) + offx;
+					y1 = polygon->GetYCoords(j) + offy;
 
-					float x2 = polygon->GetXCoords(j+1) + offx;
-					float y2 = polygon->GetYCoords(j+1) + offy;
+					x2 = polygon->GetXCoords(j+1) + offx;
+					y2 = polygon->GetYCoords(j+1) + offy;
+
 					glEdgeFlag(GL_TRUE);
-					glVertex3f(x1, y1, z1);
-					glVertex3f(x1, y1, z2);
-					glEdgeFlag(GL_FALSE);
 					glVertex3f(x2, y2, z1);
+					glVertex3f(x1, y1, z1);
+					glEdgeFlag(GL_FALSE);
+					glVertex3f(x1, y1, z2);
 
 					glEdgeFlag(GL_TRUE);
-					glVertex3f(x2, y2, z2);
 					glVertex3f(x1, y1, z2);
+					glVertex3f(x2, y2, z2);
 					glEdgeFlag(GL_FALSE);
 					glVertex3f(x2, y2, z1);
 				}
-				glEnd();
+/*
+				x1 = polygon->GetXCoords(polygon->GetPoints()-2) + offx;
+				y1 = polygon->GetYCoords(polygon->GetPoints()-2) + offy;
+
+				x2 = polygon->GetXCoords(0) + offx;
+				y2 = polygon->GetYCoords(0) + offy;
+
+				glEdgeFlag(GL_TRUE);
+				glVertex3f(x2, y2, z1);
+				glVertex3f(x1, y1, z1);
+				glEdgeFlag(GL_FALSE);
+				glVertex3f(x1, y1, z2);
+
+				glEdgeFlag(GL_TRUE);
+				glVertex3f(x1, y1, z2);
+				glVertex3f(x2, y2, z2);
+				glEdgeFlag(GL_FALSE);
+				glVertex3f(x2, y2, z1);
+*/
+				//glEnd();
 			}
 		}
 	}
