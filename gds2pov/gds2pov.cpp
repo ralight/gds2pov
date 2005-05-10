@@ -14,18 +14,23 @@ bool decompose;
 
 void printusage()
 {
-		printf("gds2pov  version %s\n", GDS2POV_VERSION);
-		printf("Copyright (C) 2004,2005 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
-		printf("gds2pov comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2pov freely\nas described in the readme.txt distributed with this file.\n\n");
-		printf("gds2pov is a program for converting a GDS2 file to a POV-Ray scene file.\n\n");
-		printf("Usage: gds2pov input.gds output.pov [-b] [-c config.txt] [-d] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
-		printf("Options\n");
-		printf(" -b\t\tOutput bounding box instead of layout to allow easier and\n\t\tquicker placing of the camera\n");
-		printf(" -c\t\tSpecify config file\n");
-		printf(" -d\t\tDecompose polygons into triangles when using pov output format\n");
-		printf(" -p\t\tSpecify process file\n -q\t\tQuiet output\n -t\t\tSpecify top cell name\n");
-		printf(" -v\t\tVerbose output\n\n");
-		printf("See http://www.atchoo.org/gdsto3d/ for updates.\n");
+	printf("gds2pov  version %s\n", GDS2POV_VERSION);
+	printf("Copyright (C) 2004,2005 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
+	printf("gds2pov comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2pov freely\nas described in the readme.txt distributed with this file.\n\n");
+	printf("gds2pov is a program for converting a GDS2 file to a POV-Ray scene file.\n\n");
+	printf("Usage: gds2pov [-b] [-c config.txt] [-d] [-h] [-i input.gds] [-o output.pov] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
+	printf("Options\n");
+	printf(" -b\t\tOutput bounding box instead of layout to allow easier and\n\t\tquicker placing of the camera\n");
+	printf(" -c\t\tSpecify config file\n");
+	printf(" -d\t\tDecompose polygons into triangles (use mesh2 object instead of prism)\n");
+	printf(" -h\t\tDisplay this helps\n");
+	printf(" -i\t\tInput GDS2 file (stdin if not specified)\n");
+	printf(" -o\t\tOutput POV file (stdout if not specified)\n");
+	printf(" -p\t\tSpecify process file\n");
+	printf(" -q\t\tQuiet output\n");
+	printf(" -t\t\tSpecify top cell name\n");
+	printf(" -v\t\tVerbose output\n\n");
+	printf("See http://www.atchoo.org/gdsto3d/ for updates.\n");
 }
 
 int main(int argc, char *argv[])
@@ -34,20 +39,20 @@ int main(int argc, char *argv[])
 	bool bounding_output = false;
 	decompose = false;
 
-	if(argc<3 || argc>13){
-		printf("Error: Invalid number of arguments.\n\n");
+	if(argc>15){
+		fprintf(stderr, "Error: Invalid number of arguments.\n\n");
 		printusage();
 		return 1;
 	}
 
-	char *gdsfile=argv[1];
-	char *povfile=argv[2];
+	char *gdsfile=NULL;
+	char *povfile=NULL;
 
 	char *configfile=NULL;
 	char *processfile=NULL;
 	char *topcell=NULL;
 
-	for(int i=3; i<argc; i++){
+	for(int i=1; i<argc; i++){
 		if(argv[i][0] == '-'){
 			if(strncmp(argv[i], "-b", strlen("-b"))==0){
 				bounding_output = true;
@@ -62,6 +67,25 @@ int main(int argc, char *argv[])
 				}
 			}else if(strncmp(argv[i], "-d", strlen("-d"))==0){
 				decompose = true;
+			}else if(strncmp(argv[i], "-h", strlen("-h"))==0){
+				printusage();
+				return 0;
+			}else if(strncmp(argv[i], "-i", strlen("-i"))==0){
+				if(i==argc-1){
+					fprintf(stderr, "Error: -i switch given but no input file specified.\n\n");
+					printusage();
+					return 1;
+				}else{
+					gdsfile = argv[i+1];
+				}
+			}else if(strncmp(argv[i], "-o", strlen("-o"))==0){
+				if(i==argc-1){
+					fprintf(stderr, "Error: -o switch given but no output file specified.\n\n");
+					printusage();
+					return 1;
+				}else{
+					povfile = argv[i+1];
+				}
 			}else if(strncmp(argv[i], "-p", strlen("-p"))==0){
 				if(i==argc-1){
 					printf("Error: -p switch given but no process file specified.\n\n");
@@ -139,20 +163,35 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	FILE *iptr = fopen(gdsfile, "rb");
+	FILE *iptr;
+	if(gdsfile){
+		iptr = fopen(gdsfile, "rb");
+	}else{
+		iptr = stdin;
+	}
 	if(iptr){
 		class GDSParse_pov *Parser = new class GDSParse_pov(config, process, bounding_output);
 		if(!Parser->Parse(iptr)){
-			FILE *optr = fopen(povfile, "wt");
+			FILE *optr;
+			if(povfile){
+				optr = fopen(povfile, "wt");
+			}else{
+				optr = stdout;
+			}
+
 			if(optr){
 				Parser->Output(optr, topcell, true, false, bounding_output);
-				fclose(optr);
+				if(optr != stdout){
+					fclose(optr);
+				}
 			}else{
 				fprintf(stderr, "Error: Unable to open %s.\n", povfile);
 			}
 		}
 
-		fclose(iptr);
+		if(iptr != stdin){
+			fclose(iptr);
+		}
 
 		delete Parser;
 		delete config;

@@ -20,73 +20,79 @@
 
 #define GDSOGLVIEWER_VERSION "0.8"
 
-#ifdef WIN32
-LRESULT CALLBACK WindowProc( HWND, UINT, WPARAM, LPARAM );
-int WINAPI RealWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                    LPSTR lpCmdLine, int nCmdShow );
-class GDSParse_ogl *parser;
-#endif
-
-/*extern int verbose_output;
-extern bool quiet_output;
+extern int verbose_output;
+/*extern bool quiet_output;
 extern */
 int render_mode;
 
+#ifdef WIN32
+class GDSParse_ogl *parser;
+#endif
+
 void printusage()
 {
-		printf("gdsoglviewer  version %s\n", GDSOGLVIEWER_VERSION);
-		printf("Copyright (C) 2004,2005 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
-		printf("gdsoglviewer comes with ABSOLUTELY NO WARRANTY.  You may distribute gdsoglviewer freely\nas described in the readme.txt distributed with this file.\n\n");
-		printf("gdsoglviewer is a program for converting a GDS2 file to a number of 3D formats.\n\n");
-		printf("Usage: gdsoglviewer input.gds [-c config.txt] [-m solid|wire] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
-		printf("Options\n");
-		printf(" -c\t\tSpecify config file\n");
-		printf(" -m\t\tSpecify solid or wireframe mode\n");
-		printf(" -p\t\tSpecify process file\n");
-		printf(" -q\t\tQuiet output\n");
-		printf(" -t\t\tSpecify top cell name\n");
-		printf(" -v\t\tVerbose output\n\n");
-		printf("See http://www.atchoo.org/gdsto3d/ for updates.\n");
+	printf("gdsoglviewer  version %s\n", GDSOGLVIEWER_VERSION);
+	printf("Copyright (C) 2004,2005 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
+	printf("gdsoglviewer comes with ABSOLUTELY NO WARRANTY.  You may distribute gdsoglviewer freely\nas described in the readme.txt distributed with this file.\n\n");
+	printf("gdsoglviewer is a program for viewing a GDS2 file in 3D.\n\n");
+	printf("Usage: gdsoglviewer [-c config.txt] [-h] [-i input.gds] [-m solid|wire] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
+	printf("Options\n");
+	printf(" -c\t\tSpecify config file\n");
+	printf(" -h\t\tDisplay this help\n");
+	printf(" -i\t\tInput GDS2 file (stdin if not specified)\n");
+	printf(" -m\t\tSpecify solid or wireframe mode\n");
+	printf(" -p\t\tSpecify process file\n");
+	printf(" -q\t\tQuiet output\n");
+	printf(" -t\t\tSpecify top cell name\n");
+	printf(" -v\t\tVerbose output\n\n");
+	printf("See http://www.atchoo.org/gdsto3d/ for updates.\n");
 }
 
 #ifdef WIN32
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int argc;
+	char **argv;
+
+	argc = __argc;
+	argv = __argv;
 #else
 int main(int argc, char *argv[])
-#endif
 {
+#endif
 	verbose_output = 1;
 	//render_mode = GL_LINE;
 	render_mode = GL_FILL;
 
-	char *processfile=NULL;
-	char *topcell=NULL;
-
-#ifdef WIN32
-	char *gdsfile = "RF1_Top.gds";
-	//char *gdsfile = "polytest.gds";
-	char *configfile = "config.txt";
-#else
-	if(argc<3 || argc>13){
-		printf("Error: Invalid number of arguments.\n\n");
+	if(argc>13){
+		fprintf(stderr, "Error: Invalid number of arguments.\n\n");
 		printusage();
 		return 1;
 	}
 
-	char *gdsfile=argv[1];
-
+	char *gdsfile=NULL;
 	char *configfile=NULL;
+	char *processfile=NULL;
+	char *topcell=NULL;
 
-	for(int i=3; i<argc; i++){
+	for(int i=1; i<argc; i++){
 		if(argv[i][0] == '-'){
 			if(strncmp(argv[i], "-c", strlen("-c"))==0){
 
 				if(i==argc-1){
-					printf("Error: -c switch given but no config file specified.\n\n");
+					fprintf(stderr, "Error: -c switch given but no config file specified.\n\n");
 					printusage();
 					return 1;
 				}else{
 					configfile = argv[i+1];
+				}
+			}else if(strncmp(argv[i], "-i", strlen("-i"))==0){
+				if(i==argc-1){
+					fprintf(stderr, "Error: -i switch given but no input file specified.\n\n");
+					printusage();
+					return 1;
+				}else{
+					gdsfile = argv[i+1];
 				}
 			}else if(strncmp(argv[i], "-m", strlen("-m"))==0){
 				if(i==argc-1){
@@ -99,14 +105,14 @@ int main(int argc, char *argv[])
 					}else if(strncmp(argv[i+1], "wire", strlen("wire"))==0){
 						render_mode = GL_LINE;
 					}else{
-						printf("Error: Invalid render mode.\n\n");
+						fprintf(stderr, "Error: Invalid render mode.\n\n");
 						printusage();
 						return 1;
 					}
 				}
 			}else if(strncmp(argv[i], "-p", strlen("-p"))==0){
 				if(i==argc-1){
-					printf("Error: -p switch given but no process file specified.\n\n");
+					fprintf(stderr, "Error: -p switch given but no process file specified.\n\n");
 					printusage();
 					return 1;
 				}else{
@@ -116,7 +122,7 @@ int main(int argc, char *argv[])
 				verbose_output--;
 			}else if(strncmp(argv[i], "-t", strlen("-t"))==0){
 				if(i==argc-1){
-					printf("Error: -t switch given but no top cell specified.\n\n");
+					fprintf(stderr, "Error: -t switch given but no top cell specified.\n\n");
 					printusage();
 					return 1;
 				}else{
@@ -132,7 +138,6 @@ int main(int argc, char *argv[])
 		// Assume it is a process/config file specified on a previous arg
 		}
 	}
-#endif // WIN32
 
 	class GDSConfig *config=NULL;
 
@@ -183,7 +188,12 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	FILE *iptr = fopen(gdsfile, "rb");
+	FILE *iptr;
+	if(gdsfile){
+		iptr = fopen(gdsfile, "rb");
+	}else{
+		iptr = stdin;
+	}
 	if(iptr){
 		class GDSParse_ogl *Parser = new class GDSParse_ogl(config, process);
 		if(!Parser->Parse(iptr)){
@@ -195,7 +205,9 @@ int main(int argc, char *argv[])
 #endif
 		}
 
-		fclose(iptr);
+		if(iptr != stdin){
+			fclose(iptr);
+		}
 		delete Parser;
 		delete config;
 		delete process;
@@ -209,8 +221,7 @@ int main(int argc, char *argv[])
 }
 
 #ifdef WIN32
-int WINAPI RealWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                    LPSTR lpCmdLine, int nCmdShow )
+int WINAPI RealWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
     char ClassName[] = "opengl demo";
     int fullscreen;
