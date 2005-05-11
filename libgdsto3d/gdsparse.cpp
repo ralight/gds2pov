@@ -44,6 +44,11 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process)
 	for(int i=0; i<70; i++){
 		_unsupported[i] = false;
 	}
+	for(int i=0; i<256; i++){
+		for(int j=0; j<256; j++){
+			_layer_warning[i][j] = false;
+		}
+	}
 }
 
 GDSParse::~GDSParse ()
@@ -301,7 +306,7 @@ bool GDSParse::ParseFile()
 				break;
 /*			case rnUInteger:
 				break;
-Not Used	case rnUString:
+Not used in GDS2 spec	case rnUString:
 				break;
 */
 			case rnRefLibs:
@@ -633,7 +638,9 @@ void GDSParse::ParseStrName()
 		}
 		v_printf(2, "(\"%s\")", str);
 
-//FIXME	How do we get a new gdsobject_XXX in to here?
+		// This calls our own NewObject function which is pure virtual so the end 
+		// user must define it. This means we can always add a unknown object as
+		// long as it inherits from GDSObject.
 		_CurrentObject = _Objects->AddObject(str, NewObject(str));
 		delete str;
 	}
@@ -650,8 +657,14 @@ void GDSParse::ParseXYPath()
 	thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 
 	if(thislayer==NULL){
-		v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
-		v_printf(1, "\tIgnoring this path.\n");
+		// _layer_warning only has fixed bounds at the moment.
+		// Not sure how to best make it dynamic.
+
+		if(!_layer_warning[_currentlayer][_currentdatatype]){
+			v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+			v_printf(1, "\tIgnoring this layer.\n");
+			_layer_warning[_currentlayer][_currentdatatype] = true;
+		}
 		while(_recordlen){
 			GetFourByteSignedInt();
 		}
@@ -698,8 +711,13 @@ void GDSParse::ParseXYBoundary()
 	thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 
 	if(thislayer==NULL){
-		v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
-		v_printf(1, "\tIgnoring this boundary.\n");
+		// _layer_warning has a fixed bound and needs to be made
+		// better!
+		if(!_layer_warning[_currentlayer][_currentdatatype]){
+			v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+			v_printf(1, "\tIgnoring this layer.\n");
+			_layer_warning[_currentlayer][_currentdatatype] = true;
+		}
 		while(_recordlen){
 			GetFourByteSignedInt();
 		}

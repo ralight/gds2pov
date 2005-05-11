@@ -47,7 +47,18 @@ protected:
 	
 	short			_recordlen;
 
+	/*
+	** Both of these variables have fixed bounds because
+	** they are not dependant on the GDS2 spec, not on the
+	** file we are parsing.
+	** There will never be more than 70 records.
+	** The maximum layer and datatype are both defined as
+	** 255, but but could be as high as 32,767 because of
+	** the way they are stored (2 byte int). It might be worth
+	** checking if they are greater than 255
+	*/
 	bool			_unsupported[70];
+	bool			_layer_warning[256][256];
 
 	long			_PathElements;
 	long			_BoundaryElements;
