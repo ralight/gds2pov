@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	FILE *iptr;
+	FILE *iptr=NULL;
 	if(gdsfile){
 		iptr = fopen(gdsfile, "rb");
 	}else{

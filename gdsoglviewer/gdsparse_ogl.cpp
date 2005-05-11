@@ -47,7 +47,6 @@ extern int verbose_output;
 
 GDSParse_ogl::GDSParse_ogl(class GDSConfig *config, class GDSProcess *process) : GDSParse(config, process)
 {
-	_drawn = false;
 }
 
 GDSParse_ogl::~GDSParse_ogl()

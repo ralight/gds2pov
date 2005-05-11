@@ -29,8 +29,6 @@ class GDSParse_ogl : public GDSParse
 {
 private:
 	bool _bounding_output;
-	bool _drawn; // have we created the OpenGL display list?
-
 
 	int _info;
 	int _frames;
