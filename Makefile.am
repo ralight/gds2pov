@@ -1,3 +1,4 @@
 #
+SUBDIRS = libgdsto3d gds2pov gdsoglviewer
+#SUBDIRS = libgdsto3d gds2pov gds2ogl gds23ds gdsoglviewer
 
-SUBDIRS = libgdsto3d gds2pov gds2ogl gds23ds gdsoglviewer
