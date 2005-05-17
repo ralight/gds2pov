@@ -48,12 +48,12 @@ GDSObject::~GDSObject()
 		sref1 = FirstSRef;
 		while(sref1->Next){
 			sref2 = sref1->Next;
-			if(sref1->Name) delete sref1->Name;
+			if(sref1->Name) delete [] sref1->Name;
 			delete sref1;
 			sref1 = sref2;
 		}
 		if(sref1){
-			if(sref1->Name) delete sref1->Name;
+			if(sref1->Name) delete [] sref1->Name;
 			delete sref1;
 		}
 	}
@@ -65,25 +65,25 @@ GDSObject::~GDSObject()
 		aref1 = FirstARef;
 		while(aref1->Next){
 			aref2 = aref1->Next;
-			if(aref1->Name) delete aref1->Name;
+			if(aref1->Name) delete [] aref1->Name;
 			delete aref1;
 			aref1 = aref2;
 		}
 		if(aref1){
-			if(aref1->Name) delete aref1->Name;
+			if(aref1->Name) delete [] aref1->Name;
 			delete aref1;
 		}
 	}
 
 	if(SRefs){
-		delete SRefs;
+		delete [] SRefs;
 	}
 
 	if(ARefs){
-		delete ARefs;
+		delete [] ARefs;
 	}
 
-	delete Name;
+	delete [] Name;
 }
 
 void GDSObject::AddText(float newX, float newY, float newZ, bool newFlipped, float newMag, int newVJust, int newHJust, struct ProcessLayer *newlayer)
@@ -350,7 +350,7 @@ void GDSObject::IndexSRefs(class GDSObjects *Objects)
 
 	SRefElement *sref;
 	if(SRefs){
-		delete SRefs;
+		delete [] SRefs;
 		SRefs = NULL;
 	}
 
@@ -372,7 +372,7 @@ void GDSObject::IndexARefs(class GDSObjects *Objects)
 
 	ARefElement *aref;
 	if(ARefs){
-		delete ARefs;
+		delete [] ARefs;
 		ARefs = NULL;
 	}
 

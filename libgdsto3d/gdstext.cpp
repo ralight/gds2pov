@@ -20,12 +20,12 @@ GDSText::GDSText(float X, float Y, float Z, bool Flipped, float Mag, int VJust, 
 
 GDSText::~GDSText()
 {
-	if(_String) delete _String;
+	if(_String) delete [] _String;
 }
 
 void GDSText::SetString(const char *String)
 {
-	if(_String) delete _String;
+	if(_String) delete [] _String;
 
 	_String = new char[strlen(String)+1];
 	strcpy(_String, String);

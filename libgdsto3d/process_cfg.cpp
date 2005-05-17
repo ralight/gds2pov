@@ -40,7 +40,7 @@ GDSProcess::~GDSProcess ()
 		while(layer1->Next){
 			layer2 = layer1->Next;
 			if(layer1->Name){
-				delete layer1->Name;
+				delete [] layer1->Name;
 			}
 			if(layer1){
 				delete layer1;
@@ -48,7 +48,7 @@ GDSProcess::~GDSProcess ()
 			layer1 = layer2;
 		}
 		if(layer1->Name){
-			delete layer1->Name;
+			delete [] layer1->Name;
 		}
 		if(layer1){
 			delete layer1;
@@ -108,6 +108,7 @@ void GDSProcess::Parse(char *processfile)
 		fprintf(stderr, "There should be equal numbers of LayerStart and LayerEnd elements! ");
 		fprintf(stderr, "(%d and %d found respectively)\n", layerstart_cnt, layerend_cnt);
 		_Valid = false;
+		fclose(pptr);
 		return;
 	}
 
@@ -121,6 +122,11 @@ void GDSProcess::Parse(char *processfile)
 				if(in_layer){
 					fprintf(stderr, "Error: LayerStart without LayerEnd not allowed. LayerEnd should appear before line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				in_layer = true;
@@ -137,7 +143,7 @@ void GDSProcess::Parse(char *processfile)
 				current_element++;
 
 				if(NewLayer.Name){
-					delete NewLayer.Name;
+					delete [] NewLayer.Name;
 					NewLayer.Name = NULL;
 				}
 				NewLayer.Name = new char[strlen(line)-strlen("LayerStart: ")+1];
@@ -159,6 +165,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Layer definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_layer){
@@ -171,6 +182,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Datatype definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_datatype){
@@ -183,6 +199,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Height definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_height){
@@ -195,6 +216,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Thickness definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_thickness){
@@ -207,6 +233,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Red definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_red){
@@ -219,6 +250,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Green definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_green){
@@ -231,6 +267,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Blue definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_blue){
@@ -243,6 +284,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Filter definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_filter){
@@ -255,6 +301,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Metal definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_metal){
@@ -267,6 +318,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Show definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}
 				if(got_show){
@@ -280,10 +336,20 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: LayerEnd without LayerStart on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}else if(!got_layer){
 					fprintf(stderr, "Error: LayerEnd without Layer on line %d of process file.\n", current_line);
 					_Valid = false;
+					if(NewLayer.Name){
+						delete [] NewLayer.Name;
+						NewLayer.Name = NULL;
+					}
+					fclose(pptr);
 					return;
 				}else if(!got_height){
 					//v_printf(1, "Error: LayerEnd without Height on line %d of process file.\n", current_line);
@@ -302,13 +368,18 @@ void GDSProcess::Parse(char *processfile)
 					}
 
 				if(NewLayer.Name){
-					delete NewLayer.Name;
+					delete [] NewLayer.Name;
 					NewLayer.Name = NULL;
 				}
 				in_layer = false;
 			}
 		}
 	}
+	if(NewLayer.Name){
+		delete [] NewLayer.Name;
+		NewLayer.Name = NULL;
+	}
+	fclose(pptr);
 	v_printf(1, "\n");
 }
 

@@ -16,7 +16,7 @@ GDSPath::GDSPath(int Type, float Height, float Thickness, unsigned int Points, f
 
 GDSPath::~GDSPath()
 {
-	if(_Coords) delete _Coords;
+	if(_Coords) delete [] _Coords;
 }
 
 void GDSPath::AddPoint(unsigned int Index, float X, float Y)

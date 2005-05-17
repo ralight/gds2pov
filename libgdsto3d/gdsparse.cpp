@@ -53,6 +53,15 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process)
 
 GDSParse::~GDSParse ()
 {
+	if(_libname){
+		delete [] _libname;
+	}
+	if(_sname){
+		delete [] _sname;
+	}
+	if(_textstring){
+		delete [] _textstring;
+	}
 	if(_Objects){
 		delete _Objects;
 	}
@@ -273,14 +282,14 @@ bool GDSParse::ParseFile()
 			case rnString:
 				v_printf(2, "STRING ");
 				if(_textstring){
-					delete _textstring;
+					delete [] _textstring;
 					_textstring = NULL;
 				}
 				_textstring = GetAsciiString();
 				if(_CurrentObject && _textstring){
 					_CurrentObject->GetCurrentText()->SetString(_textstring);
 					v_printf(2, "(\"%s\")", _textstring);
-					delete _textstring;
+					delete [] _textstring;
 					_textstring = NULL;
 				}else if(!_textstring){
 					return -1;
@@ -313,13 +322,13 @@ Not used in GDS2 spec	case rnUString:
 				ReportUnsupported("REFLIBS", rnRefLibs);
 				tempstr = GetAsciiString();
 				v_printf(2, "REFLIBS (\"%s\")\n", tempstr);
-				delete tempstr;
+				delete [] tempstr;
 				break;
 			case rnFonts:
 				ReportUnsupported("FONTS", rnFonts);
 				tempstr = GetAsciiString();
 				v_printf(2, "FONTS (\"%s\")\n", tempstr);
-				delete tempstr;
+				delete [] tempstr;
 				break;
 			case rnGenerations:
 				ReportUnsupported("GENERATIONS", rnGenerations);
@@ -334,19 +343,19 @@ Not used in GDS2 spec	case rnUString:
 				ReportUnsupported("ATTRTABLE", rnAttrTable);
 				tempstr = GetAsciiString();
 				v_printf(2, "ATTRTABLE (\"%s\")\n", tempstr);
-				delete tempstr;
+				delete [] tempstr;
 				break;
 			case rnStypTable:
 				ReportUnsupported("STYPTABLE", rnStypTable);
 				tempstr = GetAsciiString();
 				v_printf(2, "STYPTABLE (\"%s\")\n", tempstr);
-				delete tempstr;
+				delete [] tempstr;
 				break;
 			case rnStrType:
 				ReportUnsupported("STRTYPE", rnStrType);
 				tempstr = GetAsciiString();
 				v_printf(2, "STRTYPE (\"%s\")\n", tempstr);
-				delete tempstr;
+				delete [] tempstr;
 				break;
 			case rnElFlags:
 				ReportUnsupported("ELFLAGS", rnElFlags);
@@ -400,7 +409,7 @@ Not used in GDS2 spec	case rnUString:
 				ReportUnsupported("PROPVALUE", rnPropValue);
 				tempstr = GetAsciiString();
 				v_printf(2, "PROPVALUE (\"%s\")\n", tempstr);
-				delete tempstr;
+				delete [] tempstr;
 				break;
 			case rnBox:
 				ReportUnsupported("BOX", rnBox);
@@ -476,7 +485,7 @@ Not used in GDS2 spec	case rnUString:
 				ReportUnsupported("MASK", rnMask);
 				tempstr = GetAsciiString();
 				v_printf(2, "MASK (\"%s\")\n", tempstr);
-				delete tempstr;
+				delete [] tempstr;
 				break;
 			case rnEndMasks:
 				ReportUnsupported("ENDMASKS", rnEndMasks);
@@ -495,7 +504,7 @@ Not used in GDS2 spec	case rnUString:
 				ReportUnsupported("SRFNAME", rnSrfName);
 				tempstr = GetAsciiString();
 				v_printf(2, "SRFNAME (\"%s\")\n", tempstr);
-				delete tempstr;
+				delete [] tempstr;
 				break;
 			case rnLibSecur:
 				ReportUnsupported("LIBSECUR", rnLibSecur);
@@ -578,7 +587,7 @@ void GDSParse::ParseLibName()
 	char *str;
 	str = GetAsciiString();
 	if(_libname){
-		delete _libname;
+		delete [] _libname;
 		_libname = NULL;
 	}
 	_libname = new char[strlen(str)+1];
@@ -588,7 +597,7 @@ void GDSParse::ParseLibName()
 	}else{
 		fprintf(stderr, "\nUnable to allocate memory for string (%d)\n", strlen(str)+1);
 	}
-	delete str;
+	delete [] str;
 }
 
 void GDSParse::ParseSName()
@@ -598,7 +607,7 @@ void GDSParse::ParseSName()
 	char *str;
 	str = GetAsciiString();
 	if(_sname){
-		delete _sname;
+		delete [] _sname;
 		_sname = NULL;
 	}
 	_sname = new char[strlen(str)+1];
@@ -613,13 +622,13 @@ void GDSParse::ParseSName()
 	}else{
 		fprintf(stderr, "Unable to allocate memory for string (%d)\n", strlen(str)+1);
 	}
-	delete str;
+	delete [] str;
 }
 
 void GDSParse::ParseUnits()
 {
 	double tmp;
-	_units = (float)GetEightByteReal()/20;
+	_units = (float)GetEightByteReal()/20; // FIXME - need to be able to add in scale factor manually
 	tmp = GetEightByteReal();
 	v_printf(1, "DB units/user units = %g\nSize of DB units in metres = %g\nSize of user units in m = %g\n\n", 1/_units, tmp, tmp/_units);
 }
@@ -642,7 +651,7 @@ void GDSParse::ParseStrName()
 		// user must define it. This means we can always add a unknown object as
 		// long as it inherits from GDSObject.
 		_CurrentObject = _Objects->AddObject(str, NewObject(str));
-		delete str;
+		delete [] str;
 	}
 	v_printf(2, "\n");
 }

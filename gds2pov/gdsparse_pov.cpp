@@ -19,6 +19,7 @@ extern int verbose_output;
 GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output) : GDSParse(config, process)
 {
 	_bounding_output = bounding_output;
+	_config = config;
 }
 
 GDSParse_pov::~GDSParse_pov ()

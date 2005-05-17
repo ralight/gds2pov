@@ -116,6 +116,7 @@ GDSConfig::GDSConfig(char *configfile)
 				if(in_position){
 					fprintf(stderr, "Error: GlobalStart inside PositionStart on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				in_global = true;
@@ -125,6 +126,7 @@ GDSConfig::GDSConfig(char *configfile)
 				if(!in_global){
 					fprintf(stderr, "Error: Ambient definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(got_ambient){
@@ -137,13 +139,14 @@ GDSConfig::GDSConfig(char *configfile)
 				if(!in_global){
 					fprintf(stderr, "Error: ProcessFile definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(got_processfile){
 					fprintf(stderr, "Warning: Duplicate ProcessFile definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					if(_ProcessFile){
-						delete _ProcessFile;
+						delete [] _ProcessFile;
 						_ProcessFile = NULL;
 					}
 					_ProcessFile = new char[256];
@@ -161,13 +164,14 @@ GDSConfig::GDSConfig(char *configfile)
 				if(!in_global){
 					fprintf(stderr, "Error: Font definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(got_font){
 					fprintf(stderr, "Warning: Duplicate Font definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					if(_Font){
-						delete _Font;
+						delete [] _Font;
 						_Font = NULL;
 					}
 					_Font = new char[256];
@@ -187,10 +191,12 @@ GDSConfig::GDSConfig(char *configfile)
 				if(in_position){
 					fprintf(stderr, "Error: PositionStart without PositionEnd not allowed. PositionEnd should appear before line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}else if(in_global){
 					fprintf(stderr, "Error: PositionStart inside GlobalStart on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				in_position = true;
@@ -204,6 +210,7 @@ GDSConfig::GDSConfig(char *configfile)
 				if(!in_position){
 					fprintf(stderr, "Error: Type definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(got_type){
@@ -235,6 +242,7 @@ GDSConfig::GDSConfig(char *configfile)
 					}else{
 						fprintf(stderr, "Error: Unknown position type \"%s\" on line %d of config file.\n", line, current_line);
 						_Valid = 0;
+						fclose(cptr);
 						return;
 					}
 					got_type = true;
@@ -243,11 +251,13 @@ GDSConfig::GDSConfig(char *configfile)
 				if(!in_position){
 					fprintf(stderr, "Error: Position definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(!got_type){
 					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(got_position){
@@ -267,6 +277,7 @@ GDSConfig::GDSConfig(char *configfile)
 					}else{
 						fprintf(stderr, "Error: Unknown Position \"%s\" on line %d of config file.\n", line, current_line);
 						_Valid = 0;
+						fclose(cptr);
 						return;
 					}
 					switch(current_type){
@@ -282,6 +293,7 @@ GDSConfig::GDSConfig(char *configfile)
 							}else{
 								fprintf(stderr, "Error: Position found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								_Valid = 0;
+								fclose(cptr);
 								return;
 							}
 							break;
@@ -297,11 +309,13 @@ GDSConfig::GDSConfig(char *configfile)
 				if(!in_position){
 					fprintf(stderr, "Error: XMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(!got_type){
 					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(got_xmod){
@@ -320,6 +334,7 @@ GDSConfig::GDSConfig(char *configfile)
 							}else{
 								fprintf(stderr, "Error: XMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								_Valid = 0;
+								fclose(cptr);
 								return;
 							}
 							break;
@@ -334,11 +349,13 @@ GDSConfig::GDSConfig(char *configfile)
 				if(!in_position){
 					fprintf(stderr, "Error: YMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(!got_type){
 					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(got_ymod){
@@ -357,6 +374,7 @@ GDSConfig::GDSConfig(char *configfile)
 							}else{
 								fprintf(stderr, "Error: YMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								_Valid = 0;
+								fclose(cptr);
 								return;
 							}
 							break;
@@ -371,11 +389,13 @@ GDSConfig::GDSConfig(char *configfile)
 				if(!in_position){
 					fprintf(stderr, "Error: ZMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(!got_type){
 					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				if(got_zmod){
@@ -394,6 +414,7 @@ GDSConfig::GDSConfig(char *configfile)
 							}else{
 								fprintf(stderr, "Error: ZMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								_Valid = 0;
+								fclose(cptr);
 								return;
 							}
 							break;
@@ -408,26 +429,30 @@ GDSConfig::GDSConfig(char *configfile)
 				if(!in_position){
 					fprintf(stderr, "Error: PositionEnd without PositionStart on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}else if(!got_type){
 					fprintf(stderr, "Error: PositionEnd without Type on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}else if(!got_position){
 					fprintf(stderr, "Error: PositionEnd without Position on line %d of config file.\n", current_line);
 					_Valid = 0;
+					fclose(cptr);
 					return;
 				}
 				in_position = false;
 			}
 		}
 	}
+	fclose(cptr);
 }
 
 GDSConfig::~GDSConfig()
 {
 	if(_ProcessFile){
-		delete _ProcessFile;
+		delete [] _ProcessFile;
 	}
 
 	if(_FirstLight){
@@ -448,7 +473,7 @@ GDSConfig::~GDSConfig()
 		}
 	}
 	if(_Font){
-		delete _Font;
+		delete [] _Font;
 	}
 }
 

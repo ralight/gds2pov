@@ -13,7 +13,7 @@ GDSPolygon::GDSPolygon(float Height, float Thickness, unsigned int Points, struc
 
 GDSPolygon::~GDSPolygon()
 {
-	if(_Coords) delete _Coords;
+	if(_Coords) delete [] _Coords;
 }
 
 void GDSPolygon::AddPoint(unsigned int Index, float X, float Y)
