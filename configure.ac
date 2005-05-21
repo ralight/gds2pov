@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl $Id: configure.ac 222 2005-05-21 10:44:28Z roger $
+dnl $Id: configure.ac 225 2005-05-21 19:53:25Z roger $
 
 AC_INIT([libgdsto3d and utilities], [1.0.0], [roger@atchoo.org], [gdsto3d])
 
@@ -50,6 +50,15 @@ if test "$MINGW32" = "yes"; then
 	LDADD="$LDADD -lws2_32"
 fi
 
+# Add OpenGL libraries for gdsoglviewer. This should only be done for 
+# that program really!
+if test "$MINGW32" = "yes"; then
+	OPENGL_LIBS="-lopengl32 -lglu32 -lglut32 -lgdi32"
+else
+	OPENGL_LIBS="-lGLU -lGL"
+fi
+AC_SUBST(OPENGL_LIBS)
+
 AC_CHECK_FUNCS([gettimeofday QueryPerformanceCounter])
 
 
@@ -60,9 +69,9 @@ AC_SUBST(LDADD)
 AC_CONFIG_FILES([Makefile
 		libgdsto3d/Makefile
 		gds2pov/Makefile
+		gdsoglviewer/Makefile
 		])
-		#gds23ds/Makefile
 		#gds2ogl/Makefile
-		#gdsoglviewer/Makefile
+		#gds23ds/Makefile
 AC_OUTPUT
 

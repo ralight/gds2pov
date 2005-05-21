@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.am 223 2005-05-21 11:24:17Z roger $
+# $Id: Makefile.am 225 2005-05-21 19:53:25Z roger $
 
 SUBDIRS = .
 
@@ -16,6 +16,7 @@ gdsoglviewer_SOURCES =	gdsoglviewer.cpp \
 			gdsparse_ogl.cpp \
 			gdsparse_ogl.h
 
-gdsoglviewer_LDADD = -lgdsto3d -lGLU -lGL
+#gdsoglviewer_LDADD = -lgdsto3d -lGLU -lGL
+gdsoglviewer_LDADD = -lgdsto3d $(OPENGL_LIBS)
 gdsoglviewer_LDFLAGS = -L../libgdsto3d
 
