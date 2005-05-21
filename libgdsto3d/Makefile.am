@@ -1,4 +1,4 @@
-# $Id: Makefile.am 221 2005-05-21 10:17:15Z roger $
+# $Id: Makefile.am 223 2005-05-21 11:24:17Z roger $
 
 SUBDIRS = .
 
@@ -13,14 +13,25 @@ libgdsto3d_la_LIBADD = @LDADD@
 libgdsto3d_la_LDFLAGS = -version-info 0:0:0
 
 libgdsto3d_la_SOURCES =	config_cfg.cpp \
+			config_cfg.h \
+			gdselements.h \
 			gds_globals.cpp \
+			gds_globals.h \
 			gdsobject.cpp \
+			gdsobject.h \
 			gdsobjects.cpp \
+			gdsobjects.h \
 			gdsparse.cpp \
+			gdsparse.h \
 			gdspath.cpp \
+			gdspath.h \
 			gdspolygon.cpp \
+			gdspolygon.h \
 			gdstext.cpp \
-			process_cfg.cpp
+			gdstext.h \
+			gds_types.h \
+			process_cfg.cpp \
+			process_cfg.h
 
 			//gds_types.cpp 
 

@@ -3,3 +3,4 @@
 SUBDIRS = libgdsto3d gds2pov
 #SUBDIRS = libgdsto3d gds2pov gds2ogl gds23ds gdsoglviewer
 
+EXTRA_DIST = example.gds example_config.txt example_process.txt

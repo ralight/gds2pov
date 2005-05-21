@@ -22,12 +22,16 @@ section at the bottom of this document.
 Usage
 -----
 
-gds2pov input.gds output.pov [-b] [-c config.txt] [-p process.txt] [-t topcell] [-v]
+gds2pov [-b] [-c config.txt] [-i input.gds] [-o output.pov] [-p process.txt] [-q] [-t topcell] [-v]
 
  -b	Output bounding box instead of the layout to allow easier and quicker
 	placing of the camera. It is much quicker to render a box than an IC!
  -c	Specify config file
+ -h	Display this help
+ -i	Input GDS2 file (stdin if not specified)
+ -o	Output POV file (stdout if not specified)
  -p	Specify process file
+ -q	Quiet output
  -t	Specify top cell name
  -v	Verbose output
 
@@ -50,7 +54,7 @@ This is the reason for the slightly odd numbers in example_process.txt.
 
 So, you have everything. Just run:
 
-gds2pov input.gds output.pov -p process.txt
+gds2pov -i input.gds -o output.pov -p process.txt
 
 This will produce a POV file with the camera directly above the centre of the 
 layout looking down. No extra lights are defined.
@@ -128,15 +132,7 @@ avoid merging multiple polygons/paths.
 License
 -------
 
-I have not yet decided the final license for GDS2POV. It will be a Free 
-license of some sort for certain.
-
-This will suffice for the moment:
-
-You may distribute and use this binary package as you desire as long as 
-you only distribute it intact. The author accepts no responsibility for 
-loss or damage to any GDS2 or other data used with this program.
-
+gdsto3d is released under the GNU General Public License (GPL). See the COPYING file for more details.
 
 Contact
 -------
