@@ -286,20 +286,21 @@ void GDSObject_ogl::OutputOGLSRefs(class GDSObjects *Objects, char *Font, float 
 			//obj = Objects->GetObject(sref->Name);
 			obj = sref->object;
 			if(obj){
-				obj->OutputToFile(NULL, Objects, Font, offx+sref->X, offy+sref->Y, objectid, firstlayer);
+				/*
+				if(sref->Mag!=1.0){
+					fprintf(NULL, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
+				}
+				if(sref->Flipped){
+					fprintf(NULL, "scale <1,-1,1> ");
+				}
+				if(sref->Rotate.Y){
+					fprintf(NULL, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
+				}
+				*/
+				if(!sref->Flipped && fabs(sref->Rotate.Y)<0.1){
+					obj->OutputToFile(NULL, Objects, Font, offx+sref->X, offy+sref->Y, objectid, firstlayer);
+				}
 			}
-	//		if(sref->Mag!=1.0){
-	//			fprintf(NULL, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
-	//		}
-	//		if(sref->Flipped){
-	//			fprintf(NULL, "scale <1,-1,1> ");
-	//		}
-	//		fprintf(NULL, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
-	//		if(sref->Rotate.Y){
-	//			fprintf(NULL, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
-	//		}
-	//		fprintf(NULL, "}\n");
-	
 		}
 	}
 }

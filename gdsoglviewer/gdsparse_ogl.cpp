@@ -206,21 +206,7 @@ void GDSParse_ogl::gl_draw()
 */
 	glTranslatef( -_x, -_y, -_z );
 
-	//RecursiveOutput(Object, NULL, 0.0, 0.0, &objectid, false);
-	//if(_drawn){
-		glCallList(1);
-	//}else{
-		/*
-		glNewList(1, GL_COMPILE);
-		glBegin(GL_TRIANGLES);
-		Output(NULL, NULL, false, true, false);
-		glEnd();
-		glEndList();
-		_drawn = true;
-		*/
-	//}
-
-	//glEnd();
+	glCallList(1);
 
 	if( _fps && _info )
 	{
