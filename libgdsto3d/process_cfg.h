@@ -44,7 +44,7 @@ private:
 	struct ProcessLayer	*_FirstLayer;
 	int			_Count;		/* Number of layers found */
 
-	int			_Valid;		/* Is the process file valid? */
+	bool			_Valid;		/* Is the process file valid? */
 public:
 	GDSProcess (char *filename);
 	~GDSProcess ();
@@ -57,7 +57,7 @@ public:
 	struct ProcessLayer	*GetLayer();
 	struct ProcessLayer	*GetLayer(const char *Name);
 	int			LayerCount();
-	int			IsValid();
+	bool			IsValid();
 	float			GetHighest();
 	float			GetLowest();
 };

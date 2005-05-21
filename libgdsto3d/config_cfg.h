@@ -56,11 +56,12 @@ private:
 
 	int		_LightCount;
 
-	int		_Valid;
+	bool		_Valid;
 
 	char		*_Font;
 	char		*_ProcessFile;
 	float		_Ambient;
+	float		_Scale;
 
 public:
 	GDSConfig(char *filename);
@@ -69,7 +70,8 @@ public:
 
 	char *GetProcessFile();
 	float GetAmbient();
-	int IsValid();
+	float GetScale();
+	bool IsValid();
 	char *GetFont();
 
 	Position *GetLookAtPos();

@@ -481,7 +481,7 @@ void GDSProcess::AddLayer(struct ProcessLayer *NewLayer)
 	layer->Metal = NewLayer->Metal;
 }
 
-int GDSProcess::IsValid()
+bool GDSProcess::IsValid()
 {
 	return _Valid;
 }
