@@ -15,9 +15,13 @@
 # process.txt is used as the default.
 # Note that if the -p switch is used with gds2pov it will override the ProcessFile setting.
 #
+# Scale is used to scale the design. Scaling the design down can be useul for
+# gdsoglviewer.
+#
 # GlobalStart
 # Ambient: 1.0
 # ProcessFile: process.txt
+# Scale: 1.0
 # GlobalEnd
 #
 #

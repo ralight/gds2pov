@@ -2,7 +2,7 @@
  * File: config_cfg.cpp
  * Author: Roger Light
  * Project: gdsto3d
- * $Id: config_cfg.cpp 221 2005-05-21 10:17:15Z roger $
+ * $Id: config_cfg.cpp 226 2005-05-21 20:16:06Z roger $
  * 
  * This parses the configuration file which contains camera and light
  * information.
@@ -38,6 +38,7 @@ GDSConfig::GDSConfig()
 	_ProcessFile = NULL;
 	_Font = NULL;
 	_Ambient = 1.2;
+	_Scale = 1.0;
 
 	_CameraPos.postype = ptCamera;
 	_CameraPos.boundarypos = bpCentre;
@@ -65,6 +66,7 @@ GDSConfig::GDSConfig(char *configfile)
 	_ProcessFile = NULL;
 	_Font = NULL;
 	_Ambient = 1.2;
+	_Scale = 1.0;
 	_CameraPos.Next = NULL;
 	_LookAtPos.Next = NULL;
 
@@ -89,6 +91,7 @@ GDSConfig::GDSConfig(char *configfile)
 	bool got_ambient = false;
 	bool got_processfile = false;
 	bool got_font = false;
+	bool got_scale = false;
 
 	bool in_position = false;
 	bool got_type = false;
@@ -165,6 +168,22 @@ GDSConfig::GDSConfig(char *configfile)
 					sscanf(line, "Ambient: %f", &_Ambient);
 				}
 				got_ambient = true;
+			}else if(strstr(line, "Scale:")){
+				if(!in_global){
+					fprintf(stderr, "Error: Scale definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
+					_Valid = 0;
+					fclose(cptr);
+					return;
+				}
+				if(got_scale){
+					fprintf(stderr, "Warning: Duplicate Scale definition on line %d of config file. Ignoring new definition.\n", current_line);
+				}else{
+					sscanf(line, "Scale: %f", &_Scale);
+					if(_Scale<0.001){
+						fprintf(stderr, "Warning: Scale is very small (<0.001)\n");
+					}
+				}
+				got_scale = true;
 			}else if(strstr(line, "ProcessFile:")){
 				if(!in_global){
 					fprintf(stderr, "Error: ProcessFile definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
@@ -515,6 +534,11 @@ int GDSConfig::IsValid()
 float GDSConfig::GetAmbient()
 {
 	return _Ambient;
+}
+
+float GDSConfig::GetScale()
+{
+	return _Scale;
 }
 
 char *GDSConfig::GetProcessFile()

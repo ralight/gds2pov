@@ -17,10 +17,14 @@
 # The Font option allows the font to be used to be specified. The default is crystal.ttf (supplied with
 # POV-Ray).
 #
+# Scale is used to scale the design. Scaling the design down can be useul for
+# gdsoglviewer.
+#
 # GlobalStart
 # Ambient: 1.2
 # ProcessFile: process.txt
 # Font: crystal.ttf
+# Scale: 1.0
 # GlobalEnd
 #
 #
