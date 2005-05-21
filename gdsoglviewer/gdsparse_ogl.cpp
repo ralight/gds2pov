@@ -69,10 +69,14 @@ extern int verbose_output;
 
 GDSParse_ogl::GDSParse_ogl(class GDSConfig *config, class GDSProcess *process) : GDSParse(config, process)
 {
+	_topcell = NULL;
 }
 
 GDSParse_ogl::~GDSParse_ogl()
 {
+	if(_topcell){
+		delete [] _topcell;
+	}
 }
 
 class GDSObject *GDSParse_ogl::NewObject(char *Name)
@@ -80,20 +84,18 @@ class GDSObject *GDSParse_ogl::NewObject(char *Name)
 	return new class GDSObject_ogl(Name);
 }
 
+void GDSParse_ogl::SetTopcell(char *topcell)
+{
+	_topcell = new char[strlen(topcell) + 1];
+	strcpy(_topcell, topcell);
+}
+
 void GDSParse_ogl::OutputHeader()
 {
-	/*
-	fprintf(fptr, "#ifdef WIN32\n#include <windows.h>\n#endif\n");
-	fprintf(optr, "#include <GL/gl.h>\n");
-	fprintf(optr, "#include <GL/glu.h>\n");
-	fprintf(optr, "#include <stdio.h>\n");
-	fprintf(optr, "\nvoid gds_draw()\n{\n");
-	*/
 }
 
 void GDSParse_ogl::OutputFooter()
 {
-//	fprintf(optr, "}\n");
 }
 
 /* application window title */
@@ -137,7 +139,7 @@ int GDSParse_ogl::gl_init()
 
 	glNewList(1, GL_COMPILE);
 	glBegin(GL_TRIANGLES);
-	Output(NULL, NULL, false, true, false);
+	Output(NULL, _topcell, false, true, false);
 	glEnd();
 	glEndList();
 

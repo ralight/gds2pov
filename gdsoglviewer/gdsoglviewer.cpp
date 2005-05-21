@@ -221,6 +221,7 @@ int main(int argc, char *argv[])
 		if(!Parser->Parse(iptr)){
 #ifdef WIN32
 			parser = Parser;
+			parser->SetTopcell(topcell);
 			RealWinMain(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 #else
 			Parser->Output(NULL, topcell, false, true, false);

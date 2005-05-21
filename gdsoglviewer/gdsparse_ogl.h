@@ -59,6 +59,7 @@ private:
 	GLfloat _dir[8][3];
 	GLfloat _phi[8][3];
 	struct htime _tv, _mt;
+	char *_topcell;
 
 #ifdef HAVE_X11_XLIB_H
 	Display *dpy;
@@ -90,6 +91,7 @@ public:
 	void OutputHeader();
 	void OutputFooter();
 
+	void SetTopcell(char *topcell);
 	int gl_data();
 	int gl_init();
 	void gl_draw();
