@@ -1,3 +1,5 @@
+dnl Process this file with autoconf to produce a configure script.
+dnl $Id: configure.ac 221 2005-05-21 10:17:15Z roger $
 
 AC_INIT([libgdsto3d and utilities], [1.0.0], [roger@atchoo.org], [gdsto3d])
 

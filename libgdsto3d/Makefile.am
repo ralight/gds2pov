@@ -1,5 +1,4 @@
-#
-# $Id: Makefile.am 206 2005-05-09 09:37:23Z roger $
+# $Id: Makefile.am 221 2005-05-21 10:17:15Z roger $
 
 SUBDIRS = .
 
