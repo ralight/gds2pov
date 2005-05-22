@@ -188,10 +188,13 @@ void GDSParse_ogl::gl_draw()
 		}
 	}
 
-/*
+
 	if( _ry >  180.0f ) _ry += -360.0f;
 	if( _ry < -180.0f ) _ry +=  360.0f;
-*/
+
+	if( _rx >  180.0f ) _rx += -360.0f;
+	if( _rx < -180.0f ) _rx +=  360.0f;
+
 
 	//FIXME glRotatef( _ry, 0.0f, 1.0f, 0.0f );
 	glRotatef( _ry, 0.0f, 0.0f, 1.0f );

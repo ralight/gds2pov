@@ -307,7 +307,7 @@ int WINAPI RealWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmd
             dwStyle = WS_OVERLAPPEDWINDOW;
         }
 
-        if( ! ( parser->_hWnd = CreateWindow( ClassName, "FIXME", dwStyle,
+        if( ! ( parser->_hWnd = CreateWindow( ClassName, "GDS OpenGL Viewer", dwStyle,
                         CW_USEDEFAULT, CW_USEDEFAULT, parser->_width, parser->_height,
                         NULL, NULL, hInstance, NULL ) ) )
         {

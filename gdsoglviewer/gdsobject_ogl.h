@@ -25,6 +25,8 @@
 
 class GDSObject_ogl : public GDSObject
 {
+private:
+	void DecomposePolygons(class GDSPolygon *polygon);
 public:
 	GDSObject_ogl(char *Name);
 	~GDSObject_ogl();

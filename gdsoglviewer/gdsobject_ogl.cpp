@@ -246,6 +246,7 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 				glEdgeFlag(GL_FALSE);
 				glVertex3f(x2, y2, z1);
 			}
+			DecomposePolygons(polygon);
 /*
 			x1 = polygon->GetXCoords(polygon->GetPoints()-2);// + offx;
 			y1 = polygon->GetYCoords(polygon->GetPoints()-2);// + offy;
@@ -391,6 +392,78 @@ void GDSObject_ogl::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Fo
 	}
 	if(FirstARef){
 		OutputOGLARefs(Objects, Font, offx, offy, objectid, firstlayer);
+	}
+}
+
+void GDSObject_ogl::DecomposePolygons(class GDSPolygon *polygon)
+{
+	unsigned long faceindex = 0;
+
+	if(!polygon){
+		return;
+	}
+	Point pA, pB;
+
+	pA.X = polygon->GetXCoords(0)-polygon->GetXCoords(polygon->GetPoints()-2);
+	pA.Y = polygon->GetYCoords(0)-polygon->GetYCoords(polygon->GetPoints()-2);
+	pB.X = polygon->GetXCoords(1)-polygon->GetXCoords(0);
+	pB.Y = polygon->GetYCoords(1)-polygon->GetYCoords(0);
+
+	float theta1;
+	float theta2;
+
+	theta1 = atan2(pA.X, pA.Y);
+	theta2 = atan2(pB.X, pB.Y);
+	polygon->SetAngleCoords(0, theta1 - theta2);
+
+	for(unsigned int j=1; j<polygon->GetPoints()-1; j++){
+		pA.X = polygon->GetXCoords(j)-polygon->GetXCoords(j-1);
+		pA.Y = polygon->GetYCoords(j)-polygon->GetYCoords(j-1);
+		pB.X = polygon->GetXCoords(j+1)-polygon->GetXCoords(j);
+		pB.Y = polygon->GetYCoords(j+1)-polygon->GetYCoords(j);
+
+		theta1 = atan2(pA.X, pA.Y);
+		theta2 = atan2(pB.X, pB.Y);
+		polygon->SetAngleCoords(j, theta1 - theta2);
+	}
+	int positives = 0;
+	int negatives = 0;
+
+	for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
+		polygon->SetAngleCoords(j, asinf(sinf(polygon->GetAngleCoords(j))));
+		if(polygon->GetAngleCoords(j)>=0.0){
+			positives++;
+		}else{
+			negatives++;
+		}
+	}
+	
+	//printf("+ve %d, -ve %d\n", positives, negatives);
+	int bendindex1;
+	int bendindex2;
+
+	if(!positives || !negatives){
+		float z1 = polygon->GetHeight();
+		float z2 = polygon->GetHeight() + polygon->GetThickness();
+
+		for(unsigned int j=1; j<polygon->GetPoints()-2; j++){
+			glEdgeFlag(GL_TRUE);
+			glVertex3f(polygon->GetXCoords(0),polygon->GetYCoords(0),z1);
+			glVertex3f(polygon->GetXCoords(j),polygon->GetYCoords(j),z1);
+			glVertex3f(polygon->GetXCoords(j+1),polygon->GetYCoords(j+1),z1);
+
+			glVertex3f(polygon->GetXCoords(0),polygon->GetYCoords(0),z2);
+			glVertex3f(polygon->GetXCoords(j),polygon->GetYCoords(j),z2);
+			glVertex3f(polygon->GetXCoords(j+1),polygon->GetYCoords(j+1),z2);
+
+			glVertex3f(polygon->GetXCoords(0),polygon->GetYCoords(0),z2);
+			glVertex3f(polygon->GetXCoords(j),polygon->GetYCoords(j),z2);
+			glVertex3f(polygon->GetXCoords(j+1),polygon->GetYCoords(j+1),z2);
+			glEdgeFlag(GL_FALSE);
+			//glVertex3f(,,);
+			//0, j, j+1
+			//polygon->GetPoints()-1, j+polygon->GetPoints()-1, j+polygon->GetPoints()-1+1
+		}
 	}
 }
 
