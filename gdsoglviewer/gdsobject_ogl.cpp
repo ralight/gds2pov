@@ -333,6 +333,7 @@ void GDSObject_ogl::OutputOGLARefs(class GDSObjects *Objects, char *Font, float 
 								if(aref->Mag!=1.0){
 									glScalef(aref->Mag, aref->Mag, 1);
 								}
+								//glTranslatef(offx+aref->X1, offy+aref->Y1, 0.0f);
 								glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
 								if(aref->Rotate.Y){
 									glRotatef(-aref->Rotate.Y, 0.0f, 0.0f, 1.0f);
@@ -340,7 +341,10 @@ void GDSObject_ogl::OutputOGLARefs(class GDSObjects *Objects, char *Font, float 
 								if(aref->Flipped){
 									glScalef(1.0f, -1.0f, 1.0f);
 								}
-								obj->OutputToFile(NULL, Objects, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
+								//glTranslatef(dx*(float)j, dy*(float)i, 0.0f);
+								//obj->OutputToFile(NULL, Objects, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
+								//obj->OutputToFile(NULL, Objects, Font, dx*(float)j, dy*(float)i, objectid, firstlayer);
+								obj->OutputToFile(NULL, Objects, Font, 0.0,0.0, objectid, firstlayer);
 								glPopMatrix();
 							}
 						}
@@ -358,6 +362,7 @@ void GDSObject_ogl::OutputOGLARefs(class GDSObjects *Objects, char *Font, float 
 								if(aref->Mag!=1.0){
 									glScalef(aref->Mag, aref->Mag, 1);
 								}
+								//glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
 								glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
 								if(aref->Rotate.Y){
 									glRotatef(-aref->Rotate.Y, 0.0f, 0.0f, 1.0f);
@@ -365,6 +370,7 @@ void GDSObject_ogl::OutputOGLARefs(class GDSObjects *Objects, char *Font, float 
 								if(aref->Flipped){
 									glScalef(1.0f, -1.0f, 1.0f);
 								}
+								//glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
 								obj->OutputToFile(NULL, Objects, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
 								glPopMatrix();
 							}
