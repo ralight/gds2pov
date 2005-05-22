@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
 			}
 
 			if(optr){
-				Parser->Output(optr, topcell, true, false, bounding_output);
+				Parser->Output(optr, topcell);
 				if(optr != stdout){
 					fclose(optr);
 				}

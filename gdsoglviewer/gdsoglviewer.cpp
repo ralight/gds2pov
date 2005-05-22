@@ -219,9 +219,9 @@ int main(int argc, char *argv[])
 	if(iptr){
 		class GDSParse_ogl *Parser = new class GDSParse_ogl(config, process);
 		if(!Parser->Parse(iptr)){
+			Parser->SetTopcell(topcell);
 #ifdef WIN32
 			parser = Parser;
-			parser->SetTopcell(topcell);
 			RealWinMain(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 #else
 			Parser->Output(NULL, topcell, false, true, false);

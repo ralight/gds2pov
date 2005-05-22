@@ -104,7 +104,7 @@ GlobalStart
 Ambient: 1.2
 ProcessFile: process.txt
 Font: crystal.ttf
-Scale: 0.01
+Scale: 0.05
 GlobalEnd
 
 PositionStart

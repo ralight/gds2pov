@@ -70,6 +70,7 @@ extern int verbose_output;
 GDSParse_ogl::GDSParse_ogl(class GDSConfig *config, class GDSProcess *process) : GDSParse(config, process)
 {
 	_topcell = NULL;
+	SetOutputOptions(false, false, true, false);
 }
 
 GDSParse_ogl::~GDSParse_ogl()
@@ -86,8 +87,14 @@ class GDSObject *GDSParse_ogl::NewObject(char *Name)
 
 void GDSParse_ogl::SetTopcell(char *topcell)
 {
-	_topcell = new char[strlen(topcell) + 1];
-	strcpy(_topcell, topcell);
+	if(topcell){
+		if(_topcell){
+			delete [] _topcell;
+			_topcell = NULL;
+		}
+		_topcell = new char[strlen(topcell) + 1];
+		strcpy(_topcell, topcell);
+	}
 }
 
 void GDSParse_ogl::OutputHeader()
@@ -124,6 +131,8 @@ int GDSParse_ogl::gl_data()
 int GDSParse_ogl::gl_init()
 {
 	glEnable( GL_LINE_SMOOTH );
+	glEnable( GL_POINT_SMOOTH );
+	glEnable( GL_POLYGON_SMOOTH );
 	glLineWidth( 2.0 );
 
 	glEnable( GL_BLEND );
@@ -137,10 +146,12 @@ int GDSParse_ogl::gl_init()
 	glEnable(GL_DEPTH_TEST);
 	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
+	glPolygonMode(GL_FRONT_AND_BACK, render_mode);
+
 	glNewList(1, GL_COMPILE);
-	glBegin(GL_TRIANGLES);
-	Output(NULL, _topcell, false, true, false);
-	glEnd();
+	//glBegin(GL_TRIANGLES);
+	Output(NULL, _topcell);
+	//glEnd();
 	glEndList();
 
 	hide_mouse();
@@ -213,7 +224,11 @@ void GDSParse_ogl::gl_draw()
 		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 114, _height - 40,
 				   _font, "%5.1f fps", _fps );
 
-		if( _fps < 20.0f ) glDisable( GL_LINE_SMOOTH );
+		if( _fps < 20.0f ){
+			glDisable( GL_LINE_SMOOTH );
+			glDisable( GL_POINT_SMOOTH );
+			glDisable( GL_POLYGON_SMOOTH );
+		}
 	}
 
 	glFinish();

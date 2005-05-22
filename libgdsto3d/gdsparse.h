@@ -67,6 +67,12 @@ protected:
 	
 	short			_recordlen;
 
+	/* Output options */
+	bool			_allow_multiple_output;
+	bool			_output_children_first;
+	bool			_bounding_output;
+	bool			_use_outfile;
+
 	/*
 	** Both of these variables have fixed bounds because
 	** they are not dependant on the GDS2 spec, not on the
@@ -120,13 +126,14 @@ protected:
 	virtual void OutputFooter() = 0;
 	/* End abstract functions */
 
-	void RecursiveOutput(class GDSObject *Object, FILE *optr, float offx, float offy, long *objectid, bool allow_multiple_output);
+	void RecursiveOutput(class GDSObject *Object, FILE *optr, float offx, float offy, long *objectid);
 public:
 	GDSParse (class GDSConfig *config, class GDSProcess *process);
 	virtual ~GDSParse ();
 
+	void SetOutputOptions(bool bounding_output, bool use_outfile, bool allow_multiple_output, bool output_children_first);
 	bool Parse(FILE *iptr);
-	void Output(FILE *optr, char *topcell, bool use_outfile, bool allow_multiple_output, bool bounding_output);
+	void Output(FILE *optr, char *topcell);
 	virtual class GDSObject *NewObject(char *Name) = 0;
 };
 

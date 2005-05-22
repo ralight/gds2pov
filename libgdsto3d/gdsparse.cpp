@@ -62,6 +62,11 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process)
 	_recordlen = 0;
 	_CurrentObject = NULL;
 
+	_bounding_output = false;
+	_use_outfile = false;
+	_allow_multiple_output = false;
+	_output_children_first = false;
+
 	_process = process;
 	_config = config;
 
@@ -108,22 +113,22 @@ bool GDSParse::Parse(FILE *iptr)
 	}
 }
 
-void GDSParse::Output(FILE *optr, char *topcell, bool use_outfile, bool allow_multiple_output, bool bounding_output)
+void GDSParse::Output(FILE *optr, char *topcell)
 {
 	_topcellname = topcell;
 
-	if(use_outfile){
+	if(_use_outfile){
 		_optr = optr;
 	}
-	if(_optr || !use_outfile){
+	if(_optr || !_use_outfile){
 		OutputHeader();
 
-		if(!bounding_output){
+		if(!_bounding_output){
 			long objectid = 0;
 			if(topcell){
-				RecursiveOutput(_Objects->GetObjectRef(topcell), _optr, 0.0, 0.0, &objectid, allow_multiple_output);
+				RecursiveOutput(_Objects->GetObjectRef(topcell), _optr, 0.0, 0.0, &objectid);
 			}else{
-				RecursiveOutput(_Objects->GetObjectRef(0), _optr, 0.0, 0.0, &objectid, allow_multiple_output);
+				RecursiveOutput(_Objects->GetObjectRef(0), _optr, 0.0, 0.0, &objectid);
 			}
 		}
 
@@ -131,24 +136,32 @@ void GDSParse::Output(FILE *optr, char *topcell, bool use_outfile, bool allow_mu
 	}
 }
 
-void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx, float offy, long *objectid, bool allow_multiple_output)
+void GDSParse::SetOutputOptions(bool bounding_output, bool use_outfile, bool allow_multiple_output, bool output_children_first)
+{
+	_bounding_output = bounding_output;
+	_use_outfile = use_outfile;
+	_allow_multiple_output = allow_multiple_output;
+	_output_children_first = output_children_first;
+}
+
+void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx, float offy, long *objectid)
 {
 	if(!Object){
 		return;
 	}
 	
-	if(Object->GetIsOutput() && allow_multiple_output == false){
+	if(Object->GetIsOutput() && _allow_multiple_output == false){
 		return;
 	}
 
-	if(Object->HasASRef()){
+	if(_output_children_first && Object->HasASRef()){
 		GDSObject *child;
 
 		int i=0;
 		do{
 			child = Object->GetSRef(_Objects, i);
 			if(child && (child != Object)){
-				RecursiveOutput(child, _optr, offx, offy, objectid, allow_multiple_output);
+				RecursiveOutput(child, _optr, offx, offy, objectid);
 			}
 
 			i++;
@@ -158,7 +171,7 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx,
 		do{
 			child = Object->GetARef(_Objects, i);
 			if(child && (child != Object)){
-				RecursiveOutput(child, _optr, offx, offy, objectid, allow_multiple_output);
+				RecursiveOutput(child, _optr, offx, offy, objectid);
 			}
 			i++;
 		}while(child);
