@@ -130,8 +130,9 @@ int GDSParse_ogl::gl_data()
 
 int GDSParse_ogl::gl_init()
 {
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 	glEnable( GL_LINE_SMOOTH );
-	glEnable( GL_POINT_SMOOTH );
 	glEnable( GL_POLYGON_SMOOTH );
 	glLineWidth( 2.0 );
 
@@ -192,7 +193,8 @@ void GDSParse_ogl::gl_draw()
 	if( _ry < -180.0f ) _ry +=  360.0f;
 */
 
-	glRotatef( _ry, 0.0f, 1.0f, 0.0f );
+	//FIXME glRotatef( _ry, 0.0f, 1.0f, 0.0f );
+	glRotatef( _ry, 0.0f, 0.0f, 1.0f );
 	glGetFloatv( GL_MODELVIEW_MATRIX, M );
 	glRotatef( _rx, M[0], M[4], M[8] );
 	glGetFloatv( GL_MODELVIEW_MATRIX, M );
@@ -293,26 +295,24 @@ void GDSParse_ogl::gl_event( int event, int data, int xpos, int ypos )
 	{
 		if( data == 0 ) /* left button */
 		{
-			//vx =  40.0f;
-			_vx +=  20.0f;
+			_vz +=  5.0f;
 		}
 
 		if( data == 1 ) /* right button */
 		{
-			//vx = -40.0f;
-			_vx += -20.0f;
+			_vz += -5.0f;
 		}
 	}
 
 	if( event == 1 )	/* mouse button up */
 	{
-		//vx = 0.0f;
+		_vz = 0.0f;
 	}
 
 	if( event == 2 )	/* mouse move */
 	{
-		_vy += 256.0f * (GLfloat) ( xpos - _width  / 2 ) / _width;
-		_vz -=  16.0f * (GLfloat) ( ypos - _height / 2 ) / _height;
+		_vy +=  128.0f * (GLfloat) ( xpos - _width  / 2 ) / _width;
+		_vx -=  128.0f * (GLfloat) ( ypos - _height / 2 ) / _height;
 
 		if( timer( &_mt, 0 ) > 0.05 )
 		{
