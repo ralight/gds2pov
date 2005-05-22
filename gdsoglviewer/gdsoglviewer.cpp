@@ -224,7 +224,8 @@ int main(int argc, char *argv[])
 			parser = Parser;
 			RealWinMain(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 #else
-			Parser->Output(NULL, topcell, false, true, false);
+			//Parser->Output(NULL, topcell);
+			Parser->gl_main();
 #endif
 		}
 

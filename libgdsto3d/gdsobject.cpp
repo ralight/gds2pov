@@ -345,7 +345,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		Boundary.XMax = Boundary.XMin = Boundary.YMax = Boundary.YMin = 0;
 	}
 
-	v_printf(1, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
+	v_printf(2, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
 	GotBoundary = true;
 
 	return &Boundary;

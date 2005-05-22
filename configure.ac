@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl $Id: configure.ac 225 2005-05-21 19:53:25Z roger $
+dnl $Id: configure.ac 234 2005-05-22 23:05:32Z roger $
 
 AC_INIT([libgdsto3d and utilities], [1.0.0], [roger@atchoo.org], [gdsto3d])
 
@@ -61,8 +61,19 @@ AC_SUBST(OPENGL_LIBS)
 
 AC_CHECK_FUNCS([gettimeofday QueryPerformanceCounter])
 
+AC_ARG_ENABLE([profile],
+		AC_HELP_STRING([--enable-profile], [enable gprof profiling]),
+		[enable_profile=yes],
+		[enable_profile=no])
 
-CFLAGS="${CFLAGS} -ggdb"
+if test "$enable_profile" = yes; then
+	CFLAGS="-ggdb -pg -fprofile-arcs -ftest-coverage"
+	CXXFLAGS="-ggdb -pg -fprofile-arcs -ftest-coverage"
+	CFLAGS="-g -pg -fno-stack-protector-all -fno-stack-protector -nopie"
+	CXXFLAGS="-g -pg -fno-stack-protector-all -fno-stack-protector -nopie"
+fi
+
+#CFLAGS="${CFLAGS} -ggdb"
 
 AC_SUBST(LDADD)
 

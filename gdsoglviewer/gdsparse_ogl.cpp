@@ -346,7 +346,7 @@ void GDSParse_ogl::gl_event( int event, int data, int xpos, int ypos )
 
 /* program entry point */
 
-int GDSParse_ogl::gl_main(class GDSObject *Object)
+int GDSParse_ogl::gl_main()
 {
 #ifdef HAVE_GL_GLX_H
 	int fullscreen;

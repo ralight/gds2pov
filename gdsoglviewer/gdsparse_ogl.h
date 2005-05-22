@@ -99,7 +99,7 @@ public:
                 GLint x, GLint y, GLuint font, const char *format, ... );
 	void gl_resize(void);
 	void gl_event( int event, int data, int xpos, int ypos );
-	int gl_main(class GDSObject *Object);
+	int gl_main();
 	int glx_init(int fullscreen);
 
 	float timer(struct htime *t, int reset);

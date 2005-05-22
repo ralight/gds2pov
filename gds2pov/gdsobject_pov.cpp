@@ -67,8 +67,17 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 						break;
 				}
 				for(unsigned int j=0; j<path->GetPoints()-1; j++){
-					angleX = cos(atan2(path->GetXCoords(j) - path->GetXCoords(j+1), path->GetYCoords(j+1) - path->GetYCoords(j)));
-					angleY = sin(atan2(path->GetXCoords(j) - path->GetXCoords(j+1), path->GetYCoords(j+1) - path->GetYCoords(j)));
+					float XCoords_j, XCoords_jpone;
+					float YCoords_j, YCoords_jpone;
+					float PathWidth = path->GetWidth();
+
+					XCoords_j = path->GetXCoords(j);
+					XCoords_j = path->GetXCoords(j+1);
+					YCoords_j = path->GetYCoords(j);
+					YCoords_j = path->GetYCoords(j+1);
+
+					angleX = cos(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
+					angleY = sin(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
 
 					if(j==0 || j==path->GetPoints()-2){
 						extn_x = EndExtn * angleY;
@@ -80,59 +89,60 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 
 					// 1
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						path->GetXCoords(j) + path->GetWidth() * angleX + extn_x,
-						path->GetYCoords(j) + path->GetWidth() * angleY - extn_y,
+						XCoords_j + PathWidth * angleX + extn_x,
+						YCoords_j + PathWidth * angleY - extn_y,
 						-path->GetHeight() - path->GetThickness()
 						);
 					// 2
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						path->GetXCoords(j) - path->GetWidth() * angleX + extn_x,
-						path->GetYCoords(j) - path->GetWidth() * angleY - extn_y,
+						XCoords_j - PathWidth * angleX + extn_x,
+						YCoords_j - PathWidth * angleY - extn_y,
 						-path->GetHeight() - path->GetThickness()
 						);
 					// 3
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						path->GetXCoords(j) + path->GetWidth() * angleX + extn_x,
-						path->GetYCoords(j) + path->GetWidth() * angleY - extn_y,
+						XCoords_j + PathWidth * angleX + extn_x,
+						YCoords_j + PathWidth * angleY - extn_y,
 						-path->GetHeight()
 						);
 					// 4
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						path->GetXCoords(j) - path->GetWidth() * angleX + extn_x,
-						path->GetYCoords(j) - path->GetWidth() * angleY - extn_y,
+						XCoords_j - PathWidth * angleX + extn_x,
+						YCoords_j - PathWidth * angleY - extn_y,
 						-path->GetHeight()
 						);
 
 					// 5
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						path->GetXCoords(j+1) + path->GetWidth() * angleX - extn_x,
-						path->GetYCoords(j+1) + path->GetWidth() * angleY - extn_y,
+						XCoords_jpone + PathWidth * angleX - extn_x,
+						YCoords_jpone + PathWidth * angleY - extn_y,
 						-path->GetHeight() - path->GetThickness()
 						);
 
 					// 6
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						path->GetXCoords(j+1) - path->GetWidth() * angleX - extn_x,
-						path->GetYCoords(j+1) - path->GetWidth() * angleY - extn_y,
+						XCoords_jpone - PathWidth * angleX - extn_x,
+						YCoords_jpone - PathWidth * angleY - extn_y,
 						-path->GetHeight() - path->GetThickness()
 						);
 
 					// 7
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						path->GetXCoords(j+1) + path->GetWidth() * angleX - extn_x,
-						path->GetYCoords(j+1) + path->GetWidth() * angleY - extn_y,
+						XCoords_jpone + PathWidth * angleX - extn_x,
+						YCoords_jpone + PathWidth * angleY - extn_y,
 						-path->GetHeight()
 						);
 
 					// 8
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						path->GetXCoords(j+1) - path->GetWidth() * angleX - extn_x,
-						path->GetYCoords(j+1) - path->GetWidth() * angleY - extn_y,
+						XCoords_jpone - PathWidth * angleX - extn_x,
+						YCoords_jpone - PathWidth * angleY - extn_y,
 						-path->GetHeight()
 						);
 				}
-				fprintf(fptr, "} face_indices { %d", 12*(path->GetPoints()-1));
-				for(unsigned int j=0; j<path->GetPoints()-1; j++){
+				unsigned int PathPoints = path->GetPoints();
+				fprintf(fptr, "} face_indices { %d", 12*(PathPoints-1));
+				for(unsigned int j=0; j<PathPoints-1; j++){
 					// print ,faces now
 					//int vertexindex[36] = {0, 1, 2, 1, 2, 3, 4, 5, 6, 5, 6, 7, 0, 1, 5, 0, 4, 5, 2, 3, 6, 3, 6, 7, 1, 3, 7, 1, 5, 7, 0, 2, 4, 2, 4, 6};
 					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 1+8*j, 2+8*j);
@@ -522,7 +532,8 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 					fprintf(fptr,"text{ttf \"crystal.ttf\" \"%d-\" 0.2, 0 ", j);
 				}
 				fprintf(fptr, " scale <1.5,1.5,1.5>");
-				fprintf(fptr, " translate <%.2f,%.2f,%.2f> texture{pigment{rgb <1,1,1>}}}\n", polygon->GetXCoords(j), \
+				fprintf(fptr, " translate <%.2f,%.2f,%.2f> texture{pigment{rgb <1,1,1>}}}\n", \
+						polygon->GetXCoords(j), \
 						polygon->GetYCoords(j), polygon->GetHeight() - 1);
 			}
 
