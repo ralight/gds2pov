@@ -85,5 +85,7 @@ public:
 	bool GetIsOutput();
 };
 
+typedef class GDSObject * GDSObjectRef;
+
 #endif // __GDSOBJECT_H__
 

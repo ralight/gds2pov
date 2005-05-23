@@ -376,7 +376,7 @@ void GDSObject::IndexSRefs(class GDSObjects *Objects)
 		SRefs = NULL;
 	}
 
-	SRefs = new (class GDSObject *)[SRefCount];
+	SRefs = new GDSObjectRef[SRefCount];
 
 	sref = FirstSRef;
 	int i=0;
@@ -398,7 +398,7 @@ void GDSObject::IndexARefs(class GDSObjects *Objects)
 		ARefs = NULL;
 	}
 
-	ARefs = new (class GDSObject *)[ARefCount];
+	ARefs = new GDSObjectRef[ARefCount];
 
 	aref = FirstARef;
 	int i=0;
