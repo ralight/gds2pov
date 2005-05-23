@@ -10,6 +10,10 @@ Done
 
 To Do
 =====
+- allow "ignore cells" preference
+- graphical process file editor
+- absolute camera position
+- save camera position from gdsoglviewer for use with gds2pov
 - What if top cell isn't found?
 - Tool to parse a gds file and produce a process file.
 - Allow use of eg. glade2 techfiles as a process file.
