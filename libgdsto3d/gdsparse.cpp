@@ -101,6 +101,9 @@ bool GDSParse::Parse(FILE *iptr)
 	_iptr = iptr;
 	if(_iptr){
 		_Objects = new GDSObjects;
+		
+		//DEBUG
+		printf("GDSParse::Parse(%p)\n",iptr);
 
 		bool result = ParseFile();
 
@@ -323,7 +326,10 @@ bool GDSParse::ParseFile()
 					_textstring = NULL;
 				}
 				_textstring = GetAsciiString();
-				if(_CurrentObject && _textstring){
+				/* Only set string if the current object is valid, the text string is valid 
+				 * and we are using a layer that is defined.
+				 */
+				if(_CurrentObject && _textstring && _process->GetLayer(_currentlayer, _currentdatatype)){
 					_CurrentObject->GetCurrentText()->SetString(_textstring);
 					v_printf(2, "(\"%s\")", _textstring);
 					delete [] _textstring;
