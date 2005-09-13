@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
 		delete config;
 		return -1;
 	}else if(!process->IsValid()){
-		fprintf(stderr, "Error: %s is not a valid process file\n");
+		fprintf(stderr, "Error: %s is not a valid process file\n", processfile);
 		delete config;
 		delete process;
 		return -1;
