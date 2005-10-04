@@ -327,9 +327,9 @@ bool GDSParse::ParseFile()
 				}
 				_textstring = GetAsciiString();
 				/* Only set string if the current object is valid, the text string is valid 
-				 * and we are using a layer that is defined.
+				 * and we are using a layer that is defined and being shown.
 				 */
-				if(_CurrentObject && _textstring && _process->GetLayer(_currentlayer, _currentdatatype)){
+				if(_CurrentObject && _textstring && _process->GetLayer(_currentlayer, _currentdatatype) && _process->GetLayer(_currentlayer, _currentdatatype)->Show){
 					_CurrentObject->GetCurrentText()->SetString(_textstring);
 					v_printf(2, "(\"%s\")", _textstring);
 					delete [] _textstring;
