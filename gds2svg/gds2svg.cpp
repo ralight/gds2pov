@@ -1,9 +1,9 @@
 /*
- * File: gds2pov
+ * File: gds2svg
  * Author: Roger Light
  * Project: gdsto3d
  *
- * This is the main body of the gds2pov program.
+ * This is the main body of the gds2svg program.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,28 +26,26 @@
 #include "config_cfg.h"
 #include "process_cfg.h"
 #include "gds_globals.h"
-#include "gds2pov.h"
-#include "gdsparse_pov.h"
+#include "gds2svg.h"
+#include "gdsparse_svg.h"
 
-#define GDS2POV_VERSION "0.8"
+#define GDS2SVG_VERSION "0.1"
 
 extern int verbose_output;
-bool decompose;
 
 void printusage()
 {
-	printf("gds2pov  version %s\n", GDS2POV_VERSION);
-	printf("Copyright (C) 2004,2005 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
-	printf("gds2pov comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2pov freely\nas described in the readme.txt distributed with this file.\n\n");
-	printf("gds2pov is a program for converting a GDS2 file to a POV-Ray scene file.\n\n");
-	printf("Usage: gds2pov [-b] [-c config.txt] [-d] [-h] [-i input.gds] [-o output.pov] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
+	printf("gds2svg  version %s\n", GDS2SVG_VERSION);
+	printf("Copyright (C) 2005,2006 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
+	printf("gds2svg comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2svg freely\nas described in the readme.txt distributed with this file.\n\n");
+	printf("gds2svg is a program for converting a GDS2 file to an SVG file.\n\n");
+	printf("Usage: gds2svg [-b] [-c config.txt] [-d] [-h] [-i input.gds] [-o output.svg] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
 	printf("Options\n");
-	printf(" -b\t\tOutput bounding box instead of layout to allow easier and\n\t\tquicker placing of the camera\n");
 	printf(" -c\t\tSpecify config file\n");
-	printf(" -d\t\tDecompose polygons into triangles (use mesh2 object instead of prism)\n");
+	//printf(" -d\t\tDecompose polygons into triangles (use mesh2 object instead of prism)\n");
 	printf(" -h\t\tDisplay this help\n");
 	printf(" -i\t\tInput GDS2 file (stdin if not specified)\n");
-	printf(" -o\t\tOutput POV file (stdout if not specified)\n");
+	printf(" -o\t\tOutput SVG file (stdout if not specified)\n");
 	printf(" -p\t\tSpecify process file\n");
 	printf(" -q\t\tQuiet output\n");
 	printf(" -t\t\tSpecify top cell name\n");
@@ -59,7 +57,6 @@ int main(int argc, char *argv[])
 {
 	verbose_output = 1;
 	bool bounding_output = false;
-	decompose = false;
 
 	if(argc>15){
 		fprintf(stderr, "Error: Invalid number of arguments.\n\n");
@@ -68,7 +65,7 @@ int main(int argc, char *argv[])
 	}
 
 	char *gdsfile=NULL;
-	char *povfile=NULL;
+	char *svgfile=NULL;
 
 	char *configfile=NULL;
 	char *processfile=NULL;
@@ -87,8 +84,6 @@ int main(int argc, char *argv[])
 				}else{
 					configfile = argv[i+1];
 				}
-			}else if(strncmp(argv[i], "-d", strlen("-d"))==0){
-				decompose = true;
 			}else if(strncmp(argv[i], "-h", strlen("-h"))==0){
 				printusage();
 				return 0;
@@ -106,7 +101,7 @@ int main(int argc, char *argv[])
 					printusage();
 					return 1;
 				}else{
-					povfile = argv[i+1];
+					svgfile = argv[i+1];
 				}
 			}else if(strncmp(argv[i], "-p", strlen("-p"))==0){
 				if(i==argc-1){
@@ -192,11 +187,11 @@ int main(int argc, char *argv[])
 		iptr = stdin;
 	}
 	if(iptr){
-		class GDSParse_pov *Parser = new class GDSParse_pov(config, process, bounding_output);
+		class GDSParse_svg *Parser = new class GDSParse_svg(config, process, bounding_output);
 		if(!Parser->Parse(iptr)){
 			FILE *optr;
-			if(povfile){
-				optr = fopen(povfile, "wt");
+			if(svgfile){
+				optr = fopen(svgfile, "wt");
 			}else{
 				optr = stdout;
 			}
@@ -207,7 +202,7 @@ int main(int argc, char *argv[])
 					fclose(optr);
 				}
 			}else{
-				fprintf(stderr, "Error: Unable to open %s.\n", povfile);
+				fprintf(stderr, "Error: Unable to open %s.\n", svgfile);
 			}
 		}
 

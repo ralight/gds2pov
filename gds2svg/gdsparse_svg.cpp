@@ -1,9 +1,9 @@
 /*
- * File: gdsparse_pov.cpp
+ * File: gdsparse_svg.cpp
  * Author: Roger Light
  * Project: gdsto3d
  *
- * This is the POV-RAY output specific implementation of the GDSParse class.
+ * This is the SVG output specific implementation of the GDSParse class.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,33 +28,33 @@
 #include "config_cfg.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
-#include "gdsparse_pov.h"
-#include "gdsobject_pov.h"
+#include "gdsparse_svg.h"
+#include "gdsobject_svg.h"
 //#include "gds_globals.h"
-//#include "gds2pov.h"
+//#include "gds2svg.h"
 //#include "gdstext.h"
 //#include "gdspolygon.h"
 
 
 extern int verbose_output;
 
-GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output) : GDSParse(config, process)
+GDSParse_svg::GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool bounding_output) : GDSParse(config, process)
 {
 	_config = config;
 	SetOutputOptions(bounding_output, true, false, true);
 }
 
-GDSParse_pov::~GDSParse_pov ()
+GDSParse_svg::~GDSParse_svg ()
 {
 }
 
-//class GDSObject_pov *GDSParse_pov::NewObject(char *Name)
-class GDSObject *GDSParse_pov::NewObject(char *Name)
+//class GDSObject_svg *GDSParse_svg::NewObject(char *Name)
+class GDSObject *GDSParse_svg::NewObject(char *Name)
 {
-	return new class GDSObject_pov(Name);
+	return new class GDSObject_svg(Name);
 }
 
-void GDSParse_pov::OutputFooter()
+void GDSParse_svg::OutputFooter()
 {
 	if(_topcellname){
 		fprintf(_optr, "object { str_%s }\n", _topcellname);
@@ -65,7 +65,7 @@ void GDSParse_pov::OutputFooter()
 	}
 }
 
-void GDSParse_pov::OutputHeader()
+void GDSParse_svg::OutputHeader()
 {
 	if(_optr && _Objects){
 		fprintf(_optr, "#include \"colors.inc\"\n");

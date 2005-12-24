@@ -1,5 +1,5 @@
 /*
- * File: gdsparse_pov.h
+ * File: gdsparse_svg.h
  * Author: Roger Light
  * Project: gdsto3d
  *
@@ -18,27 +18,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __GDSPARSE_POV_H__
-#define __GDSPARSE_POV_H__
+#ifndef __GDSPARSE_SVG_H__
+#define __GDSPARSE_SVG_H__
 
 #include "config_cfg.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
 
-class GDSParse_pov : public GDSParse
+class GDSParse_svg : public GDSParse
 {
 private:
-	bool _bounding_output;
 
 public:
-	GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output);
-	~GDSParse_pov ();
+	GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool bounding_output);
+	~GDSParse_svg ();
 
-	//class GDSObject_pov *NewObject(char *Name);
+	//class GDSObject_svg *NewObject(char *Name);
 	class GDSObject *NewObject(char *Name);
 	void OutputHeader();
 	void OutputFooter();
 };
 
-#endif // __GDSPARSE_POV_H__
+#endif // __GDSPARSE_SVG_H__
 

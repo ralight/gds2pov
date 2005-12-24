@@ -1,5 +1,5 @@
 /*
- * File: gdsobject_pov.h
+ * File: gdsobject_svg.h
  * Author: Roger Light
  * Project: gdsto3d
  *
@@ -18,18 +18,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __GDSOBJECT_POV_H__
-#define __GDSOBJECT_POV_H__
+#ifndef __GDSOBJECT_SVG_H__
+#define __GDSOBJECT_SVG_H__
 
 #include "gdsobject.h"
 
-class GDSObject_pov : public GDSObject
+class GDSObject_svg : public GDSObject
 {
 public:
-	GDSObject_pov(char *Name);
-	~GDSObject_pov();
+	GDSObject_svg(char *Name);
+	~GDSObject_svg();
 
-	void DecomposePOVPolygons(FILE *fptr);
+	void DecomposeSVGPolygons(FILE *fptr);
 	virtual void OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
@@ -39,5 +39,5 @@ public:
 
 };
 
-#endif // __GDSOBJECT_POV_H__
+#endif // __GDSOBJECT_SVG_H__
 

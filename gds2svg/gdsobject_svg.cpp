@@ -1,9 +1,9 @@
 /*
- * File: gdsobject_pov.cpp
+ * File: gdsobject_svg.cpp
  * Author: Roger Light
  * Project: gdsto3d
  *
- * This is the POV-RAY output specific implementation of the GDSObject class.
+ * This is the SVG output specific implementation of the GDSObject class.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,17 +24,17 @@
 #include <math.h>
 
 #include "gds_globals.h" //FIXME - this should be removed
-#include "gdsobject_pov.h"
-#include "gds2pov.h"
+#include "gdsobject_svg.h"
+#include "gds2svg.h"
 
-GDSObject_pov::GDSObject_pov(char *Name) : GDSObject(Name){
+GDSObject_svg::GDSObject_svg(char *Name) : GDSObject(Name){
 }
 
-GDSObject_pov::~GDSObject_pov()
+GDSObject_svg::~GDSObject_svg()
 {
 }
 
-void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PathItems.empty()){
 		float angleX, angleY;
@@ -171,31 +171,27 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 	}
 }
 
-void GDSObject_pov::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PolygonItems.empty()){
-		if(decompose){
-			DecomposePOVPolygons(fptr);
-		}else{
-			class GDSPolygon *polygon;
+		class GDSPolygon *polygon;
 
-			for(unsigned long i=0; i<PolygonItems.size(); i++){
-				polygon = PolygonItems[i];
+		for(unsigned long i=0; i<PolygonItems.size(); i++){
+			polygon = PolygonItems[i];
 
-				fprintf(fptr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
-				for(unsigned int j=0; j<polygon->GetPoints(); j++){
-					fprintf(fptr, ",<%.2f,%.2f>", polygon->GetXCoords(j), polygon->GetYCoords(j));
-				}
-				fprintf(fptr, " rotate<-90,0,0> ");
-
-				fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name);
-				fprintf(fptr, "}\n");
+			fprintf(fptr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
+			for(unsigned int j=0; j<polygon->GetPoints(); j++){
+				fprintf(fptr, ",<%.2f,%.2f>", polygon->GetXCoords(j), polygon->GetYCoords(j));
 			}
+			fprintf(fptr, " rotate<-90,0,0> ");
+
+			fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name);
+			fprintf(fptr, "}\n");
 		}
 	}
 }
 
-void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!TextItems.empty()){
 		class GDSText *text;
@@ -256,7 +252,7 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 	}
 }
 
-void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(FirstSRef){
 		SRefElement dummysref;
@@ -283,7 +279,7 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 	}
 }
 
-void GDSObject_pov::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(FirstARef){
 		ARefElement dummyaref;
@@ -361,7 +357,7 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 }
 
 
-void GDSObject_pov::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(fptr && !IsOutput){
 		fprintf(fptr, "#declare str_%s = union {\n", Name);
@@ -377,7 +373,7 @@ void GDSObject_pov::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Fo
 	IsOutput = true;
 }
 
-void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
+void GDSObject_svg::DecomposeSVGPolygons(FILE *fptr)
 {
 	unsigned long faceindex;
 

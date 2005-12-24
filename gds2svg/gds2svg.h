@@ -1,5 +1,5 @@
 /*
- * File: gds2pov.h
+ * File: gds2svg.h
  * Author: Roger Light
  * Project: gdsto3d
  *
@@ -18,9 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef _GDS2POV_H
-#define _GDS2POV_H
-
-extern bool decompose;
+#ifndef _GDS2SVG_H
+#define _GDS2SVG_H
 
 #endif
