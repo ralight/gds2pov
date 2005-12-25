@@ -25,10 +25,15 @@
 
 class GDSObject_svg : public GDSObject
 {
+private:
+	float _ioffx, _ioffy;
+	float _scale;
 public:
 	GDSObject_svg(char *Name);
 	~GDSObject_svg();
 
+	void SetInitialOffset(float ioffx, float ioffy);
+	void SetScale(float scale);
 	void DecomposeSVGPolygons(FILE *fptr);
 	virtual void OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);

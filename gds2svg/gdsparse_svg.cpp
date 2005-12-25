@@ -38,10 +38,11 @@
 
 extern int verbose_output;
 
-GDSParse_svg::GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool bounding_output) : GDSParse(config, process)
+GDSParse_svg::GDSParse_svg (class GDSConfig *config, class GDSProcess *process) : GDSParse(config, process)
 {
 	_config = config;
-	SetOutputOptions(bounding_output, true, false, true);
+	// FIXME - check multiple output and output children first
+	SetOutputOptions(false, true, false, true);
 }
 
 GDSParse_svg::~GDSParse_svg ()
@@ -56,6 +57,7 @@ class GDSObject *GDSParse_svg::NewObject(char *Name)
 
 void GDSParse_svg::OutputFooter()
 {
+	/*
 	if(_topcellname){
 		fprintf(_optr, "object { str_%s }\n", _topcellname);
 	}else{
@@ -63,147 +65,58 @@ void GDSParse_svg::OutputFooter()
 			fprintf(_optr, "object { str_%s }\n", _Objects->GetObjectRef(0)->GetName());
 		}
 	}
+	*/
+	fprintf(_optr, "</svg>");
 }
 
 void GDSParse_svg::OutputHeader()
 {
 	if(_optr && _Objects){
-		fprintf(_optr, "#include \"colors.inc\"\n");
-		fprintf(_optr, "#include \"metals.inc\"\n");
-		fprintf(_optr, "#include \"transforms.inc\"\n");
-
 		struct _Boundary *Boundary = _Objects->GetBoundary();
-		float half_widthX = (Boundary->XMax - Boundary->XMin)/2;
-		float half_widthY = (Boundary->YMax - Boundary->YMin)/2;
-		float centreX = half_widthX + Boundary->XMin;
-		float centreY = half_widthY + Boundary->YMin;
+		float width = (Boundary->XMax - Boundary->XMin);
+		float height = (Boundary->YMax - Boundary->YMin);
+		int i;
+		GDSObject_svg *obj;
 
-		float distance;
-		if(half_widthX > half_widthY){
-			distance = half_widthX * 1.8;
-		}else{
-			distance = half_widthY * 1.8;
+		for(i = 0; i < _Objects->GetCount(); i++){
+			obj = (GDSObject_svg *)_Objects->GetObjectRef(i);
+			obj->SetInitialOffset(-Boundary->XMin, -Boundary->YMin);
+			obj->SetScale(100);
 		}
 
+		fprintf(_optr, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
+		fprintf(_optr, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 
-		fprintf(_optr, "// TopLeft: %.2f, %.2f\n", Boundary->XMin, Boundary->YMax);
-		fprintf(_optr, "// TopRight: %.2f, %.2f\n", Boundary->XMax, Boundary->YMax);
-		fprintf(_optr, "// BottomLeft: %.2f, %.2f\n", Boundary->XMin, Boundary->YMin);
-		fprintf(_optr, "// BottomRight: %.2f, %.2f\n", Boundary->XMax, Boundary->YMin);
-		fprintf(_optr, "// Centre: %.2f, %.2f\n", centreX, centreY);
-
-		float XMod = _config->GetCameraPos()->XMod;
-		float YMod = _config->GetCameraPos()->YMod;
-		float ZMod = _config->GetCameraPos()->ZMod;
-
-		switch(_config->GetCameraPos()->boundarypos){
-			case bpCentre:
-				// Default camera angle = 67.38
-				// Half of this is 33.69
-				// tan(33.69) = 0.66666 = 1/1.5
-				// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
-
-				fprintf(_optr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n", centreX*XMod, centreY*YMod, -distance*ZMod);
-				break;
-			case bpTopLeft:
-				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
-				break;
-			case bpTopRight:
-				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
-				break;
-			case bpBottomLeft:
-				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
-				break;
-			case bpBottomRight:
-				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
-				break;
-		}
-
-		fprintf(_optr, "\tsky <0,0,-1>\n"); //This fixes the look at rotation (hopefully)
-
-		XMod = _config->GetLookAtPos()->XMod;
-		YMod = _config->GetLookAtPos()->YMod;
-		ZMod = _config->GetLookAtPos()->ZMod;
-
-		switch(_config->GetLookAtPos()->boundarypos){
-			case bpCentre:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", centreX*XMod, centreY*YMod, -distance*ZMod);
-				break;
-			case bpTopLeft:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
-				break;
-			case bpTopRight:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
-				break;
-			case bpBottomLeft:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
-				break;
-			case bpBottomRight:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
-				break;
-		}
-
-		if(_config->GetLightPos()!=NULL){
-			Position dummypos;
-			dummypos.Next = _config->GetLightPos();
-
-			Position *LightPos = &dummypos;
-
-			while(LightPos->Next){
-				LightPos = LightPos->Next;
-				XMod = LightPos->XMod;
-				YMod = LightPos->YMod;
-				ZMod = LightPos->ZMod;
-
-				switch(LightPos->boundarypos){
-					case bpCentre:
-						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", centreX*XMod, centreY*YMod, -distance*ZMod);
-						break;
-					case bpTopLeft:
-						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
-						break;
-					case bpTopRight:
-						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
-						break;
-					case bpBottomLeft:
-						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
-						break;
-					case bpBottomRight:
-						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
-						break;
-				}
-			}
-		}else{
-			fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", centreX, centreY, -distance);
-		}
-
-		fprintf(_optr, "background { color Black }\n");
-		fprintf(_optr, "global_settings { ambient_light rgb <%.2f,%.2f,%.2f> }\n", _config->GetAmbient(), _config->GetAmbient(), _config->GetAmbient());
+		fprintf(_optr, "<svg width=\"10cm\" height=\"10cm\" viewBox=\"0 0 %.2f %.2f\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n", width*150, height*150);
 
 		/* Output layer texture information */
+
 		struct ProcessLayer *firstlayer;
 		firstlayer = _process->GetLayer();
-		while(firstlayer->Next){
+		fprintf(_optr, "<style>\n");
+		while(firstlayer){
 			if(firstlayer->Show){
-				if(!firstlayer->Metal){
-					fprintf(_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
-				}else{
-					fprintf(_optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
-				}
+				fprintf(_optr, "	.%s { fill: #%02x%02x%02x; opacity:0.5; }\n", firstlayer->Name, (int)(255*firstlayer->Red), (int)(255*firstlayer->Green), (int)(255*firstlayer->Blue));
 			}
 			firstlayer = firstlayer->Next;
 		}
-		if(firstlayer->Show){
-			if(!firstlayer->Metal){
-				fprintf(_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
-			}else{
-				fprintf(_optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
-			}
+		fprintf(_optr, "</style>\n");
+
+		/* Finish styles */
+
+		fprintf(_optr, "<title>Example Units</title>");
+		fprintf(_optr, "<desc>Illustrates various units options</desc>\n");
+
+		float centreX = width/2 + Boundary->XMin;
+		float centreY = height/2 + Boundary->YMin;
+
+		float distance;
+		if(width/2 > height/2){
+			distance = width * 1.8/2;
+		}else{
+			distance = height * 1.8/2;
 		}
 
-		if(_bounding_output){
-			fprintf(_optr, "box {<%.2f,%.2f,%.2f> <%.2f,%.2f,%.2f> texture { pigment { rgb <0.75, 0.75, 0.75> } } }", Boundary->XMin, Boundary->YMin,_units*_process->GetLowest(),Boundary->XMax, Boundary->YMax,_units*_process->GetHighest());
-		}
 	}
 }
 

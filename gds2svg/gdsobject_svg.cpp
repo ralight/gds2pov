@@ -34,6 +34,17 @@ GDSObject_svg::~GDSObject_svg()
 {
 }
 
+void GDSObject_svg::SetInitialOffset(float ioffx, float ioffy)
+{
+	_ioffx = ioffx;
+	_ioffy = ioffy;
+}
+
+void GDSObject_svg::SetScale(float scale)
+{
+	_scale = scale;
+}
+
 void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PathItems.empty()){
@@ -45,7 +56,7 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 			path = PathItems[i];
 
 			if(path->GetWidth()){
-				fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->GetPoints()-1));
+				fprintf(fptr, "<polygon class=\"%s\" points=\"", path->GetLayer()->Name);
 
 				float BgnExtn;
 				float EndExtn;
@@ -72,9 +83,9 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 					float PathWidth = path->GetWidth();
 
 					XCoords_j = path->GetXCoords(j);
-					XCoords_j = path->GetXCoords(j+1);
+					XCoords_jpone = path->GetXCoords(j+1);
 					YCoords_j = path->GetYCoords(j);
-					YCoords_j = path->GetYCoords(j+1);
+					YCoords_jpone = path->GetYCoords(j+1);
 
 					angleX = cos(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
 					angleY = sin(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
@@ -88,84 +99,28 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 					}
 
 					// 1
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_j + PathWidth * angleX + extn_x,
-						YCoords_j + PathWidth * angleY - extn_y,
-						-path->GetHeight() - path->GetThickness()
+					fprintf(fptr, "%.2fpx,%.2fpx ", 
+						_scale*(_ioffx + XCoords_j + PathWidth * angleX + extn_x),
+						_scale*(_ioffy + YCoords_j + PathWidth * angleY - extn_y)
+						);
+					// 5
+					fprintf(fptr, "%.2fpx,%.2fpx ", 
+						_scale*(_ioffx + XCoords_jpone + PathWidth * angleX - extn_x),
+						_scale*(_ioffy + YCoords_jpone + PathWidth * angleY - extn_y)
+						);
+					// 6
+					fprintf(fptr, "%.2fpx,%.2fpx ", 
+						_scale*(_ioffx + XCoords_jpone - PathWidth * angleX - extn_x),
+						_scale*(_ioffy + YCoords_jpone - PathWidth * angleY - extn_y)
 						);
 					// 2
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_j - PathWidth * angleX + extn_x,
-						YCoords_j - PathWidth * angleY - extn_y,
-						-path->GetHeight() - path->GetThickness()
-						);
-					// 3
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_j + PathWidth * angleX + extn_x,
-						YCoords_j + PathWidth * angleY - extn_y,
-						-path->GetHeight()
-						);
-					// 4
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_j - PathWidth * angleX + extn_x,
-						YCoords_j - PathWidth * angleY - extn_y,
-						-path->GetHeight()
-						);
-
-					// 5
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_jpone + PathWidth * angleX - extn_x,
-						YCoords_jpone + PathWidth * angleY - extn_y,
-						-path->GetHeight() - path->GetThickness()
-						);
-
-					// 6
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_jpone - PathWidth * angleX - extn_x,
-						YCoords_jpone - PathWidth * angleY - extn_y,
-						-path->GetHeight() - path->GetThickness()
-						);
-
-					// 7
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_jpone + PathWidth * angleX - extn_x,
-						YCoords_jpone + PathWidth * angleY - extn_y,
-						-path->GetHeight()
-						);
-
-					// 8
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_jpone - PathWidth * angleX - extn_x,
-						YCoords_jpone - PathWidth * angleY - extn_y,
-						-path->GetHeight()
+					fprintf(fptr, "%.2fpx,%.2fpx ", 
+						_scale*(_ioffx + XCoords_j - PathWidth * angleX + extn_x),
+						_scale*(_ioffy + YCoords_j - PathWidth * angleY - extn_y)
 						);
 				}
-				unsigned int PathPoints = path->GetPoints();
-				fprintf(fptr, "} face_indices { %d", 12*(PathPoints-1));
-				for(unsigned int j=0; j<PathPoints-1; j++){
-					// print ,faces now
-					//int vertexindex[36] = {0, 1, 2, 1, 2, 3, 4, 5, 6, 5, 6, 7, 0, 1, 5, 0, 4, 5, 2, 3, 6, 3, 6, 7, 1, 3, 7, 1, 5, 7, 0, 2, 4, 2, 4, 6};
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 1+8*j, 2+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 2+8*j, 3+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 4+8*j, 5+8*j, 6+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 5+8*j, 6+8*j, 7+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 1+8*j, 5+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 4+8*j, 5+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 2+8*j, 3+8*j, 6+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 3+8*j, 6+8*j, 7+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 3+8*j, 7+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 5+8*j, 7+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 2+8*j, 4+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 2+8*j, 4+8*j, 6+8*j);
-				}
-				fprintf(fptr, "} ");
-				//if(!path->Colour.Metal){
-				//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-				//}else{
-				//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
-				//}
-				fprintf(fptr, "texture{t%s}",path->GetLayer()->Name);
-				fprintf(fptr, "}\n");
+				fprintf(fptr, "\"");
+				fprintf(fptr, "/><!-- path -->\n");
 			}
 		}
 	}
@@ -179,14 +134,15 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 		for(unsigned long i=0; i<PolygonItems.size(); i++){
 			polygon = PolygonItems[i];
 
-			fprintf(fptr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
+			//fprintf(fptr, "<polygon fill=\"pink\" stroke=\"black\" stroke-width=\"1px\" points=\"");
+			fprintf(fptr, "<polygon class=\"%s\" points=\"", polygon->GetLayer()->Name);
 			for(unsigned int j=0; j<polygon->GetPoints(); j++){
-				fprintf(fptr, ",<%.2f,%.2f>", polygon->GetXCoords(j), polygon->GetYCoords(j));
+				fprintf(fptr, "%.2fpx,%.2fpx ",_scale*(polygon->GetXCoords(j)+_ioffx), _scale*(polygon->GetYCoords(j)+_ioffy));
 			}
-			fprintf(fptr, " rotate<-90,0,0> ");
+			fprintf(fptr, "\"");
+			//fprintf(fptr, " rotate<-90,0,0> ");
 
-			fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name);
-			fprintf(fptr, "}\n");
+			fprintf(fptr, "/>\n");
 		}
 	}
 }
@@ -360,7 +316,8 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(fptr && !IsOutput){
-		fprintf(fptr, "#declare str_%s = union {\n", Name);
+		//fprintf(fptr, "#declare str_%s = union {\n", Name);
+		fprintf(fptr, "<g>\n", Name);
 
 		OutputPolygonToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
 		OutputPathToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
@@ -368,174 +325,8 @@ void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Fo
 		OutputTextToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
 		OutputARefToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
 
-		fprintf(fptr, "}\n");
+		fprintf(fptr, "</g>\n");
 	}
 	IsOutput = true;
-}
-
-void GDSObject_svg::DecomposeSVGPolygons(FILE *fptr)
-{
-	unsigned long faceindex;
-
-	if(!PolygonItems.empty()){
-		class GDSPolygon *polygon;
-
-		faceindex = 0;
-
-		for(unsigned long i=0; i<PolygonItems.size(); i++){
-			polygon = PolygonItems[i];
-
-			/* Output vertices */
-			fprintf(fptr, "mesh2 { vertex_vectors { %d", 2*(polygon->GetPoints()-1));
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-					polygon->GetXCoords(j),
-					polygon->GetYCoords(j),
-					polygon->GetHeight() + polygon->GetThickness()
-					);
-			}
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-
-				fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-					polygon->GetXCoords(j),
-					polygon->GetYCoords(j),
-					polygon->GetHeight()
-					);
-			}
-
-			/*
-			 * Calculate angles between adjacent vertices.
-			 * We do this to tell what "type" of polygon we are dealing with.
-			 * Specifically, where any change of convex/concave takes place.
-			 * Because the first and last points are identical we do not need
-			 * to worry about the final vertex angle (it is already calculated 
-			 * in the 0th vertex).
-			 */
-
-			Point pA, pB;
-
-			pA.X = polygon->GetXCoords(0)-polygon->GetXCoords(polygon->GetPoints()-2);
-			pA.Y = polygon->GetYCoords(0)-polygon->GetYCoords(polygon->GetPoints()-2);
-			pB.X = polygon->GetXCoords(1)-polygon->GetXCoords(0);
-			pB.Y = polygon->GetYCoords(1)-polygon->GetYCoords(0);
-
-			float theta1;
-			float theta2;
-
-			theta1 = atan2(pA.X, pA.Y);
-			theta2 = atan2(pB.X, pB.Y);
-			polygon->SetAngleCoords(0, theta1 - theta2);
-
-			for(unsigned int j=1; j<polygon->GetPoints()-1; j++){
-				pA.X = polygon->GetXCoords(j)-polygon->GetXCoords(j-1);
-				pA.Y = polygon->GetYCoords(j)-polygon->GetYCoords(j-1);
-
-				pB.X = polygon->GetXCoords(j+1)-polygon->GetXCoords(j);
-				pB.Y = polygon->GetYCoords(j+1)-polygon->GetYCoords(j);
-
-				theta1 = atan2(pA.X, pA.Y);
-				theta2 = atan2(pB.X, pB.Y);
-
-				polygon->SetAngleCoords(j, theta1 - theta2);
-			}
-			int positives = 0;
-			int negatives = 0;
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				polygon->SetAngleCoords(j, asinf(sinf(polygon->GetAngleCoords(j))));
-				if(polygon->GetAngleCoords(j)>=0){
-					positives++;
-				}else{
-					negatives++;
-				}
-			}
-
-			int bendindex1;
-			int bendindex2;
-
-			if(!positives || !negatives){
-				fprintf(fptr, "} face_indices { %d", 2*(polygon->GetPoints()-3) + 2*(polygon->GetPoints()-1));
-				for(unsigned int j=1; j<polygon->GetPoints()-2; j++){
-					fprintf(fptr, ",<%d,%d,%d>",0,j,j+1);
-					fprintf(fptr, ",<%d,%d,%d>",polygon->GetPoints()-1,j+polygon->GetPoints()-1,j+polygon->GetPoints()-1+1);
-				}
-			}else if(positives==1 && negatives>1){
-				bendindex1 = -1;
-				fprintf(fptr, "} face_indices { %d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if(polygon->GetAngleCoords(j)>=0){
-						bendindex1 = (int)j;
-						break;
-					}
-				}
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if((int)j!=bendindex1){
-						fprintf(fptr, ",<%d,%d,%d>", bendindex1, j, j+1);
-						fprintf(fptr, ",<%d,%d,%d>", bendindex1+polygon->GetPoints()-1, j+polygon->GetPoints()-1, (j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j+1:j+polygon->GetPoints());
-					}
-				}
-			}else if(negatives==1 && positives>1){
-				bendindex1 = -1;
-				fprintf(fptr, "} face_indices { %d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if(polygon->GetAngleCoords(j)<0){
-						bendindex1 = j;
-						break;
-					}
-				}
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if((int)j!=bendindex1){
-						fprintf(fptr, ",<%d,%d,%d>", bendindex1, j, j+1);
-						fprintf(fptr, ",<%d,%d,%d>", bendindex1+polygon->GetPoints()-1, j+polygon->GetPoints()-1, (j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j+1:j+polygon->GetPoints());
-					}
-				}
-			/*}else if(negatives==2 && positives>2){
-				bendindex1 = -1;
-				bendindex2 = -1;
-
-				fprintf(fptr, "} face_indices{%d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if(polygon->GetAngleCoords(j)<0 && bendindex1 == -1){
-						bendindex1 = j;
-					}else if(polygon->GetAngleCoords(j)<0){
-						bendindex2 = j;
-						break;
-					}
-				}
-				for(unsigned int j=bendindex1; j<=bendindex2; j++){
-					fprintf(fptr, "<%d,%d,%d>",);
-				}
-				for(unsigned int j=0; j<bendindex1; j++){
-					fprintf(fptr, ",<%d,%d,%d>",);
-				}
-				*/
-			}else{
-				fprintf(fptr, "} face_indices { %d", 2*(polygon->GetPoints()-1));
-			}
-
-			/* Always output the vertical faces regardless of whether we fill in the horizontal faces or not */
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				fprintf(fptr, ",<%d,%d,%d>",j,j+polygon->GetPoints()-1,(j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j:j+polygon->GetPoints());
-				fprintf(fptr, ",<%d,%d,%d>",j,j+1,(j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j:j+polygon->GetPoints());
-			}
-			fprintf(fptr,"}");
-			fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name);
-			fprintf(fptr, "}\n");
-
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				if(polygon->GetAngleCoords(j)>=0){
-					fprintf(fptr,"text{ttf \"crystal.ttf\" \"%d+\" 0.2, 0 ", j);
-				}else{
-					fprintf(fptr,"text{ttf \"crystal.ttf\" \"%d-\" 0.2, 0 ", j);
-				}
-				fprintf(fptr, " scale <1.5,1.5,1.5>");
-				fprintf(fptr, " translate <%.2f,%.2f,%.2f> texture{pigment{rgb <1,1,1>}}}\n", \
-						polygon->GetXCoords(j), \
-						polygon->GetYCoords(j), polygon->GetHeight() - 1);
-			}
-
-			printf("+ve %d, -ve %d\n\n", positives, negatives);
-		}
-
-	}
 }
 

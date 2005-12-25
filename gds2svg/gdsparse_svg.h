@@ -30,7 +30,7 @@ class GDSParse_svg : public GDSParse
 private:
 
 public:
-	GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool bounding_output);
+	GDSParse_svg (class GDSConfig *config, class GDSProcess *process);
 	~GDSParse_svg ();
 
 	//class GDSObject_svg *NewObject(char *Name);

@@ -56,7 +56,6 @@ void printusage()
 int main(int argc, char *argv[])
 {
 	verbose_output = 1;
-	bool bounding_output = false;
 
 	if(argc>15){
 		fprintf(stderr, "Error: Invalid number of arguments.\n\n");
@@ -73,9 +72,7 @@ int main(int argc, char *argv[])
 
 	for(int i=1; i<argc; i++){
 		if(argv[i][0] == '-'){
-			if(strncmp(argv[i], "-b", strlen("-b"))==0){
-				bounding_output = true;
-			}else if(strncmp(argv[i], "-c", strlen("-c"))==0){
+			if(strncmp(argv[i], "-c", strlen("-c"))==0){
 
 				if(i==argc-1){
 					printf("Error: -c switch given but no config file specified.\n\n");
@@ -187,7 +184,7 @@ int main(int argc, char *argv[])
 		iptr = stdin;
 	}
 	if(iptr){
-		class GDSParse_svg *Parser = new class GDSParse_svg(config, process, bounding_output);
+		class GDSParse_svg *Parser = new class GDSParse_svg(config, process);
 		if(!Parser->Parse(iptr)){
 			FILE *optr;
 			if(svgfile){
