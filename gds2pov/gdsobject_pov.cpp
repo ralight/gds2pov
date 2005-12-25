@@ -72,9 +72,9 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 					float PathWidth = path->GetWidth();
 
 					XCoords_j = path->GetXCoords(j);
-					XCoords_j = path->GetXCoords(j+1);
+					XCoords_jpone = path->GetXCoords(j+1);
 					YCoords_j = path->GetYCoords(j);
-					YCoords_j = path->GetYCoords(j+1);
+					YCoords_jpone = path->GetYCoords(j+1);
 
 					angleX = cos(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
 					angleY = sin(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
