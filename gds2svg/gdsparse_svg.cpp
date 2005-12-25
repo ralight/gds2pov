@@ -57,15 +57,14 @@ class GDSObject *GDSParse_svg::NewObject(char *Name)
 
 void GDSParse_svg::OutputFooter()
 {
-	/*
+	fprintf(_optr, "\t</defs>\n");
 	if(_topcellname){
-		fprintf(_optr, "object { str_%s }\n", _topcellname);
+		fprintf(_optr, "\t<use x=\"0\" y=\"0\" xlink:href=\"#%s\"/>\n", _topcellname);
 	}else{
 		if(_Objects->GetObjectRef(0)){
-			fprintf(_optr, "object { str_%s }\n", _Objects->GetObjectRef(0)->GetName());
+			fprintf(_optr, "\t<use x=\"0\" y=\"0\" xlink:href=\"#%s\"/>\n", _Objects->GetObjectRef(0)->GetName());
 		}
 	}
-	*/
 	fprintf(_optr, "</svg>");
 }
 
@@ -87,25 +86,25 @@ void GDSParse_svg::OutputHeader()
 		fprintf(_optr, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
 		fprintf(_optr, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 
-		fprintf(_optr, "<svg width=\"10cm\" height=\"10cm\" viewBox=\"0 0 %.2f %.2f\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n", width*150, height*150);
+		fprintf(_optr, "<svg width=\"10cm\" height=\"10cm\" viewBox=\"0 0 %.2f %.2f\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", width*150, height*150);
 
 		/* Output layer texture information */
 
 		struct ProcessLayer *firstlayer;
 		firstlayer = _process->GetLayer();
-		fprintf(_optr, "<style>\n");
+		fprintf(_optr, "\t<style>\n");
 		while(firstlayer){
 			if(firstlayer->Show){
-				fprintf(_optr, "	.%s { fill: #%02x%02x%02x; opacity:0.5; }\n", firstlayer->Name, (int)(255*firstlayer->Red), (int)(255*firstlayer->Green), (int)(255*firstlayer->Blue));
+				fprintf(_optr, "\t\t.%s { fill: #%02x%02x%02x; opacity:0.5; }\n", firstlayer->Name, (int)(255*firstlayer->Red), (int)(255*firstlayer->Green), (int)(255*firstlayer->Blue));
 			}
 			firstlayer = firstlayer->Next;
 		}
-		fprintf(_optr, "</style>\n");
+		fprintf(_optr, "\t</style>\n");
 
 		/* Finish styles */
 
-		fprintf(_optr, "<title>Example Units</title>");
-		fprintf(_optr, "<desc>Illustrates various units options</desc>\n");
+		fprintf(_optr, "\t<title>Example Units</title>");
+		fprintf(_optr, "\t<desc>Illustrates various units options</desc>\n");
 
 		float centreX = width/2 + Boundary->XMin;
 		float centreY = height/2 + Boundary->YMin;
@@ -116,6 +115,8 @@ void GDSParse_svg::OutputHeader()
 		}else{
 			distance = height * 1.8/2;
 		}
+
+		fprintf(_optr, "\t<defs>\n");
 
 	}
 }

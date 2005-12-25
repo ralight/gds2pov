@@ -56,7 +56,7 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 			path = PathItems[i];
 
 			if(path->GetWidth()){
-				fprintf(fptr, "<polygon class=\"%s\" points=\"", path->GetLayer()->Name);
+				fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", path->GetLayer()->Name);
 
 				float BgnExtn;
 				float EndExtn;
@@ -135,7 +135,7 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 			polygon = PolygonItems[i];
 
 			//fprintf(fptr, "<polygon fill=\"pink\" stroke=\"black\" stroke-width=\"1px\" points=\"");
-			fprintf(fptr, "<polygon class=\"%s\" points=\"", polygon->GetLayer()->Name);
+			fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", polygon->GetLayer()->Name);
 			for(unsigned int j=0; j<polygon->GetPoints(); j++){
 				fprintf(fptr, "%.2fpx,%.2fpx ",_scale*(polygon->GetXCoords(j)+_ioffx), _scale*(polygon->GetYCoords(j)+_ioffy));
 			}
@@ -219,18 +219,19 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 		while(sref->Next){
 			sref = sref->Next;
 
-			fprintf(fptr, "object{str_%s ", sref->Name);
+			fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(_ioffx+sref->X), _scale*(_ioffy+sref->Y), sref->Name);
+			/* FIXME 
 			if(sref->Mag!=1.0){
-				fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
+				fprintf(fptr, " scale <%.2f,%.2f,1>", sref->Mag, sref->Mag);
 			}
 			if(sref->Flipped){
-				fprintf(fptr, "scale <1,-1,1> ");
+				fprintf(fptr, " scale <1,-1,1> ");
 			}
-			fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
+			fprintf(fptr, " translate <%.2f,%.2f,0> ", sref->X, sref->Y);
 			if(sref->Rotate.Y){
 				fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
-			}
-			fprintf(fptr, "}\n");
+			}*/
+			fprintf(fptr, "/>\n");
 		}
 	}
 }
@@ -244,6 +245,8 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 
 		float dx, dy;
 
+		//FIXME
+		return;
 		while(aref->Next){
 			aref = aref->Next;
 			if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
@@ -317,7 +320,8 @@ void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Fo
 {
 	if(fptr && !IsOutput){
 		//fprintf(fptr, "#declare str_%s = union {\n", Name);
-		fprintf(fptr, "<g>\n", Name);
+		fprintf(fptr, "\t\t<symbol id=\"%s\">\n", Name);
+		fprintf(fptr, "\t\t\t<desc>%s</desc>\n", Name);
 
 		OutputPolygonToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
 		OutputPathToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
@@ -325,7 +329,7 @@ void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Fo
 		OutputTextToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
 		OutputARefToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
 
-		fprintf(fptr, "</g>\n");
+		fprintf(fptr, "\t\t</symbol>\n");
 	}
 	IsOutput = true;
 }
