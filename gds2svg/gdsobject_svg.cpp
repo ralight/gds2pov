@@ -56,7 +56,6 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 			path = PathItems[i];
 
 			if(path->GetWidth()){
-				fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", path->GetLayer()->Name);
 
 				float BgnExtn;
 				float EndExtn;
@@ -78,6 +77,7 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 						break;
 				}
 				for(unsigned int j=0; j<path->GetPoints()-1; j++){
+					fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", path->GetLayer()->Name);
 					float XCoords_j, XCoords_jpone;
 					float YCoords_j, YCoords_jpone;
 					float PathWidth = path->GetWidth();
@@ -118,9 +118,8 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 						_scale*(_ioffx + XCoords_j - PathWidth * angleX + extn_x),
 						_scale*(_ioffy + YCoords_j - PathWidth * angleY - extn_y)
 						);
+					fprintf(fptr, "\"/>\n");
 				}
-				fprintf(fptr, "\"");
-				fprintf(fptr, "/><!-- path -->\n");
 			}
 		}
 	}
@@ -227,10 +226,10 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 			if(sref->Flipped){
 				fprintf(fptr, " scale <1,-1,1> ");
 			}
-			fprintf(fptr, " translate <%.2f,%.2f,0> ", sref->X, sref->Y);
+			*/
 			if(sref->Rotate.Y){
-				fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
-			}*/
+				fprintf(fptr, " transform=\"rotate(%.2f,%.2f,%.2f)\"", -sref->Rotate.Y, _scale*(_ioffx+sref->X), _scale*(_ioffy+sref->Y));
+			}
 			fprintf(fptr, "/>\n");
 		}
 	}
@@ -239,14 +238,13 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(FirstARef){
+		int i, j;
 		ARefElement dummyaref;
 		dummyaref.Next = FirstARef;
 		ARefElement *aref = &dummyaref;
 
 		float dx, dy;
 
-		//FIXME
-		return;
 		while(aref->Next){
 			aref = aref->Next;
 			if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
@@ -254,61 +252,30 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 					dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
 					dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
 
-					fprintf(fptr, "#declare dx = %.2f;\n", dx);
-					fprintf(fptr, "#declare dy = %.2f;\n", dy);
-
-					fprintf(fptr, "#declare colcount = 0;\n");
-					fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-					fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-					fprintf(fptr, "#while (colcount < cols)\n");
-					fprintf(fptr, "\t#declare rowcount = 0;");
-					fprintf(fptr, "\t#while (rowcount < rows)\n");
-					fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
-					if(aref->Mag!=1.0){
-						fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
+					for(i=0; i<aref->Columns; i++){
+						for(j=0; j<aref->Rows; j++){
+							fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(_ioffx+aref->X1+dx*i), _scale*(_ioffy+aref->Y1+dy*j), aref->Name);
+							if(aref->Rotate.Y){
+								fprintf(fptr, " transform=\"rotate(%.2f,%.2f,%.2f)\"", -aref->Rotate.Y, _scale*(_ioffx+aref->X1), _scale*(_ioffy+aref->Y1));
+							}
+							fprintf(fptr, "/>\n");
+						}
 					}
-					if(aref->Flipped){
-						fprintf(fptr, "scale <1,-1,1> ");
-					}
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-					if(aref->Rotate.Y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
-					}
-					fprintf(fptr, "}\n");
-
-					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-					fprintf(fptr, "\t#end\n");
-					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-					fprintf(fptr, "#end\n");
 				}
 			}else{
 				if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
 					dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
 					dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
 
-					fprintf(fptr, "#declare dx = %.2f;\n", dx);
-					fprintf(fptr, "#declare dy = %.2f;\n", dy);
-
-					fprintf(fptr, "#declare colcount = 0;\n");
-					fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-					fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-					fprintf(fptr, "#while (colcount < cols)\n");
-					fprintf(fptr, "\t#declare rowcount = 0;");
-					fprintf(fptr, "\t#while (rowcount < rows)\n");
-					fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
-					if(aref->Flipped){
-						fprintf(fptr, "scale <1,-1,1> ");
+					for(i=0; i<aref->Columns; i++){
+						for(j=0; j<aref->Rows; j++){
+							fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(_ioffx+aref->X1+dx*i), _scale*(_ioffy+aref->Y1+dy*j), aref->Name);
+							if(aref->Rotate.Y){
+								fprintf(fptr, " transform=\"rotate(%.2f,%.2f,%.2f)\"", -aref->Rotate.Y, _scale*(_ioffx+aref->X1), _scale*(_ioffy+aref->Y1));
+							}
+							fprintf(fptr, "/>\n");
+						}
 					}
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-					if(aref->Rotate.Y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
-					}
-					fprintf(fptr, "}\n");
-
-					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-					fprintf(fptr, "\t#end\n");
-					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-					fprintf(fptr, "#end\n");
 				}
 			}
 		}
@@ -319,9 +286,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(fptr && !IsOutput){
-		//fprintf(fptr, "#declare str_%s = union {\n", Name);
-		fprintf(fptr, "\t\t<symbol id=\"%s\">\n", Name);
-		fprintf(fptr, "\t\t\t<desc>%s</desc>\n", Name);
+		fprintf(fptr, "\t\t<symbol id=\"%s\" overflow=\"visible\">\n", Name);
 
 		OutputPolygonToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
 		OutputPathToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
