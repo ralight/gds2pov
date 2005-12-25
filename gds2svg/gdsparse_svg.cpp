@@ -57,15 +57,22 @@ class GDSObject *GDSParse_svg::NewObject(char *Name)
 
 void GDSParse_svg::OutputFooter()
 {
-	fprintf(_optr, "\t</defs>\n");
-	if(_topcellname){
-		fprintf(_optr, "\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", _topcellname);
-	}else{
-		if(_Objects->GetObjectRef(0)){
-			fprintf(_optr, "\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", _Objects->GetObjectRef(0)->GetName());
+	if(_optr && _Objects){
+		struct _Boundary *Boundary = _Objects->GetBoundary();
+		float height = (Boundary->YMax - Boundary->YMin);
+		
+		fprintf(_optr, "\t</defs>\n");
+		fprintf(_optr, "\t<g transform=\"matrix(1 0 0 -1 0 %.2f)\">\n", 1000*height);
+		if(_topcellname){
+			fprintf(_optr, "\t\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\" transform=\"translate(1,-1)\"/>\n", _topcellname);
+		}else{
+			if(_Objects->GetObjectRef(0)){
+				fprintf(_optr, "\t\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\" transform=\"translate(1,-1)\"/>\n", _Objects->GetObjectRef(0)->GetName());
+			}
 		}
+		fprintf(_optr, "\t</g>\n");
+		fprintf(_optr, "</svg>");
 	}
-	fprintf(_optr, "</svg>");
 }
 
 void GDSParse_svg::OutputHeader()

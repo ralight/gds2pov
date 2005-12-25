@@ -154,22 +154,21 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 		for (unsigned int i=0; i<TextItems.size(); i++){
 			text = TextItems[i];
 			if(text->GetString()){
-				if(Font){
+				/* FIXME if(Font){
 					fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->GetString());
 				}else{
 					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
-				}
+				}*/
 				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-				fprintf(fptr, "texture{t%s}",text->GetLayer()->Name);
-				if(text->GetMag()!=1.0){
+				fprintf(fptr, "\t\t\t<text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2fpx\" y=\"%.2fpx\" class=\"%s\"",_scale*(_ioffx+text->GetX()), _scale*(_ioffy+text->GetY()), text->GetLayer()->Name);
+				/* FIXME if(text->GetMag()!=1.0){
 					fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
-				}
-				if(text->GetFlipped()){
+				} */
+				/* FIXME if(text->GetFlipped()){
 					fprintf(fptr, "scale <1,-1,1> ");
-				}
-				fprintf(fptr, "translate <%.2f,%.2f,%.2f> ", text->GetX(), text->GetY(), -text->GetZ());
+				} */
 				if(text->GetRY()){
-					fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,%.2f>)", -text->GetRY(), text->GetX(), text->GetY(), -text->GetZ());
+					fprintf(fptr, " transform=\"rotate(%.2f,%.2f,%.2f)\"", -text->GetRY(), text->GetX(), text->GetY());
 				}
 				float htrans = 0.0, vtrans = 0.0;
 				switch(text->GetHJust()){
@@ -194,14 +193,14 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 						vtrans = -1.0;
 						break;
 				}
-				if(htrans || vtrans){
+				/* FIXME if(htrans || vtrans){
 					if(text->GetRY()){
 						fprintf(fptr, "translate <%.2f,%.2f,0> ", vtrans, htrans);
 					}else{
 						fprintf(fptr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
 					}
-				}
-				fprintf(fptr, "}\n");
+				} */
+				fprintf(fptr, ">%s</text>\n", text->GetString());
 			}
 		}
 	}
@@ -218,17 +217,21 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 		while(sref->Next){
 			sref = sref->Next;
 
-			fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(_ioffx+sref->X), _scale*(_ioffy+sref->Y), sref->Name);
-			/* FIXME 
-			if(sref->Mag!=1.0){
-				fprintf(fptr, " scale <%.2f,%.2f,1>", sref->Mag, sref->Mag);
-			}
-			if(sref->Flipped){
-				fprintf(fptr, " scale <1,-1,1> ");
-			}
-			*/
-			if(sref->Rotate.Y){
-				fprintf(fptr, " transform=\"rotate(%.2f,%.2f,%.2f)\"", -sref->Rotate.Y, _scale*(_ioffx+sref->X), _scale*(_ioffy+sref->Y));
+			fprintf(fptr, "\t\t\t<use x=\"%.2fpx\" y=\"%.2fpx\" xlink:href=\"#%s\"", _scale*(_ioffx+sref->X), _scale*(_ioffy+sref->Y), sref->Name);
+
+			if(sref->Mag!=1.0 || sref->Flipped || sref->Rotate.Y){
+				fprintf(fptr, " transform=\"");
+
+				if(sref->Mag!=1.0){
+					fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
+				}
+				if(sref->Flipped){
+					fprintf(fptr, " translate(1,-1)");
+				}
+				if(sref->Rotate.Y){
+					fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", -sref->Rotate.Y, _scale*(_ioffx+sref->X), _scale*(_ioffy+sref->Y));
+				}
+				fprintf(fptr, "\"");
 			}
 			fprintf(fptr, "/>\n");
 		}
@@ -245,6 +248,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 
 		float dx, dy;
 
+		return;
 		while(aref->Next){
 			aref = aref->Next;
 			if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
@@ -263,6 +267,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 					}
 				}
 			}else{
+				/*
 				if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
 					dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
 					dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
@@ -277,6 +282,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 						}
 					}
 				}
+				*/
 			}
 		}
 	}
