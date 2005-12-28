@@ -143,20 +143,22 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 
 void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	return;
 	if(!TextItems.empty()){
+		char *str = NULL;
 		class GDSText *text;
 		//for (vector<class GDSText>::const_iterator text=TextItems.begin(); text!=TextItems.end(); ++text){
 		for (unsigned int i=0; i<TextItems.size(); i++){
 			text = TextItems[i];
-			if(text->GetString()){
+			str = (char *)malloc(strlen(text->GetString())+1);
+			if(str){
+				strncpy(str, text->GetString(), strlen(text->GetString()));
 				/* FIXME if(Font){
 					fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->GetString());
 				}else{
 					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
 				}*/
 				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-				fprintf(fptr, "\t\t\t<g transforms=\"translate(1,-1)\"><text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(text->GetX()), _scale*(text->GetY()), text->GetLayer()->Name);
+				fprintf(fptr, "\t\t\t<g><text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(text->GetX()), _scale*(text->GetY()), text->GetLayer()->Name);
 				/* FIXME if(text->GetMag()!=1.0){
 					fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
 				} */
@@ -169,10 +171,10 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 				float htrans = 0.0, vtrans = 0.0;
 				switch(text->GetHJust()){
 					case 0:
-						htrans = -0.5*strlen(text->GetString());
+						htrans = -0.5*strlen(str);
 						break;
 					case 1:
-						htrans = -0.25*strlen(text->GetString());
+						htrans = -0.25*strlen(str);
 						break;
 					case 2:
 						htrans = 0;
@@ -196,8 +198,20 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 						fprintf(fptr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
 					}
 				} */
-				fprintf(fptr, ">%s</text></g>\n", text->GetString());
+				/* Remove forbidden characters 
+				 * They should be escaped really, but that is for later
+				 * FIXME!
+				 */
+				for(int j = 0; j < strlen(str); j++){
+					if(str[j] == '&'){
+						str[j] = '_';
+					}
+				}
+				
+				fprintf(fptr, ">%s</text></g>\n", str);
+				free(str);
 			}
+			str = NULL;
 		}
 	}
 }
