@@ -64,10 +64,10 @@ void GDSParse_svg::OutputFooter()
 		fprintf(_optr, "\t</defs>\n");
 		fprintf(_optr, "\t<g transform=\"matrix(1 0 0 -1 0 %.2f)\">\n", 1000*height);
 		if(_topcellname){
-			fprintf(_optr, "\t\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\" transform=\"translate(1,-1)\"/>\n", _topcellname);
+			fprintf(_optr, "\t\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", _topcellname);
 		}else{
 			if(_Objects->GetObjectRef(0)){
-				fprintf(_optr, "\t\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\" transform=\"translate(1,-1)\"/>\n", _Objects->GetObjectRef(0)->GetName());
+				fprintf(_optr, "\t\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", _Objects->GetObjectRef(0)->GetName());
 			}
 		}
 		fprintf(_optr, "\t</g>\n");
@@ -86,7 +86,7 @@ void GDSParse_svg::OutputHeader()
 
 		for(i = 0; i < _Objects->GetCount(); i++){
 			obj = (GDSObject_svg *)_Objects->GetObjectRef(i);
-			obj->SetInitialOffset(-Boundary->XMin, -Boundary->YMin);
+			//obj->SetInitialOffset(-Boundary->XMin, -Boundary->YMin);
 			obj->SetScale(1000);
 		}
 

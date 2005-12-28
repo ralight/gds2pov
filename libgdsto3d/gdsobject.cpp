@@ -42,6 +42,8 @@ GDSObject::GDSObject(char *NewName)
 	GotBoundary = false;
 	Boundary.XMax = Boundary.YMax = -1000000.0;
 	Boundary.XMin = Boundary.YMin =  1000000.0;
+	_width = 0.0;
+	_height = 0.0;
 
 	IsOutput = false;
 }
@@ -348,6 +350,9 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 	v_printf(2, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
 	GotBoundary = true;
 
+	_width = Boundary.XMax - Boundary.XMin;
+	_height = Boundary.YMax - Boundary.YMin;
+
 	return &Boundary;
 }
 
@@ -435,5 +440,15 @@ class GDSObject *GDSObject::GetARef(class GDSObjects *Objects, int Index)
 bool GDSObject::GetIsOutput()
 {
 	return IsOutput;
+}
+
+float GDSObject::GetWidth()
+{
+	return _width;
+}
+
+float GDSObject::GetHeight()
+{
+	return _height;
 }
 

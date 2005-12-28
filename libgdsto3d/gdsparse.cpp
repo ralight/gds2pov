@@ -103,7 +103,7 @@ bool GDSParse::Parse(FILE *iptr)
 		_Objects = new GDSObjects;
 		
 		//DEBUG
-		printf("GDSParse::Parse(%p)\n",iptr);
+		//printf("GDSParse::Parse(%p)\n",iptr);
 
 		bool result = ParseFile();
 

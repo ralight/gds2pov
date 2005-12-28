@@ -26,6 +26,7 @@
 #include "gds_globals.h" //FIXME - this should be removed
 #include "gdsobject_svg.h"
 #include "gds2svg.h"
+#include "gdsobjects.h"
 
 GDSObject_svg::GDSObject_svg(char *Name) : GDSObject(Name){
 }
@@ -99,22 +100,22 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 					}
 
 					// 1
-					fprintf(fptr, "%.2fpx,%.2fpx ", 
+					fprintf(fptr, "%.2f,%.2f ", 
 						_scale*(_ioffx + XCoords_j + PathWidth * angleX + extn_x),
 						_scale*(_ioffy + YCoords_j + PathWidth * angleY - extn_y)
 						);
 					// 5
-					fprintf(fptr, "%.2fpx,%.2fpx ", 
+					fprintf(fptr, "%.2f,%.2f ", 
 						_scale*(_ioffx + XCoords_jpone + PathWidth * angleX - extn_x),
 						_scale*(_ioffy + YCoords_jpone + PathWidth * angleY - extn_y)
 						);
 					// 6
-					fprintf(fptr, "%.2fpx,%.2fpx ", 
+					fprintf(fptr, "%.2f,%.2f ", 
 						_scale*(_ioffx + XCoords_jpone - PathWidth * angleX - extn_x),
 						_scale*(_ioffy + YCoords_jpone - PathWidth * angleY - extn_y)
 						);
 					// 2
-					fprintf(fptr, "%.2fpx,%.2fpx ", 
+					fprintf(fptr, "%.2f,%.2f ", 
 						_scale*(_ioffx + XCoords_j - PathWidth * angleX + extn_x),
 						_scale*(_ioffy + YCoords_j - PathWidth * angleY - extn_y)
 						);
@@ -133,10 +134,10 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 		for(unsigned long i=0; i<PolygonItems.size(); i++){
 			polygon = PolygonItems[i];
 
-			//fprintf(fptr, "<polygon fill=\"pink\" stroke=\"black\" stroke-width=\"1px\" points=\"");
+			//fprintf(fptr, "<polygon fill=\"pink\" stroke=\"black\" stroke-width=\"1\" points=\"");
 			fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", polygon->GetLayer()->Name);
 			for(unsigned int j=0; j<polygon->GetPoints(); j++){
-				fprintf(fptr, "%.2fpx,%.2fpx ",_scale*(polygon->GetXCoords(j)+_ioffx), _scale*(polygon->GetYCoords(j)+_ioffy));
+				fprintf(fptr, "%.2f,%.2f ",_scale*(polygon->GetXCoords(j)+_ioffx), _scale*(polygon->GetYCoords(j)+_ioffy));
 			}
 			fprintf(fptr, "\"");
 			//fprintf(fptr, " rotate<-90,0,0> ");
@@ -148,6 +149,7 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 
 void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
+	return;
 	if(!TextItems.empty()){
 		class GDSText *text;
 		//for (vector<class GDSText>::const_iterator text=TextItems.begin(); text!=TextItems.end(); ++text){
@@ -160,7 +162,7 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
 				}*/
 				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-				fprintf(fptr, "\t\t\t<text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2fpx\" y=\"%.2fpx\" class=\"%s\"",_scale*(_ioffx+text->GetX()), _scale*(_ioffy+text->GetY()), text->GetLayer()->Name);
+				fprintf(fptr, "\t\t\t<g transforms=\"translate(1,-1)\"><text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(_ioffx+text->GetX()), _scale*(_ioffy+text->GetY()), text->GetLayer()->Name);
 				/* FIXME if(text->GetMag()!=1.0){
 					fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
 				} */
@@ -200,7 +202,7 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 						fprintf(fptr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
 					}
 				} */
-				fprintf(fptr, ">%s</text>\n", text->GetString());
+				fprintf(fptr, ">%s</text></g>\n", text->GetString());
 			}
 		}
 	}
@@ -210,26 +212,60 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 {
 	if(FirstSRef){
 		SRefElement dummysref;
+		struct _Boundary *bound;
+		float width, height, x;
+		GDSObject *obj = NULL;
 		dummysref.Next = FirstSRef;
 
 		SRefElement *sref = &dummysref;
 
 		while(sref->Next){
 			sref = sref->Next;
+			
+			obj = Objects->GetObjectRef(sref->Name);
+			if(obj){
+				width = obj->GetWidth();
+				height = obj->GetHeight();
+			}else{
+				width = 0.0f;
+				height = 0.0f;
+			}
 
-			fprintf(fptr, "\t\t\t<use x=\"%.2fpx\" y=\"%.2fpx\" xlink:href=\"#%s\"", _scale*(_ioffx+sref->X), _scale*(_ioffy+sref->Y), sref->Name);
+			x = sref->X;
+
+			/* fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(sref->X+width/2), _scale*(sref->Y+height/2), sref->Name);
 
 			if(sref->Mag!=1.0 || sref->Flipped || sref->Rotate.Y){
 				fprintf(fptr, " transform=\"");
 
-				if(sref->Mag!=1.0){
-					fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
-				}
+				//if(sref->Mag!=1.0){
+				//	fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
+				//}
 				if(sref->Flipped){
-					fprintf(fptr, " translate(1,-1)");
+					fprintf(fptr, " matrix(-1,0,0,1,%.2f,0)", _scale*(2*sref->X+width));
+					//fprintf(fptr, " scale(-1,1)");
 				}
 				if(sref->Rotate.Y){
-					fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", -sref->Rotate.Y, _scale*(_ioffx+sref->X), _scale*(_ioffy+sref->Y));
+					fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", sref->Rotate.Y, _scale*(sref->X), _scale*(sref->Y));
+				}
+				fprintf(fptr, "\"");
+			}
+			fprintf(fptr, "/>\n"); */
+			if(sref->Flipped){
+				x = -x;
+			}
+			fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(x), _scale*(sref->Y), sref->Name);
+
+			if(sref->Mag!=1.0 || sref->Flipped || sref->Rotate.Y){
+				fprintf(fptr, " transform=\"");
+				//if(sref->Mag!=1.0){
+				//	fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
+				//}
+				if(sref->Flipped){
+					fprintf(fptr, " scale(-1,1)");
+				}
+				if(sref->Rotate.Y){
+					fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", 180/M_PI*asin(sin(-sref->Rotate.Y*M_PI/180)), _scale*(x), _scale*(sref->Y));
 				}
 				fprintf(fptr, "\"");
 			}

@@ -48,6 +48,7 @@ protected:
 	char *Name;
 
 	struct _Boundary Boundary;
+	float _width, _height;
 
 	class GDSObject **SRefs;
 	class GDSObject **ARefs;
@@ -81,6 +82,8 @@ public:
 	void IndexARefs(class GDSObjects *Objects);
 
 	struct _Boundary *GetBoundary(struct ObjectList *objectlist);
+	float GetWidth();
+	float GetHeight();
 
 	bool GetIsOutput();
 };
