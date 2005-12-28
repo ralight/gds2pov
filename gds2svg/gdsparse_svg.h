@@ -28,6 +28,7 @@
 class GDSParse_svg : public GDSParse
 {
 private:
+	float _scale;
 
 public:
 	GDSParse_svg (class GDSConfig *config, class GDSProcess *process);

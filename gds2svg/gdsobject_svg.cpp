@@ -35,12 +35,6 @@ GDSObject_svg::~GDSObject_svg()
 {
 }
 
-void GDSObject_svg::SetInitialOffset(float ioffx, float ioffy)
-{
-	_ioffx = ioffx;
-	_ioffy = ioffy;
-}
-
 void GDSObject_svg::SetScale(float scale)
 {
 	_scale = scale;
@@ -101,23 +95,23 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 
 					// 1
 					fprintf(fptr, "%.2f,%.2f ", 
-						_scale*(_ioffx + XCoords_j + PathWidth * angleX + extn_x),
-						_scale*(_ioffy + YCoords_j + PathWidth * angleY - extn_y)
+						_scale*(XCoords_j + PathWidth * angleX + extn_x),
+						_scale*(YCoords_j + PathWidth * angleY - extn_y)
 						);
 					// 5
 					fprintf(fptr, "%.2f,%.2f ", 
-						_scale*(_ioffx + XCoords_jpone + PathWidth * angleX - extn_x),
-						_scale*(_ioffy + YCoords_jpone + PathWidth * angleY - extn_y)
+						_scale*(XCoords_jpone + PathWidth * angleX - extn_x),
+						_scale*(YCoords_jpone + PathWidth * angleY - extn_y)
 						);
 					// 6
 					fprintf(fptr, "%.2f,%.2f ", 
-						_scale*(_ioffx + XCoords_jpone - PathWidth * angleX - extn_x),
-						_scale*(_ioffy + YCoords_jpone - PathWidth * angleY - extn_y)
+						_scale*(XCoords_jpone - PathWidth * angleX - extn_x),
+						_scale*(YCoords_jpone - PathWidth * angleY - extn_y)
 						);
 					// 2
 					fprintf(fptr, "%.2f,%.2f ", 
-						_scale*(_ioffx + XCoords_j - PathWidth * angleX + extn_x),
-						_scale*(_ioffy + YCoords_j - PathWidth * angleY - extn_y)
+						_scale*(XCoords_j - PathWidth * angleX + extn_x),
+						_scale*(YCoords_j - PathWidth * angleY - extn_y)
 						);
 					fprintf(fptr, "\"/>\n");
 				}
@@ -137,7 +131,7 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 			//fprintf(fptr, "<polygon fill=\"pink\" stroke=\"black\" stroke-width=\"1\" points=\"");
 			fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", polygon->GetLayer()->Name);
 			for(unsigned int j=0; j<polygon->GetPoints(); j++){
-				fprintf(fptr, "%.2f,%.2f ",_scale*(polygon->GetXCoords(j)+_ioffx), _scale*(polygon->GetYCoords(j)+_ioffy));
+				fprintf(fptr, "%.2f,%.2f ",_scale*(polygon->GetXCoords(j)), _scale*(polygon->GetYCoords(j)));
 			}
 			fprintf(fptr, "\"");
 			//fprintf(fptr, " rotate<-90,0,0> ");
@@ -162,7 +156,7 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
 				}*/
 				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-				fprintf(fptr, "\t\t\t<g transforms=\"translate(1,-1)\"><text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(_ioffx+text->GetX()), _scale*(_ioffy+text->GetY()), text->GetLayer()->Name);
+				fprintf(fptr, "\t\t\t<g transforms=\"translate(1,-1)\"><text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(text->GetX()), _scale*(text->GetY()), text->GetLayer()->Name);
 				/* FIXME if(text->GetMag()!=1.0){
 					fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
 				} */
