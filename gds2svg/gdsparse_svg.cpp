@@ -64,7 +64,7 @@ void GDSParse_svg::OutputFooter()
 		fprintf(_optr, "\t</defs>\n");
 		fprintf(_optr, "\t<g transform=\"matrix(1 0 0 -1 0 %.2f)\">\n", 1000*height);
 		if(_topcellname){
-			fprintf(_optr, "\t\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", _topcellname);
+			fprintf(_optr, "\t\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", -1000*Boundary->XMin, -1000*Boundary->YMin, _topcellname);
 		}else{
 			if(_Objects->GetObjectRef(0)){
 				fprintf(_optr, "\t\t<use x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", _Objects->GetObjectRef(0)->GetName());
