@@ -142,11 +142,13 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 	if(!TextItems.empty()){
 		char *str = NULL;
 		class GDSText *text;
+		float angle;
 		//for (vector<class GDSText>::const_iterator text=TextItems.begin(); text!=TextItems.end(); ++text){
 		for (unsigned int i=0; i<TextItems.size(); i++){
 			text = TextItems[i];
 			str = (char *)malloc(strlen(text->GetString())+1);
 			if(str){
+				angle = 180.0/M_PI*asin(sin(M_PI/180*text->GetRY()));
 				strncpy(str, text->GetString(), strlen(text->GetString())+1);
 				/* FIXME if(Font){
 					fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->GetString());
@@ -154,57 +156,57 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
 				}*/
 				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-				fprintf(fptr, "\t\t\t<g><text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(text->GetX()), _scale*(this->GetHeight() - text->GetY()), text->GetLayer()->Name);
-				/* FIXME if(text->GetMag()!=1.0){
-					fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
-				} */
-				/* FIXME if(text->GetFlipped()){
-					fprintf(fptr, "scale <1,-1,1> ");
-				} */
-				if(text->GetRY()){
-					fprintf(fptr, " transform=\"rotate(%.2f,%.2f,%.2f)\"", -text->GetRY(), _scale*text->GetX(), _scale*(this->GetHeight() - text->GetY()));
-				}
+				fprintf(fptr, "\t\t\t<text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(text->GetX()), _scale*(this->GetHeight() - text->GetY()), text->GetLayer()->Name);
 				float htrans = 0.0, vtrans = 0.0;
 				switch(text->GetHJust()){
 					case 0:
-						htrans = -0.5*strlen(str);
+						htrans = -0.5f*strlen(str);
 						break;
 					case 1:
-						htrans = -0.25*strlen(str);
+						htrans = -0.25f*strlen(str);
 						break;
 					case 2:
-						htrans = 0;
+						htrans = 0.0f;
 						break;
 				}
 				switch(text->GetVJust()){
-					case 0:
-						vtrans = 0.0;
+					case 2:
+						vtrans = 0.0f;
 						break;
 					case 1:
-						vtrans = -0.5;
+						vtrans = 0.5f;
 						break;
-					case 2:
-						vtrans = -1.0;
+					case 0:
+						vtrans = 1.0f;
 						break;
 				}
-				/* FIXME if(htrans || vtrans){
-					if(text->GetRY()){
-						fprintf(fptr, "translate <%.2f,%.2f,0> ", vtrans, htrans);
-					}else{
-						fprintf(fptr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
+				if(text->GetMag()!=1.0 || text->GetFlipped() || fabs(angle) > 0.0f || htrans < 0.0 || vtrans < 0.0){
+					fprintf(fptr, " transform=\"");
+					/* FIXME if(text->GetMag()!=1.0){
+						fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
+					} */
+					/* FIXME if(text->GetFlipped()){
+						fprintf(fptr, "scale <1,-1,1> ");
+					} */
+					if(fabs(angle) > 0.0f){
+						fprintf(fptr, "rotate(%.2f,%.2f,%.2f)", angle, _scale*text->GetX(), _scale*(this->GetHeight() - text->GetY()));
 					}
-				} */
+					if(htrans < 0.0 || vtrans < 0.0){
+						fprintf(fptr, " translate(%.2f,%.2f)", 55.0*htrans, 55.0*vtrans);
+					}
+					fprintf(fptr, "\"");
+				}
 				/* Remove forbidden characters 
 				 * They should be escaped really, but that is for later
 				 * FIXME!
 				 */
 				for(int j = 0; j < strlen(str); j++){
-					if(str[j] == '&'){
+					if(str[j] == '&' || str[j] == '<' || str[j] == '>'){
 						str[j] = '_';
 					}
 				}
 				
-				fprintf(fptr, ">%s</text></g>\n", str);
+				fprintf(fptr, ">%s</text>\n", str);
 				free(str);
 			}
 			str = NULL;
@@ -241,7 +243,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 			}
 			fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*x, _scale*(this->GetHeight() - sref->Y - height), sref->Name);
 
-			if(sref->Mag!=1.0 || sref->Flipped || fabs(angle) > 0.01f){
+			if(sref->Mag!=1.0 || sref->Flipped || fabs(angle) > 0.0f){
 				fprintf(fptr, " transform=\"");
 				/* FIXME - Mag isn't tested */
 				/* if(sref->Mag!=1.0){
@@ -250,7 +252,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 				if(sref->Flipped){
 					fprintf(fptr, " scale(-1,1)");
 				}
-				if(fabs(angle) > 0.01f){
+				if(fabs(angle) > 0.0f){
 					fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - sref->Y));
 				}
 				fprintf(fptr, "\"");
@@ -308,7 +310,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 				for(i=0; i<aref->Columns; i++){
 					for(j=0; j<aref->Rows; j++){
 						fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(x + dx * i), _scale*(this->GetHeight() - (y + dy * j) - height), aref->Name);
-						if(aref->Mag!=1.0f || aref->Flipped || fabs(angle)>0.01f){
+						if(aref->Mag!=1.0f || aref->Flipped || fabs(angle)>0.0f){
 							fprintf(fptr, " transform=\"");
 							/* FIXME - Mag isn't tested */
 							/* if(sref->Mag!=1.0){
@@ -317,7 +319,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 							if(aref->Flipped){
 								fprintf(fptr, " scale(-1,1)");
 							}
-							if(fabs(angle)>0.01f){
+							if(fabs(angle)>0.0f){
 								fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - aref->Y1));
 							}
 							fprintf(fptr, "\"");
