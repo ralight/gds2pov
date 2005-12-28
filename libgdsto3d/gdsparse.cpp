@@ -477,12 +477,12 @@ Not used in GDS2 spec	case rnUString:
 				break;
 			case rnBgnExtn:
 				ReportUnsupported("BGNEXTN", rnBgnExtn);
-				_currentbgnextn = GetFourByteSignedInt();
+				_currentbgnextn = _units * GetFourByteSignedInt();
 				v_printf(2, "BGNEXTN (%f)\n", _currentbgnextn);
 				break;
 			case rnEndExtn:
 				ReportUnsupported("ENDEXTN", rnEndExtn);
-				_currentendextn = GetFourByteSignedInt();
+				_currentendextn = _units * GetFourByteSignedInt();
 				v_printf(2, "ENDEXTN (%ld)\n", _currentendextn);
 				break;
 			case rnTapeNum:
