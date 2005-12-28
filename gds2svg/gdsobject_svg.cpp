@@ -213,7 +213,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 	if(FirstSRef){
 		SRefElement dummysref;
 		struct _Boundary *bound;
-		float width, height, x;
+		float width, height, x, angle;
 		GDSObject *obj = NULL;
 		dummysref.Next = FirstSRef;
 
@@ -232,40 +232,24 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 			}
 
 			x = sref->X;
+			angle = 180/M_PI*asin(sin(-sref->Rotate.Y*M_PI/180));
 
-			/* fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(sref->X+width/2), _scale*(sref->Y+height/2), sref->Name);
-
-			if(sref->Mag!=1.0 || sref->Flipped || sref->Rotate.Y){
-				fprintf(fptr, " transform=\"");
-
-				//if(sref->Mag!=1.0){
-				//	fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
-				//}
-				if(sref->Flipped){
-					fprintf(fptr, " matrix(-1,0,0,1,%.2f,0)", _scale*(2*sref->X+width));
-					//fprintf(fptr, " scale(-1,1)");
-				}
-				if(sref->Rotate.Y){
-					fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", sref->Rotate.Y, _scale*(sref->X), _scale*(sref->Y));
-				}
-				fprintf(fptr, "\"");
-			}
-			fprintf(fptr, "/>\n"); */
 			if(sref->Flipped){
 				x = -x;
 			}
 			fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(x), _scale*(sref->Y), sref->Name);
 
-			if(sref->Mag!=1.0 || sref->Flipped || sref->Rotate.Y){
+			if(sref->Mag!=1.0 || sref->Flipped || angle){
 				fprintf(fptr, " transform=\"");
-				//if(sref->Mag!=1.0){
-				//	fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
-				//}
+				/* FIXME - Mag isn't tested */
+				/* if(sref->Mag!=1.0){
+					fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
+				} */
 				if(sref->Flipped){
 					fprintf(fptr, " scale(-1,1)");
 				}
-				if(sref->Rotate.Y){
-					fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", 180/M_PI*asin(sin(-sref->Rotate.Y*M_PI/180)), _scale*(x), _scale*(sref->Y));
+				if(angle){
+					fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*(x), _scale*(sref->Y));
 				}
 				fprintf(fptr, "\"");
 			}
@@ -281,45 +265,67 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 		ARefElement dummyaref;
 		dummyaref.Next = FirstARef;
 		ARefElement *aref = &dummyaref;
+		float x, angle;
 
 		float dx, dy;
 
-		return;
 		while(aref->Next){
 			aref = aref->Next;
+			fprintf(fptr, "<!-- ARef Start -->\n");
 			if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
+				/*
 				if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
 					dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
 					dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
 
 					for(i=0; i<aref->Columns; i++){
 						for(j=0; j<aref->Rows; j++){
-							fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(_ioffx+aref->X1+dx*i), _scale*(_ioffy+aref->Y1+dy*j), aref->Name);
+							fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(aref->X1+dx*i), _scale*(aref->Y1+dy*j), aref->Name);
 							if(aref->Rotate.Y){
-								fprintf(fptr, " transform=\"rotate(%.2f,%.2f,%.2f)\"", -aref->Rotate.Y, _scale*(_ioffx+aref->X1), _scale*(_ioffy+aref->Y1));
-							}
-							fprintf(fptr, "/>\n");
-						}
-					}
-				}
-			}else{
-				/*
-				if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
-					dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
-					dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
-
-					for(i=0; i<aref->Columns; i++){
-						for(j=0; j<aref->Rows; j++){
-							fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(_ioffx+aref->X1+dx*i), _scale*(_ioffy+aref->Y1+dy*j), aref->Name);
-							if(aref->Rotate.Y){
-								fprintf(fptr, " transform=\"rotate(%.2f,%.2f,%.2f)\"", -aref->Rotate.Y, _scale*(_ioffx+aref->X1), _scale*(_ioffy+aref->Y1));
+								fprintf(fptr, " transform=\"rotate(%.2f,%.2f,%.2f)\"", 180/M_PI*asin(sin(-aref->Rotate.Y*M_PI/180))), _scale*(aref->X1), _scale*(aref->Y1));
 							}
 							fprintf(fptr, "/>\n");
 						}
 					}
 				}
 				*/
+			}else{
+				if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
+					dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
+					dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
+
+					angle = 180/M_PI*asin(sin(-aref->Rotate.Y*M_PI/180));
+
+					x = aref->X1;
+					if(aref->Flipped){
+						x = -x;
+						dx = -dx;
+					}
+
+					for(i=0; i<aref->Columns; i++){
+						for(j=0; j<aref->Rows; j++){
+							fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(x+dx*i), _scale*(aref->Y1+dy*j), aref->Name);
+
+							if(aref->Mag!=1.0f || aref->Flipped || fabs(angle)>0.01f){
+								fprintf(fptr, " transform=\"");
+								/* FIXME - Mag isn't tested */
+								/* if(sref->Mag!=1.0){
+									fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
+								} */
+								if(aref->Flipped){
+									fprintf(fptr, " scale(-1,1)");
+								}
+								if(fabs(angle)>0.01f){
+									fprintf(fptr, " rotate(%.2f,%.2f,%.2f)\"", angle, _scale*(aref->X1), _scale*(aref->Y1));
+								}
+								fprintf(fptr, "\"");
+							}
+							fprintf(fptr, "/>\n");
+						}
+					}
+				}
 			}
+			fprintf(fptr, "<!-- ARef End -->\n");
 		}
 	}
 }
