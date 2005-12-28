@@ -27,12 +27,13 @@ class GDSObject_svg : public GDSObject
 {
 private:
 	float _scale;
+	float _oheight;
 public:
 	GDSObject_svg(char *Name);
 	~GDSObject_svg();
 
 	void SetScale(float scale);
-	void DecomposeSVGPolygons(FILE *fptr);
+
 	virtual void OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
