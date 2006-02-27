@@ -40,8 +40,6 @@
 #include "gds_globals.h"
 #include "process_cfg.h"
 
-#define GDSOGLVIEWER_VERSION "0.8"
-
 extern int verbose_output;
 /*extern bool quiet_output;
 extern */
@@ -53,8 +51,8 @@ class GDSParse_ogl *parser;
 
 void printusage()
 {
-	printf("gdsoglviewer  version %s\n", GDSOGLVIEWER_VERSION);
-	printf("Copyright (C) 2004,2005 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
+	printf("gdsoglviewer  version %s\n", VERSION);
+	printf("Copyright (C) 2004-2006 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
 	printf("gdsoglviewer comes with ABSOLUTELY NO WARRANTY.  You may distribute gdsoglviewer freely\nas described in the readme.txt distributed with this file.\n\n");
 	printf("gdsoglviewer is a program for viewing a GDS2 file in 3D.\n\n");
 	printf("Usage: gdsoglviewer [-c config.txt] [-h] [-i input.gds] [-m solid|wire] [-p process.txt] [-q] [-t topcell] [-v]\n\n");

@@ -29,13 +29,11 @@
 #include "gds2svg.h"
 #include "gdsparse_svg.h"
 
-#define GDS2SVG_VERSION "0.1"
-
 extern int verbose_output;
 
 void printusage()
 {
-	printf("gds2svg  version %s\n", GDS2SVG_VERSION);
+	printf("gds2svg  version %s\n", VERSION);
 	printf("Copyright (C) 2005,2006 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
 	printf("gds2svg comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2svg freely\nas described in the readme.txt distributed with this file.\n\n");
 	printf("gds2svg is a program for converting a GDS2 file to an SVG file.\n\n");

@@ -1,33 +1,51 @@
-GDS2POV 0.7.3
-=============
+GDSTO3D 20060227
+================
 
 Introduction
 ------------
 
-GDS2POV is a program to take a GDS2 layout file and output a POV-Ray scene 
-description file of the GDS2 data. This allows the creation of attractive 3D 
-pictures of a layout.
+GDSTO3D is a collection of programs to process GDS2 layout files.
 
 GDS2 files are used for storing the geometrical and layer information for 
-creating an IC. If you do not what this is, GDS2POV is probably of no interest
+creating an IC. If you do not what this is, GDSTO3D is probably of no interest
 to you!
 
-POV-Ray is a completely free, cross platform ray tracer. It can be obtained 
-from http://www.povray.org
+GDS2POV is a program to take a GDS2 layout file and output a POV-Ray scene 
+description file of the GDS2 data. This allows the creation of attractive 3D 
+pictures of a layout. POV-Ray is a completely free, cross platform ray tracer.
+It can be obtained from http://www.povray.org
+
+GDSOGLVIEWER is an OpenGL viewer that can show GDS2 files. It's not very good
+yet!
+
+GDS2SVG converts GDS2 files to Scalable Vector Graphic (SVG) files. This is
+still experimental as well, but give it a try. "It works for me". Mostly,
+anyway.
+
 
 I would love to hear from you if you produce any nice results! See the contact 
 section at the bottom of this document.
 
+General Usage
+-------------
 
-Usage
------
+Usage is mostly the same across the programs. You can always try:
 
-gds2pov input.gds output.pov [-b] [-c config.txt] [-p process.txt] [-t topcell] [-v]
+program -h
+
+to get the specific usage information.
+
+
+gds2pov [-i input.gds] [-o output.pov] [-b] [-c config.txt] [-p process.txt] [-t topcell] [-v]
 
  -b	Output bounding box instead of the layout to allow easier and quicker
 	placing of the camera. It is much quicker to render a box than an IC!
  -c	Specify config file
+ -h Show usage
+ -i Input GDS2 file (stdin if not given)
+ -o Output POV file (stdout if not given)
  -p	Specify process file
+ -q Quiet output
  -t	Specify top cell name
  -v	Verbose output
 
@@ -50,7 +68,7 @@ This is the reason for the slightly odd numbers in example_process.txt.
 
 So, you have everything. Just run:
 
-gds2pov input.gds output.pov -p process.txt
+gds2pov -i input.gds -o output.pov -p process.txt
 
 This will produce a POV file with the camera directly above the centre of the 
 layout looking down. No extra lights are defined.
@@ -128,15 +146,7 @@ avoid merging multiple polygons/paths.
 License
 -------
 
-I have not yet decided the final license for GDS2POV. It will be a Free 
-license of some sort for certain.
-
-This will suffice for the moment:
-
-You may distribute and use this binary package as you desire as long as 
-you only distribute it intact. The author accepts no responsibility for 
-loss or damage to any GDS2 or other data used with this program.
-
+The entire GDSTO3D package is released under the GPL v2.
 
 Contact
 -------
@@ -147,5 +157,5 @@ support for the GDS2 format) are very welcome.
 
 Contact me on roger@atchoo.org
 
-Updates to GDS2POV should be at http://www.atchoo.org/gds2pov/
+Updates to GDSTO3D should be at http://www.atchoo.org/gds2pov/
 

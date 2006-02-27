@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl $Id: configure.ac 240 2005-12-24 20:11:56Z roger $
+dnl $Id: configure.ac 257 2006-02-27 00:46:38Z roger $
 
-AC_INIT([libgdsto3d and utilities], [1.0.0], [roger@atchoo.org], [gdsto3d])
+AC_INIT([libgdsto3d and utilities], [20060227], [roger@atchoo.org], [gdsto3d])
 
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_HEADERS([config.h])
