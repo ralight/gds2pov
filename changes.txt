@@ -1,3 +1,8 @@
+Version 20060228
+================
+
+- Fixed gds2pov -b option which wasn't producing any output.
+
 Version 20060227
 ================
 
