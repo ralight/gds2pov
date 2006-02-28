@@ -27,9 +27,6 @@
 
 class GDSParse_pov : public GDSParse
 {
-private:
-	bool _bounding_output;
-
 public:
 	GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output);
 	~GDSParse_pov ();
