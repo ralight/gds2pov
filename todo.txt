@@ -1,15 +1,7 @@
-Done
-====
-
-- Set path parsing and prisms parsing so that the Layer struct item points to
-  the appropriate layer rather than the LayerName.
-- Replace GetARefName() and GetSRefName() with a more efficient GetARef() and
-  GetSRef()
-- Extensive refactoring of path, polygon, aref and sref code which should lead
-  to increased robustness as well as being easier to maintain.
-
 To Do
 =====
+- Checks for Xext for eg. SuSe.
+- Fix compile errors on Solaris
 - allow "ignore cells" preference
 - graphical process file editor
 - absolute camera position
@@ -42,3 +34,14 @@ To Do
 - Camera include file?
 - Consider how best to store dimensions in process file - scaled or not?
 - Animations
+
+Done
+====
+
+- Set path parsing and prisms parsing so that the Layer struct item points to
+  the appropriate layer rather than the LayerName.
+- Replace GetARefName() and GetSRefName() with a more efficient GetARef() and
+  GetSRef()
+- Extensive refactoring of path, polygon, aref and sref code which should lead
+  to increased robustness as well as being easier to maintain.
+

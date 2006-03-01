@@ -1,4 +1,4 @@
-# $Id: Makefile.am 223 2005-05-21 11:24:17Z roger $
+# $Id: Makefile.am 261 2006-03-01 14:20:07Z roger $
 
 SUBDIRS = .
 
@@ -10,7 +10,7 @@ include_HEADERS = gdsto3d.h
 
 libgdsto3d_la_LIBADD = @LDADD@
 
-libgdsto3d_la_LDFLAGS = -version-info 0:0:0
+libgdsto3d_la_LDFLAGS = -version-info 0:0:1
 
 libgdsto3d_la_SOURCES =	config_cfg.cpp \
 			config_cfg.h \

@@ -1,3 +1,9 @@
+Version 20060301
+================
+
+- Changed libgdsto3d long and short types to int32_t and int16_t as appropriate
+  problems when long and short change size.
+
 Version 20060228
 ================
 
