@@ -477,12 +477,12 @@ Not used in GDS2 spec	case rnUString:
 				break;
 			case rnBgnExtn:
 				ReportUnsupported("BGNEXTN", rnBgnExtn);
-				_currentbgnextn = _units * GetFourByteSignedInt();
+				_currentbgnextn = _units * (float)GetFourByteSignedInt();
 				v_printf(2, "BGNEXTN (%f)\n", _currentbgnextn);
 				break;
 			case rnEndExtn:
 				ReportUnsupported("ENDEXTN", rnEndExtn);
-				_currentendextn = _units * GetFourByteSignedInt();
+				_currentendextn = _units * (float)GetFourByteSignedInt();
 				v_printf(2, "ENDEXTN (%ld)\n", _currentendextn);
 				break;
 			case rnTapeNum:
@@ -820,7 +820,7 @@ void GDSParse::ParseXY()
 	int Flipped;
 
 	thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
-	Flipped = ((unsigned short)(_currentstrans & 0x8000) == (unsigned short)0x8000) ? 1 : 0;
+	Flipped = ((u_int16_t)(_currentstrans & 0x8000) == (u_int16_t)0x8000) ? 1 : 0;
 
 	switch(_currentelement){
 		case elSRef:
@@ -960,9 +960,9 @@ double GDSParse::GetEightByteReal()
 	return sign*(mant*pow(16.0,exponent));
 }
 
-long GDSParse::GetFourByteSignedInt()
+int32_t GDSParse::GetFourByteSignedInt()
 {
-	long value;
+	int32_t value;
 	fread(&value, 4, 1, _iptr);
 	
 	_recordlen-=4;
@@ -974,9 +974,9 @@ long GDSParse::GetFourByteSignedInt()
 #endif
 }
 
-short GDSParse::GetTwoByteSignedInt()
+int16_t GDSParse::GetTwoByteSignedInt()
 {
-	short value;
+	int16_t value;
 
 	fread(&value, 2, 1, _iptr);
 

@@ -21,6 +21,8 @@
 #ifndef __GDSPARSE_H__
 #define __GDSPARSE_H__
 
+#include <sys/types.h>
+
 #include "config_cfg.h"
 #include "process_cfg.h"
 #include "gds_globals.h"
@@ -42,22 +44,22 @@ protected:
 	char			*_libname;
 	char			*_topcellname;
 
-	short			_currentlayer;
+	int16_t			_currentlayer;
 	float			_currentwidth;
-	short			_currentpathtype;
+	int16_t			_currentpathtype;
 	gds_element_type	_currentelement;
-	short			_currenttexttype;
-	short			_currentpresentation;
+	int16_t			_currenttexttype;
+	int16_t			_currentpresentation;
 	char			*_textstring;
-	unsigned short		_currentstrans;
+	int16_t			_currentstrans;
 	float			_currentangle;
-	short			_currentdatatype;
+	int16_t			_currentdatatype;
 	float			_currentmag;
 	float			_currentbgnextn;
 	float			_currentendextn;
 
 	char			*_sname;
-	short			_arrayrows, _arraycols;
+	int16_t			_arrayrows, _arraycols;
 	float			_units;
 	float			_angle;
 	FILE			*_iptr;
@@ -65,7 +67,7 @@ protected:
 	class GDSProcess	*_process;
 	class GDSConfig		*_config;
 	
-	short			_recordlen;
+	int16_t			_recordlen;
 
 	/* Output options */
 	bool			_allow_multiple_output;
@@ -113,8 +115,8 @@ protected:
 
 	short GetBitArray();
 	double GetEightByteReal();
-	long GetFourByteSignedInt();
-	short GetTwoByteSignedInt();
+	int32_t GetFourByteSignedInt();
+	int16_t GetTwoByteSignedInt();
 	char *GetAsciiString();
 
 	void ReportUnsupported(char *Name, enum RecordNumbers rn);
