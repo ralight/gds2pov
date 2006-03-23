@@ -1,3 +1,8 @@
+Version 2006xxxx
+================
+
+- Fixed compile errors on msys due to u_int16_t being defined as uint16_t.
+
 Version 20060301
 ================
 

@@ -21,6 +21,15 @@
 #ifndef __GDSPARSE_H__
 #define __GDSPARSE_H__
 
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
+#ifdef HAVE_STDINT_H
+#  include <stdint.h>
+typedef uint16_t u_int16_t;
+#endif
+
 #include <sys/types.h>
 
 #include "config_cfg.h"

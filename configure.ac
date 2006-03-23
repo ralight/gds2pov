@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl $Id: configure.ac 261 2006-03-01 14:20:07Z roger $
+dnl $Id: configure.ac 263 2006-03-23 10:51:00Z roger $
 
 AC_INIT([libgdsto3d and utilities], [20060301], [roger@atchoo.org], [gdsto3d])
 
@@ -31,7 +31,7 @@ esac
 
 # Check for header files
 # ======================
-AC_CHECK_HEADERS([stdarg.h X11/keysym.h X11/Xlib.h GL/gl.h GL/glx.h GL/glu.h sys/time.h time.h windows.h winsock2.h])
+AC_CHECK_HEADERS([stdarg.h X11/keysym.h X11/Xlib.h GL/gl.h GL/glx.h GL/glu.h stdint.h sys/time.h time.h windows.h winsock2.h])
 
 
 # Add DLL build support

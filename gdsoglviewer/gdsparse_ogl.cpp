@@ -54,10 +54,6 @@
 #  include <time.h>
 #endif
 
-#ifdef HAVE_WINDOWS_H
-#  include <windows.h>
-#endif
-
 #include "gdsparse_ogl.h"
 #include "config_cfg.h"
 #include "process_cfg.h"
