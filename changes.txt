@@ -3,6 +3,14 @@ Version 2006xxxx
 
 - Fixed compile errors on msys due to u_int16_t being defined as uint16_t.
 
+These changes thanks to Arun Persaud:
+
+- Added simple support for Boxes (they are treated as Boundaries)
+- gdsoglviewer uses the config.txt settings to set the initial position.
+- gdsoglviewer displays a camera and lookat position which can be used in gds2pov.
+- Zero width paths no longer prevent the rest of the GDS2 file being parsed.
+- An error in the type of the STYPTABLE record was fixed.
+
 Version 20060301
 ================
 
