@@ -27,6 +27,7 @@ void v_printf(const int level, const char *fmt, ...);
 
 typedef enum{
 	elBoundary,
+	elBox,
 	elPath,
 	elSRef,
 	elARef,

@@ -39,6 +39,7 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process)
 
 	_PathElements = 0;
 	_BoundaryElements = 0;
+	_BoxElements = 0;
 	_TextElements = 0;
 	_SRefElements = 0;
 	_ARefElements = 0;
@@ -107,8 +108,8 @@ bool GDSParse::Parse(FILE *iptr)
 
 		bool result = ParseFile();
 
-		v_printf(1, "\nSummary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
-			_PathElements, _BoundaryElements, _TextElements, _SRefElements, _ARefElements);
+		v_printf(1, "\nSummary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tBoxes:\t\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
+			_PathElements, _BoundaryElements, _BoxElements, _TextElements, _SRefElements, _ARefElements);
 
 		return result;
 	}else{
@@ -284,6 +285,10 @@ bool GDSParse::ParseFile()
 						_BoundaryElements++;
 						ParseXYBoundary();
 						break;
+					case elBox:
+						_BoxElements++;
+						ParseXYBoundary();
+						break;
 					case elPath:
 						_PathElements++;
 						ParseXYPath();
@@ -390,9 +395,7 @@ Not used in GDS2 spec	case rnUString:
 				break;
 			case rnStypTable:
 				ReportUnsupported("STYPTABLE", rnStypTable);
-				tempstr = GetAsciiString();
-				v_printf(2, "STYPTABLE (\"%s\")\n", tempstr);
-				delete [] tempstr;
+				v_printf(2, "STYPTABLE (\"%d\")\n", GetTwoByteSignedInt());
 				break;
 			case rnStrType:
 				ReportUnsupported("STRTYPE", rnStrType);
@@ -458,14 +461,11 @@ Not used in GDS2 spec	case rnUString:
 				ReportUnsupported("BOX", rnBox);
 				v_printf(2, "BOX\n");
 				/* Empty */
+				_currentelement = elBox;
 				break;
 			case rnBoxType:
 				ReportUnsupported("BOXTYPE", rnBoxType);
-				v_printf(2, "BOXTYPE (");
-				while(_recordlen){
-					v_printf(2, "%d ", GetTwoByteSignedInt());
-				}
-				v_printf(2, ")\n");
+				v_printf(2, "BOXTYPE (%d)\n", GetTwoByteSignedInt());
 				break;
 			case rnPlex:
 				ReportUnsupported("PLEX", rnPlex);
@@ -740,6 +740,11 @@ void GDSParse::ParseXYPath()
 			if(thislayer->Height && thislayer->Show && _CurrentObject){
 				_CurrentObject->GetCurrentPath()->AddPoint(i, X, Y);
 			}
+		}
+	}else{
+		for(i=0; i<points; i++){
+			GetFourByteSignedInt();
+			GetFourByteSignedInt();
 		}
 	}
 	v_printf(2, "\n");

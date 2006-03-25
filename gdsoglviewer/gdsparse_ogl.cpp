@@ -54,6 +54,10 @@
 #  include <time.h>
 #endif
 
+#ifdef HAVE_WINDOWS_H
+#  include <windows.h>
+#endif
+
 #include "gdsparse_ogl.h"
 #include "config_cfg.h"
 #include "process_cfg.h"
@@ -117,7 +121,7 @@ int GDSParse_ogl::gl_data()
 
 	_x = _rx = _vx = 0.0f;
 	_y = _ry = _vy = 0.0f;
-	_z =	  _vz = 0.0f;
+	_z = _vz = 0.0f;
 
 	return( 0 );
 }
@@ -155,14 +159,114 @@ int GDSParse_ogl::gl_init()
 	move_mouse( _width / 2, _height / 2 );
 	timer( &_mt, 1 );
 
+
+	/* init view position, same as in gds2pov */
+	GLdouble x,y,z;
+	GLdouble Lx,Ly,Lz;
+	GLdouble Ux,Uy,Uz;
+	
+	Ux=0;Uy=0;Uz=1;
+	
+	if( _Objects){
+	  
+	  struct _Boundary *Boundary = _Objects->GetBoundary();
+	  
+	  float half_widthX = (Boundary->XMax - Boundary->XMin)/2;
+	  float half_widthY = (Boundary->YMax - Boundary->YMin)/2;
+	  float centreX = half_widthX + Boundary->XMin;
+	  float centreY = half_widthY + Boundary->YMin;
+	  
+	  float distance;
+	  if(half_widthX > half_widthY){
+	    distance = half_widthX * 1.8;
+	  }else{
+	    distance = half_widthY * 1.8;
+	  }
+	  
+	  float XMod = _config->GetCameraPos()->XMod;
+	  float YMod = _config->GetCameraPos()->YMod;
+	  float ZMod = _config->GetCameraPos()->ZMod;
+	  
+	  switch(_config->GetCameraPos()->boundarypos){
+	  case bpCentre:
+	    // Default camera angle = 67.38
+	    // Half of this is 33.69
+	    // tan(33.69) = 0.66666 = 1/1.5
+	    // Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
+	    
+	    x = centreX*XMod;
+	    y = centreY*YMod;
+	    z = -distance*ZMod;
+	    break;
+	  case bpTopLeft:
+	    x = Boundary->XMin*XMod;
+	    y = Boundary->YMax*YMod;
+	    z = -distance*ZMod;
+	    break;
+	  case bpTopRight:
+	    x = Boundary->XMax*XMod; 
+	    y = Boundary->YMax*YMod;
+	    z = -distance*ZMod;
+	    break;
+	  case bpBottomLeft:
+	    x = Boundary->XMin*XMod;
+	    y = Boundary->YMin*YMod;
+	    z = -distance*ZMod;
+	    break;
+	  case bpBottomRight:
+	    x = Boundary->XMax*XMod;
+	    y = Boundary->YMin*YMod;
+	    z = -distance*ZMod;
+	    break;
+	  }
+	  
+	  XMod = _config->GetLookAtPos()->XMod;
+	  YMod = _config->GetLookAtPos()->YMod;
+	  ZMod = _config->GetLookAtPos()->ZMod;
+	  
+	  switch(_config->GetLookAtPos()->boundarypos){
+	  case bpCentre:
+	    Lx = centreX*XMod;
+	    Ly = centreY*YMod;
+	    Lz = -distance*ZMod;
+	    break;
+	  case bpTopLeft:
+	    Lx = Boundary->XMin*XMod;
+	    Ly = Boundary->YMax*YMod;
+	    Lz = -distance*ZMod;
+	    break;
+	  case bpTopRight:
+	    Lx = Boundary->XMax*XMod;
+	    Ly = Boundary->YMax*YMod;
+	    Lz = -distance*ZMod;
+	    break;
+	  case bpBottomLeft:
+	    Lx = Boundary->XMin*XMod;
+	    Ly = Boundary->YMin*YMod;
+	    Lz = -distance*ZMod;
+	    break;
+	  case bpBottomRight:
+	    Lx = Boundary->XMax*XMod;
+	    Ly = Boundary->YMin*YMod;
+	    Lz = -distance*ZMod;
+	    break;
+	  }
+	}  
+	
+	_x = x;
+	_y = y;
+	_z = -z;
+
+	/* end init view position */
+	
 	return( 0 );
 }
 
 /* window drawing function */
-
 void GDSParse_ogl::gl_draw()
 {
-	GLfloat M[16];
+	GLfloat M[16],G[16];
+	GLfloat R1x,R1y,R1z;
 	long objectid=0;
 
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -170,21 +274,24 @@ void GDSParse_ogl::gl_draw()
 
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
-
+	
 	if( _fps ){
+		/*change angle according to velocity */
 		_ry += _vy / _fps;
 		_rx += _vx / _fps;
 
+		/* slow velocity down ??*/
 		if( _fps > 4.0f ){
 			_vy *= 1.0f - 4.0f / _fps;
-			_rx *= 1.0f - 4.0f / _fps;
+			_vx *= 1.0f - 4.0f / _fps;
 		}else{
 			_vy = 0.0f;
-			_rx = 0.0f;
+			_vx = 0.0f;
 		}
 	}
 
 
+	/* make sure angles are in [-180,+180] */
 	if( _ry >  180.0f ) _ry += -360.0f;
 	if( _ry < -180.0f ) _ry +=  360.0f;
 
@@ -195,6 +302,9 @@ void GDSParse_ogl::gl_draw()
 	//FIXME glRotatef( _ry, 0.0f, 1.0f, 0.0f );
 	glRotatef( _ry, 0.0f, 0.0f, 1.0f );
 	glGetFloatv( GL_MODELVIEW_MATRIX, M );
+
+	/* save vector so we can calculate the inverse rotation later */
+	R1x=M[0];R1y=M[4];R1z=M[8];
 	glRotatef( _rx, M[0], M[4], M[8] );
 	glGetFloatv( GL_MODELVIEW_MATRIX, M );
 	glFlush();
@@ -217,13 +327,28 @@ void GDSParse_ogl::gl_draw()
 	if( _y >  0.7f ) _y =  0.7f;
 */
 	glTranslatef( -_x, -_y, -_z );
-
+	glGetFloatv( GL_MODELVIEW_MATRIX, M );
 	glCallList(1);
+
+	/* figure out look at statement: calculate inverse transformation and apply to (0,0,-1) */
+	glLoadIdentity();
+	glTranslatef( _x, _y, _z );
+	glRotatef( -(_rx), R1x, R1y, R1z );
+	glRotatef( -(_ry), 0.0f, 0.0f, 1.0f );
+	glGetFloatv( GL_MODELVIEW_MATRIX, G );
 
 	if( _fps && _info )
 	{
 		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 114, _height - 40,
-				   _font, "%5.1f fps", _fps );
+				_font, "fps: %5.1f", _fps );
+		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 420, _height - 40,
+				_font, "location:"  );
+		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 320, _height - 40,
+				_font, " %5.1f %5.1f %5.1f",_x,_y,-(_z)  ); /*  -z because of povrays coordinate system? */
+		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 420, _height - 60,
+				_font, "look_at:"  );
+		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 320, _height - 60,
+				_font, " %5.1f %5.1f %5.1f", -G[8]+G[12],-G[9]+G[13],+G[10]-G[14]  ); 
 
 		if( _fps < 20.0f ){
 			glDisable( GL_LINE_SMOOTH );
@@ -669,4 +794,5 @@ void GDSParse_ogl::move_mouse( int x, int y )
 	SetCursorPos(p.x, p.y);
 #endif
 }
+
 

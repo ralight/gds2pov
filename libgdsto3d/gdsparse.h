@@ -99,6 +99,7 @@ protected:
 
 	long			_PathElements;
 	long			_BoundaryElements;
+	long			_BoxElements;
 	long			_TextElements;
 	long			_SRefElements;
 	long			_ARefElements;
