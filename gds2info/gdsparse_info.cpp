@@ -38,9 +38,9 @@
 
 extern int verbose_output;
 
-GDSParse_info::GDSParse_info () : GDSParse(NULL, NULL)
+GDSParse_info::GDSParse_info (class GDSConfig *config) : GDSParse(config, NULL)
 {
-	SetOutputOptions(false, true, false, true);
+	SetOutputOptions(false, false, true, false);
 }
 
 GDSParse_info::~GDSParse_info ()
@@ -55,13 +55,12 @@ class GDSObject *GDSParse_info::NewObject(char *Name)
 
 void GDSParse_info::OutputFooter()
 {
-	if(!_bounding_output){
-		if(_topcellname){
-			fprintf(_optr, "object { str_%s }\n", _topcellname);
-		}else{
-			if(_Objects->GetObjectRef(0)){
-				fprintf(_optr, "object { str_%s }\n", _Objects->GetObjectRef(0)->GetName());
-			}
+	if(_topcellname){
+		fprintf(_optr, "object { str_%s }\n", _topcellname);
+	}else{
+		if(_Objects->GetObjectRef(0)){
+			//FIXME fprintf(_optr, "object { str_%s }\n", _Objects->GetObjectRef(0)->GetName());
+			fprintf(_optr, "%p\n", _Objects);
 		}
 	}
 }
@@ -183,8 +182,7 @@ void GDSParse_info::OutputHeader()
 
 		/* Output layer texture information */
 		struct ProcessLayer *firstlayer;
-		firstlayer = _process->GetLayer();
-		while(firstlayer->Next){
+		while(firstlayer && firstlayer->Next){
 			if(firstlayer->Show){
 				if(!firstlayer->Metal){
 					fprintf(_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
@@ -200,10 +198,6 @@ void GDSParse_info::OutputHeader()
 			}else{
 				fprintf(_optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 			}
-		}
-
-		if(_bounding_output){
-			fprintf(_optr, "box {<%.2f,%.2f,%.2f> <%.2f,%.2f,%.2f> texture { pigment { rgb <0.75, 0.75, 0.75> } } }", Boundary->XMin, Boundary->YMin,_units*_process->GetLowest(),Boundary->XMax, Boundary->YMax,_units*_process->GetHighest());
 		}
 	}
 }

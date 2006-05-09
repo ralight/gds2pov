@@ -117,7 +117,11 @@ void GDSObject::AddText(float newX, float newY, float newZ, bool newFlipped, flo
 
 class GDSText *GDSObject::GetCurrentText()
 {
-	return TextItems[TextItems.size()-1];
+	if(TextItems.size()){
+		return TextItems[TextItems.size()-1];
+	}else{
+		return NULL;
+	}
 }
 
 char *GDSObject::GetName()

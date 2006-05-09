@@ -117,149 +117,114 @@ char *AppTitle = "GDSto3D";
 
 int GDSParse_ogl::gl_data()
 {
-	_info = 1;
+  _info = 1;
+  
+  _x = _rx = _vx = 0.0f;
+  _y = _ry = _vy = 0.0f;
+  _z =	     _vz = 0.0f;
 
-	_x = _rx = _vx = 0.0f;
-	_y = _ry = _vy = 0.0f;
-	_z = _vz = 0.0f;
-
-	return( 0 );
+  _speed_factor = 1;
+  _xmin=_ymin=0;
+  _xmax=_ymax=1;
+  
+  return( 0 );
 }
 
 /* gl initialization function */
 
 int GDSParse_ogl::gl_init()
 {
-	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-	glEnable( GL_LINE_SMOOTH );
-	glEnable( GL_POLYGON_SMOOTH );
-	glLineWidth( 2.0 );
-
-	glEnable( GL_BLEND );
-	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
-
-	//glHint(GL_CLIP_VOLUME_CLIPPING_HINT_EXT,GL_FASTEST);
-	//glEnable(GL_DEPTH);
-	glEnable(GL_DEPTH_TEST);
-	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-
-	glPolygonMode(GL_FRONT_AND_BACK, render_mode);
-
-	glNewList(1, GL_COMPILE);
-	//glBegin(GL_TRIANGLES);
-	Output(NULL, _topcell);
-	//glEnd();
-	glEndList();
-
-	hide_mouse();
-	move_mouse( _width / 2, _height / 2 );
-	timer( &_mt, 1 );
-
-
-	/* init view position, same as in gds2pov */
-	GLdouble x,y,z;
-	GLdouble Lx,Ly,Lz;
-	GLdouble Ux,Uy,Uz;
-	
-	Ux=0;Uy=0;Uz=1;
-	
-	if( _Objects){
-	  
-	  struct _Boundary *Boundary = _Objects->GetBoundary();
-	  
-	  float half_widthX = (Boundary->XMax - Boundary->XMin)/2;
-	  float half_widthY = (Boundary->YMax - Boundary->YMin)/2;
-	  float centreX = half_widthX + Boundary->XMin;
-	  float centreY = half_widthY + Boundary->YMin;
-	  
-	  float distance;
-	  if(half_widthX > half_widthY){
-	    distance = half_widthX * 1.8;
-	  }else{
-	    distance = half_widthY * 1.8;
-	  }
-	  
-	  float XMod = _config->GetCameraPos()->XMod;
-	  float YMod = _config->GetCameraPos()->YMod;
-	  float ZMod = _config->GetCameraPos()->ZMod;
-	  
-	  switch(_config->GetCameraPos()->boundarypos){
-	  case bpCentre:
-	    // Default camera angle = 67.38
-	    // Half of this is 33.69
-	    // tan(33.69) = 0.66666 = 1/1.5
-	    // Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
-	    
-	    x = centreX*XMod;
-	    y = centreY*YMod;
-	    z = -distance*ZMod;
-	    break;
-	  case bpTopLeft:
-	    x = Boundary->XMin*XMod;
-	    y = Boundary->YMax*YMod;
-	    z = -distance*ZMod;
-	    break;
-	  case bpTopRight:
-	    x = Boundary->XMax*XMod; 
-	    y = Boundary->YMax*YMod;
-	    z = -distance*ZMod;
-	    break;
-	  case bpBottomLeft:
-	    x = Boundary->XMin*XMod;
-	    y = Boundary->YMin*YMod;
-	    z = -distance*ZMod;
-	    break;
-	  case bpBottomRight:
-	    x = Boundary->XMax*XMod;
-	    y = Boundary->YMin*YMod;
-	    z = -distance*ZMod;
-	    break;
-	  }
-	  
-	  XMod = _config->GetLookAtPos()->XMod;
-	  YMod = _config->GetLookAtPos()->YMod;
-	  ZMod = _config->GetLookAtPos()->ZMod;
-	  
-	  switch(_config->GetLookAtPos()->boundarypos){
-	  case bpCentre:
-	    Lx = centreX*XMod;
-	    Ly = centreY*YMod;
-	    Lz = -distance*ZMod;
-	    break;
-	  case bpTopLeft:
-	    Lx = Boundary->XMin*XMod;
-	    Ly = Boundary->YMax*YMod;
-	    Lz = -distance*ZMod;
-	    break;
-	  case bpTopRight:
-	    Lx = Boundary->XMax*XMod;
-	    Ly = Boundary->YMax*YMod;
-	    Lz = -distance*ZMod;
-	    break;
-	  case bpBottomLeft:
-	    Lx = Boundary->XMin*XMod;
-	    Ly = Boundary->YMin*YMod;
-	    Lz = -distance*ZMod;
-	    break;
-	  case bpBottomRight:
-	    Lx = Boundary->XMax*XMod;
-	    Ly = Boundary->YMin*YMod;
-	    Lz = -distance*ZMod;
-	    break;
-	  }
-	}  
-	
-	_x = x;
-	_y = y;
-	_z = -z;
-
-	/* end init view position */
-	
-	return( 0 );
+  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+  glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+  glEnable( GL_LINE_SMOOTH );
+  glEnable( GL_POLYGON_SMOOTH );
+  glLineWidth( 2.0 );
+  
+  glEnable( GL_BLEND );
+  glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+  
+  //glEnable(GL_LIGHTING);
+  //glEnable(GL_LIGHT0);
+  
+  //glHint(GL_CLIP_VOLUME_CLIPPING_HINT_EXT,GL_FASTEST);
+  //glEnable(GL_DEPTH);
+  glEnable(GL_DEPTH_TEST);
+  glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+  
+  glPolygonMode(GL_FRONT_AND_BACK, render_mode);
+  
+  glNewList(1, GL_COMPILE);
+  //glBegin(GL_TRIANGLES);
+  Output(NULL, _topcell);
+  //glEnd();
+  glEndList();
+  
+  hide_mouse();
+  move_mouse( _width / 2, _height / 2 );
+  timer( &_mt, 1 );
+  
+  
+  /* init view position, same as in gds2pov */
+  if( _Objects){
+    struct _Boundary *Boundary = _Objects->GetBoundary();
+    
+    float half_widthX = (Boundary->XMax - Boundary->XMin)/2;
+    float half_widthY = (Boundary->YMax - Boundary->YMin)/2;
+    float centreX = half_widthX + Boundary->XMin;
+    float centreY = half_widthY + Boundary->YMin;
+    
+    float distance;
+    if(half_widthX > half_widthY){
+      distance = half_widthX * 1.8;
+    }else{
+      distance = half_widthY * 1.8;
+    }
+    
+    _speed_factor = distance/20.0f;
+    _xmin = Boundary->XMin;
+    _xmax = Boundary->XMax;
+    _ymin = Boundary->YMin;
+    _ymax = Boundary->YMax;
+    
+    float XMod = _config->GetCameraPos()->XMod;
+    float YMod = _config->GetCameraPos()->YMod;
+    float ZMod = _config->GetCameraPos()->ZMod;
+    
+    switch(_config->GetCameraPos()->boundarypos){
+    case bpCentre:
+      // Default camera angle = 67.38
+      // Half of this is 33.69
+      // tan(33.69) = 0.66666 = 1/1.5
+      // Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
+      
+      _x = centreX*XMod;
+      _y = centreY*YMod;
+      _z = distance*ZMod;
+      break;
+    case bpTopLeft:
+      _x = Boundary->XMin*XMod;
+      _y = Boundary->YMax*YMod;
+      _z = distance*ZMod;
+      break;
+    case bpTopRight:
+      _x = Boundary->XMax*XMod; 
+      _y = Boundary->YMax*YMod;
+      _z = distance*ZMod;
+      break;
+    case bpBottomLeft:
+      _x = Boundary->XMin*XMod;
+      _y = Boundary->YMin*YMod;
+      _z = distance*ZMod;
+      break;
+    case bpBottomRight:
+      _x = Boundary->XMax*XMod;
+      _y = Boundary->YMin*YMod;
+      _z = distance*ZMod;
+      break;
+    }
+  }   /* end init view position */
+  
+  return( 0 );
 }
 
 /* window drawing function */
@@ -276,7 +241,7 @@ void GDSParse_ogl::gl_draw()
 	glLoadIdentity();
 	
 	if( _fps ){
-		/*change angle according to velocity */
+	        /*change angle according to velocity */
 		_ry += _vy / _fps;
 		_rx += _vx / _fps;
 
@@ -315,8 +280,39 @@ void GDSParse_ogl::gl_draw()
 		_z -= M[10] * _vz / _fps;
 	}
 
-	if( _vz < -40.0f ) _vz = -40.0f;
-	if( _vz >  40.0f ) _vz =  40.0f;
+	/* FIXME: something is wrong, without the next chunk of code, the  program starts up much faster, once it's up
+	   it doesn't make a difference */
+	{
+	  /* add an estimate for zFar, so that the whole obeject is always in view */
+	  glMatrixMode(GL_PROJECTION); 
+	  glLoadIdentity(); 
+	  {
+	    GLfloat tmpz;
+	    GLfloat x,y,z;
+
+	    /* distance to the bounding box, use larger value...
+	       if we would know the direction were are looking in, we could use the correct distance, but this works */
+	    x = (_x-_xmin);     
+	    if ((_xmax-_x) > x) x = _xmax-_x;
+	    
+	    y = (_y-_ymin);
+	    if ((_ymax-_y) > y) y = _ymax-_y;
+	    
+	    /* FIXME: should use zmax and zmin instead of a default value of 50 */
+	    z = (_z+50);
+	    if ((50-_z) > z) z = 50-_z; 
+	    
+	    tmpz = x+y+z; /* correct would be \sqrt(x*x+y*y+z*z)+\epsilon, but this should be faster and as good */
+	    if(tmpz<10.0) tmpz = 10.0; /* not sure if neccessary */
+	    
+	    gluPerspective(50.0f , 1.0f, 1.0f,tmpz);  /* set zFar */
+	  }
+	  glMatrixMode( GL_MODELVIEW ); /* back to the model view  */
+	}
+	
+
+	if( _vz < -40.0f*_speed_factor ) _vz = -40.0f*_speed_factor;
+	if( _vz >  40.0f*_speed_factor ) _vz =  40.0f*_speed_factor;
 
 /*
 	if( _x < -6.0f ) _x += 6.0f;
@@ -328,6 +324,7 @@ void GDSParse_ogl::gl_draw()
 */
 	glTranslatef( -_x, -_y, -_z );
 	glGetFloatv( GL_MODELVIEW_MATRIX, M );
+
 	glCallList(1);
 
 	/* figure out look at statement: calculate inverse transformation and apply to (0,0,-1) */
@@ -340,15 +337,15 @@ void GDSParse_ogl::gl_draw()
 	if( _fps && _info )
 	{
 		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 114, _height - 40,
-				_font, "fps: %5.1f", _fps );
-		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 420, _height - 40,
-				_font, "location:"  );
-		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 320, _height - 40,
-				_font, " %5.1f %5.1f %5.1f",_x,_y,-(_z)  ); /*  -z because of povrays coordinate system? */
-		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 420, _height - 60,
-				_font, "look_at:"  );
-		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 320, _height - 60,
-				_font, " %5.1f %5.1f %5.1f", -G[8]+G[12],-G[9]+G[13],+G[10]-G[14]  ); 
+				   _font, "fps: %5.1f", _fps );
+ 		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 420, _height - 40,
+ 				   _font, "location:"  );
+ 		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 320, _height - 40,
+			   _font, " %5.1f %5.1f %5.1f",_x,_y,-(_z)  ); /*  -z because of povrays coordinate system? */
+ 		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 420, _height - 60,
+ 				   _font, "look_at:"  );
+ 		gl_printf( 0.1f, 1.0f, 0.1f, 0.4f, _width - 320, _height - 60,
+ 				   _font, " %5.1f %5.1f %5.1f", -G[8]+G[12],-G[9]+G[13],+G[10]-G[14]  ); 
 
 		if( _fps < 20.0f ){
 			glDisable( GL_LINE_SMOOTH );
@@ -419,12 +416,12 @@ void GDSParse_ogl::gl_event( int event, int data, int xpos, int ypos )
 	{
 		if( data == 0 ) /* left button */
 		{
-			_vz +=  5.0f;
+			_vz +=  5.0f*_speed_factor;
 		}
 
 		if( data == 1 ) /* right button */
 		{
-			_vz += -5.0f;
+			_vz += -5.0f*_speed_factor;
 		}
 	}
 
@@ -435,8 +432,8 @@ void GDSParse_ogl::gl_event( int event, int data, int xpos, int ypos )
 
 	if( event == 2 )	/* mouse move */
 	{
-		_vy +=  128.0f * (GLfloat) ( xpos - _width  / 2 ) / _width;
-		_vx -=  128.0f * (GLfloat) ( ypos - _height / 2 ) / _height;
+		_vy +=  128.0f * _speed_factor * (GLfloat) ( xpos - _width  / 2 ) / _width;
+		_vx -=  128.0f * _speed_factor * (GLfloat) ( ypos - _height / 2 ) / _height;
 
 		if( timer( &_mt, 0 ) > 0.05 )
 		{
@@ -473,8 +470,8 @@ int GDSParse_ogl::gl_main()
 	int fullscreen;
 	XEvent event;
 
-	if( gl_data() ){
-		fprintf( stderr, "gl_data failed\n" );
+	if( gl_data() )
+{
 		return( 1 );
 	}
 

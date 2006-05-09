@@ -182,13 +182,21 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx,
 
 	}
 
-	Object->OutputToFile(_optr, _Objects, _config->GetFont(), offx, offy, objectid, _process->GetLayer());
+	struct ProcessLayer *layer = NULL;
+	if(_process != NULL){
+		printf("_process = %p\n", _process);
+		fflush(stdout);
+		layer = _process->GetLayer();
+	}
+
+	Object->OutputToFile(_optr, _Objects, _config->GetFont(), offx, offy, objectid, layer);
 }
 
 bool GDSParse::ParseFile()
 {
 	byte recordtype, datatype;
 	char *tempstr;
+	struct ProcessLayer *layer = NULL;
 
 	if(!_iptr){
 		return -1;
@@ -334,8 +342,19 @@ bool GDSParse::ParseFile()
 				/* Only set string if the current object is valid, the text string is valid 
 				 * and we are using a layer that is defined and being shown.
 				 */
-				if(_CurrentObject && _textstring && _process->GetLayer(_currentlayer, _currentdatatype) && _process->GetLayer(_currentlayer, _currentdatatype)->Show){
-					_CurrentObject->GetCurrentText()->SetString(_textstring);
+				if(_CurrentObject && _textstring){
+					if(_process != NULL){
+		printf("_process = %p\n", _process);
+		fflush(stdout);
+						layer = _process->GetLayer(_currentlayer, _currentdatatype);
+						if(layer && layer->Show){
+							_CurrentObject->GetCurrentText()->SetString(_textstring);
+						}
+					}else{
+						if(_CurrentObject->GetCurrentText()){
+							_CurrentObject->GetCurrentText()->SetString(_textstring);
+						}
+					}
 					v_printf(2, "(\"%s\")", _textstring);
 					delete [] _textstring;
 					_textstring = NULL;
@@ -704,40 +723,44 @@ void GDSParse::ParseXYPath()
 	float X, Y;
 	int points = _recordlen/8;
 	int i;
-	struct ProcessLayer *thislayer;
+	struct ProcessLayer *thislayer = NULL;
 
-	thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
+	if(_process != NULL){
+		printf("_process = %p\n", _process);
+		fflush(stdout);
+		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 
-	if(thislayer==NULL){
-		// _layer_warning only has fixed bounds at the moment.
-		// Not sure how to best make it dynamic.
+		if(thislayer==NULL){
+			// _layer_warning only has fixed bounds at the moment.
+			// Not sure how to best make it dynamic.
 
-		if(!_layer_warning[_currentlayer][_currentdatatype]){
-			v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
-			v_printf(1, "\tIgnoring this layer.\n");
-			_layer_warning[_currentlayer][_currentdatatype] = true;
+			if(!_layer_warning[_currentlayer][_currentdatatype]){
+				v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+				v_printf(1, "\tIgnoring this layer.\n");
+				_layer_warning[_currentlayer][_currentdatatype] = true;
+			}
+			while(_recordlen){
+				GetFourByteSignedInt();
+			}
+			_currentwidth = 0.0; // Always reset to default for paths in case width not specified
+			_currentpathtype = 0;
+			_currentangle = 0.0;
+			_currentdatatype = -1;
+			_currentmag = 1.0;
+			return;
 		}
-		while(_recordlen){
-			GetFourByteSignedInt();
-		}
-		_currentwidth = 0.0; // Always reset to default for paths in case width not specified
-		_currentpathtype = 0;
-		_currentangle = 0.0;
-		_currentdatatype = -1;
-		_currentmag = 1.0;
-		return;
 	}
 
 	if(_currentwidth){
 		/* FIXME - need to check for -ve value and then not scale */
-		if(thislayer->Height && thislayer->Show && _CurrentObject){
+		if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
 			_CurrentObject->AddPath(_currentpathtype, _units*thislayer->Height, _units*thislayer->Thickness, points, _currentwidth, _currentbgnextn, _currentendextn, thislayer);
 		}
 		for(i=0; i<points; i++){
 			X = _units * (float)GetFourByteSignedInt();
 			Y = _units * (float)GetFourByteSignedInt();
 			v_printf(2, "(%.3f,%.3f) ", X, Y);
-			if(thislayer->Height && thislayer->Show && _CurrentObject){
+			if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
 				_CurrentObject->GetCurrentPath()->AddPoint(i, X, Y);
 			}
 		}
@@ -763,30 +786,34 @@ void GDSParse::ParseXYBoundary()
 	float firstX=0.0, firstY=0.0;
 	int points = _recordlen/8;
 	int i;
-	struct ProcessLayer *thislayer;
+	struct ProcessLayer *thislayer = NULL;
 
-	thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
+	if(_process != NULL){
+		printf("_process = %p\n", _process);
+		fflush(stdout);
+		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 
-	if(thislayer==NULL){
-		// _layer_warning has a fixed bound and needs to be made
-		// better!
-		if(!_layer_warning[_currentlayer][_currentdatatype]){
-			v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
-			v_printf(1, "\tIgnoring this layer.\n");
-			_layer_warning[_currentlayer][_currentdatatype] = true;
+		if(thislayer==NULL){
+			// _layer_warning has a fixed bound and needs to be made
+			// better!
+			if(!_layer_warning[_currentlayer][_currentdatatype]){
+				v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+				v_printf(1, "\tIgnoring this layer.\n");
+				_layer_warning[_currentlayer][_currentdatatype] = true;
+			}
+			while(_recordlen){
+				GetFourByteSignedInt();
+			}
+			_currentwidth = 0.0; // Always reset to default for paths in case width not specified
+			_currentpathtype = 0;
+			_currentangle = 0.0;
+			_currentdatatype = -1;
+			_currentmag = 1.0;
+			return;
 		}
-		while(_recordlen){
-			GetFourByteSignedInt();
-		}
-		_currentwidth = 0.0; // Always reset to default for paths in case width not specified
-		_currentpathtype = 0;
-		_currentangle = 0.0;
-		_currentdatatype = -1;
-		_currentmag = 1.0;
-		return;
 	}
 
-	if(thislayer->Height && thislayer->Show && _CurrentObject){
+	if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
 		//FIXME - why was this points+1 ? _CurrentObject->AddPolygon(_units*thislayer->Height, _units*thislayer->Thickness, points+1, thislayer->Name);
 		_CurrentObject->AddPolygon(_units*thislayer->Height, _units*thislayer->Thickness, points, thislayer);
 	}
@@ -799,12 +826,12 @@ void GDSParse::ParseXYBoundary()
 			firstX = X;
 			firstY = Y;
 		}
-		if(thislayer->Height && thislayer->Show && _CurrentObject){
+		if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
 			_CurrentObject->GetCurrentPolygon()->AddPoint(i, X, Y);
 		}
 	}
 	v_printf(2, "\n");
-	if(thislayer->Height && thislayer->Show && _CurrentObject){
+	if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
 		_CurrentObject->GetCurrentPolygon()->AddPoint(i, firstX, firstY);
 		//_CurrentObject->GetCurrentPolygon()->SetColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 	}
@@ -821,10 +848,14 @@ void GDSParse::ParseXY()
 {
 	float X, Y;
 	float firstX=0.0, firstY=0.0, secondX=0.0, secondY=0.0;
-	struct ProcessLayer *thislayer;
+	struct ProcessLayer *thislayer = NULL;
 	int Flipped;
 
-	thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
+	if(_process != NULL){
+		printf("_process = %p\n", _process);
+		fflush(stdout);
+		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
+	}
 	Flipped = ((u_int16_t)(_currentstrans & 0x8000) == (u_int16_t)0x8000) ? 1 : 0;
 
 	switch(_currentelement){

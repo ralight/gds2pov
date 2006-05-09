@@ -11,6 +11,11 @@ These changes thanks to Arun Persaud:
 - Zero width paths no longer prevent the rest of the GDS2 file being parsed.
 - An error in the type of the STYPTABLE record was fixed.
 
+These changes suggested by Frederic Pecourt:
+
+- Added the option of using a camera include file in gds2pov rather than
+  calculating the camera position inside the main pov file.
+
 Version 20060301
 ================
 

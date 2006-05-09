@@ -21,12 +21,13 @@
 #ifndef __GDSPARSE_INFO_H__
 #define __GDSPARSE_INFO_H__
 
+#include "config_cfg.h"
 #include "gdsparse.h"
 
 class GDSParse_info : public GDSParse
 {
 public:
-	GDSParse_info ();
+	GDSParse_info (class GDSConfig *config);
 	~GDSParse_info ();
 
 	class GDSObject *NewObject(char *Name);

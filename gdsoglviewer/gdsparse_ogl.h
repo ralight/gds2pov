@@ -58,6 +58,10 @@ private:
 	GLfloat _vx, _vy, _vz;
 	GLfloat _dir[8][3];
 	GLfloat _phi[8][3];
+
+	GLfloat _speed_factor; /* to have a similar speed independent of the feature size */
+	GLfloat _xmin,_xmax,_ymin,_ymax; /* the bounding box for the gds features, FIXME: include z values */
+
 	struct htime _tv, _mt;
 	char *_topcell;
 
@@ -108,4 +112,5 @@ public:
 };
 
 #endif // __GDSPARSE_OGL_H__
+
 

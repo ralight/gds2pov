@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl $Id: configure.ac 266 2006-03-25 18:20:22Z roger $
+dnl $Id: configure.ac 267 2006-05-09 15:10:07Z roger $
 
-AC_INIT([libgdsto3d and utilities], [20060301], [roger@atchoo.org], [gdsto3d])
+AC_INIT([libgdsto3d and utilities], [20060330], [roger@atchoo.org], [gdsto3d])
 
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_HEADERS([config.h])
@@ -82,8 +82,8 @@ AC_CONFIG_FILES([Makefile
 		gds2pov/Makefile
 		gdsoglviewer/Makefile
 		gds2svg/Makefile
-		gds2info/Makefile
 		])
+#		gds2info/Makefile
 		#gds2ogl/Makefile
 		#gds23ds/Makefile
 AC_OUTPUT

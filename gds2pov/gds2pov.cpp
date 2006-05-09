@@ -35,14 +35,15 @@ bool decompose;
 void printusage()
 {
 	printf("gds2pov  version %s\n", VERSION);
-	printf("Copyright (C) 2004-2006 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
+	printf("Copyright (C) 2004-2006 by Roger Light\nhttp://www.atchoo.org/gds2pov/\n\n");
 	printf("gds2pov comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2pov freely\nas described in the readme.txt distributed with this file.\n\n");
 	printf("gds2pov is a program for converting a GDS2 file to a POV-Ray scene file.\n\n");
-	printf("Usage: gds2pov [-b] [-c config.txt] [-d] [-h] [-i input.gds] [-o output.pov] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
+	printf("Usage: gds2pov [-b] [-c config.txt] [-d] [-e camera.pov] [-h] [-i input.gds] [-o output.pov] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
 	printf("Options\n");
 	printf(" -b\t\tOutput bounding box instead of layout to allow easier and\n\t\tquicker placing of the camera\n");
 	printf(" -c\t\tSpecify config file\n");
 	printf(" -d\t\tDecompose polygons into triangles (use mesh2 object instead of prism)\n");
+	printf(" -e\t\tUse external camera include file instead of specifying camera internally\n");
 	printf(" -h\t\tDisplay this help\n");
 	printf(" -i\t\tInput GDS2 file (stdin if not specified)\n");
 	printf(" -o\t\tOutput POV file (stdout if not specified)\n");
@@ -50,7 +51,7 @@ void printusage()
 	printf(" -q\t\tQuiet output\n");
 	printf(" -t\t\tSpecify top cell name\n");
 	printf(" -v\t\tVerbose output\n\n");
-	printf("See http://www.atchoo.org/gdsto3d/ for updates.\n");
+	printf("See http://www.atchoo.org/gds2pov/ for updates.\n");
 }
 
 int main(int argc, char *argv[])
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
 	bool bounding_output = false;
 	decompose = false;
 
-	if(argc>15){
+	if(argc>20){
 		fprintf(stderr, "Error: Invalid number of arguments.\n\n");
 		printusage();
 		return 1;
@@ -67,6 +68,7 @@ int main(int argc, char *argv[])
 
 	char *gdsfile=NULL;
 	char *povfile=NULL;
+	char *camfile=NULL;
 
 	char *configfile=NULL;
 	char *processfile=NULL;
@@ -87,6 +89,14 @@ int main(int argc, char *argv[])
 				}
 			}else if(strncmp(argv[i], "-d", strlen("-d"))==0){
 				decompose = true;
+			}else if(strncmp(argv[i], "-e", strlen("-e"))==0){
+				if(i==argc-1){
+					fprintf(stderr, "Error: -e switch given but no camera file specified.\n\n");
+					printusage();
+					return 1;
+				}else{
+					camfile = argv[i+1];
+				}
 			}else if(strncmp(argv[i], "-h", strlen("-h"))==0){
 				printusage();
 				return 0;
@@ -135,6 +145,9 @@ int main(int argc, char *argv[])
 		}
 	}
 
+
+	/************ Load config ****************/
+
 	class GDSConfig *config=NULL;
 
 	if(configfile){
@@ -149,6 +162,8 @@ int main(int argc, char *argv[])
 		delete config;
 		return -1;
 	}
+
+	/************ Load process ****************/
 
 	class GDSProcess *process=NULL;
 	/* 
@@ -183,6 +198,8 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	/************ Open GDS2 file and parse ****************/
+
 	FILE *iptr;
 	if(gdsfile){
 		iptr = fopen(gdsfile, "rb");
@@ -190,7 +207,7 @@ int main(int argc, char *argv[])
 		iptr = stdin;
 	}
 	if(iptr){
-		class GDSParse_pov *Parser = new class GDSParse_pov(config, process, bounding_output);
+		class GDSParse_pov *Parser = new class GDSParse_pov(config, process, bounding_output, camfile);
 		if(!Parser->Parse(iptr)){
 			FILE *optr;
 			if(povfile){

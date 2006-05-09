@@ -99,7 +99,8 @@ int main(int argc, char *argv[])
 		iptr = stdin;
 	}
 	if(iptr){
-		class GDSParse_info *Parser = new class GDSParse_info();
+		class GDSConfig *config = new GDSConfig();
+		class GDSParse_info *Parser = new class GDSParse_info(config);
 		if(!Parser->Parse(iptr)){
 			Parser->Output(stdout, topcell);
 		}
@@ -109,6 +110,7 @@ int main(int argc, char *argv[])
 		}
 
 		delete Parser;
+		delete config;
 	}else{
 		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile);
 		return -1;

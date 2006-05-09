@@ -38,9 +38,10 @@
 
 extern int verbose_output;
 
-GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output) : GDSParse(config, process)
+GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, char* camfile) : GDSParse(config, process)
 {
 	_config = config;
+	_camfile = camfile;
 	SetOutputOptions(bounding_output, true, false, true);
 }
 
@@ -87,6 +88,9 @@ void GDSParse_pov::OutputHeader()
 			distance = half_widthY * 1.8;
 		}
 
+		fprintf(_optr, "#declare sizeX = %.2f\n", Boundary->XMax - Boundary->XMin);
+		fprintf(_optr, "#declare sizeY = %.2f\n", Boundary->YMax - Boundary->YMin);
+//		fprintf(_optr, "#declare sizeZ = %.2f\n", Boundary->ZMax - Boundary->ZMin);
 
 		fprintf(_optr, "// TopLeft: %.2f, %.2f\n", Boundary->XMin, Boundary->YMax);
 		fprintf(_optr, "// TopRight: %.2f, %.2f\n", Boundary->XMax, Boundary->YMax);
@@ -98,51 +102,57 @@ void GDSParse_pov::OutputHeader()
 		float YMod = _config->GetCameraPos()->YMod;
 		float ZMod = _config->GetCameraPos()->ZMod;
 
-		switch(_config->GetCameraPos()->boundarypos){
-			case bpCentre:
-				// Default camera angle = 67.38
-				// Half of this is 33.69
-				// tan(33.69) = 0.66666 = 1/1.5
-				// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
-
-				fprintf(_optr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n", centreX*XMod, centreY*YMod, -distance*ZMod);
-				break;
-			case bpTopLeft:
-				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
-				break;
-			case bpTopRight:
-				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
-				break;
-			case bpBottomLeft:
+		/* _camfile is a possible camera include file. Depends on the -e option
+		 * If it is null, use the normal camera else use the include */
+		if(!_camfile){
+			switch(_config->GetCameraPos()->boundarypos){
+				case bpCentre:
+					// Default camera angle = 67.38
+					// Half of this is 33.69
+					// tan(33.69) = 0.66666 = 1/1.5
+					// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
+	
+					fprintf(_optr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n", centreX*XMod, centreY*YMod, -distance*ZMod);
+					break;
+				case bpTopLeft:
+					fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
+					break;
+				case bpTopRight:
+					fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
+					break;
+					case bpBottomLeft:
 				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
-				break;
-			case bpBottomRight:
-				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
-				break;
-		}
+						break;
+				case bpBottomRight:
+					fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
+					break;
+			}
 
-		fprintf(_optr, "\tsky <0,0,-1>\n"); //This fixes the look at rotation (hopefully)
+			fprintf(_optr, "\tsky <0,0,-1>\n"); //This fixes the look at rotation (hopefully)
 
-		XMod = _config->GetLookAtPos()->XMod;
-		YMod = _config->GetLookAtPos()->YMod;
-		ZMod = _config->GetLookAtPos()->ZMod;
+			XMod = _config->GetLookAtPos()->XMod;
+			YMod = _config->GetLookAtPos()->YMod;
+			ZMod = _config->GetLookAtPos()->ZMod;
 
-		switch(_config->GetLookAtPos()->boundarypos){
-			case bpCentre:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", centreX*XMod, centreY*YMod, -distance*ZMod);
+			switch(_config->GetLookAtPos()->boundarypos){
+				case bpCentre:
+					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", centreX*XMod, centreY*YMod, -distance*ZMod);
+					break;
+				case bpTopLeft:
+					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
+					break;
+				case bpTopRight:
+					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
+					break;
+				case bpBottomLeft:
+					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
+					break;
+				case bpBottomRight:
+						fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
 				break;
-			case bpTopLeft:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
-				break;
-			case bpTopRight:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
-				break;
-			case bpBottomLeft:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
-				break;
-			case bpBottomRight:
-				fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
-				break;
+			}
+		}else{
+			fprintf(_optr, "#include %s\n", _camfile);
 		}
 
 		if(_config->GetLightPos()!=NULL){
