@@ -88,8 +88,8 @@ void GDSParse_pov::OutputHeader()
 			distance = half_widthY * 1.8;
 		}
 
-		fprintf(_optr, "#declare sizeX = %.2f\n", Boundary->XMax - Boundary->XMin);
-		fprintf(_optr, "#declare sizeY = %.2f\n", Boundary->YMax - Boundary->YMin);
+		fprintf(_optr, "#declare sizeX = %.2f;\n", Boundary->XMax - Boundary->XMin);
+		fprintf(_optr, "#declare sizeY = %.2f;\n", Boundary->YMax - Boundary->YMin);
 //		fprintf(_optr, "#declare sizeZ = %.2f\n", Boundary->ZMax - Boundary->ZMin);
 
 		fprintf(_optr, "// TopLeft: %.2f, %.2f\n", Boundary->XMin, Boundary->YMax);
