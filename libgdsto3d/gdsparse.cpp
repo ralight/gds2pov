@@ -184,8 +184,6 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx,
 
 	struct ProcessLayer *layer = NULL;
 	if(_process != NULL){
-		printf("_process = %p\n", _process);
-		fflush(stdout);
 		layer = _process->GetLayer();
 	}
 
@@ -344,8 +342,6 @@ bool GDSParse::ParseFile()
 				 */
 				if(_CurrentObject && _textstring){
 					if(_process != NULL){
-		printf("_process = %p\n", _process);
-		fflush(stdout);
 						layer = _process->GetLayer(_currentlayer, _currentdatatype);
 						if(layer && layer->Show){
 							_CurrentObject->GetCurrentText()->SetString(_textstring);
@@ -726,8 +722,6 @@ void GDSParse::ParseXYPath()
 	struct ProcessLayer *thislayer = NULL;
 
 	if(_process != NULL){
-		printf("_process = %p\n", _process);
-		fflush(stdout);
 		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 
 		if(thislayer==NULL){
@@ -789,8 +783,6 @@ void GDSParse::ParseXYBoundary()
 	struct ProcessLayer *thislayer = NULL;
 
 	if(_process != NULL){
-		printf("_process = %p\n", _process);
-		fflush(stdout);
 		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 
 		if(thislayer==NULL){
@@ -852,8 +844,6 @@ void GDSParse::ParseXY()
 	int Flipped;
 
 	if(_process != NULL){
-		printf("_process = %p\n", _process);
-		fflush(stdout);
 		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 	}
 	Flipped = ((u_int16_t)(_currentstrans & 0x8000) == (u_int16_t)0x8000) ? 1 : 0;
