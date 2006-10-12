@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl $Id: configure.ac 267 2006-05-09 15:10:07Z roger $
+dnl $Id: configure.ac 271 2006-10-12 22:18:19Z roger $
 
-AC_INIT([libgdsto3d and utilities], [20060330], [roger@atchoo.org], [gdsto3d])
+AC_INIT([libgdsto3d and utilities], [20061012], [roger@atchoo.org], [gdsto3d])
 
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_HEADERS([config.h])
@@ -29,10 +29,39 @@ case $host_os in
           * ) MINGW32=no;;
 esac
 
+case $host_os in
+  *solaris* ) SOLARIS=yes;;
+  	      * ) SOLARIS=no;;
+esac
+
 # Check for header files
 # ======================
 AC_CHECK_HEADERS([stdarg.h X11/keysym.h X11/Xlib.h GL/gl.h GL/glx.h GL/glu.h stdint.h sys/time.h time.h windows.h winsock2.h])
 
+AC_CHECK_HEADERS([GL/gl.h GL/glx.h GL/glu.h], [enable_ogl=yes], [enable_ogl=no])
+# Check for types
+# ===============
+
+AC_CHECK_TYPE([u_int16_t], [],
+[
+	AC_CHECK_TYPE([uint16_t],
+	[
+		AC_DEFINE(u_int16_t, [uint16_t], [If system does not define u_int16_t, define a usable substitute])
+	],
+	[
+		AC_MSG_WARN([system has no u_int16_t or uint16_t, default to unsigned short int])
+		AC_DEFINE(u_int16_t, [unsigned short int], [If system does not define u_int16_t, define a usable substitute.])
+	])
+])
+
+AC_CHECK_FUNC([sinf], [],
+[
+	AC_DEFINE(sinf, [sin], [Use sin instead of sinf if sinf is not defined])
+])
+AC_CHECK_FUNC([asinf], [],
+[
+	AC_DEFINE(asinf, [asin], [Use asin instead of asinf if asinf is not defined])
+])
 
 # Add DLL build support
 # =====================
@@ -52,10 +81,18 @@ fi
 
 # Add OpenGL libraries for gdsoglviewer. This should only be done for 
 # that program really!
-if test "$MINGW32" = "yes"; then
-	OPENGL_LIBS="-lopengl32 -lglu32 -lglut32 -lgdi32"
+if test "$enable_ogl" = "yes"; then
+	if test "$MINGW32" = "yes"; then
+		OPENGL_LIBS="-lopengl32 -lglu32 -lglut32 -lgdi32"
+	else
+		if test "$SOLARIS" = "yes"; then
+			OPENGL_LIBS="-lGLU -lGL -lX11"
+		else
+			OPENGL_LIBS="-lGLU -lGL"
+		fi
+	fi
 else
-	OPENGL_LIBS="-lGLU -lGL"
+	OPENGL_LIBS=""
 fi
 AC_SUBST(OPENGL_LIBS)
 
@@ -75,6 +112,13 @@ fi
 
 #CFLAGS="${CFLAGS} -ggdb"
 
+if test "$enable_ogl" = "yes"; then
+	SUBDIRS="libgdsto3d gds2pov gdsoglviewer gds2svg"
+else
+	SUBDIRS="libgdsto3d gds2pov gds2svg"
+fi
+
+AC_SUBST(SUBDIRS)
 AC_SUBST(LDADD)
 
 AC_CONFIG_FILES([Makefile

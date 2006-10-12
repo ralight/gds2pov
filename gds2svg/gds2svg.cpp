@@ -160,9 +160,9 @@ int main(int argc, char *argv[])
 	process = new GDSProcess(processfile);
 	process->Parse(processfile);
 
-	if(config->GetProcessFile()==NULL){
+	/*if(config->GetProcessFile()==NULL){
 		delete processfile;
-	}
+	}*/
 	if(!process){
 		fprintf(stderr, "Error: Out of memory.\n");
 		delete config;
