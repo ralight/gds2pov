@@ -445,7 +445,7 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 			int positives = 0;
 			int negatives = 0;
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				polygon->SetAngleCoords(j, asinf(sinf(polygon->GetAngleCoords(j))));
+				polygon->SetAngleCoords(j, (float)asin(sin((double)polygon->GetAngleCoords(j))));
 				if(polygon->GetAngleCoords(j)>=0){
 					positives++;
 				}else{

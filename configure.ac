@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl $Id: configure.ac 272 2006-11-30 23:14:56Z roger $
+dnl $Id: configure.ac 273 2006-11-30 23:23:02Z roger $
 
 AC_INIT([libgdsto3d and utilities], [20061012], [roger@atchoo.org], [gdsto3d])
 
@@ -52,15 +52,6 @@ AC_CHECK_TYPE([u_int16_t], [],
 		AC_MSG_WARN([system has no u_int16_t or uint16_t, default to unsigned short int])
 		AC_DEFINE(u_int16_t, [unsigned short int], [If system does not define u_int16_t, define a usable substitute.])
 	])
-])
-
-AC_CHECK_FUNC([sinf], [],
-[
-	AC_DEFINE(sinf, [sin], [Use sin instead of sinf if sinf is not defined])
-])
-AC_CHECK_FUNC([asinf], [],
-[
-	AC_DEFINE(asinf, [asin], [Use asin instead of asinf if asinf is not defined])
 ])
 
 # Add DLL build support
