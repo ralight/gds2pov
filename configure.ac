@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl $Id: configure.ac 271 2006-10-12 22:18:19Z roger $
+dnl $Id: configure.ac 272 2006-11-30 23:14:56Z roger $
 
 AC_INIT([libgdsto3d and utilities], [20061012], [roger@atchoo.org], [gdsto3d])
 
@@ -112,11 +112,7 @@ fi
 
 #CFLAGS="${CFLAGS} -ggdb"
 
-if test "$enable_ogl" = "yes"; then
-	SUBDIRS="libgdsto3d gds2pov gdsoglviewer gds2svg"
-else
-	SUBDIRS="libgdsto3d gds2pov gds2svg"
-fi
+SUBDIRS="libgdsto3d gds2pov gdsoglviewer gds2svg"
 
 AC_SUBST(SUBDIRS)
 AC_SUBST(LDADD)
