@@ -16,7 +16,7 @@ extern */
 void printusage()
 {
 		printf("gds2ogl  version %s\n", GDS2OGL_VERSION);
-		printf("Copyright (C) 2004,2005 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
+		printf("Copyright (C) 2004-2007 by Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 		printf("gdsto3d comes with ABSOLUTELY NO WARRANTY.  You may distribute gdsto3d freely\nas described in the readme.txt distributed with this file.\n\n");
 		printf("gdsto3d is a program for converting a GDS2 file to a number of 3D formats.\n\n");
 		printf("Usage: gds2ogl input.gds output.c [-c config.txt] [-d] [-m solid|wire] [-p process.txt] [-q] [-t topcell] [-v]\n\n");

@@ -33,7 +33,7 @@ bool decompose;
 void printusage()
 {
 	printf("gds2info  version %s\n", VERSION);
-	printf("Copyright (C) 2004-2006 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
+	printf("Copyright (C) 2004-2007 by Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 	printf("gds2info comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2info freely\nas described in the readme.txt distributed with this file.\n\n");
 	printf("gds2info is a program for displaying information on a GDS2 file.\n\n");
 	printf("Usage: gds2info [-h] [-i input.gds] [-q] [-t topcell] [-v]\n\n");

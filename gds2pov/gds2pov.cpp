@@ -35,7 +35,7 @@ bool decompose;
 void printusage()
 {
 	printf("gds2pov  version %s\n", VERSION);
-	printf("Copyright (C) 2004-2006 by Roger Light\nhttp://www.atchoo.org/gds2pov/\n\n");
+	printf("Copyright (C) 2004-2007 by Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 	printf("gds2pov comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2pov freely\nas described in the readme.txt distributed with this file.\n\n");
 	printf("gds2pov is a program for converting a GDS2 file to a POV-Ray scene file.\n\n");
 	printf("Usage: gds2pov [-b] [-c config.txt] [-d] [-e camera.pov] [-h] [-i input.gds] [-o output.pov] [-p process.txt] [-q] [-t topcell] [-v]\n\n");

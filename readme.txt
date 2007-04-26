@@ -1,5 +1,5 @@
-GDSTO3D 20060301
-================
+GDSTO3D
+=======
 
 Introduction
 ------------
@@ -7,13 +7,13 @@ Introduction
 GDSTO3D is a collection of programs to process GDS2 layout files.
 
 GDS2 files are used for storing the geometrical and layer information for 
-creating an IC. If you do not what this is, GDSTO3D is probably of no interest
-to you!
+creating an IC or MEMS device. If you do not what this is, GDSTO3D is 
+probably of no interest to you!
 
 GDS2POV is a program to take a GDS2 layout file and output a POV-Ray scene 
 description file of the GDS2 data. This allows the creation of attractive 3D 
 pictures of a layout. POV-Ray is a completely free, cross platform ray tracer.
-It can be obtained from http://www.povray.org
+It can be obtained from http://www.povray.org/
 
 GDSOGLVIEWER is an OpenGL viewer that can show GDS2 files. It's not very good
 yet!
@@ -157,5 +157,5 @@ support for the GDS2 format) are very welcome.
 
 Contact me on roger@atchoo.org
 
-Updates to GDSTO3D should be at http://www.atchoo.org/gds2pov/
+Updates to GDSTO3D should be at http://atchoo.org/gds2pov/
 

@@ -1,4 +1,19 @@
-Version 2006xxxx
+Version 20070426
+================
+
+Thanks to Matt Hopcroft:
+
+- Layers with height=0 were not being processed (should've been
+  thickness=0).
+
+
+Version 20061130
+================
+
+- Fixes to the build process.
+- Memory stability fixes.
+
+Version 20061012
 ================
 
 - Fixed compile errors on msys due to u_int16_t being defined as uint16_t.

@@ -747,14 +747,14 @@ void GDSParse::ParseXYPath()
 
 	if(_currentwidth){
 		/* FIXME - need to check for -ve value and then not scale */
-		if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
+		if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
 			_CurrentObject->AddPath(_currentpathtype, _units*thislayer->Height, _units*thislayer->Thickness, points, _currentwidth, _currentbgnextn, _currentendextn, thislayer);
 		}
 		for(i=0; i<points; i++){
 			X = _units * (float)GetFourByteSignedInt();
 			Y = _units * (float)GetFourByteSignedInt();
 			v_printf(2, "(%.3f,%.3f) ", X, Y);
-			if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
+			if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
 				_CurrentObject->GetCurrentPath()->AddPoint(i, X, Y);
 			}
 		}
@@ -805,7 +805,7 @@ void GDSParse::ParseXYBoundary()
 		}
 	}
 
-	if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
+	if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
 		//FIXME - why was this points+1 ? _CurrentObject->AddPolygon(_units*thislayer->Height, _units*thislayer->Thickness, points+1, thislayer->Name);
 		_CurrentObject->AddPolygon(_units*thislayer->Height, _units*thislayer->Thickness, points, thislayer);
 	}
@@ -818,12 +818,12 @@ void GDSParse::ParseXYBoundary()
 			firstX = X;
 			firstY = Y;
 		}
-		if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
+		if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
 			_CurrentObject->GetCurrentPolygon()->AddPoint(i, X, Y);
 		}
 	}
 	v_printf(2, "\n");
-	if(thislayer && thislayer->Height && thislayer->Show && _CurrentObject){
+	if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
 		_CurrentObject->GetCurrentPolygon()->AddPoint(i, firstX, firstY);
 		//_CurrentObject->GetCurrentPolygon()->SetColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 	}
