@@ -19,11 +19,15 @@
 # Show: (boolean, 0 or 1)
 # LayerEnd
 #
-# Filter defines the transparency of the layer, with 1 being the most transparent.
+# Filter defines the transparency of the layer, with 1 being the most
+# transparent. It actually works for values greater than 1, but the povray
+# documentation states that it is limited to 1 so don't rely on it.
+#
 # Metal, when set to 1, will make the layer slightly reflective.
 # Show defines whether the layer is shown or not.
 #
-# The only compulsory items are LayerStart, Layer and LayerEnd. If any value is ommitted, the default will be used. The defaults are:
+# The only compulsory items are LayerStart, Layer and LayerEnd. If any value
+# is omitted, the default will be used. The defaults are:
 #
 # Datatype: 0
 # Height: 0
