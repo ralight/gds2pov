@@ -48,13 +48,13 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process)
 	_currentwidth = 0.0;
 	_currentstrans = 0;
 	_currentpathtype = 0;
+	_currentlayer = -1;
 	_currentdatatype = -1;
 	_currentmag = 1.0;
 	_currentbgnextn = 0.0;
 	_currentendextn = 0.0;
 	_currenttexttype = 0;
 	_currentpresentation = 0;
-	_currentlayer = 0;
 //	_currentelement = 0;
 	_arrayrows = 0;
 	_arraycols = 0;
@@ -340,16 +340,14 @@ bool GDSParse::ParseFile()
 				/* Only set string if the current object is valid, the text string is valid 
 				 * and we are using a layer that is defined and being shown.
 				 */
-				if(_CurrentObject && _textstring){
+				if(_CurrentObject && _CurrentObject->GetCurrentText() && _textstring){
 					if(_process != NULL){
 						layer = _process->GetLayer(_currentlayer, _currentdatatype);
 						if(layer && layer->Show){
 							_CurrentObject->GetCurrentText()->SetString(_textstring);
 						}
 					}else{
-						if(_CurrentObject->GetCurrentText()){
-							_CurrentObject->GetCurrentText()->SetString(_textstring);
-						}
+						_CurrentObject->GetCurrentText()->SetString(_textstring);
 					}
 					v_printf(2, "(\"%s\")", _textstring);
 					delete [] _textstring;
@@ -728,7 +726,7 @@ void GDSParse::ParseXYPath()
 			// _layer_warning only has fixed bounds at the moment.
 			// Not sure how to best make it dynamic.
 
-			if(!_layer_warning[_currentlayer][_currentdatatype]){
+			if(_currentlayer == -1 || _currentdatatype == -1 || !_layer_warning[_currentlayer][_currentdatatype]){
 				v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
 				v_printf(1, "\tIgnoring this layer.\n");
 				_layer_warning[_currentlayer][_currentdatatype] = true;
@@ -788,7 +786,7 @@ void GDSParse::ParseXYBoundary()
 		if(thislayer==NULL){
 			// _layer_warning has a fixed bound and needs to be made
 			// better!
-			if(!_layer_warning[_currentlayer][_currentdatatype]){
+			if(_currentlayer == -1 || _currentdatatype == -1 || !_layer_warning[_currentlayer][_currentdatatype]){
 				v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
 				v_printf(1, "\tIgnoring this layer.\n");
 				_layer_warning[_currentlayer][_currentdatatype] = true;
@@ -904,7 +902,7 @@ void GDSParse::ParseXY()
 			Y = _units * (float)GetFourByteSignedInt();
 			v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
-			if(_CurrentObject){
+			if(_CurrentObject && _CurrentObject->GetCurrentText()){
 				int vert_just, horiz_just;
 
 				vert_just = (((((unsigned long)_currentpresentation & 0x8 ) == (unsigned long)0x8 ) ? 2 : 0) + (((((unsigned long)_currentpresentation & 0x4 ) == (unsigned long)0x4 ) ? 1 : 0)));

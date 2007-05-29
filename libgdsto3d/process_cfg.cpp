@@ -411,6 +411,8 @@ struct ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 
 	layer = _FirstLayer;
 
+	if(Number == -1) return NULL;
+
 	while(layer){
 		if(layer->Layer == Number && layer->Datatype == -1){
 			return layer;
