@@ -30,7 +30,7 @@ cp gdsoglviewer/CMakeLists.txt gdsoglviewer/gdsparse_ogl.cpp gdsoglviewer/gdsobj
 
 tar -jcf ${DISTDIR}.tar.bz2 ${DISTDIR}
 pushd ${DISTDIR}
-find . -print | zip ${DISTDIR}.zip -@
+zip -9 -r ${DISTDIR}.zip .
 popd
 #rm -rf ${DISTDIR}
 

@@ -3,8 +3,11 @@ Version 20070601
 
 - Fixed erroneous URLs in the help for each program.
 - Changed the build chain to use cmake instead of autotools.
-- 
--
+
+Thanks to Mark Wilmott:
+
+- Top level cell is correctly placed within the canvas when using gds2svg.
+
 
 Version 20070426
 ================
