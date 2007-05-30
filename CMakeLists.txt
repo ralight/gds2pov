@@ -37,4 +37,4 @@ IF (OPENGL_FOUND)
 	ADD_SUBDIRECTORY (gdsoglviewer)
 ENDIF (OPENGL_FOUND)
 
-INSTALL (FILES changes.txt example.gds example_process.txt example_config.txt readme.txt todo.txt DESTINATION ${SHAREDEST})
+INSTALL (FILES changes.txt example.cmd example.gds example_process.txt example_config.txt readme.txt todo.txt DESTINATION ${SHAREDEST})
