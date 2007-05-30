@@ -48,7 +48,7 @@ void printusage()
 	printf(" -q\t\tQuiet output\n");
 	printf(" -t\t\tSpecify top cell name\n");
 	printf(" -v\t\tVerbose output\n\n");
-	printf("See http://www.atchoo.org/gdsto3d/ for updates.\n");
+	printf("See http://atchoo.org/gds2pov/ for updates.\n");
 }
 
 int main(int argc, char *argv[])

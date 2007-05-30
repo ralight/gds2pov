@@ -52,7 +52,7 @@ class GDSParse_ogl *parser;
 void printusage()
 {
 	printf("gdsoglviewer  version %s\n", VERSION);
-	printf("Copyright (C) 2004-2006 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
+	printf("Copyright (C) 2004-2006 by Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 	printf("gdsoglviewer comes with ABSOLUTELY NO WARRANTY.  You may distribute gdsoglviewer freely\nas described in the readme.txt distributed with this file.\n\n");
 	printf("gdsoglviewer is a program for viewing a GDS2 file in 3D.\n\n");
 	printf("Usage: gdsoglviewer [-c config.txt] [-h] [-i input.gds] [-m solid|wire] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
@@ -65,7 +65,7 @@ void printusage()
 	printf(" -q\t\tQuiet output\n");
 	printf(" -t\t\tSpecify top cell name\n");
 	printf(" -v\t\tVerbose output\n\n");
-	printf("See http://www.atchoo.org/gdsto3d/ for updates.\n");
+	printf("See http://atchoo.org/gds2pov/ for updates.\n");
 }
 
 #ifdef WIN32

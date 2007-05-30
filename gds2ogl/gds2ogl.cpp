@@ -26,7 +26,7 @@ void printusage()
 		printf(" -m\t\tSpecify solid or wireframe mode. Defaults to solid if not specified\n");
 		printf(" -p\t\tSpecify process file\n -q\t\tQuiet output\n -t\t\tSpecify top cell name\n");
 		printf(" -v\t\tVerbose output\n\n");
-		printf("See http://www.atchoo.org/gdsto3d/ for updates.\n");
+		printf("See http://atchoo.org/gds2pov/ for updates.\n");
 }
 
 int main(int argc, char *argv[])

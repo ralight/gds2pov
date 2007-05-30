@@ -16,7 +16,7 @@ extern */
 void printusage()
 {
 		printf("gdsto3d  version %s\n", GDS23DS_VERSION);
-		printf("Copyright (C) 2004,2005 by Roger Light\nhttp://www.atchoo.org/gdsto3d/\n\n");
+		printf("Copyright (C) 2004,2005 by Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 		printf("gdsto3d comes with ABSOLUTELY NO WARRANTY.  You may distribute gdsto3d freely\nas described in the readme.txt distributed with this file.\n\n");
 		printf("gdsto3d is a program for converting a GDS2 file to a number of 3D formats.\n\n");
 		printf("Usage: gdsto3d input.gds output.pov [-c config.txt] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
@@ -26,7 +26,7 @@ void printusage()
 		printf(" -q\t\tQuiet output\n");
 		printf(" -t\t\tSpecify top cell name\n");
 		printf(" -v\t\tVerbose output\n\n");
-		printf("See http://www.atchoo.org/gdsto3d/ for updates.\n");
+		printf("See http://atchoo.org/gds2pov/ for updates.\n");
 }
 
 int main(int argc, char *argv[])
