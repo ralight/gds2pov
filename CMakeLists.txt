@@ -21,9 +21,11 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY
 IF (WIN32)
 	SET (BINDEST .)
 	SET (LIBDEST .)
+	SET (SHAREDEST .)
 ELSE (WIN32)
 	SET (BINDEST bin)
 	SET (LIBDEST lib)
+	SET (SHAREDEST lib/gdsto3d)
 ENDIF (WIN32)
 
 ADD_SUBDIRECTORY (libgdsto3d)
@@ -37,3 +39,5 @@ IF (OPENGL_FOUND)
 #	ADD_SUBDIRECTORY (gds2ogl)
 	ADD_SUBDIRECTORY (gdsoglviewer)
 ENDIF (OPENGL_FOUND)
+
+INSTALL (FILES changes.txt example.gds example_process.txt example_config.txt readme.txt todo.txt DESTINATION ${SHAREDEST})
