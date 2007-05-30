@@ -5,6 +5,7 @@ SET (GDSTO3D_SRCS config_cfg.cpp gds_globals.cpp gdsobject.cpp gdsobjects.cpp gd
 #ELSE (WIN32)
 	ADD_LIBRARY (gdsto3d SHARED ${GDSTO3D_SRCS})
 #ENDIF (WIN32)
+SET_TARGET_PROPERTIES (gdsto3d PROPERTIES VERSION 0.0.3 SOVERSION 0)
 
 INCLUDE_DIRECTORIES(${gdsto3d_SOURCE_DIR}/libgdsto3d)
 LINK_DIRECTORIES(${gdsto3d_BINARY_DIR}/libgdsto3d)
