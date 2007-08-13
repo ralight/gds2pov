@@ -1,7 +1,3 @@
-# Check for header files
-# ======================
-AC_CHECK_HEADERS([stdarg.h X11/keysym.h X11/Xlib.h GL/glx.h sys/time.h time.h windows.h winsock2.h])
-
 # Check for types
 # ===============
 
@@ -20,8 +16,6 @@ if test "$enable_ogl" = "yes"; then
 else
 	OPENGL_LIBS=""
 fi
-
-AC_CHECK_FUNCS([gettimeofday QueryPerformanceCounter])
 
 AC_ARG_ENABLE([profile],
 		AC_HELP_STRING([--enable-profile], [enable gprof profiling]),
