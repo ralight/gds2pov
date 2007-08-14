@@ -750,6 +750,8 @@ float GDSParse_ogl::timer( struct htime *t, int reset )
 		t->start.tv_usec = offset.tv_usec;
 	}
 #else
+
+#ifdef HAVE_QUERYPERFORMANCECOUNTER
 	LARGE_INTEGER offset;
 	
 	QueryPerformanceCounter(&offset);
@@ -763,7 +765,10 @@ float GDSParse_ogl::timer( struct htime *t, int reset )
 		QueryPerformanceFrequency(&t->hfreq);
 		QueryPerformanceCounter(&t->start);
 	}
-#endif
+#else
+#error "No suitable timer functions found"
+#endif /* HAVE_QUERYPERFORMANCECOUNTER */
+#endif /* HAVE_GETTIMEOFDAY */
 
 	return( delta );
 }

@@ -28,6 +28,8 @@ cp gds2svg/gdsparse_svg.cpp gds2svg/gds2svg.cpp gds2svg/CMakeLists.txt gds2svg/g
 mkdir -p ${DISTDIR}/gdsoglviewer
 cp gdsoglviewer/CMakeLists.txt gdsoglviewer/gdsparse_ogl.cpp gdsoglviewer/gdsobject_ogl.h gdsoglviewer/gdsoglviewer.cpp gdsoglviewer/gdsoglviewer.h gdsoglviewer/gdsparse_ogl.h gdsoglviewer/gdsobject_ogl.cpp ${DISTDIR}/gdsoglviewer/
 
+mkdir -p ${DISTDIR}/build
+
 tar -jcf ${DISTDIR}.tar.bz2 ${DISTDIR}
 pushd ${DISTDIR}
 zip -9 -r ${DISTDIR}.zip .

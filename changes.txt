@@ -1,4 +1,10 @@
-Version 20070601
+Version 20070814
+================
+
+- Update library search path on install on Unix systems.
+
+
+Version 20070813
 ================
 
 - Fixed erroneous URLs in the help for each program.

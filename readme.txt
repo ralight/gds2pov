@@ -26,6 +26,27 @@ anyway.
 I would love to hear from you if you produce any nice results! See the contact 
 section at the bottom of this document.
 
+
+Compiling
+---------
+
+gdsto3d uses 'cmake' to configure its build environment. This means it is
+possible to support lots of different systems and build tools.
+
+To build gdsto3d, change to the 'build' directory and type 'cmake ..'. This
+should generate the required files. The build directory contains only
+generated files so it can be completely removed if required. Typically on Unix
+systems you would type 'make' followed by 'make install' to compile and
+install the software respectively.
+
+Typing just 'cmake' should give you a list of options to specify for cmake,
+including a list of generators which can be used to generate the files for
+different build tools. For example, you might be able to use the following
+command to generate files for KDevelop.
+
+cmake -G KDevelop3 ..
+
+
 General Usage
 -------------
 
