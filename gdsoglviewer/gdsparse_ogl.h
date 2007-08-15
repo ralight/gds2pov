@@ -37,12 +37,13 @@
 #include "gdsparse.h"
 
 struct htime{
+#ifdef HAVE_GETTIMEOFDAY
+	struct timeval start;
+#else
 #ifdef HAVE_WINDOWS_H
 	LARGE_INTEGER start, hfreq;
 #endif
-#ifdef HAVE_GETTIMEOFDAY
-	struct timeval start;
-#endif
+#endif /* HAVE_GETTIMEOFDAY */
 };
 
 class GDSParse_ogl : public GDSParse

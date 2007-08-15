@@ -1,6 +1,7 @@
-Version 20070814
+Version 20070815
 ================
 
+- Build fixes for Windows.
 - Update library search path on install on Unix systems.
 
 
