@@ -1,3 +1,10 @@
+Version 20070827
+================
+
+- Minor fix for building on multilib Linux x86_64 machines. Thanks to
+  Chitlesh Goorah.
+
+
 Version 20070815
 ================
 
