@@ -30,7 +30,7 @@ cp gdsoglviewer/CMakeLists.txt gdsoglviewer/gdsparse_ogl.cpp gdsoglviewer/gdsobj
 
 mkdir -p ${DISTDIR}/build
 
-tar -jcf ${DISTDIR}.tar.bz2 ${DISTDIR}
+tar -jcf ${DISTDIR}.tar.bz2 -C $2 gdsto3d-$3
 pushd ${DISTDIR}
 zip -9 -r ${DISTDIR}.zip .
 popd
