@@ -31,7 +31,7 @@ private:
 	float _scale;
 
 public:
-	GDSParse_svg (class GDSConfig *config, class GDSProcess *process);
+	GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	~GDSParse_svg ();
 
 	//class GDSObject_svg *NewObject(char *Name);

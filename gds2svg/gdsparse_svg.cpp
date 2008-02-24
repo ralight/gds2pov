@@ -38,10 +38,11 @@
 
 extern int verbose_output;
 
-GDSParse_svg::GDSParse_svg (class GDSConfig *config, class GDSProcess *process) : GDSParse(config, process)
+GDSParse_svg::GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool generate_process) : GDSParse(config, process, generate_process)
 {
 	_config = config;
 	_scale = 100.0;
+	_generate_process = generate_process;
 	// FIXME - check multiple output and output children first
 	SetOutputOptions(false, true, false, true);
 }
@@ -59,15 +60,12 @@ void GDSParse_svg::OutputFooter()
 {
 	if(_optr && _Objects){
 		struct _Boundary *Boundary = _Objects->GetBoundary();
-		float height = (Boundary->YMax - Boundary->YMin);
 		
 		fprintf(_optr, "\t</defs>\n");
 		if(_topcellname){
-			//fprintf(_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", -_scale*Boundary->XMin, -_scale*(height - Boundary->YMin), _topcellname);
 			fprintf(_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", -_scale*Boundary->XMin/2, -_scale*Boundary->YMin/2, _topcellname);
 		}else{
 			if(_Objects->GetObjectRef(0)){
-				//fprintf(_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", -_scale*Boundary->XMin, _scale*(Boundary->YMin), _Objects->GetObjectRef(0)->GetName());
 				fprintf(_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", -_scale*Boundary->XMin/2, -_scale*Boundary->YMin/2, _Objects->GetObjectRef(0)->GetName());
 		}else{
 			}
@@ -94,7 +92,6 @@ void GDSParse_svg::OutputHeader()
 		fprintf(_optr, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 
 		fprintf(_optr, "<svg width=\"%.2f\" height=\"%.2f\" viewBox=\"0 0 %.2f %.2f\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", width*20, height*20, width*_scale, height*_scale);
-		//fprintf(_optr, "<svg width=\"%.2f\" height=\"%.2f\" viewBox=\"0 0 %.2f %.2f\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", width, height, width*_scale, height*_scale);
 
 		/* Output layer texture information */
 
@@ -113,9 +110,6 @@ void GDSParse_svg::OutputHeader()
 
 		fprintf(_optr, "\t<title></title>");
 		fprintf(_optr, "\t<desc></desc>\n");
-
-		float centreX = width/2 + Boundary->XMin;
-		float centreY = height/2 + Boundary->YMin;
 
 		float distance;
 		if(width/2 > height/2){

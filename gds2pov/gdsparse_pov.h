@@ -30,7 +30,7 @@ class GDSParse_pov : public GDSParse
 private:
 	char *_camfile;
 public:
-	GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, char *camfile);
+	GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, char *camfile, bool generate_process);
 	~GDSParse_pov ();
 
 	//class GDSObject_pov *NewObject(char *Name);

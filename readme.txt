@@ -62,6 +62,8 @@ gds2pov [-i input.gds] [-o output.pov] [-b] [-c config.txt] [-p process.txt] [-t
  -b	Output bounding box instead of the layout to allow easier and quicker
 	placing of the camera. It is much quicker to render a box than an IC!
  -c	Specify config file
+ -g Generate process file from gds2 file information (suppresses generation of
+    output file).
  -h Show usage
  -i Input GDS2 file (stdin if not given)
  -o Output POV file (stdout if not given)

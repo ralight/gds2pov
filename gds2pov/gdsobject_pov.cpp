@@ -454,7 +454,6 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 			}
 
 			int bendindex1;
-			int bendindex2;
 
 			if(!positives || !negatives){
 				fprintf(fptr, "} face_indices { %d", 2*(polygon->GetPoints()-3) + 2*(polygon->GetPoints()-1));

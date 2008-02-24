@@ -28,7 +28,7 @@
 
 extern int verbose_output;
 
-GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process)
+GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool generate_process)
 {
 	_iptr = NULL;
 	_optr = NULL;
@@ -67,6 +67,7 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process)
 	_use_outfile = false;
 	_allow_multiple_output = false;
 	_output_children_first = false;
+	_generate_process = generate_process;
 
 	_process = process;
 	_config = config;
@@ -726,10 +727,17 @@ void GDSParse::ParseXYPath()
 			// _layer_warning only has fixed bounds at the moment.
 			// Not sure how to best make it dynamic.
 
-			if(_currentlayer == -1 || _currentdatatype == -1 || !_layer_warning[_currentlayer][_currentdatatype]){
-				v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
-				v_printf(1, "\tIgnoring this layer.\n");
-				_layer_warning[_currentlayer][_currentdatatype] = true;
+			if(!_generate_process){
+				if(_currentlayer == -1 || _currentdatatype == -1 || !_layer_warning[_currentlayer][_currentdatatype]){
+					v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+					v_printf(1, "\tIgnoring this layer.\n");
+					_layer_warning[_currentlayer][_currentdatatype] = true;
+				}
+			}else{
+				if(!_layer_warning[_currentlayer][_currentdatatype]){
+					_process->AddLayer(_currentlayer, _currentdatatype);
+					_layer_warning[_currentlayer][_currentdatatype] = true;
+				}
 			}
 			while(_recordlen){
 				GetFourByteSignedInt();
@@ -772,6 +780,7 @@ void GDSParse::ParseXYPath()
 	_currentendextn = 0.0;
 }
 
+
 void GDSParse::ParseXYBoundary()
 {
 	float X, Y;
@@ -784,12 +793,17 @@ void GDSParse::ParseXYBoundary()
 		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 
 		if(thislayer==NULL){
-			// _layer_warning has a fixed bound and needs to be made
-			// better!
-			if(_currentlayer == -1 || _currentdatatype == -1 || !_layer_warning[_currentlayer][_currentdatatype]){
-				v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
-				v_printf(1, "\tIgnoring this layer.\n");
-				_layer_warning[_currentlayer][_currentdatatype] = true;
+			if(!_generate_process){
+				if(_currentlayer == -1 || _currentdatatype == -1 || !_layer_warning[_currentlayer][_currentdatatype]){
+					v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+					v_printf(1, "\tIgnoring this layer.\n");
+					_layer_warning[_currentlayer][_currentdatatype] = true;
+				}
+			}else{
+				if(!_layer_warning[_currentlayer][_currentdatatype]){
+					_process->AddLayer(_currentlayer, _currentdatatype);
+					_layer_warning[_currentlayer][_currentdatatype] = true;
+				}
 			}
 			while(_recordlen){
 				GetFourByteSignedInt();
@@ -885,8 +899,15 @@ void GDSParse::ParseXY()
 			_TextElements++;
 
 			if(thislayer==NULL){
-				v_printf(2, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
-				v_printf(2, "\tIgnoring this string.\n");
+				if(!_generate_process){
+					v_printf(2, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+					v_printf(2, "\tIgnoring this string.\n");
+				}else{
+					if(!_layer_warning[_currentlayer][_currentdatatype]){
+						_process->AddLayer(_currentlayer, _currentdatatype);
+						_layer_warning[_currentlayer][_currentdatatype] = true;
+					}
+				}
 				while(_recordlen){
 					GetFourByteSignedInt();
 				}

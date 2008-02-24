@@ -42,24 +42,26 @@ class GDSProcess
 {
 private:
 	struct ProcessLayer	*_FirstLayer;
-	int			_Count;		/* Number of layers found */
+	int _Count;		/* Number of layers found */
 
-	bool			_Valid;		/* Is the process file valid? */
+	bool _Valid;		/* Is the process file valid? */
 public:
-	GDSProcess (char *filename);
+	GDSProcess ();
 	~GDSProcess ();
 
-	void 			Parse(char *processfile);
-	//bool			Parse(char *processfile);
+	void Parse(char *processfile);
+	//bool Parse(char *processfile);
 
-	void			AddLayer(struct ProcessLayer *NewLayer);
-	struct ProcessLayer	*GetLayer(int Number, int Datatype);
-	struct ProcessLayer	*GetLayer();
-	struct ProcessLayer	*GetLayer(const char *Name);
-	int			LayerCount();
-	bool			IsValid();
-	float			GetHighest();
-	float			GetLowest();
+	void AddLayer(struct ProcessLayer *NewLayer);
+	void AddLayer(int Layer, int Datatype);
+	struct ProcessLayer *GetLayer(int Number, int Datatype);
+	struct ProcessLayer *GetLayer();
+	struct ProcessLayer *GetLayer(const char *Name);
+	int LayerCount();
+	bool IsValid();
+	float GetHighest();
+	float GetLowest();
+	bool Save(const char *filename);
 };
 
 #endif // _PROCESS_CFG_H

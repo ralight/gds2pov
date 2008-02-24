@@ -38,7 +38,7 @@
 
 extern int verbose_output;
 
-GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, char* camfile) : GDSParse(config, process)
+GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, char* camfile, bool generate_process) : GDSParse(config, process, generate_process)
 {
 	_config = config;
 	_camfile = camfile;

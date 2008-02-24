@@ -83,6 +83,7 @@ protected:
 	bool			_output_children_first;
 	bool			_bounding_output;
 	bool			_use_outfile;
+	bool			_generate_process;
 
 	/*
 	** Both of these variables have fixed bounds because
@@ -140,7 +141,7 @@ protected:
 
 	void RecursiveOutput(class GDSObject *Object, FILE *optr, float offx, float offy, long *objectid);
 public:
-	GDSParse (class GDSConfig *config, class GDSProcess *process);
+	GDSParse (class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	virtual ~GDSParse ();
 
 	void SetOutputOptions(bool bounding_output, bool use_outfile, bool allow_multiple_output, bool output_children_first);

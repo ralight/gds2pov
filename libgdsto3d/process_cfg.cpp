@@ -43,7 +43,7 @@
 #include "process_cfg.h"
 #include "gds_globals.h"
 
-GDSProcess::GDSProcess(char *processfile)
+GDSProcess::GDSProcess()
 {
 	_Count = 0;
 	_Valid = true;
@@ -449,6 +449,28 @@ int GDSProcess::LayerCount()
 	return _Count;
 }
 
+
+void GDSProcess::AddLayer(int Layer, int Datatype)
+{
+	struct ProcessLayer NewLayer;
+
+	NewLayer.Name = NULL;
+	NewLayer.Layer = Layer;
+	NewLayer.Datatype = Datatype;
+	NewLayer.Height = 0.0;
+	NewLayer.Thickness = 0.0;
+	NewLayer.Red = 0.0;
+	NewLayer.Green = 0.0;
+	NewLayer.Blue = 0.0;
+	NewLayer.Filter = 0.0;
+	NewLayer.Metal = 0;
+	NewLayer.Show = false;
+	NewLayer.Next = NULL;
+
+	AddLayer(&NewLayer);
+}
+
+
 void GDSProcess::AddLayer(struct ProcessLayer *NewLayer)
 {
 	struct ProcessLayer *layer;
@@ -469,8 +491,10 @@ void GDSProcess::AddLayer(struct ProcessLayer *NewLayer)
 	}
 
 	layer->Name = NULL;
-	layer->Name = new char[strlen(NewLayer->Name)+1];
-	strcpy(layer->Name, NewLayer->Name);
+	if(NewLayer->Name){
+		layer->Name = new char[strlen(NewLayer->Name)+1];
+		strcpy(layer->Name, NewLayer->Name);
+	}
 	layer->Layer = NewLayer->Layer;
 	layer->Datatype = NewLayer->Datatype;
 	layer->Height = NewLayer->Height;
@@ -494,16 +518,11 @@ float GDSProcess::GetHighest()
 	struct ProcessLayer *layer;
 
 	layer = _FirstLayer;
-	if(_FirstLayer){
-		while(layer->Next){
-			layer = layer->Next;
-			if(layer->Height + layer->Thickness > Highest && layer->Show){
-				Highest = layer->Height + layer->Thickness;
-			}
-		}
+	while(layer){
 		if(layer->Height + layer->Thickness > Highest && layer->Show){
 			Highest = layer->Height + layer->Thickness;
 		}
+		layer = layer->Next;
 	}
 	return Highest;
 }
@@ -514,19 +533,44 @@ float GDSProcess::GetLowest()
 	struct ProcessLayer *layer;
 
 	layer = _FirstLayer;
-	if(_FirstLayer){
-		while(layer->Next){
-			layer = layer->Next;
-			if(layer->Height < Lowest && layer->Show){
-				Lowest = layer->Height;
-			}
-		}
+	while(layer){
 		if(layer->Height < Lowest && layer->Show){
 			Lowest = layer->Height;
 		}
+		layer = layer->Next;
 	}
 	return Lowest;
 }
 
 
+bool GDSProcess::Save(const char *filename)
+{
+	struct ProcessLayer *layer;
+	FILE *fptr = NULL;
+
+	if(!filename) return false;
+
+	fptr = fopen(filename, "wt");
+	if(!fptr) return false;
+
+	layer = _FirstLayer;
+	while(layer){
+		fprintf(fptr, "LayerStart: LAYER-%d-%d\n", layer->Layer, layer->Datatype);
+		fprintf(fptr, "Layer: %d\n", layer->Layer);
+		fprintf(fptr, "Height: 0\n");
+		fprintf(fptr, "Thickness: 0\n");
+		fprintf(fptr, "Red: 0.0\n");
+		fprintf(fptr, "Green: 0.0\n");
+		fprintf(fptr, "Blue: 0.0\n");
+		fprintf(fptr, "Filter: 0.0\n");
+		fprintf(fptr, "Metal: 0\n");
+		fprintf(fptr, "Show: 1\n");
+		fprintf(fptr, "LayerEnd\n\n");
+
+		layer = layer->Next;
+	}
+	fclose(fptr);
+
+	return true;
+}
 
