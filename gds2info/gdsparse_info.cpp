@@ -21,9 +21,9 @@
  */
 
 
-//#include <stdio.h>
+#include <cstdio>
 //#include <stdlib.h>
-//#include <math.h>
+//#include <cmath>
 
 #include "config_cfg.h"
 #include "process_cfg.h"

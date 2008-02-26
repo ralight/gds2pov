@@ -20,8 +20,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include <stdio.h>
-#include <math.h>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
 
 #include "gds_globals.h" //FIXME - this should be removed
 #include "gdsobject_svg.h"
@@ -200,7 +201,7 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 					 * They should be escaped really, but that is for later
 					 * FIXME!
 					 */
-					for(int j = 0; j < strlen(str); j++){
+					for(unsigned int j = 0; j < strlen(str); j++){
 						if(str[j] == '&' || str[j] == '<' || str[j] == '>'){
 							str[j] = '_';
 						}
@@ -219,7 +220,6 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 {
 	if(FirstSRef){
 		SRefElement dummysref;
-		struct _Boundary *bound;
 		float height, x, angle;
 		GDSObject *obj = NULL;
 		dummysref.Next = FirstSRef;

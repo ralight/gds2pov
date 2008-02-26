@@ -2,7 +2,7 @@
  * File: config_cfg.cpp
  * Author: Roger Light
  * Project: gdsto3d
- * $Id: config_cfg.cpp 227 2005-05-21 20:27:36Z roger $
+ * $Id: config_cfg.cpp 302 2008-02-26 10:47:01Z roger $
  * 
  * This parses the configuration file which contains camera and light
  * information.
@@ -28,8 +28,8 @@
 #  include "config.h"
 #endif
 
-#include <stdio.h>
-#include <string>
+#include <cstdio>
+#include <cstring>
 
 #include "config_cfg.h"
 

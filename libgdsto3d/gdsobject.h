@@ -21,6 +21,7 @@
 #ifndef __GDSOBJECT_H__
 #define __GDSOBJECT_H__
 
+#include <cstdio>
 #include <vector>
 using namespace std;
 
