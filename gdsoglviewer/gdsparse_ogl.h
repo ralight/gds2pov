@@ -88,7 +88,7 @@ public:
 #endif
 
 
-	GDSParse_ogl (class GDSConfig *config, class GDSProcess *process);
+	GDSParse_ogl (class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	~GDSParse_ogl ();
 
 	//class GDSObject_ogl *NewObject(char *Name);

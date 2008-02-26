@@ -22,6 +22,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <cmath>
 
 #ifdef HAVE_CONFIG_H
@@ -67,7 +68,7 @@
 
 extern int verbose_output;
 
-GDSParse_ogl::GDSParse_ogl(class GDSConfig *config, class GDSProcess *process) : GDSParse(config, process)
+GDSParse_ogl::GDSParse_ogl(class GDSConfig *config, class GDSProcess *process, bool generate_process) : GDSParse(config, process, generate_process)
 {
 	_topcell = NULL;
 	SetOutputOptions(false, false, true, false);
@@ -107,7 +108,7 @@ void GDSParse_ogl::OutputFooter()
 
 /* application window title */
 
-char *AppTitle = "GDSto3D";
+const char *AppTitle = "GDSto3D";
 
 /* external OS-dependant functions */
 

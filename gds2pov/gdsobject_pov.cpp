@@ -21,6 +21,7 @@
  */
 
 #include <cstdio>
+#include <cstring>
 #include <cmath>
 
 #include "gds_globals.h" //FIXME - this should be removed

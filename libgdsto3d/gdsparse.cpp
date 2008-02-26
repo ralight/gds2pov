@@ -23,6 +23,7 @@
  */
 
 #include <cmath>
+#include <cstring>
 
 #include "gdsparse.h"
 
@@ -1052,7 +1053,7 @@ char *GDSParse::GetAsciiString()
 	return str;
 }
 
-void GDSParse::ReportUnsupported(char *Name, enum RecordNumbers rn)
+void GDSParse::ReportUnsupported(const char *Name, enum RecordNumbers rn)
 {
 	if(!_unsupported[rn]){
 		v_printf(1, "Unsupported GDS2 record type: %s\n", Name);

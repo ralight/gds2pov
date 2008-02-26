@@ -23,6 +23,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cmath>
+#include <cstdlib>
 
 #include "gds_globals.h" //FIXME - this should be removed
 #include "gdsobject_svg.h"

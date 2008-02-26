@@ -20,8 +20,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -190,7 +191,7 @@ int main(int argc, char *argv[])
 			strncpy(processfile, "process.txt", 13);
 		}
 	}
-	process = new GDSProcess(processfile);
+	process = new GDSProcess();
 	process->Parse(processfile);
 	if(!process){
 		fprintf(stderr, "Error: Out of memory.\n");
@@ -215,7 +216,7 @@ int main(int argc, char *argv[])
 		iptr = stdin;
 	}
 	if(iptr){
-		class GDSParse_ogl *Parser = new class GDSParse_ogl(config, process);
+		class GDSParse_ogl *Parser = new class GDSParse_ogl(config, process, false);
 		if(!Parser->Parse(iptr)){
 			Parser->SetTopcell(topcell);
 #ifdef WIN32

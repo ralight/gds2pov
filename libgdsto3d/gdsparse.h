@@ -130,7 +130,7 @@ protected:
 	int16_t GetTwoByteSignedInt();
 	char *GetAsciiString();
 
-	void ReportUnsupported(char *Name, enum RecordNumbers rn);
+	void ReportUnsupported(const char *Name, enum RecordNumbers rn);
 	
 	bool ParseFile();
 
