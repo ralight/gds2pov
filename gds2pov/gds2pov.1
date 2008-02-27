@@ -1,0 +1,180 @@
+.TH "gds2pov" "1" "27th February 2008" "" ""
+.SH NAME
+gds2pov \- a program convert GDS2 layout files into a POV-Ray scene description file to allow the creation of attractive 3D pictures of a layout.
+
+.SH SYNOPSIS
+.PP
+gds2pov -h
+.PP
+gds2pov
+.I [-c config.txt] [-d] [-e camera.txt] [-g] [-i input.gds] [-o output.pov] [-p process.txt] [-q] [-t topcell] [-v]
+.PP
+
+Usage: gds2pov [-b] [-c config.txt] [-d] [-e camera.pov] [-h] [-i input.gds] [-o output.pov] [-p process.txt] [-q] [-t topcell] [-v]
+
+Options
+ -b             Output bounding box instead of layout to allow easier and
+                 quicker placing of the camera
+				  -c             Specify config file
+				   -d             Decompose polygons into triangles (use mesh2 object instead of prism)
+				    -e             Use external camera include file instead of specifying camera internally
+					 -h             Display this help
+					  -i             Input GDS2 file (stdin if not specified)
+					   -o             Output POV file (stdout if not specified)
+					    -p             Specify process file
+						 -q             Quiet output
+						  -t             Specify top cell name
+						   -v             Verbose output
+
+.SH DESCRIPTION
+.B ralcalc
+is a command line calculator designed for very quick calculations where perhaps only a single result is wanted without having to start and then quit a program.
+.PP
+.B ralcalc
+is also installed as the
+.B =
+command to make using it even quicker.
+
+.SH OPTIONS
+.IP -h
+Display options, version and contact details.
+.IP -c config.txt
+Specify the config file (see CONFIG below)
+.IP -d
+Decompose gds2 polygon shapes into triangles (so use the POV-Ray mesh2 object instead of the prism object). This is incomplete.
+.IP -e camera.txt
+Display the result in decimal format with neither SI prefixes nor exponent.
+
+.SH NUMBER FORMAT
+Numbers should be input using the "." or "," as a decimal point (this is locale dependent so both may not work in your locale), with no thousands separators.
+.PP
+ralcalc supports the SI prefix characters for both input and output:
+.PP
+.RS
+= 2u/35
+.br
+2u/35 = 57.1429n
+.RE
+.PP
+Numbers of the form 1e-3 are also supported, where the "e" indicates a power of ten. Don't mix and match SI prefixes and "e"s in the same number (although 1e-3n is valid, 1ne-3 is not - avoid both for less confusion).
+
+.SH OPERATORS
+
+The simple mathematical operators for addition (+), subtraction (-), multiplication (*, x), division (/) and power (^) are supported, with addition and subtraction having the lowest precedence and power having the highest.
+.PP
+.RS
+= 1+2x3
+.br
+1+2x3 = 7
+.RE
+.PP
+Brackets ( (), [] ) can be used to control the order in which statements are processed:
+.PP
+.RS
+= [1+2]x3
+.br
+[1+2]x3 = 9
+.RE
+.PP
+Both the square and round brackets can be used and are both directly equivalent, so [1+2)x3 is also valid. Round brackets are more commonly used in mathematics, but the square brackets (and the "x" for multiplication) are included to try to prevent problems with the shell expanding those characters.
+.PP
+ralcalc stores the result of the calculation so that it can be used in the next calculation with the "_" character.
+.PP
+.RS
+= 2^0.5
+.br
+2^0.5 = 1.41421
+.br
+= 1/_
+.br
+1/_ = 0.707107
+.RE
+
+.SH FILES
+.I ~/.ralcalc_result
+.RS
+The result of the last calculation, which can be accessed in a later calculation using the "_" character. Note that this is not necessarily portable across different machine architectures.
+
+.SH ENVIRONMENT
+.IP HOME
+Determines where the .ralcalc_result file is stored.
+
+.SH DIAGNOSTICS
+ralcalc attempts to notify the user of as many errors as possible and indicate where those errors are, if they are user input related.
+
+.PP
+If an unknown character is included in the equation, an "unknown token" error will be generated. The error marker points to the invalid character.
+.PP
+.RS
+= 34/3@2
+
+Error: 34/3@2
+           ^ unknown token
+.RE
+
+.PP
+If an invalid number is included, a "bad number" error will be generated. The error marker points to the end of the invalid number.
+.PP
+.RS
+= 3.14.159x2.8^2
+
+Error: 3.14.159x2.8^2
+              ^ bad number
+.RE
+
+.PP
+If the number of open and close brackets do not match up, a "mismatched brackets" error will be generated. The error marker position has no significance.
+.PP
+.RS
+= 5/[[2+3]*9
+
+Error: 5/[[2+3]*9
+                 ^ mismatched brackets
+
+.RE
+
+.PP
+If an operator appears in an invalid position, an "invalid operator" error will be generated. Examples of this include duplicated operators "++" and operators next to closed brackets "+)". The error marker indicates the invalid operator.
+.PP
+.RS
+= 3^^7
+
+Error: 3^^7
+         ^ invalid operator
+.RE
+
+.PP
+If a bracket appears in an invalid position, an "invalid bracket" error will be generated. This type of error often overlaps with other errors, so there will be a number of messages written to the screen. It is best to fix this error first as it will likely be the root cause of the problem. The error marker indicates the invalid bracket.
+.PP
+.RS
+= [2+]3
+ 
+Error: [2+]3
+          ^ invalid bracket
+  
+Error: [2+]3
+            ^ invalid operator
+.RE
+
+.PP
+If ralcalc is unable to allocate some memory, an "out of memory" error will be generated.
+
+.PP
+Internal error: If the parser notices two numbers next to each other yet does not generate a "bad number" error, then a "duplicate number" error will be generated. This should never happen.
+
+.PP
+Internal error: If an unknown error code is passed to the error output function, an "unknown error" will be generated and the invalid error code displayed.
+
+.SH EXIT VALUES
+.TP
+.B 0
+.I Success
+.TP
+.B 1
+.I At least one error occurred.
+
+.SH BUGS
+None known...
+
+.SH AUTHOR
+Roger Light <roger@atchoo.org>
