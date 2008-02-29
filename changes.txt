@@ -1,3 +1,12 @@
+Version 20080229
+================
+
+- Number of fixes to provide gcc 4.3 support.
+- New feature for gds2pov and gds2svg: use the "-g" option to automatically
+  generate a process file with information based on the layers found in the
+  supplied gds2 file.
+
+
 Version 20070827
 ================
 
@@ -37,6 +46,7 @@ Version 20061130
 
 - Fixes to the build process.
 - Memory stability fixes.
+
 
 Version 20061012
 ================

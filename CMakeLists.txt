@@ -1,5 +1,5 @@
 project (gdsto3d)
-set (VERSION 20071201)
+set (VERSION 20080229)
 
 add_definitions (-DVERSION=\\\"${VERSION}\\\" -DHAVE_CONFIG_H)
 include_directories (${gdsto3d_BINARY_DIR})
