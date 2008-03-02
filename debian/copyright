@@ -1,0 +1,19 @@
+This package was debianized by Roger Light <roger@atchoo.org> on
+Sun, 02 Mar 2008 22:41:57 +0000.
+
+It was downloaded from http://atchoo.org/gds2pov/files/gdsto3d-20080229.tar.gz
+
+Upstream Author(s): 
+
+    Roger Light <roger@atchoo.org>
+
+Copyright: 
+
+    Copyright (C) 2004-2008 Roger Light
+
+License:
+
+    gds2tod is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+
+The Debian packaging is (C) 2008, Roger Light <roger@atchoo.org> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

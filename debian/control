@@ -1,0 +1,15 @@
+Source: gdsto3d
+Section: electronics
+Priority: extra
+Maintainer: Roger Light <roger@atchoo.org>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: gdsto3d
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Programs for converting gds2 file into a variety of formats.
+ gdsto3d contains the programs gds2pov, gds2svg and gdsoglviewer which convert
+ the standard chip layout format gds2 files into POV-Ray and SVG files or view
+ them in real time.
+
