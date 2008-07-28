@@ -22,6 +22,9 @@
 #ifndef _CONFIG_CFG_H
 #define _CONFIG_CFG_H
 
+#include <vector>
+using namespace std;
+
 typedef enum {
 	ptNone,
 	ptCamera,
@@ -37,22 +40,25 @@ typedef enum {
 	bpBottomRight
 } BoundaryPos;
 
-typedef struct _Position{
-	struct _Position *Next;
+class Position {
+public: 
 	PosType postype;
 	BoundaryPos boundarypos;
 	float XMod;
 	float YMod;
 	float ZMod;
-} Position;
+
+	Position() : boundarypos(bpCentre),
+		XMod(1.0), YMod(1.0), ZMod(1.0) { };
+};
 
 class GDSConfig
 {
 private:
-	Position	_CameraPos;
-	Position	_LookAtPos;
-	Position	*_FirstLight;
-	Position	*_LastLight;
+	class Position _CameraPos;
+	class Position _LookAtPos;
+	vector<class Position *> _Lights;
+	class Position *_currentlight;
 
 	int		_LightCount;
 
@@ -74,9 +80,11 @@ public:
 	bool IsValid();
 	char *GetFont();
 
-	Position *GetLookAtPos();
-	Position *GetCameraPos();
-	Position *GetLightPos();
+	class Position *GetLookAtPos();
+	class Position *GetCameraPos();
+	class Position *GetLightPos();
+	class Position *GetLightPos(int index);
+	int GetLightCount();
 };
 
 #endif // _PROCESS_CFG_H

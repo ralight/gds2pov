@@ -156,13 +156,10 @@ void GDSParse_pov::OutputHeader()
 		}
 
 		if(_config->GetLightPos()!=NULL){
-			Position dummypos;
-			dummypos.Next = _config->GetLightPos();
+			int count = _config->GetLightCount();
 
-			Position *LightPos = &dummypos;
-
-			while(LightPos->Next){
-				LightPos = LightPos->Next;
+			for(int i = 0; i < count; i++){
+				Position *LightPos = _config->GetLightPos(i);
 				XMod = LightPos->XMod;
 				YMod = LightPos->YMod;
 				ZMod = LightPos->ZMod;

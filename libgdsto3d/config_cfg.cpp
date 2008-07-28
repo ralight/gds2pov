@@ -45,17 +45,13 @@ GDSConfig::GDSConfig()
 	_CameraPos.XMod = 1.0;
 	_CameraPos.YMod = 1.0;
 	_CameraPos.ZMod = 1.0;
-	_CameraPos.Next = NULL;
 
 	_LookAtPos.postype = ptLookAt;
 	_LookAtPos.boundarypos = bpCentre;
 	_LookAtPos.XMod = 1.0;
 	_LookAtPos.YMod = 1.0;
 	_LookAtPos.ZMod = 0.0;
-	_LookAtPos.Next = NULL;
 
-	_FirstLight = NULL;
-	_LastLight = NULL;
 	_LightCount = 0;
 	_Valid = true;
 
@@ -67,11 +63,7 @@ GDSConfig::GDSConfig(char *configfile)
 	_Font = NULL;
 	_Ambient = 1.2;
 	_Scale = 1.0;
-	_CameraPos.Next = NULL;
-	_LookAtPos.Next = NULL;
 
-	_FirstLight = NULL;
-	_LastLight = NULL;
 	_LightCount = 0;
 	_Valid = true;
 
@@ -271,23 +263,9 @@ GDSConfig::GDSConfig(char *configfile)
 						current_type = ptLookAt;
 					}else if(strstr(line, "Type: Light")){
 						current_type = ptLight;
-						if(_LastLight){
-							_LastLight->Next = new Position;
-							_LastLight = _LastLight->Next;
-							_LastLight->Next = NULL;
-							_LastLight->boundarypos = bpCentre;
-							_LastLight->XMod = 1.0;
-							_LastLight->YMod = 1.0;
-							_LastLight->ZMod = 1.0;
-						}else{
-							_FirstLight = new Position;
-							_LastLight = _FirstLight;
-							_LastLight->Next = NULL;
-							_LastLight->boundarypos = bpCentre;
-							_LastLight->XMod = 1.0;
-							_LastLight->YMod = 1.0;
-							_LastLight->ZMod = 1.0;
-						}
+
+						_currentlight = new Position;
+						_Lights.push_back(_currentlight);
 					}else{
 						fprintf(stderr, "Error: Unknown position type \"%s\" on line %d of config file.\n", line, current_line);
 						_Valid = false;
@@ -337,8 +315,8 @@ GDSConfig::GDSConfig(char *configfile)
 							_LookAtPos.boundarypos = thispos;
 							break;
 						case ptLight:
-							if(_LastLight){
-								_LastLight->boundarypos = thispos;
+							if(_currentlight){
+								_currentlight->boundarypos = thispos;
 							}else{
 								fprintf(stderr, "Error: Position found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								_Valid = false;
@@ -378,8 +356,8 @@ GDSConfig::GDSConfig(char *configfile)
 							sscanf(line, "XMod: %f", &_LookAtPos.XMod);
 							break;
 						case ptLight:
-							if(_LastLight){
-								sscanf(line, "XMod: %f", &_LastLight->XMod);
+							if(_currentlight){
+								sscanf(line, "XMod: %f", &_currentlight->XMod);
 							}else{
 								fprintf(stderr, "Error: XMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								_Valid = false;
@@ -418,8 +396,8 @@ GDSConfig::GDSConfig(char *configfile)
 							sscanf(line, "YMod: %f", &_LookAtPos.YMod);
 							break;
 						case ptLight:
-							if(_LastLight){
-								sscanf(line, "YMod: %f", &_LastLight->YMod);
+							if(_currentlight){
+								sscanf(line, "YMod: %f", &_currentlight->YMod);
 							}else{
 								fprintf(stderr, "Error: YMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								_Valid = false;
@@ -458,8 +436,8 @@ GDSConfig::GDSConfig(char *configfile)
 							sscanf(line, "ZMod: %f", &_LookAtPos.ZMod);
 							break;
 						case ptLight:
-							if(_LastLight){
-								sscanf(line, "ZMod: %f", &_LastLight->ZMod);
+							if(_currentlight){
+								sscanf(line, "ZMod: %f", &_currentlight->ZMod);
 							}else{
 								fprintf(stderr, "Error: ZMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								_Valid = false;
@@ -504,22 +482,9 @@ GDSConfig::~GDSConfig()
 		delete [] _ProcessFile;
 	}
 
-	if(_FirstLight){
-		Position *pos1;
-		Position *pos2;
-
-		pos1 = _FirstLight;
-
-		while(pos1->Next){
-			pos2 = pos1->Next;
-			if(pos1){
-				delete pos1;
-			}
-			pos1 = pos2;
-		}
-		if(pos1){
-			delete pos1;
-		}
+	while(!_Lights.empty()){
+		delete _Lights[_Lights.size()-1];
+		_Lights.pop_back();
 	}
 	if(_Font){
 		delete [] _Font;
@@ -563,6 +528,15 @@ Position *GDSConfig::GetCameraPos()
 
 Position *GDSConfig::GetLightPos()
 {
-	return _FirstLight;
+	return _Lights[0];
 }
 
+Position *GDSConfig::GetLightPos(int index)
+{
+	return _Lights[index];
+}
+
+int GDSConfig::GetLightCount()
+{
+	return _Lights.size();
+}
