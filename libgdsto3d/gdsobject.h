@@ -77,7 +77,8 @@ public:
 	class GDSObject *GetSRef(class GDSObjects *Objects, unsigned int Index);
 	class GDSObject *GetARef(class GDSObjects *Objects, unsigned int Index);
 
-	struct _Boundary *GetBoundary(struct ObjectList *objectlist);
+	//struct _Boundary *GetBoundary(struct ObjectList *objectlist);
+	struct _Boundary *GetBoundary(void);
 	float GetWidth();
 	float GetHeight();
 

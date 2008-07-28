@@ -54,7 +54,6 @@ typedef struct _SRefElement {
 } SRefElement;
 
 typedef struct _ARefElement {
-	struct _ARefElement *Next;
 	float X1;
 	float Y1;
 	float X2;

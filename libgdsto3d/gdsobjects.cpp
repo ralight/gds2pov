@@ -25,29 +25,17 @@
 
 #include "gdsobjects.h"
 
-GDSObjects::GDSObjects()
+GDSObjects::GDSObjects() : Boundary(NULL)
 {
-	FirstObject = NULL;
-	LastObject = NULL;
-	Count = 0;
-	Boundary = NULL;
 }
 
 GDSObjects::~GDSObjects()
 {
-	struct ObjectList *object;
-
-	object = FirstObject;
-
-	if(object){
-		while(object->Next){
-			object = object->Next;
-			delete object->Prev->Object;
-			delete object->Prev;
-		}
-		delete object->Object;
-		delete object;
+	while(!FirstObject.empty()){
+		delete FirstObject[FirstObject.size()-1];
+		FirstObject.pop_back();
 	}
+
 	if(Boundary){
 		delete Boundary;
 	}
@@ -55,32 +43,14 @@ GDSObjects::~GDSObjects()
 
 class GDSObject *GDSObjects::AddObject(std::string Name, class GDSObject *newobject)
 {
-	struct ObjectList *object = new struct ObjectList;
-	//object->Object = new class GDSObject(Name);
-	object->Object = newobject;
-	if(FirstObject){
-		LastObject->Next = object;
-		object->Prev = LastObject;
-		LastObject = object;
-		LastObject->Next = NULL;
-	}else{
-		FirstObject = object;
-		LastObject = object;
-		object->Next = NULL;
-		object->Prev = NULL;
-	}
-	Count++;
-	return object->Object;
+	FirstObject.push_back(newobject);
+	return newobject;
 }
 
-class GDSObject *GDSObjects::GetObjectRef(int Index)
+class GDSObject *GDSObjects::GetObjectRef(unsigned int Index)
 {
-	if(FirstObject && Index<Count){
-		struct ObjectList *object = FirstObject;
-		for(int i=0; i<Index && object; i++){
-			object = object->Next;
-		}
-		return object->Object;
+	if(!FirstObject.empty() && Index < FirstObject.size()){
+		return FirstObject[Index];
 	}else{
 		return NULL;
 	}
@@ -88,17 +58,11 @@ class GDSObject *GDSObjects::GetObjectRef(int Index)
 
 class GDSObject *GDSObjects::GetObjectRef(std::string Name)
 {
-	if(FirstObject && Name.length() > 0){	
-		struct ObjectList *object = FirstObject;
-
-		while(object->Next){
-			if(Name == object->Object->GetName()){
-				return object->Object;
+	if(!FirstObject.empty() && Name.length() > 0){	
+		for(unsigned int i = 0; i < FirstObject.size(); i++){
+			if(Name == FirstObject[i]->GetName()){
+				return FirstObject[i];
 			}
-			object = object->Next;
-		}
-		if(Name == object->Object->GetName()){
-			return object->Object;
 		}
 	}
 	return NULL;
@@ -107,7 +71,7 @@ class GDSObject *GDSObjects::GetObjectRef(std::string Name)
 
 int GDSObjects::GetCount()
 {
-	return Count;
+	return FirstObject.size();
 }
 
 struct _Boundary *GDSObjects::GetBoundary()
@@ -119,29 +83,8 @@ struct _Boundary *GDSObjects::GetBoundary()
 	Boundary->XMax = Boundary->YMax = -10000000.0;
 	Boundary->XMin = Boundary->YMin =  10000000.0;
 
-	if(FirstObject){
-		struct ObjectList *objectlist = LastObject;
-		struct _Boundary *object_bound;
-
-		while(objectlist->Prev){
-			object_bound = objectlist->Object->GetBoundary(FirstObject);
-
-			if(object_bound->XMax > Boundary->XMax){
-				Boundary->XMax = object_bound->XMax;
-			}
-			if(object_bound->XMin < Boundary->XMin){
-				Boundary->XMin = object_bound->XMin;
-			}
-			if(object_bound->YMax > Boundary->YMax){
-				Boundary->YMax = object_bound->YMax;
-			}
-			if(object_bound->YMin < Boundary->YMin){
-				Boundary->YMin = object_bound->YMin;
-			}
-
-			objectlist = objectlist->Prev;
-		}
-		object_bound = objectlist->Object->GetBoundary(FirstObject);
+	for(unsigned int i = 0; i < FirstObject.size(); i++){
+		struct _Boundary *object_bound = FirstObject[i]->GetBoundary();
 
 		if(object_bound->XMax > Boundary->XMax){
 			Boundary->XMax = object_bound->XMax;
@@ -157,10 +100,5 @@ struct _Boundary *GDSObjects::GetBoundary()
 		}
 	}
 	return Boundary;
-}
-
-struct ObjectList *GDSObjects::GetObjectList()
-{
-	return FirstObject;
 }
 
