@@ -142,76 +142,72 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!TextItems.empty()){
-		char *str = NULL;
+		std::string str;
 		class GDSText *text;
 		float angle;
 		//for (vector<class GDSText>::const_iterator text=TextItems.begin(); text!=TextItems.end(); ++text){
 		for (unsigned int i=0; i<TextItems.size(); i++){
 			text = TextItems[i];
-			if(text && text->GetString()){
-				str = strdup(text->GetString());
-				if(str){
-					angle = 180.0/M_PI*asin(sin(M_PI/180*text->GetRY()));
-					/* FIXME if(Font){
-					fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->GetString());
-					}else{
-						fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
-					}*/
-					//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-					fprintf(fptr, "\t\t\t<text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(text->GetX()), _scale*(this->GetHeight() - text->GetY()), text->GetLayer()->Name.c_str());
-					float htrans = 0.0, vtrans = 0.0;
-					switch(text->GetHJust()){
-						case 0:
-							htrans = -0.5f*strlen(str);
-							break;
-						case 1:
-								htrans = -0.25f*strlen(str);
+			if(text && text->GetString().length() > 0){
+				str = text->GetString();
+				angle = 180.0/M_PI*asin(sin(M_PI/180*text->GetRY()));
+				/* FIXME if(Font){
+				fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->GetString());
+				}else{
+					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
+				}*/
+				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
+				fprintf(fptr, "\t\t\t<text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(text->GetX()), _scale*(this->GetHeight() - text->GetY()), text->GetLayer()->Name.c_str());
+				float htrans = 0.0, vtrans = 0.0;
+				switch(text->GetHJust()){
+					case 0:
+						htrans = -0.5f*str.length();
 						break;
-							case 2:
-							htrans = 0.0f;
-							break;
-					}
-					switch(text->GetVJust()){
+					case 1:
+							htrans = -0.25f*str.length();
+					break;
 						case 2:
-							vtrans = 0.0f;
-							break;
-						case 1:
-							vtrans = 0.5f;
-							break;
-						case 0:
-							vtrans = 1.0f;
-							break;
-					}
-					if(text->GetMag()!=1.0 || text->GetFlipped() || fabs(angle) > 0.0f || htrans < 0.0 || vtrans < 0.0){
-						fprintf(fptr, " transform=\"");
-						/* FIXME if(text->GetMag()!=1.0){
-							fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
-						} */
-						/* FIXME if(text->GetFlipped()){
-							fprintf(fptr, "scale <1,-1,1> ");
-						} */
-						if(fabs(angle) > 0.0f){
-							fprintf(fptr, "rotate(%.2f,%.2f,%.2f)", angle, _scale*text->GetX(), _scale*(this->GetHeight() - text->GetY()));
-						}
-						if(htrans < 0.0 || vtrans < 0.0){
-							fprintf(fptr, " translate(%.2f,%.2f)", 55.0*htrans, 55.0*vtrans);
-						}
-						fprintf(fptr, "\"");
-					}
-					/* Remove forbidden characters 
-					 * They should be escaped really, but that is for later
-					 * FIXME!
-					 */
-					for(unsigned int j = 0; j < strlen(str); j++){
-						if(str[j] == '&' || str[j] == '<' || str[j] == '>'){
-							str[j] = '_';
-						}
-					}
-					
-					fprintf(fptr, ">%s</text>\n", str);
-					free(str);
-					str = NULL;
+						htrans = 0.0f;
+						break;
 				}
+				switch(text->GetVJust()){
+					case 2:
+						vtrans = 0.0f;
+						break;
+					case 1:
+						vtrans = 0.5f;
+						break;
+					case 0:
+						vtrans = 1.0f;
+						break;
+				}
+				if(text->GetMag()!=1.0 || text->GetFlipped() || fabs(angle) > 0.0f || htrans < 0.0 || vtrans < 0.0){
+					fprintf(fptr, " transform=\"");
+					/* FIXME if(text->GetMag()!=1.0){
+						fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
+					} */
+					/* FIXME if(text->GetFlipped()){
+						fprintf(fptr, "scale <1,-1,1> ");
+					} */
+					if(fabs(angle) > 0.0f){
+						fprintf(fptr, "rotate(%.2f,%.2f,%.2f)", angle, _scale*text->GetX(), _scale*(this->GetHeight() - text->GetY()));
+					}
+					if(htrans < 0.0 || vtrans < 0.0){
+						fprintf(fptr, " translate(%.2f,%.2f)", 55.0*htrans, 55.0*vtrans);
+					}
+					fprintf(fptr, "\"");
+				}
+				/* Remove forbidden characters 
+				 * They should be escaped really, but that is for later
+				 * FIXME!
+				 */
+				for(unsigned int j = 0; j < str.length(); j++){
+					if(str[j] == '&' || str[j] == '<' || str[j] == '>'){
+						str[j] = '_';
+					}
+				}
+				
+				fprintf(fptr, ">%s</text>\n", str.c_str());
 			}
 		}
 	}

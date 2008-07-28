@@ -203,11 +203,11 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 		//for (vector<class GDSText>::const_iterator text=TextItems.begin(); text!=TextItems.end(); ++text){
 		for (unsigned int i=0; i<TextItems.size(); i++){
 			text = TextItems[i];
-			if(text->GetString()){
+			if(text->GetString().length() > 0){
 				if(Font){
-					fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->GetString());
+					fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font, text->GetString().c_str());
 				}else{
-					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
+					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString().c_str());
 				}
 				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
 				fprintf(fptr, "texture{t%s}",text->GetLayer()->Name.c_str());
@@ -224,10 +224,10 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 				float htrans = 0.0, vtrans = 0.0;
 				switch(text->GetHJust()){
 					case 0:
-						htrans = -0.5*strlen(text->GetString());
+						htrans = -0.5*text->GetString().length();
 						break;
 					case 1:
-						htrans = -0.25*strlen(text->GetString());
+						htrans = -0.25*text->GetString().length();
 						break;
 					case 2:
 						htrans = 0;
