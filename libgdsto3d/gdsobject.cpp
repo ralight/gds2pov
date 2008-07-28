@@ -28,11 +28,6 @@
 
 GDSObject::GDSObject(std::string NewName)
 {
-	FirstARef = NULL;
-	LastARef = NULL;
-
-	SRefCount = 0;
-	ARefCount = 0;
 	SRefs = NULL;
 	ARefs = NULL;
 
@@ -69,19 +64,9 @@ GDSObject::~GDSObject()
 		FirstSRef.pop_back();
 	}
 
-	if(FirstARef){
-		ARefElement *aref1;
-		ARefElement *aref2;
-
-		aref1 = FirstARef;
-		while(aref1->Next){
-			aref2 = aref1->Next;
-			delete aref1;
-			aref1 = aref2;
-		}
-		if(aref1){
-			delete aref1;
-		}
+	while(!FirstARef.empty()){
+		delete FirstARef[FirstARef.size()-1];
+		FirstARef.pop_back();
 	}
 
 	if(SRefs){
@@ -136,12 +121,12 @@ void GDSObject::AddSRef(std::string Name, float X, float Y, int Flipped, float M
 	NewSRef->Mag = Mag;
 	NewSRef->object = NULL;
 
-	SRefCount++;
+	FirstSRef.push_back(NewSRef);
 }
 
 void GDSObject::SetSRefRotation(float X, float Y, float Z)
 {
-	if(FirstSRef.size() > 0){
+	if(!FirstSRef.empty()){
 		FirstSRef[FirstSRef.size()-1]->Rotate.X = X;
 		FirstSRef[FirstSRef.size()-1]->Rotate.Y = Y;
 		FirstSRef[FirstSRef.size()-1]->Rotate.Z = Z;
@@ -152,18 +137,7 @@ void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2
 {
 	ARefElement *NewARef = new ARefElement;
 
-	NewARef->Next = NULL;
-	NewARef->Name = "";
-
-	if(LastARef){
-		LastARef->Next = NewARef;
-		LastARef = NewARef;
-	}else{
-		FirstARef = NewARef;
-		LastARef = NewARef;
-	}
-
-	NewARef->Name = strdup(Name.c_str());
+	NewARef->Name = Name;
 	NewARef->X1 = X1;
 	NewARef->Y1 = Y1;
 	NewARef->X2 = X2;
@@ -179,15 +153,15 @@ void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2
 	NewARef->Mag = Mag;
 	NewARef->object = NULL;
 
-	ARefCount++;
+	FirstARef.push_back(NewARef);
 }
 
 void GDSObject::SetARefRotation(float X, float Y, float Z)
 {
-	if(LastARef){
-		LastARef->Rotate.X = X;
-		LastARef->Rotate.Y = Y;
-		LastARef->Rotate.Z = Z;
+	if(!FirstARef.empty()){
+		FirstARef[FirstARef.size()-1]->Rotate.X = X;
+		FirstARef[FirstARef.size()-1]->Rotate.Y = Y;
+		FirstARef[FirstARef.size()-1]->Rotate.Z = Z;
 	}
 }
 
@@ -244,7 +218,6 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 
 	struct ObjectList *object;
 	dummyobject.Next = objectlist;
-	struct _Boundary *NewBound;
 
 	for(int i = 0; i < FirstSRef.size(); i++){
 		SRefElement *sref = FirstSRef[i];
@@ -254,6 +227,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 			while(object->Next){
 				object = object->Next;
 				if(object->Object->GetName() == sref->Name){
+					struct _Boundary *NewBound;
 					NewBound = object->Object->GetBoundary(objectlist);
 					if(sref->X + NewBound->XMax > Boundary.XMax){
 						Boundary.XMax = sref->X + NewBound->XMax;
@@ -273,45 +247,36 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		}
 	}
 
-	if(FirstARef){
-		ARefElement dummyaref;
-		dummyaref.Next = FirstARef;
-
-		ARefElement *aref = &dummyaref;
-
-		struct ObjectList *object;
-		dummyobject.Next = objectlist;
+	dummyobject.Next = objectlist;
 		
-		struct _Boundary *NewBound;
-		while(aref->Next){
-			aref = aref->Next;
-			if(Name == aref->Name){
-				object = &dummyobject;
-				object = &dummyobject;
-				while(object->Next){
-					object = object->Next;
-					if(object->Object->GetName() == aref->Name){
-						NewBound = object->Object->GetBoundary(objectlist);
-						if(aref->X2 + NewBound->XMax > Boundary.XMax){
-							Boundary.XMax = aref->X2 + NewBound->XMax;
-						}
-						if(aref->X1 - NewBound->XMin < Boundary.XMin){
-							Boundary.XMin = aref->X1 - NewBound->XMin;
-						}
-						if(aref->Y3 + NewBound->YMax > Boundary.YMax){
-							Boundary.YMax = aref->Y3 + NewBound->YMax;
-						}
-						if(aref->Y1 - NewBound->YMin < Boundary.YMin){
-							Boundary.YMin = aref->Y1 - NewBound->YMin;
-						}
-						break;
+	for(int i = 0; i < FirstARef.size(); i++){
+		ARefElement *aref = FirstARef[i];
+		if(Name == aref->Name){
+			object = &dummyobject;
+			while(object->Next){
+				object = object->Next;
+				if(object->Object->GetName() == aref->Name){
+					struct _Boundary *NewBound;
+					NewBound = object->Object->GetBoundary(objectlist);
+					if(aref->X2 + NewBound->XMax > Boundary.XMax){
+						Boundary.XMax = aref->X2 + NewBound->XMax;
 					}
+					if(aref->X1 - NewBound->XMin < Boundary.XMin){
+						Boundary.XMin = aref->X1 - NewBound->XMin;
+					}
+					if(aref->Y3 + NewBound->YMax > Boundary.YMax){
+						Boundary.YMax = aref->Y3 + NewBound->YMax;
+					}
+					if(aref->Y1 - NewBound->YMin < Boundary.YMin){
+						Boundary.YMin = aref->Y1 - NewBound->YMin;
+					}
+					break;
 				}
 			}
 		}
 	}
 
-	if(PathItems.empty() && PolygonItems.empty() && FirstSRef.empty() && !FirstARef){
+	if(PathItems.empty() && PolygonItems.empty() && FirstSRef.empty() && FirstARef.empty()){
 		Boundary.XMax = Boundary.XMin = Boundary.YMax = Boundary.YMin = 0;
 	}
 
@@ -336,53 +301,11 @@ class GDSPath *GDSObject::GetCurrentPath()
 
 int GDSObject::HasASRef()
 {
-	return (LastARef || !FirstSRef.empty());
-}
-
-void GDSObject::IndexSRefs(class GDSObjects *Objects)
-{
-	if(FirstSRef.empty()) return;
-
-	if(SRefs){
-		delete [] SRefs;
-		SRefs = NULL;
-	}
-
-	SRefs = new GDSObjectRef[SRefCount];
-
-	for(int i = 0; i < FirstSRef.size(); i++){
-		SRefElement *sref = FirstSRef[i];
-		SRefs[i] = Objects->GetObjectRef(sref->Name);
-	}
-}
-
-void GDSObject::IndexARefs(class GDSObjects *Objects)
-{
-	if(!FirstARef) return;
-
-	ARefElement *aref;
-	if(ARefs){
-		delete [] ARefs;
-		ARefs = NULL;
-	}
-
-	ARefs = new GDSObjectRef[ARefCount];
-
-	aref = FirstARef;
-	int i=0;
-	while(aref->Next){
-		ARefs[i] = Objects->GetObjectRef(aref->Name);
-		i++;
-		aref = aref->Next;
-	}
-	ARefs[i] = Objects->GetObjectRef(aref->Name);
+	return (!FirstARef.empty() || !FirstSRef.empty());
 }
 
 class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, int Index)
 {
-	if(!SRefs && FirstSRef.size()){
-		IndexSRefs(Objects);
-	}
 	if(FirstSRef.size() > 0 && Index < FirstSRef.size()){
 		return SRefs[Index];
 	}
@@ -391,10 +314,7 @@ class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, int Index)
 
 class GDSObject *GDSObject::GetARef(class GDSObjects *Objects, int Index)
 {
-	if(!ARefs && FirstARef){
-		IndexARefs(Objects);
-	}
-	if(FirstARef && Index<ARefCount){
+	if(FirstARef.size() > 0 && Index < FirstARef.size()){
 		return ARefs[Index];
 	}
 	return NULL;

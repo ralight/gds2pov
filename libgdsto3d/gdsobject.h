@@ -39,11 +39,9 @@ protected:
 	vector<class GDSPolygon*> PolygonItems;
 
 	vector<SRefElement*> FirstSRef;
-	ARefElement *FirstARef;
-	ARefElement *LastARef;
+	vector<ARefElement*> FirstARef;
 	bool GotBoundary;
 	bool IsOutput;
-	int SRefCount, ARefCount;
 
 	std::string Name;
 
@@ -78,8 +76,6 @@ public:
 	int HasASRef();
 	class GDSObject *GetSRef(class GDSObjects *Objects, int Index);
 	class GDSObject *GetARef(class GDSObjects *Objects, int Index);
-	void IndexSRefs(class GDSObjects *Objects);
-	void IndexARefs(class GDSObjects *Objects);
 
 	struct _Boundary *GetBoundary(struct ObjectList *objectlist);
 	float GetWidth();

@@ -279,76 +279,71 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std:
 
 void GDSObject_pov::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	if(FirstARef){
-		ARefElement dummyaref;
-		dummyaref.Next = FirstARef;
-		ARefElement *aref = &dummyaref;
+	for(int i = 0; i < FirstARef.size(); i++){
+		ARefElement *aref = FirstARef[i];
 
 		float dx, dy;
 
-		while(aref->Next){
-			aref = aref->Next;
-			if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
-				if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
-					dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
-					dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
+		if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
+			if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
+				dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
+				dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
 
-					fprintf(fptr, "#declare dx = %.2f;\n", dx);
-					fprintf(fptr, "#declare dy = %.2f;\n", dy);
+				fprintf(fptr, "#declare dx = %.2f;\n", dx);
+				fprintf(fptr, "#declare dy = %.2f;\n", dy);
 
-					fprintf(fptr, "#declare colcount = 0;\n");
-					fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-					fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-					fprintf(fptr, "#while (colcount < cols)\n");
-					fprintf(fptr, "\t#declare rowcount = 0;");
-					fprintf(fptr, "\t#while (rowcount < rows)\n");
-					fprintf(fptr, "\t\tobject{str_%s ", aref->Name.c_str());
-					if(aref->Mag!=1.0){
-						fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
-					}
-					if(aref->Flipped){
-						fprintf(fptr, "scale <1,-1,1> ");
-					}
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-					if(aref->Rotate.Y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
-					}
-					fprintf(fptr, "}\n");
-
-					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-					fprintf(fptr, "\t#end\n");
-					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-					fprintf(fptr, "#end\n");
+				fprintf(fptr, "#declare colcount = 0;\n");
+				fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
+				fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
+				fprintf(fptr, "#while (colcount < cols)\n");
+				fprintf(fptr, "\t#declare rowcount = 0;");
+				fprintf(fptr, "\t#while (rowcount < rows)\n");
+				fprintf(fptr, "\t\tobject{str_%s ", aref->Name.c_str());
+				if(aref->Mag!=1.0){
+					fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
 				}
-			}else{
-				if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
-					dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
-					dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
-
-					fprintf(fptr, "#declare dx = %.2f;\n", dx);
-					fprintf(fptr, "#declare dy = %.2f;\n", dy);
-
-					fprintf(fptr, "#declare colcount = 0;\n");
-					fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-					fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
-					fprintf(fptr, "#while (colcount < cols)\n");
-					fprintf(fptr, "\t#declare rowcount = 0;");
-					fprintf(fptr, "\t#while (rowcount < rows)\n");
-					fprintf(fptr, "\t\tobject{str_%s ", aref->Name.c_str());
-					if(aref->Flipped){
-						fprintf(fptr, "scale <1,-1,1> ");
-					}
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-					if(aref->Rotate.Y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
-					}
-					fprintf(fptr, "}\n");
-
-					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
-					fprintf(fptr, "\t#end\n");
-					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
-					fprintf(fptr, "#end\n");
+				if(aref->Flipped){
+					fprintf(fptr, "scale <1,-1,1> ");
 				}
+				fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
+				if(aref->Rotate.Y){
+					fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
+				}
+				fprintf(fptr, "}\n");
+
+				fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
+				fprintf(fptr, "\t#end\n");
+				fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
+				fprintf(fptr, "#end\n");
+			}
+		}else{
+			if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
+				dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
+				dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
+
+				fprintf(fptr, "#declare dx = %.2f;\n", dx);
+				fprintf(fptr, "#declare dy = %.2f;\n", dy);
+
+				fprintf(fptr, "#declare colcount = 0;\n");
+				fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
+				fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
+				fprintf(fptr, "#while (colcount < cols)\n");
+				fprintf(fptr, "\t#declare rowcount = 0;");
+				fprintf(fptr, "\t#while (rowcount < rows)\n");
+				fprintf(fptr, "\t\tobject{str_%s ", aref->Name.c_str());
+				if(aref->Flipped){
+					fprintf(fptr, "scale <1,-1,1> ");
+				}
+				fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
+				if(aref->Rotate.Y){
+					fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
+				}
+				fprintf(fptr, "}\n");
+
+				fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
+				fprintf(fptr, "\t#end\n");
+				fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
+				fprintf(fptr, "#end\n");
 			}
 		}
 	}
