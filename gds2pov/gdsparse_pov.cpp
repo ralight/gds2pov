@@ -30,15 +30,11 @@
 #include "gdsparse.h"
 #include "gdsparse_pov.h"
 #include "gdsobject_pov.h"
-//#include "gds_globals.h"
-//#include "gds2pov.h"
-//#include "gdstext.h"
-//#include "gdspolygon.h"
 
 
 extern int verbose_output;
 
-GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, char* camfile, bool generate_process) : GDSParse(config, process, generate_process)
+GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, std::string camfile, bool generate_process) : GDSParse(config, process, generate_process)
 {
 	_config = config;
 	_camfile = camfile;
@@ -103,7 +99,7 @@ void GDSParse_pov::OutputHeader()
 
 		/* _camfile is a possible camera include file. Depends on the -e option
 		 * If it is null, use the normal camera else use the include */
-		if(!_camfile){
+		if(_camfile != ""){
 			switch(_config->GetCameraPos()->boundarypos){
 				case bpCentre:
 					// Default camera angle = 67.38
@@ -151,7 +147,7 @@ void GDSParse_pov::OutputHeader()
 				break;
 			}
 		}else{
-			fprintf(_optr, "#include %s\n", _camfile);
+			fprintf(_optr, "#include %s\n", _camfile.c_str());
 		}
 
 		if(_config->GetLightPos()!=NULL){

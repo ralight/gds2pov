@@ -61,9 +61,9 @@ int main(int argc, char *argv[])
 	bool bounding_output = false;
 	bool generate_process = false;
 
-	char *gdsfile=NULL;
-	char *povfile=NULL;
-	char *camfile=NULL;
+	std::string gdsfile="";
+	std::string povfile="";
+	std::string camfile="";
 
 	std::string configfile="";
 	std::string processfile="";
@@ -209,8 +209,8 @@ int main(int argc, char *argv[])
 	/************ Open GDS2 file and parse ****************/
 
 	FILE *iptr;
-	if(gdsfile){
-		iptr = fopen(gdsfile, "rb");
+	if(gdsfile != ""){
+		iptr = fopen(gdsfile.c_str(), "rb");
 	}else{
 		iptr = stdin;
 	}
@@ -219,8 +219,8 @@ int main(int argc, char *argv[])
 		if(!Parser->Parse(iptr)){
 			if(!generate_process){
 				FILE *optr;
-				if(povfile){
-					optr = fopen(povfile, "wt");
+				if(povfile != ""){
+					optr = fopen(povfile.c_str(), "wt");
 				}else{
 					optr = stdout;
 				}
@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
 						fclose(optr);
 					}
 				}else{
-					fprintf(stderr, "Error: Unable to open %s.\n", povfile);
+					fprintf(stderr, "Error: Unable to open %s.\n", povfile.c_str());
 				}
 			}else{
 				process->Save(processfile);
@@ -247,7 +247,7 @@ int main(int argc, char *argv[])
 		delete config;
 		delete process;
 	}else{
-		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile);
+		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile.c_str());
 		delete config;
 		delete process;
 		return -1;
