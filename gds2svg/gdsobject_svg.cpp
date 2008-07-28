@@ -215,48 +215,42 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, std:
 
 void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	if(FirstSRef){
-		SRefElement dummysref;
-		float height, x, angle;
-		GDSObject *obj = NULL;
-		dummysref.Next = FirstSRef;
+	float height, x, angle;
+	GDSObject *obj = NULL;
 
-		SRefElement *sref = &dummysref;
-
-		while(sref->Next){
-			sref = sref->Next;
+	for(int i = 0; i < FirstSRef.size(); i++){
+		SRefElement *sref = FirstSRef[i];
 			
-			obj = Objects->GetObjectRef(sref->Name);
-			if(obj){
-				height = obj->GetHeight();
-			}else{
-				height = 0.0f;
-			}
-
-			x = sref->X;
-			angle = 180/M_PI*asin(sin(sref->Rotate.Y*M_PI/180));
-
-			if(sref->Flipped){
-				x = -x;
-			}
-			fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*x, _scale*(this->GetHeight() - sref->Y - height), sref->Name.c_str());
-
-			if(sref->Mag!=1.0 || sref->Flipped || fabs(angle) > 0.0f){
-				fprintf(fptr, " transform=\"");
-				/* FIXME - Mag isn't tested */
-				/* if(sref->Mag!=1.0){
-					fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
-				} */
-				if(sref->Flipped){
-					fprintf(fptr, " scale(-1,1)");
-				}
-				if(fabs(angle) > 0.0f){
-					fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - sref->Y));
-				}
-				fprintf(fptr, "\"");
-			}
-			fprintf(fptr, "/>\n");
+		obj = Objects->GetObjectRef(sref->Name);
+		if(obj){
+			height = obj->GetHeight();
+		}else{
+			height = 0.0f;
 		}
+
+		x = sref->X;
+		angle = 180/M_PI*asin(sin(sref->Rotate.Y*M_PI/180));
+
+		if(sref->Flipped){
+			x = -x;
+		}
+		fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*x, _scale*(this->GetHeight() - sref->Y - height), sref->Name.c_str());
+
+		if(sref->Mag!=1.0 || sref->Flipped || fabs(angle) > 0.0f){
+			fprintf(fptr, " transform=\"");
+			/* FIXME - Mag isn't tested */
+			/* if(sref->Mag!=1.0){
+				fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
+			} */
+			if(sref->Flipped){
+				fprintf(fptr, " scale(-1,1)");
+			}
+			if(fabs(angle) > 0.0f){
+				fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - sref->Y));
+			}
+			fprintf(fptr, "\"");
+		}
+		fprintf(fptr, "/>\n");
 	}
 }
 

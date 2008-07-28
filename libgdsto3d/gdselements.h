@@ -44,7 +44,6 @@ typedef struct {
 } ElementColour;
 
 typedef struct _SRefElement {
-	struct _SRefElement *Next;
 	float X;
 	float Y;
 	float Mag;

@@ -28,8 +28,6 @@
 
 GDSObject::GDSObject(std::string NewName)
 {
-	FirstSRef = NULL;
-	LastSRef = NULL;
 	FirstARef = NULL;
 	LastARef = NULL;
 
@@ -66,19 +64,9 @@ GDSObject::~GDSObject()
 		TextItems.pop_back();
 	}
 
-	if(FirstSRef){
-		SRefElement *sref1;
-		SRefElement *sref2;
-
-		sref1 = FirstSRef;
-		while(sref1->Next){
-			sref2 = sref1->Next;
-			delete sref1;
-			sref1 = sref2;
-		}
-		if(sref1){
-			delete sref1;
-		}
+	while(!FirstSRef.empty()){
+		delete FirstSRef[FirstSRef.size()-1];
+		FirstSRef.pop_back();
 	}
 
 	if(FirstARef){
@@ -138,18 +126,7 @@ void GDSObject::AddSRef(std::string Name, float X, float Y, int Flipped, float M
 {
 	SRefElement *NewSRef = new SRefElement;
 
-	NewSRef->Next = NULL;
-	NewSRef->Name = "";
-
-	if(LastSRef){
-		LastSRef->Next = NewSRef;
-		LastSRef = NewSRef;
-	}else{
-		FirstSRef = NewSRef;
-		LastSRef = NewSRef;
-	}
-
-	NewSRef->Name = strdup(Name.c_str());
+	NewSRef->Name = Name;
 	NewSRef->X = X;
 	NewSRef->Y = Y;
 	NewSRef->Rotate.X = 0.0;
@@ -164,10 +141,10 @@ void GDSObject::AddSRef(std::string Name, float X, float Y, int Flipped, float M
 
 void GDSObject::SetSRefRotation(float X, float Y, float Z)
 {
-	if(LastSRef){
-		LastSRef->Rotate.X = X;
-		LastSRef->Rotate.Y = Y;
-		LastSRef->Rotate.Z = Z;
+	if(FirstSRef.size() > 0){
+		FirstSRef[FirstSRef.size()-1]->Rotate.X = X;
+		FirstSRef[FirstSRef.size()-1]->Rotate.Y = Y;
+		FirstSRef[FirstSRef.size()-1]->Rotate.Z = Z;
 	}
 }
 
@@ -265,38 +242,32 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		}
 	}
 
-	if(FirstSRef){
-		SRefElement dummysref;
-		dummysref.Next=FirstSRef;
-		SRefElement *sref = &dummysref;
+	struct ObjectList *object;
+	dummyobject.Next = objectlist;
+	struct _Boundary *NewBound;
 
-		struct ObjectList *object;
-		dummyobject.Next = objectlist;
-		struct _Boundary *NewBound;
+	for(int i = 0; i < FirstSRef.size(); i++){
+		SRefElement *sref = FirstSRef[i];
+		if(Name == sref->Name){
+			object = &dummyobject;
 
-		while(sref->Next){
-			sref = sref->Next;
-			if(Name == sref->Name){
-				object = &dummyobject;
-
-				while(object->Next){
-					object = object->Next;
-					if(object->Object->GetName() == sref->Name){
-						NewBound = object->Object->GetBoundary(objectlist);
-						if(sref->X + NewBound->XMax > Boundary.XMax){
-							Boundary.XMax = sref->X + NewBound->XMax;
-						}
-						if(sref->X - NewBound->XMin < Boundary.XMin){
-							Boundary.XMin = sref->X - NewBound->XMin;
-						}
-						if(sref->Y + NewBound->YMax > Boundary.YMax){
-							Boundary.YMax = sref->Y + NewBound->YMax;
-						}
-						if(sref->Y - NewBound->YMin < Boundary.YMin){
-							Boundary.YMin = sref->Y - NewBound->YMin;
-						}
-						break;
+			while(object->Next){
+				object = object->Next;
+				if(object->Object->GetName() == sref->Name){
+					NewBound = object->Object->GetBoundary(objectlist);
+					if(sref->X + NewBound->XMax > Boundary.XMax){
+						Boundary.XMax = sref->X + NewBound->XMax;
 					}
+					if(sref->X - NewBound->XMin < Boundary.XMin){
+						Boundary.XMin = sref->X - NewBound->XMin;
+					}
+					if(sref->Y + NewBound->YMax > Boundary.YMax){
+						Boundary.YMax = sref->Y + NewBound->YMax;
+					}
+					if(sref->Y - NewBound->YMin < Boundary.YMin){
+						Boundary.YMin = sref->Y - NewBound->YMin;
+					}
+					break;
 				}
 			}
 		}
@@ -340,7 +311,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		}
 	}
 
-	if(PathItems.empty() && PolygonItems.empty() && !FirstSRef && !FirstARef){
+	if(PathItems.empty() && PolygonItems.empty() && FirstSRef.empty() && !FirstARef){
 		Boundary.XMax = Boundary.XMin = Boundary.YMax = Boundary.YMin = 0;
 	}
 
@@ -365,14 +336,13 @@ class GDSPath *GDSObject::GetCurrentPath()
 
 int GDSObject::HasASRef()
 {
-	return (LastARef || LastSRef);
+	return (LastARef || !FirstSRef.empty());
 }
 
 void GDSObject::IndexSRefs(class GDSObjects *Objects)
 {
-	if(!FirstSRef) return;
+	if(FirstSRef.empty()) return;
 
-	SRefElement *sref;
 	if(SRefs){
 		delete [] SRefs;
 		SRefs = NULL;
@@ -380,14 +350,10 @@ void GDSObject::IndexSRefs(class GDSObjects *Objects)
 
 	SRefs = new GDSObjectRef[SRefCount];
 
-	sref = FirstSRef;
-	int i=0;
-	while(sref->Next){
+	for(int i = 0; i < FirstSRef.size(); i++){
+		SRefElement *sref = FirstSRef[i];
 		SRefs[i] = Objects->GetObjectRef(sref->Name);
-		i++;
-		sref = sref->Next;
 	}
-	SRefs[i] = Objects->GetObjectRef(sref->Name);
 }
 
 void GDSObject::IndexARefs(class GDSObjects *Objects)
@@ -414,10 +380,10 @@ void GDSObject::IndexARefs(class GDSObjects *Objects)
 
 class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, int Index)
 {
-	if(!SRefs && FirstSRef){
+	if(!SRefs && FirstSRef.size()){
 		IndexSRefs(Objects);
 	}
-	if(FirstSRef && Index<SRefCount){
+	if(FirstSRef.size() > 0 && Index < FirstSRef.size()){
 		return SRefs[Index];
 	}
 	return NULL;

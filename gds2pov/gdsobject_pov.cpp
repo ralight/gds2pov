@@ -259,28 +259,21 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, std:
 
 void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	if(FirstSRef){
-		SRefElement dummysref;
-		dummysref.Next = FirstSRef;
+	for(int i = 0; i < FirstSRef.size(); i++){
+		SRefElement *sref = FirstSRef[i];
 
-		SRefElement *sref = &dummysref;
-
-		while(sref->Next){
-			sref = sref->Next;
-
-			fprintf(fptr, "object{str_%s ", sref->Name.c_str());
-			if(sref->Mag!=1.0){
-				fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
-			}
-			if(sref->Flipped){
-				fprintf(fptr, "scale <1,-1,1> ");
-			}
-			fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
-			if(sref->Rotate.Y){
-				fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
-			}
-			fprintf(fptr, "}\n");
+		fprintf(fptr, "object{str_%s ", sref->Name.c_str());
+		if(sref->Mag!=1.0){
+			fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
 		}
+		if(sref->Flipped){
+			fprintf(fptr, "scale <1,-1,1> ");
+		}
+		fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
+		if(sref->Rotate.Y){
+			fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
+		}
+		fprintf(fptr, "}\n");
 	}
 }
 

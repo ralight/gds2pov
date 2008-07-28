@@ -38,8 +38,7 @@ protected:
 	vector<class GDSText*> TextItems;
 	vector<class GDSPolygon*> PolygonItems;
 
-	SRefElement *FirstSRef;
-	SRefElement *LastSRef;
+	vector<SRefElement*> FirstSRef;
 	ARefElement *FirstARef;
 	ARefElement *LastARef;
 	bool GotBoundary;
