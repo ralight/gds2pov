@@ -35,7 +35,7 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool gen
 	_optr = NULL;
 	_libname = "";
 	_sname = "";
-	_textstring = NULL;
+	_textstring = "";
 	_Objects = NULL;
 
 	_PathElements = 0;
@@ -85,9 +85,6 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool gen
 
 GDSParse::~GDSParse ()
 {
-	if(_textstring){
-		delete [] _textstring;
-	}
 	if(_Objects){
 		delete _Objects;
 	}
@@ -113,7 +110,7 @@ bool GDSParse::Parse(FILE *iptr)
 	}
 }
 
-void GDSParse::Output(FILE *optr, char *topcell)
+void GDSParse::Output(FILE *optr, std::string topcell)
 {
 	_topcellname = topcell;
 
@@ -125,7 +122,7 @@ void GDSParse::Output(FILE *optr, char *topcell)
 
 		if(!_bounding_output){
 			long objectid = 0;
-			if(topcell){
+			if(topcell.length() > 0){
 				RecursiveOutput(_Objects->GetObjectRef(topcell), _optr, 0.0, 0.0, &objectid);
 			}else{
 				RecursiveOutput(_Objects->GetObjectRef(0), _optr, 0.0, 0.0, &objectid);
@@ -328,15 +325,15 @@ bool GDSParse::ParseFile()
 				break;
 			case rnString:
 				v_printf(2, "STRING ");
-				if(_textstring){
-					delete [] _textstring;
-					_textstring = NULL;
+				tempstr = GetAsciiString();
+				if(tempstr){
+					_textstring = tempstr;
+					delete tempstr;
 				}
-				_textstring = GetAsciiString();
 				/* Only set string if the current object is valid, the text string is valid 
 				 * and we are using a layer that is defined and being shown.
 				 */
-				if(_CurrentObject && _CurrentObject->GetCurrentText() && _textstring){
+				if(_CurrentObject && _CurrentObject->GetCurrentText() && _textstring.length() > 0){
 					if(_process != NULL){
 						layer = _process->GetLayer(_currentlayer, _currentdatatype);
 						if(layer && layer->Show){
@@ -345,10 +342,8 @@ bool GDSParse::ParseFile()
 					}else{
 						_CurrentObject->GetCurrentText()->SetString(_textstring);
 					}
-					v_printf(2, "(\"%s\")", _textstring);
-					delete [] _textstring;
-					_textstring = NULL;
-				}else if(!_textstring){
+					v_printf(2, "(\"%s\")", _textstring.c_str());
+				}else if(_textstring.length() == 0){
 					return -1;
 				}
 				v_printf(2, "\n");
@@ -669,8 +664,7 @@ void GDSParse::ParseUnits()
 
 void GDSParse::ParseStrName()
 {
-	char *str=NULL;
-	str = GetAsciiString();
+	char *str = GetAsciiString();
 
 	if(str){
 		// Disallow invalid characters in POV-Ray _names.
@@ -1029,10 +1023,10 @@ char *GDSParse::GetAsciiString()
 	return str;
 }
 
-void GDSParse::ReportUnsupported(char *Name, enum RecordNumbers rn)
+void GDSParse::ReportUnsupported(std::string Name, enum RecordNumbers rn)
 {
 	if(!_unsupported[rn]){
-		v_printf(1, "Unsupported GDS2 record type: %s\n", Name);
+		v_printf(1, "Unsupported GDS2 record type: %s\n", Name.c_str());
 		_unsupported[rn] = true;
 	}
 

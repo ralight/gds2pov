@@ -21,6 +21,8 @@
 #ifndef __GDSOBJECT_SVG_H__
 #define __GDSOBJECT_SVG_H__
 
+#include <string>
+
 #include "gdsobject.h"
 
 class GDSObject_svg : public GDSObject
@@ -29,7 +31,7 @@ private:
 	float _scale;
 	float _oheight;
 public:
-	GDSObject_svg(char *Name);
+	GDSObject_svg(std::string Name);
 	~GDSObject_svg();
 
 	void SetScale(float scale);

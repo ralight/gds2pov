@@ -22,6 +22,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <string>
 
 #include "config_cfg.h"
 #include "process_cfg.h"
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
 
 	char *configfile=NULL;
 	char *processfile=NULL;
-	char *topcell=NULL;
+	std::string topcell="";
 
 	bool generate_process = false;
 

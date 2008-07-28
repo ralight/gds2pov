@@ -21,6 +21,8 @@
 #ifndef __GDSPARSE_POV_H__
 #define __GDSPARSE_POV_H__
 
+#include <string>
+
 #include "config_cfg.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
@@ -33,8 +35,7 @@ public:
 	GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, char *camfile, bool generate_process);
 	~GDSParse_pov ();
 
-	//class GDSObject_pov *NewObject(char *Name);
-	class GDSObject *NewObject(char *Name);
+	class GDSObject *NewObject(std::string Name);
 	void OutputHeader();
 	void OutputFooter();
 };

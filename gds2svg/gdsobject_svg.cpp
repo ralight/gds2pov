@@ -30,7 +30,7 @@
 #include "gds2svg.h"
 #include "gdsobjects.h"
 
-GDSObject_svg::GDSObject_svg(char *Name) : GDSObject(Name){
+GDSObject_svg::GDSObject_svg(std::string Name) : GDSObject(Name){
 }
 
 GDSObject_svg::~GDSObject_svg()
@@ -335,7 +335,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std:
 void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(fptr && !IsOutput){
-		fprintf(fptr, "\t\t<symbol id=\"%s\" overflow=\"visible\">\n", Name);
+		fprintf(fptr, "\t\t<symbol id=\"%s\" overflow=\"visible\">\n", Name.c_str());
 
 		OutputPolygonToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
 		OutputPathToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);

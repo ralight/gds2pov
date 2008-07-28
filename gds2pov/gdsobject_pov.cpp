@@ -28,7 +28,7 @@
 #include "gdsobject_pov.h"
 #include "gds2pov.h"
 
-GDSObject_pov::GDSObject_pov(char *Name) : GDSObject(Name){
+GDSObject_pov::GDSObject_pov(std::string Name) : GDSObject(Name){
 }
 
 GDSObject_pov::~GDSObject_pov()

@@ -49,8 +49,7 @@ GDSParse_pov::~GDSParse_pov ()
 {
 }
 
-//class GDSObject_pov *GDSParse_pov::NewObject(char *Name)
-class GDSObject *GDSParse_pov::NewObject(char *Name)
+class GDSObject *GDSParse_pov::NewObject(std::string Name)
 {
 	return new class GDSObject_pov(Name);
 }

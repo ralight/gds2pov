@@ -28,7 +28,7 @@
 class GDSObject_pov : public GDSObject
 {
 public:
-	GDSObject_pov(char *Name);
+	GDSObject_pov(std::string Name);
 	~GDSObject_pov();
 
 	void DecomposePOVPolygons(FILE *fptr);

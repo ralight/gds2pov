@@ -21,6 +21,8 @@
 #ifndef __GDSPARSE_SVG_H__
 #define __GDSPARSE_SVG_H__
 
+#include <string>
+
 #include "config_cfg.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
@@ -34,8 +36,7 @@ public:
 	GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	~GDSParse_svg ();
 
-	//class GDSObject_svg *NewObject(char *Name);
-	class GDSObject *NewObject(char *Name);
+	class GDSObject *NewObject(std::string Name);
 	void OutputHeader();
 	void OutputFooter();
 };

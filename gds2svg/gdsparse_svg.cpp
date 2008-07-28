@@ -51,7 +51,7 @@ GDSParse_svg::~GDSParse_svg ()
 {
 }
 
-class GDSObject *GDSParse_svg::NewObject(char *Name)
+class GDSObject *GDSParse_svg::NewObject(std::string Name)
 {
 	return new class GDSObject_svg(Name);
 }

@@ -59,7 +59,7 @@ protected:
 	gds_element_type _currentelement;
 	int16_t _currenttexttype;
 	int16_t _currentpresentation;
-	char *_textstring;
+	std::string _textstring;
 	int16_t _currentstrans;
 	float _currentangle;
 	int16_t _currentdatatype;
@@ -130,7 +130,7 @@ protected:
 	int16_t GetTwoByteSignedInt();
 	char *GetAsciiString();
 
-	void ReportUnsupported(char *Name, enum RecordNumbers rn);
+	void ReportUnsupported(std::string Name, enum RecordNumbers rn);
 	
 	bool ParseFile();
 
@@ -146,8 +146,8 @@ public:
 
 	void SetOutputOptions(bool bounding_output, bool use_outfile, bool allow_multiple_output, bool output_children_first);
 	bool Parse(FILE *iptr);
-	void Output(FILE *optr, char *topcell);
-	virtual class GDSObject *NewObject(char *Name) = 0;
+	void Output(FILE *optr, std::string topcell);
+	virtual class GDSObject *NewObject(std::string Name) = 0;
 };
 
 #endif // __GDSPARSE_H__
