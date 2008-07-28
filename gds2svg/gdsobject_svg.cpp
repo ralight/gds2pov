@@ -28,7 +28,6 @@
 #include "gds_globals.h" //FIXME - this should be removed
 #include "gdsobject_svg.h"
 #include "gds2svg.h"
-#include "gdsobjects.h"
 
 GDSObject_svg::GDSObject_svg(std::string Name) : GDSObject(Name){
 }
@@ -42,7 +41,7 @@ void GDSObject_svg::SetScale(float scale)
 	_scale = scale;
 }
 
-void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputPathToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PathItems.empty()){
 		float angleX, angleY;
@@ -122,7 +121,7 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, std:
 	}
 }
 
-void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputPolygonToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PolygonItems.empty()){
 		class GDSPolygon *polygon;
@@ -139,7 +138,7 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, s
 	}
 }
 
-void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputTextToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!TextItems.empty()){
 		std::string str;
@@ -213,15 +212,14 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, std:
 	}
 }
 
-void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputSRefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	float height, x, angle;
-	GDSObject *obj = NULL;
 
 	for(unsigned int i = 0; i < FirstSRef.size(); i++){
 		SRefElement *sref = FirstSRef[i];
-			
-		obj = Objects->GetObjectRef(sref->Name);
+
+		GDSObject *obj = sref->object;
 		if(obj){
 			height = obj->GetHeight();
 		}else{
@@ -254,7 +252,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std:
 	}
 }
 
-void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputARefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < FirstARef.size(); i++){
 		ARefElement *aref = FirstARef[i];
@@ -262,7 +260,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std:
 		float height;
 		float dx, dy;
 
-		GDSObject *obj = Objects->GetObjectRef(aref->Name);
+		GDSObject *obj = aref->object;
 		if(obj){
 			height = obj->GetHeight();
 		}else{
@@ -317,16 +315,16 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std:
 }
 
 
-void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(fptr && !IsOutput){
 		fprintf(fptr, "\t\t<symbol id=\"%s\" overflow=\"visible\">\n", Name.c_str());
 
-		OutputPolygonToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
-		OutputPathToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
-		OutputSRefToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
-		OutputTextToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
-		OutputARefToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
+		OutputPolygonToFile(fptr, Font, offx, offy, objectid, firstlayer);
+		OutputPathToFile(fptr, Font, offx, offy, objectid, firstlayer);
+		OutputSRefToFile(fptr, Font, offx, offy, objectid, firstlayer);
+		OutputTextToFile(fptr, Font, offx, offy, objectid, firstlayer);
+		OutputARefToFile(fptr, Font, offx, offy, objectid, firstlayer);
 
 		fprintf(fptr, "\t\t</symbol>\n");
 	}

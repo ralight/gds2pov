@@ -58,15 +58,15 @@ class GDSObject *GDSParse_svg::NewObject(std::string Name)
 
 void GDSParse_svg::OutputFooter()
 {
-	if(_optr && _Objects){
-		struct _Boundary *Boundary = _Objects->GetBoundary();
+	if(_optr && !_Objects.empty()){
+		struct _Boundary *Boundary = GetBoundary();
 		
 		fprintf(_optr, "\t</defs>\n");
 		if(_topcellname.length() > 0){
 			fprintf(_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", -_scale*Boundary->XMin/2, -_scale*Boundary->YMin/2, _topcellname.c_str());
 		}else{
-			if(_Objects->GetObjectRef(0)){
-				fprintf(_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", -_scale*Boundary->XMin/2, -_scale*Boundary->YMin/2, _Objects->GetObjectRef(0)->GetName().c_str());
+			if(_Objects[0]){
+				fprintf(_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%\" height=\"100%\" xlink:href=\"#%s\"/>\n", -_scale*Boundary->XMin/2, -_scale*Boundary->YMin/2, _Objects[0]->GetName().c_str());
 		}else{
 			}
 		}
@@ -76,15 +76,15 @@ void GDSParse_svg::OutputFooter()
 
 void GDSParse_svg::OutputHeader()
 {
-	if(_optr && _Objects){
-		struct _Boundary *Boundary = _Objects->GetBoundary();
+	if(_optr && !_Objects.empty()){
+		struct _Boundary *Boundary = GetBoundary();
 		float width = (Boundary->XMax - Boundary->XMin);
 		float height = (Boundary->YMax - Boundary->YMin);
-		int i;
 		GDSObject_svg *obj;
 
-		for(i = 0; i < _Objects->GetCount(); i++){
-			obj = (GDSObject_svg *)_Objects->GetObjectRef(i);
+		for(unsigned int i = 0; i < _Objects.size(); i++){
+			/* FIXME - use c++ style casts */
+			obj = (GDSObject_svg *)_Objects[i];
 			obj->SetScale(_scale);
 		}
 

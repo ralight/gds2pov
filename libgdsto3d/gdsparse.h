@@ -30,13 +30,15 @@
 typedef uint16_t u_int16_t;
 #endif
 
+#include <vector>
+using namespace std;
+
 #include <sys/types.h>
 
 #include "config_cfg.h"
 #include "process_cfg.h"
 #include "gds_globals.h"
 #include "gdsobject.h"
-#include "gdsobjects.h"
 #include "gds_types.h"
 
 typedef enum{
@@ -76,6 +78,7 @@ protected:
 	class GDSProcess *_process;
 	class GDSConfig	 *_config;
 	
+	struct _Boundary *Boundary;
 	int16_t _recordlen;
 
 	/* Output options */
@@ -105,7 +108,7 @@ protected:
 	long _SRefElements;
 	long _ARefElements;
  
-	class GDSObjects *_Objects;
+	vector<class GDSObject*> _Objects;
 	class GDSObject *_CurrentObject;
 
 	/* gds_parse.h functions */
@@ -133,6 +136,7 @@ protected:
 	void ReportUnsupported(std::string Name, enum RecordNumbers rn);
 	
 	bool ParseFile();
+	struct _Boundary *GDSParse::GetBoundary();
 
 	/* Abstract functions to be implemented be inheriting class */
 	virtual void OutputHeader() = 0;
@@ -140,6 +144,7 @@ protected:
 	/* End abstract functions */
 
 	void RecursiveOutput(class GDSObject *Object, FILE *optr, float offx, float offy, long *objectid);
+	class GDSObject *GetObjectRef(std::string Name);
 public:
 	GDSParse (class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	virtual ~GDSParse ();

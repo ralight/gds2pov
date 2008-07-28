@@ -56,8 +56,8 @@ void GDSParse_pov::OutputFooter()
 		if(_topcellname.length() > 0){
 			fprintf(_optr, "object { str_%s }\n", _topcellname.c_str());
 		}else{
-			if(_Objects->GetObjectRef(0)){
-				fprintf(_optr, "object { str_%s }\n", _Objects->GetObjectRef(0)->GetName().c_str());
+			if(!_Objects.empty()){
+				fprintf(_optr, "object { str_%s }\n", _Objects[0]->GetName().c_str());
 			}
 		}
 	}
@@ -65,12 +65,12 @@ void GDSParse_pov::OutputFooter()
 
 void GDSParse_pov::OutputHeader()
 {
-	if(_optr && _Objects){
+	if(_optr && !_Objects.empty()){
 		fprintf(_optr, "#include \"colors.inc\"\n");
 		fprintf(_optr, "#include \"metals.inc\"\n");
 		fprintf(_optr, "#include \"transforms.inc\"\n");
 
-		struct _Boundary *Boundary = _Objects->GetBoundary();
+		struct _Boundary *Boundary = GetBoundary();
 		float half_widthX = (Boundary->XMax - Boundary->XMin)/2;
 		float half_widthY = (Boundary->YMax - Boundary->YMin)/2;
 		float centreX = half_widthX + Boundary->XMin;

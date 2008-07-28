@@ -36,7 +36,6 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool gen
 	_libname = "";
 	_sname = "";
 	_textstring = "";
-	_Objects = NULL;
 
 	_PathElements = 0;
 	_BoundaryElements = 0;
@@ -81,12 +80,19 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool gen
 			_layer_warning[i][j] = false;
 		}
 	}
+
+	Boundary = NULL;
 }
 
 GDSParse::~GDSParse ()
 {
-	if(_Objects){
-		delete _Objects;
+	while(!_Objects.empty()){
+		delete _Objects[_Objects.size()-1];
+		_Objects.pop_back();
+	}
+
+	if(Boundary){
+		delete Boundary;
 	}
 }
 
@@ -94,8 +100,6 @@ bool GDSParse::Parse(FILE *iptr)
 {
 	_iptr = iptr;
 	if(_iptr){
-		_Objects = new GDSObjects;
-		
 		//DEBUG
 		//printf("GDSParse::Parse(%p)\n",iptr);
 
@@ -123,9 +127,9 @@ void GDSParse::Output(FILE *optr, std::string topcell)
 		if(!_bounding_output){
 			long objectid = 0;
 			if(topcell.length() > 0){
-				RecursiveOutput(_Objects->GetObjectRef(topcell), _optr, 0.0, 0.0, &objectid);
+				RecursiveOutput(GetObjectRef(topcell), _optr, 0.0, 0.0, &objectid);
 			}else{
-				RecursiveOutput(_Objects->GetObjectRef(0), _optr, 0.0, 0.0, &objectid);
+				RecursiveOutput(_Objects[0], _optr, 0.0, 0.0, &objectid);
 			}
 		}
 
@@ -156,7 +160,7 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx,
 
 		int i=0;
 		do{
-			child = Object->GetSRef(_Objects, i);
+			child = Object->GetSRef(i);
 			if(child && (child != Object)){
 				RecursiveOutput(child, _optr, offx, offy, objectid);
 			}
@@ -166,7 +170,7 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx,
 
 		i = 0;
 		do{
-			child = Object->GetARef(_Objects, i);
+			child = Object->GetARef(i);
 			if(child && (child != Object)){
 				RecursiveOutput(child, _optr, offx, offy, objectid);
 			}
@@ -180,7 +184,7 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx,
 		layer = _process->GetLayer();
 	}
 
-	Object->OutputToFile(_optr, _Objects, _config->GetFont(), offx, offy, objectid, layer);
+	Object->OutputToFile(_optr, _config->GetFont(), offx, offy, objectid, layer);
 }
 
 bool GDSParse::ParseFile()
@@ -678,7 +682,8 @@ void GDSParse::ParseStrName()
 		// This calls our own NewObject function which is pure virtual so the end 
 		// user must define it. This means we can always add a unknown object as
 		// long as it inherits from GDSObject.
-		_CurrentObject = _Objects->AddObject(str, NewObject(str));
+		_Objects.push_back(NewObject(str));
+		_CurrentObject = _Objects[_Objects.size()-1];
 		delete [] str;
 	}
 	v_printf(2, "\n");
@@ -839,7 +844,7 @@ void GDSParse::ParseXY()
 			v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
 			if(_CurrentObject){
-				_CurrentObject->AddSRef(_sname.c_str(), X, Y, Flipped, _currentmag);
+				_CurrentObject->AddSRef(_sname, X, Y, Flipped, _currentmag);
 				if(_currentangle){
 					_CurrentObject->SetSRefRotation(0, -_currentangle, 0);
 				}
@@ -859,7 +864,7 @@ void GDSParse::ParseXY()
 			v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
 			if(_CurrentObject){
-				_CurrentObject->AddARef(_sname.c_str(), firstX, firstY, secondX, secondY, X, Y, _arraycols, _arrayrows, Flipped, _currentmag);
+				_CurrentObject->AddARef(_sname, firstX, firstY, secondX, secondY, X, Y, _arraycols, _arrayrows, Flipped, _currentmag);
 				if(_currentangle){
 					_CurrentObject->SetARefRotation(0, -_currentangle, 0);
 				}
@@ -1031,4 +1036,46 @@ void GDSParse::ReportUnsupported(std::string Name, enum RecordNumbers rn)
 	}
 
 }
+
+
+struct _Boundary *GDSParse::GetBoundary()
+{
+	if(!Boundary){
+		Boundary = new struct _Boundary;
+	}
+
+	Boundary->XMax = Boundary->YMax = -10000000.0;
+	Boundary->XMin = Boundary->YMin =  10000000.0;
+
+	for(unsigned int i = 0; i < _Objects.size(); i++){
+		struct _Boundary *object_bound = _Objects[i]->GetBoundary();
+
+		if(object_bound->XMax > Boundary->XMax){
+			Boundary->XMax = object_bound->XMax;
+		}
+		if(object_bound->XMin < Boundary->XMin){
+			Boundary->XMin = object_bound->XMin;
+		}
+		if(object_bound->YMax > Boundary->YMax){
+			Boundary->YMax = object_bound->YMax;
+		}
+		if(object_bound->YMin < Boundary->YMin){
+			Boundary->YMin = object_bound->YMin;
+		}
+	}
+	return Boundary;
+}
+
+class GDSObject *GDSParse::GetObjectRef(std::string Name)
+{
+	if(!_Objects.empty() && Name.length() > 0){	
+		for(unsigned int i = 0; i < _Objects.size(); i++){
+			if(Name == _Objects[i]->GetName()){
+				return _Objects[i];
+			}
+		}
+	}
+	return NULL;
+}
+
 

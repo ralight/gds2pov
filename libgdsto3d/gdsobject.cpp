@@ -23,7 +23,6 @@
 #include <cstring>
 
 #include "gdsobject.h"
-#include "gdsobjects.h"
 #include "gds_globals.h"
 
 GDSObject::GDSObject(std::string NewName)
@@ -282,7 +281,7 @@ int GDSObject::HasASRef()
 	return (!FirstARef.empty() || !FirstSRef.empty());
 }
 
-class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, unsigned int Index)
+class GDSObject *GDSObject::GetSRef(unsigned int Index)
 {
 	if(FirstSRef.size() > 0 && Index < FirstSRef.size()){
 		return SRefs[Index];
@@ -290,7 +289,7 @@ class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, unsigned int Inde
 	return NULL;
 }
 
-class GDSObject *GDSObject::GetARef(class GDSObjects *Objects, unsigned int Index)
+class GDSObject *GDSObject::GetARef(unsigned int Index)
 {
 	if(FirstARef.size() > 0 && Index < FirstARef.size()){
 		return ARefs[Index];

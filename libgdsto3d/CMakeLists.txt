@@ -1,4 +1,4 @@
-set (GDSTO3D_SRCS config_cfg.cpp gds_globals.cpp gdsobject.cpp gdsobjects.cpp gdsparse.cpp gdspath.cpp gdspolygon.cpp gdstext.cpp process_cfg.cpp)
+set (GDSTO3D_SRCS config_cfg.cpp gds_globals.cpp gdsobject.cpp gdsparse.cpp gdspath.cpp gdspolygon.cpp gdstext.cpp process_cfg.cpp)
 
 #if (WIN32)
 #	add_library (gdsto3d SHARED ${gdsto3d_SRCS} gds_types.cpp)

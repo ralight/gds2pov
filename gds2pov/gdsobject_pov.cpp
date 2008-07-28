@@ -35,7 +35,7 @@ GDSObject_pov::~GDSObject_pov()
 {
 }
 
-void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_pov::OutputPathToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PathItems.empty()){
 		float angleX, angleY;
@@ -172,7 +172,7 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, std:
 	}
 }
 
-void GDSObject_pov::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_pov::OutputPolygonToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PolygonItems.empty()){
 		if(decompose){
@@ -196,7 +196,7 @@ void GDSObject_pov::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, s
 	}
 }
 
-void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_pov::OutputTextToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!TextItems.empty()){
 		class GDSText *text;
@@ -257,7 +257,7 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, std:
 	}
 }
 
-void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_pov::OutputSRefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < FirstSRef.size(); i++){
 		SRefElement *sref = FirstSRef[i];
@@ -277,7 +277,7 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std:
 	}
 }
 
-void GDSObject_pov::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < FirstARef.size(); i++){
 		ARefElement *aref = FirstARef[i];
@@ -350,16 +350,16 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std:
 }
 
 
-void GDSObject_pov::OutputToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_pov::OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(fptr && !IsOutput){
 		fprintf(fptr, "#declare str_%s = union {\n", Name.c_str());
 
-		OutputPolygonToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
-		OutputPathToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
-		OutputSRefToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
-		OutputTextToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
-		OutputARefToFile(fptr, Objects, Font, offx, offy, objectid, firstlayer);
+		OutputPolygonToFile(fptr, Font, offx, offy, objectid, firstlayer);
+		OutputPathToFile(fptr, Font, offx, offy, objectid, firstlayer);
+		OutputSRefToFile(fptr, Font, offx, offy, objectid, firstlayer);
+		OutputTextToFile(fptr, Font, offx, offy, objectid, firstlayer);
+		OutputARefToFile(fptr, Font, offx, offy, objectid, firstlayer);
 
 		fprintf(fptr, "}\n");
 	}
