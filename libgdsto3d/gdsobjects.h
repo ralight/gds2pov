@@ -21,6 +21,8 @@
 #ifndef __GDSOBJECTS_H__
 #define __GDSOBJECTS_H__
 
+#include <string>
+
 #include "gdsobject.h"
 
 struct ObjectList{
@@ -41,9 +43,9 @@ public:
 	GDSObjects();
 	~GDSObjects();
 
-	class GDSObject *AddObject(char *Name, class GDSObject *newobject);
+	class GDSObject *AddObject(std::string Name, class GDSObject *newobject);
 	class GDSObject *GetObjectRef(int Index);
-	class GDSObject *GetObjectRef(char *Name);
+	class GDSObject *GetObjectRef(std::string Name);
 	struct ObjectList *GetObjectList();
 	struct _Boundary *GetBoundary();
 	int GetCount();

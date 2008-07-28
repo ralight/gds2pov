@@ -53,7 +53,7 @@ GDSObjects::~GDSObjects()
 	}
 }
 
-class GDSObject *GDSObjects::AddObject(char *Name, class GDSObject *newobject)
+class GDSObject *GDSObjects::AddObject(std::string Name, class GDSObject *newobject)
 {
 	struct ObjectList *object = new struct ObjectList;
 	//object->Object = new class GDSObject(Name);
@@ -86,18 +86,18 @@ class GDSObject *GDSObjects::GetObjectRef(int Index)
 	}
 }
 
-class GDSObject *GDSObjects::GetObjectRef(char *Name)
+class GDSObject *GDSObjects::GetObjectRef(std::string Name)
 {
-	if(FirstObject && Name){	
+	if(FirstObject && Name.length() > 0){	
 		struct ObjectList *object = FirstObject;
 
 		while(object->Next){
-			if(strcmp(Name, object->Object->GetName())==0){
+			if(Name == object->Object->GetName()){
 				return object->Object;
 			}
 			object = object->Next;
 		}
-		if(strcmp(Name, object->Object->GetName())==0){
+		if(Name == object->Object->GetName()){
 			return object->Object;
 		}
 	}

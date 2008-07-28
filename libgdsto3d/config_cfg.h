@@ -60,12 +60,12 @@ private:
 	vector<class Position *> _Lights;
 	class Position *_currentlight;
 
-	bool		_Valid;
+	bool _Valid;
 
-	char		*_Font;
-	char		*_ProcessFile;
-	float		_Ambient;
-	float		_Scale;
+	char *_Font;
+	char *_ProcessFile;
+	float _Ambient;
+	float _Scale;
 
 public:
 	GDSConfig(char *filename);
