@@ -268,7 +268,7 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std:
 		while(sref->Next){
 			sref = sref->Next;
 
-			fprintf(fptr, "object{str_%s ", sref->Name);
+			fprintf(fptr, "object{str_%s ", sref->Name.c_str());
 			if(sref->Mag!=1.0){
 				fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
 			}
@@ -309,7 +309,7 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std:
 					fprintf(fptr, "#while (colcount < cols)\n");
 					fprintf(fptr, "\t#declare rowcount = 0;");
 					fprintf(fptr, "\t#while (rowcount < rows)\n");
-					fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
+					fprintf(fptr, "\t\tobject{str_%s ", aref->Name.c_str());
 					if(aref->Mag!=1.0){
 						fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
 					}
@@ -341,7 +341,7 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std:
 					fprintf(fptr, "#while (colcount < cols)\n");
 					fprintf(fptr, "\t#declare rowcount = 0;");
 					fprintf(fptr, "\t#while (rowcount < rows)\n");
-					fprintf(fptr, "\t\tobject{str_%s ", aref->Name);
+					fprintf(fptr, "\t\tobject{str_%s ", aref->Name.c_str());
 					if(aref->Flipped){
 						fprintf(fptr, "scale <1,-1,1> ");
 					}

@@ -21,6 +21,8 @@
 #ifndef __GDSELEMENTS_H__
 #define __GDSELEMENTS_H__
 
+#include <string>
+
 typedef struct {
 	float X;
 	float Y;
@@ -46,7 +48,7 @@ typedef struct _SRefElement {
 	float X;
 	float Y;
 	float Mag;
-	char *Name;
+	std::string Name;
 	Transform Rotate;
 	int Flipped;
 	class GDSObject *object;
@@ -63,7 +65,7 @@ typedef struct _ARefElement {
 	float Mag;
 	int Columns;
 	int Rows;
-	char *Name;
+	std::string Name;
 	Transform Rotate;
 	int Flipped;
 	class GDSObject *object;

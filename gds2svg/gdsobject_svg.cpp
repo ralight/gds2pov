@@ -239,7 +239,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std:
 			if(sref->Flipped){
 				x = -x;
 			}
-			fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*x, _scale*(this->GetHeight() - sref->Y - height), sref->Name);
+			fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*x, _scale*(this->GetHeight() - sref->Y - height), sref->Name.c_str());
 
 			if(sref->Mag!=1.0 || sref->Flipped || fabs(angle) > 0.0f){
 				fprintf(fptr, " transform=\"");
@@ -307,7 +307,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std:
 
 				for(i=0; i<aref->Columns; i++){
 					for(j=0; j<aref->Rows; j++){
-						fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(x + dx * i), _scale*(this->GetHeight() - (y + dy * j) - height), aref->Name);
+						fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(x + dx * i), _scale*(this->GetHeight() - (y + dy * j) - height), aref->Name.c_str());
 						if(aref->Mag!=1.0f || aref->Flipped || fabs(angle)>0.0f){
 							fprintf(fptr, " transform=\"");
 							/* FIXME - Mag isn't tested */

@@ -73,12 +73,10 @@ GDSObject::~GDSObject()
 		sref1 = FirstSRef;
 		while(sref1->Next){
 			sref2 = sref1->Next;
-			if(sref1->Name) delete sref1->Name;
 			delete sref1;
 			sref1 = sref2;
 		}
 		if(sref1){
-			if(sref1->Name) delete sref1->Name;
 			delete sref1;
 		}
 	}
@@ -90,12 +88,10 @@ GDSObject::~GDSObject()
 		aref1 = FirstARef;
 		while(aref1->Next){
 			aref2 = aref1->Next;
-			if(aref1->Name) delete aref1->Name;
 			delete aref1;
 			aref1 = aref2;
 		}
 		if(aref1){
-			if(aref1->Name) delete aref1->Name;
 			delete aref1;
 		}
 	}
@@ -143,7 +139,7 @@ void GDSObject::AddSRef(std::string Name, float X, float Y, int Flipped, float M
 	SRefElement *NewSRef = new SRefElement;
 
 	NewSRef->Next = NULL;
-	NewSRef->Name = NULL;
+	NewSRef->Name = "";
 
 	if(LastSRef){
 		LastSRef->Next = NewSRef;
@@ -180,7 +176,7 @@ void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2
 	ARefElement *NewARef = new ARefElement;
 
 	NewARef->Next = NULL;
-	NewARef->Name = NULL;
+	NewARef->Name = "";
 
 	if(LastARef){
 		LastARef->Next = NewARef;
