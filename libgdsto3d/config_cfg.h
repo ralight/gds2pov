@@ -56,17 +56,16 @@ public:
 class GDSConfig
 {
 private:
+	std::string _ProcessFile;
+	std::string _Font;
+	float _Ambient;
+	float _Scale;
+	bool _Valid;
+
 	class Position _CameraPos;
 	class Position _LookAtPos;
 	vector<class Position *> _Lights;
 	class Position *_currentlight;
-
-	bool _Valid;
-
-	std::string _Font;
-	std::string _ProcessFile;
-	float _Ambient;
-	float _Scale;
 
 public:
 	GDSConfig(std::string filename);

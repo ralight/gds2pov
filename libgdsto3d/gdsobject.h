@@ -74,8 +74,8 @@ public:
 	virtual void OutputToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)=0;
 
 	int HasASRef();
-	class GDSObject *GetSRef(class GDSObjects *Objects, int Index);
-	class GDSObject *GetARef(class GDSObjects *Objects, int Index);
+	class GDSObject *GetSRef(class GDSObjects *Objects, unsigned int Index);
+	class GDSObject *GetARef(class GDSObjects *Objects, unsigned int Index);
 
 	struct _Boundary *GetBoundary(struct ObjectList *objectlist);
 	float GetWidth();

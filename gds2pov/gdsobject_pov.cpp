@@ -259,7 +259,7 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, std:
 
 void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	for(int i = 0; i < FirstSRef.size(); i++){
+	for(unsigned int i = 0; i < FirstSRef.size(); i++){
 		SRefElement *sref = FirstSRef[i];
 
 		fprintf(fptr, "object{str_%s ", sref->Name.c_str());
@@ -279,7 +279,7 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std:
 
 void GDSObject_pov::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	for(int i = 0; i < FirstARef.size(); i++){
+	for(unsigned int i = 0; i < FirstARef.size(); i++){
 		ARefElement *aref = FirstARef[i];
 
 		float dx, dy;

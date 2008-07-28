@@ -219,7 +219,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 	struct ObjectList *object;
 	dummyobject.Next = objectlist;
 
-	for(int i = 0; i < FirstSRef.size(); i++){
+	for(unsigned int i = 0; i < FirstSRef.size(); i++){
 		SRefElement *sref = FirstSRef[i];
 		if(Name == sref->Name){
 			object = &dummyobject;
@@ -249,7 +249,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 
 	dummyobject.Next = objectlist;
 		
-	for(int i = 0; i < FirstARef.size(); i++){
+	for(unsigned int i = 0; i < FirstARef.size(); i++){
 		ARefElement *aref = FirstARef[i];
 		if(Name == aref->Name){
 			object = &dummyobject;
@@ -304,7 +304,7 @@ int GDSObject::HasASRef()
 	return (!FirstARef.empty() || !FirstSRef.empty());
 }
 
-class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, int Index)
+class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, unsigned int Index)
 {
 	if(FirstSRef.size() > 0 && Index < FirstSRef.size()){
 		return SRefs[Index];
@@ -312,7 +312,7 @@ class GDSObject *GDSObject::GetSRef(class GDSObjects *Objects, int Index)
 	return NULL;
 }
 
-class GDSObject *GDSObject::GetARef(class GDSObjects *Objects, int Index)
+class GDSObject *GDSObject::GetARef(class GDSObjects *Objects, unsigned int Index)
 {
 	if(FirstARef.size() > 0 && Index < FirstARef.size()){
 		return ARefs[Index];

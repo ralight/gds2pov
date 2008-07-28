@@ -324,7 +324,7 @@ class ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 {
 	if(Number == -1) return NULL;
 
-	for(int i = 0; i < _FirstLayer.size(); i++){
+	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
 		if(_FirstLayer[i]->Layer == Number && _FirstLayer[i]->Datatype == -1){
 			return _FirstLayer[i];
 		}else if(_FirstLayer[i]->Layer == Number && _FirstLayer[i]->Datatype == Datatype){
@@ -336,7 +336,7 @@ class ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 
 class ProcessLayer *GDSProcess::GetLayer(std::string Name)
 {
-	for(int i = 0; i < _FirstLayer.size(); i++){
+	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
 		if(_FirstLayer[i]->Name == Name){
 			return _FirstLayer[i];
 		}
@@ -349,7 +349,7 @@ class ProcessLayer *GDSProcess::GetLayer()
 	return _FirstLayer[0];
 }
 
-class ProcessLayer *GDSProcess::GetLayer(int index)
+class ProcessLayer *GDSProcess::GetLayer(unsigned int index)
 {
 	if(index >=0 && index < _FirstLayer.size()){
 		return _FirstLayer[index];
@@ -411,7 +411,7 @@ float GDSProcess::GetHighest()
 {
 	float Highest = -10000.0;
 
-	for(int i = 0; i < _FirstLayer.size(); i++){
+	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
 		if(_FirstLayer[i]->Height + _FirstLayer[i]->Thickness > Highest && _FirstLayer[i]->Show){
 			Highest = _FirstLayer[i]->Height + _FirstLayer[i]->Thickness;
 		}
@@ -423,7 +423,7 @@ float GDSProcess::GetLowest()
 {
 	float Lowest = 10000.0;
 
-	for(int i = 0; i < _FirstLayer.size(); i++){
+	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
 		if(_FirstLayer[i]->Height < Lowest && _FirstLayer[i]->Show){
 			Lowest = _FirstLayer[i]->Height;
 		}
@@ -441,7 +441,7 @@ bool GDSProcess::Save(std::string filename)
 	fptr = fopen(filename.c_str(), "wt");
 	if(!fptr) return false;
 
-	for(int i = 0; i < _FirstLayer.size(); i++){
+	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
 		fprintf(fptr, "LayerStart: LAYER-%d-%d\n", _FirstLayer[i]->Layer, _FirstLayer[i]->Datatype);
 		fprintf(fptr, "Layer: %d\n", _FirstLayer[i]->Layer);
 		fprintf(fptr, "Height: 0\n");

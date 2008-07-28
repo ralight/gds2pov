@@ -58,7 +58,7 @@ public:
 	void AddLayer(int Layer, int Datatype);
 	class ProcessLayer *GetLayer(int Number, int Datatype);
 	class ProcessLayer *GetLayer();
-	class ProcessLayer *GetLayer(int index);
+	class ProcessLayer *GetLayer(unsigned int index);
 	class ProcessLayer *GetLayer(std::string Name);
 	int LayerCount();
 	bool IsValid();

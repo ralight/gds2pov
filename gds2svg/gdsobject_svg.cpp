@@ -218,7 +218,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std:
 	float height, x, angle;
 	GDSObject *obj = NULL;
 
-	for(int i = 0; i < FirstSRef.size(); i++){
+	for(unsigned int i = 0; i < FirstSRef.size(); i++){
 		SRefElement *sref = FirstSRef[i];
 			
 		obj = Objects->GetObjectRef(sref->Name);
@@ -256,7 +256,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std:
 
 void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	for(int i = 0; i < FirstARef.size(); i++){
+	for(unsigned int i = 0; i < FirstARef.size(); i++){
 		ARefElement *aref = FirstARef[i];
 		float x, y, angle;
 		float height;
