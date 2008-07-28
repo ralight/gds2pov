@@ -95,14 +95,13 @@ void GDSParse_svg::OutputHeader()
 
 		/* Output layer texture information */
 
-		struct ProcessLayer *firstlayer;
-		firstlayer = _process->GetLayer();
+		class ProcessLayer *firstlayer;
 		fprintf(_optr, "\t<style>\n");
-		while(firstlayer){
+		for(int i=0; i < _process->LayerCount(); i++){
+			firstlayer = _process->GetLayer(i);
 			if(firstlayer->Show){
-				fprintf(_optr, "\t\t.%s { fill: #%02x%02x%02x; opacity:0.75; }\n", firstlayer->Name, (int)(255*firstlayer->Red), (int)(255*firstlayer->Green), (int)(255*firstlayer->Blue));
+				fprintf(_optr, "\t\t.%s { fill: #%02x%02x%02x; opacity:0.75; }\n", firstlayer->Name.c_str(), (int)(255*firstlayer->Red), (int)(255*firstlayer->Green), (int)(255*firstlayer->Blue));
 			}
-			firstlayer = firstlayer->Next;
 		}
 		fprintf(_optr, "\t</style>\n");
 

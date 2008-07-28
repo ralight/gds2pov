@@ -190,23 +190,22 @@ void GDSParse_pov::OutputHeader()
 		fprintf(_optr, "global_settings { ambient_light rgb <%.2f,%.2f,%.2f> }\n", _config->GetAmbient(), _config->GetAmbient(), _config->GetAmbient());
 
 		/* Output layer texture information */
-		struct ProcessLayer *firstlayer;
-		firstlayer = _process->GetLayer();
-		while(firstlayer->Next){
+		class ProcessLayer *firstlayer;
+		for(int i = 0; i < _process->LayerCount(); i++){
+			firstlayer = _process->GetLayer(i);
 			if(firstlayer->Show){
 				if(!firstlayer->Metal){
-					fprintf(_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+					fprintf(_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name.c_str(), firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 				}else{
-					fprintf(_optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+					fprintf(_optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n", firstlayer->Name.c_str(), firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 				}
 			}
-			firstlayer = firstlayer->Next;
 		}
 		if(firstlayer->Show){
 			if(!firstlayer->Metal){
-				fprintf(_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+				fprintf(_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name.c_str(), firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 			}else{
-				fprintf(_optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n", firstlayer->Name, firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
+				fprintf(_optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n", firstlayer->Name.c_str(), firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 			}
 		}
 

@@ -165,7 +165,7 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 				//}else{
 				//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 				//}
-				fprintf(fptr, "texture{t%s}",path->GetLayer()->Name);
+				fprintf(fptr, "texture{t%s}",path->GetLayer()->Name.c_str());
 				fprintf(fptr, "}\n");
 			}
 		}
@@ -189,7 +189,7 @@ void GDSObject_pov::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 				}
 				fprintf(fptr, " rotate<-90,0,0> ");
 
-				fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name);
+				fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name.c_str());
 				fprintf(fptr, "}\n");
 			}
 		}
@@ -210,7 +210,7 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
 				}
 				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-				fprintf(fptr, "texture{t%s}",text->GetLayer()->Name);
+				fprintf(fptr, "texture{t%s}",text->GetLayer()->Name.c_str());
 				if(text->GetMag()!=1.0){
 					fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
 				}
@@ -522,7 +522,7 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 				fprintf(fptr, ",<%d,%d,%d>",j,j+1,(j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j:j+polygon->GetPoints());
 			}
 			fprintf(fptr,"}");
-			fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name);
+			fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name.c_str());
 			fprintf(fptr, "}\n");
 
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){

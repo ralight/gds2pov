@@ -74,7 +74,7 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 						break;
 				}
 				for(unsigned int j=0; j<path->GetPoints()-1; j++){
-					fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", path->GetLayer()->Name);
+					fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", path->GetLayer()->Name.c_str());
 					float XCoords_j, XCoords_jpone;
 					float YCoords_j, YCoords_jpone;
 					float PathWidth = path->GetWidth();
@@ -130,7 +130,7 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 		for(unsigned long i=0; i<PolygonItems.size(); i++){
 			polygon = PolygonItems[i];
 
-			fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", polygon->GetLayer()->Name);
+			fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", polygon->GetLayer()->Name.c_str());
 			for(unsigned int j=0; j<polygon->GetPoints(); j++){
 				fprintf(fptr, "%.2f,%.2f ",_scale*(polygon->GetXCoords(j)), _scale*(this->GetHeight() - polygon->GetYCoords(j)));
 			}
@@ -158,7 +158,7 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 						fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
 					}*/
 					//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-					fprintf(fptr, "\t\t\t<text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(text->GetX()), _scale*(this->GetHeight() - text->GetY()), text->GetLayer()->Name);
+					fprintf(fptr, "\t\t\t<text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",_scale*(text->GetX()), _scale*(this->GetHeight() - text->GetY()), text->GetLayer()->Name.c_str());
 					float htrans = 0.0, vtrans = 0.0;
 					switch(text->GetHJust()){
 						case 0:

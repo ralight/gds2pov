@@ -49,33 +49,14 @@ GDSProcess::GDSProcess()
 	_Count = 0;
 	_Valid = true;
 
-	_FirstLayer = NULL;
+	//_FirstLayer = NULL;
 }
 
 GDSProcess::~GDSProcess ()
 {
-	if(_FirstLayer){
-		struct ProcessLayer *layer1;
-		struct ProcessLayer *layer2;
-
-		layer1 = _FirstLayer;
-
-		while(layer1->Next){
-			layer2 = layer1->Next;
-			if(layer1->Name){
-				delete [] layer1->Name;
-			}
-			if(layer1){
-				delete layer1;
-			}
-			layer1 = layer2;
-		}
-		if(layer1->Name){
-			delete [] layer1->Name;
-		}
-		if(layer1){
-			delete layer1;
-		}
+	while(!_FirstLayer.empty()){
+		delete _FirstLayer[_FirstLayer.size()-1];
+		_FirstLayer.pop_back();
 	}
 }
 
@@ -104,8 +85,7 @@ void GDSProcess::Parse(char *processfile)
 	/* End State variables */
 	bool showing;
 
-	struct ProcessLayer NewLayer;
-	NewLayer.Name = NULL;
+	class ProcessLayer NewLayer;
 
 	FILE *pptr = NULL;
 
@@ -145,10 +125,6 @@ void GDSProcess::Parse(char *processfile)
 				if(in_layer){
 					fprintf(stderr, "Error: LayerStart without LayerEnd not allowed. LayerEnd should appear before line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -165,14 +141,9 @@ void GDSProcess::Parse(char *processfile)
 				got_show = false;
 				current_element++;
 
-				if(NewLayer.Name){
-					delete [] NewLayer.Name;
-					NewLayer.Name = NULL;
-				}
-				NewLayer.Name = new char[strlen(line)-strlen("LayerStart: ")+1];
 //				strncpy(NewLayer.Name, line+strlen("LayerStart: "), strlen(line)-strlen("LayerStart: "));
-				strcpy(NewLayer.Name, line+strlen("LayerStart: "));
-				NewLayer.Name[strlen(NewLayer.Name)-1] = '\0';
+				/* FIXME - line below for std::string equiv
+				strcpy(NewLayer.Name, line+strlen("LayerStart: ")); */
 				NewLayer.Layer = 0;
 				NewLayer.Datatype = -1;
 				NewLayer.Height = 0.0;
@@ -183,15 +154,10 @@ void GDSProcess::Parse(char *processfile)
 				NewLayer.Filter = 0.0;
 				NewLayer.Metal = 0;
 				NewLayer.Show = false;
-				NewLayer.Next = NULL;
 			}else if(strstr(line, "Layer:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Layer definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -205,10 +171,6 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Datatype definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -222,10 +184,6 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Height definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -239,10 +197,6 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Thickness definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -256,10 +210,6 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Red definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -273,10 +223,6 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Green definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -290,10 +236,6 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Blue definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -307,10 +249,6 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Filter definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -324,10 +262,6 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Metal definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -341,10 +275,6 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: Show definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}
@@ -359,19 +289,11 @@ void GDSProcess::Parse(char *processfile)
 				if(!in_layer){
 					fprintf(stderr, "Error: LayerEnd without LayerStart on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}else if(!got_layer){
 					fprintf(stderr, "Error: LayerEnd without Layer on line %d of process file.\n", current_line);
 					_Valid = false;
-					if(NewLayer.Name){
-						delete [] NewLayer.Name;
-						NewLayer.Name = NULL;
-					}
 					fclose(pptr);
 					return;
 				}else if(!got_height){
@@ -382,80 +304,70 @@ void GDSProcess::Parse(char *processfile)
 					showing = false;
 				}
 				AddLayer(&NewLayer);
-					if(!showing){
-						if(NewLayer.Datatype == -1){
-							v_printf(1, "Notice: Not showing layer %d (all datatypes)\n", NewLayer.Layer);
-						}else{
-							v_printf(1, "Notice: Not showing layer %d datatype %d\n", NewLayer.Layer, NewLayer.Datatype);
-						}
+				if(!showing){
+					if(NewLayer.Datatype == -1){
+						v_printf(1, "Notice: Not showing layer %d (all datatypes)\n", NewLayer.Layer);
+					}else{
+						v_printf(1, "Notice: Not showing layer %d datatype %d\n", NewLayer.Layer, NewLayer.Datatype);
 					}
-
-				if(NewLayer.Name){
-					delete [] NewLayer.Name;
-					NewLayer.Name = NULL;
 				}
+
 				in_layer = false;
 			}
 		}
-	}
-	if(NewLayer.Name){
-		delete [] NewLayer.Name;
-		NewLayer.Name = NULL;
 	}
 	fclose(pptr);
 	v_printf(1, "\n");
 }
 
-struct ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
+class ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 {
-	struct ProcessLayer *layer;
-
-	layer = _FirstLayer;
-
 	if(Number == -1) return NULL;
 
-	while(layer){
-		if(layer->Layer == Number && layer->Datatype == -1){
-			return layer;
-		}else if(layer->Layer == Number && layer->Datatype == Datatype){
-			return layer;
+	for(int i = 0; i < _FirstLayer.size(); i++){
+		if(_FirstLayer[i]->Layer == Number && _FirstLayer[i]->Datatype == -1){
+			return _FirstLayer[i];
+		}else if(_FirstLayer[i]->Layer == Number && _FirstLayer[i]->Datatype == Datatype){
+			return _FirstLayer[i];
 		}
-		layer = layer->Next;
 	}
 	return NULL;
 }
 
-struct ProcessLayer *GDSProcess::GetLayer(const char *Name)
+class ProcessLayer *GDSProcess::GetLayer(const char *Name)
 {
-	struct ProcessLayer *layer;
-
-	layer = _FirstLayer;
-
-	while(layer){
-		if(strcmp(Name, layer->Name) == 0){
-			return layer;
+	for(int i = 0; i < _FirstLayer.size(); i++){
+		if(strcmp(_FirstLayer[i]->Name.c_str(), Name) == 0){
+			return _FirstLayer[i];
 		}
-		layer = layer->Next;
 	}
 	return NULL;
 }
 
-struct ProcessLayer *GDSProcess::GetLayer()
+class ProcessLayer *GDSProcess::GetLayer()
 {
-	return _FirstLayer;
+	return _FirstLayer[0];
+}
+
+class ProcessLayer *GDSProcess::GetLayer(int index)
+{
+	if(index >=0 && index < _FirstLayer.size()){
+		return _FirstLayer[index];
+	}else{
+		return NULL;
+	}
 }
 
 int GDSProcess::LayerCount()
 {
-	return _Count;
+	return _FirstLayer.size();
 }
 
 
 void GDSProcess::AddLayer(int Layer, int Datatype)
 {
-	struct ProcessLayer NewLayer;
+	class ProcessLayer NewLayer;
 
-	NewLayer.Name = NULL;
 	NewLayer.Layer = Layer;
 	NewLayer.Datatype = Datatype;
 	NewLayer.Height = 0.0;
@@ -466,36 +378,16 @@ void GDSProcess::AddLayer(int Layer, int Datatype)
 	NewLayer.Filter = 0.0;
 	NewLayer.Metal = 0;
 	NewLayer.Show = false;
-	NewLayer.Next = NULL;
 
 	AddLayer(&NewLayer);
 }
 
 
-void GDSProcess::AddLayer(struct ProcessLayer *NewLayer)
+void GDSProcess::AddLayer(class ProcessLayer *NewLayer)
 {
-	struct ProcessLayer *layer;
+	class ProcessLayer *layer = new ProcessLayer;
 
-	layer = _FirstLayer;
-
-	if(_FirstLayer){
-		while(layer->Next){
-			layer = layer->Next;
-		}
-		layer->Next = new struct ProcessLayer;
-		layer = layer->Next;
-		layer->Next = NULL;
-	}else{
-		_FirstLayer = new struct ProcessLayer;
-		layer = _FirstLayer;
-		layer->Next = NULL;
-	}
-
-	layer->Name = NULL;
-	if(NewLayer->Name){
-		layer->Name = new char[strlen(NewLayer->Name)+1];
-		strcpy(layer->Name, NewLayer->Name);
-	}
+	layer->Name = NewLayer->Name;
 	layer->Layer = NewLayer->Layer;
 	layer->Datatype = NewLayer->Datatype;
 	layer->Height = NewLayer->Height;
@@ -506,6 +398,8 @@ void GDSProcess::AddLayer(struct ProcessLayer *NewLayer)
 	layer->Blue = NewLayer->Blue;
 	layer->Filter = NewLayer->Filter;
 	layer->Metal = NewLayer->Metal;
+
+	_FirstLayer.push_back(layer);
 }
 
 bool GDSProcess::IsValid()
@@ -516,14 +410,11 @@ bool GDSProcess::IsValid()
 float GDSProcess::GetHighest()
 {
 	float Highest = -10000.0;
-	struct ProcessLayer *layer;
 
-	layer = _FirstLayer;
-	while(layer){
-		if(layer->Height + layer->Thickness > Highest && layer->Show){
-			Highest = layer->Height + layer->Thickness;
+	for(int i = 0; i < _FirstLayer.size(); i++){
+		if(_FirstLayer[i]->Height + _FirstLayer[i]->Thickness > Highest && _FirstLayer[i]->Show){
+			Highest = _FirstLayer[i]->Height + _FirstLayer[i]->Thickness;
 		}
-		layer = layer->Next;
 	}
 	return Highest;
 }
@@ -531,14 +422,11 @@ float GDSProcess::GetHighest()
 float GDSProcess::GetLowest()
 {
 	float Lowest = 10000.0;
-	struct ProcessLayer *layer;
 
-	layer = _FirstLayer;
-	while(layer){
-		if(layer->Height < Lowest && layer->Show){
-			Lowest = layer->Height;
+	for(int i = 0; i < _FirstLayer.size(); i++){
+		if(_FirstLayer[i]->Height < Lowest && _FirstLayer[i]->Show){
+			Lowest = _FirstLayer[i]->Height;
 		}
-		layer = layer->Next;
 	}
 	return Lowest;
 }
@@ -546,7 +434,6 @@ float GDSProcess::GetLowest()
 
 bool GDSProcess::Save(const char *filename)
 {
-	struct ProcessLayer *layer;
 	FILE *fptr = NULL;
 
 	if(!filename) return false;
@@ -554,10 +441,9 @@ bool GDSProcess::Save(const char *filename)
 	fptr = fopen(filename, "wt");
 	if(!fptr) return false;
 
-	layer = _FirstLayer;
-	while(layer){
-		fprintf(fptr, "LayerStart: LAYER-%d-%d\n", layer->Layer, layer->Datatype);
-		fprintf(fptr, "Layer: %d\n", layer->Layer);
+	for(int i = 0; i < _FirstLayer.size(); i++){
+		fprintf(fptr, "LayerStart: LAYER-%d-%d\n", _FirstLayer[i]->Layer, _FirstLayer[i]->Datatype);
+		fprintf(fptr, "Layer: %d\n", _FirstLayer[i]->Layer);
 		fprintf(fptr, "Height: 0\n");
 		fprintf(fptr, "Thickness: 0\n");
 		fprintf(fptr, "Red: 0.0\n");
@@ -567,8 +453,6 @@ bool GDSProcess::Save(const char *filename)
 		fprintf(fptr, "Metal: 0\n");
 		fprintf(fptr, "Show: 1\n");
 		fprintf(fptr, "LayerEnd\n\n");
-
-		layer = layer->Next;
 	}
 	fclose(fptr);
 

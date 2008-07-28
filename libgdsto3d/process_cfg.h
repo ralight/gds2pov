@@ -21,9 +21,13 @@
 #ifndef _PROCESS_CFG_H
 #define _PROCESS_CFG_H
 
-struct ProcessLayer{
-	struct ProcessLayer *Next;
-	char *Name;
+#include <string>
+#include <vector>
+using namespace std;
+
+class ProcessLayer {
+public:
+	std::string Name;
 	int Layer;
 	int Datatype;
 	float Height;
@@ -36,12 +40,10 @@ struct ProcessLayer{
 	int Metal;
 };
 
-typedef struct ProcessLayer layers;
-
 class GDSProcess
 {
 private:
-	struct ProcessLayer	*_FirstLayer;
+	vector<class ProcessLayer*> _FirstLayer;
 	int _Count;		/* Number of layers found */
 
 	bool _Valid;		/* Is the process file valid? */
@@ -52,11 +54,12 @@ public:
 	void Parse(char *processfile);
 	//bool Parse(char *processfile);
 
-	void AddLayer(struct ProcessLayer *NewLayer);
+	void AddLayer(class ProcessLayer *NewLayer);
 	void AddLayer(int Layer, int Datatype);
-	struct ProcessLayer *GetLayer(int Number, int Datatype);
-	struct ProcessLayer *GetLayer();
-	struct ProcessLayer *GetLayer(const char *Name);
+	class ProcessLayer *GetLayer(int Number, int Datatype);
+	class ProcessLayer *GetLayer();
+	class ProcessLayer *GetLayer(int index);
+	class ProcessLayer *GetLayer(const char *Name);
 	int LayerCount();
 	bool IsValid();
 	float GetHighest();
