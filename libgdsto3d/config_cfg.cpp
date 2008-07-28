@@ -33,40 +33,20 @@
 
 #include "config_cfg.h"
 
-GDSConfig::GDSConfig()
+GDSConfig::GDSConfig() :
+	_ProcessFile(NULL), _Font(NULL),
+	_Ambient(1.2), _Scale(1.0), _Valid(true)
 {
-	_ProcessFile = NULL;
-	_Font = NULL;
-	_Ambient = 1.2;
-	_Scale = 1.0;
-
 	_CameraPos.postype = ptCamera;
-	_CameraPos.boundarypos = bpCentre;
-	_CameraPos.XMod = 1.0;
-	_CameraPos.YMod = 1.0;
-	_CameraPos.ZMod = 1.0;
-
 	_LookAtPos.postype = ptLookAt;
-	_LookAtPos.boundarypos = bpCentre;
-	_LookAtPos.XMod = 1.0;
-	_LookAtPos.YMod = 1.0;
-	_LookAtPos.ZMod = 0.0;
-
-	_LightCount = 0;
-	_Valid = true;
-
 }
 
-GDSConfig::GDSConfig(char *configfile)
+GDSConfig::GDSConfig(char *configfile) : 
+	_ProcessFile(NULL), _Font(NULL),
+	_Ambient(1.2), _Scale(1.0), _Valid(true)
 {
-	_ProcessFile = NULL;
-	_Font = NULL;
-	_Ambient = 1.2;
-	_Scale = 1.0;
-
-	_LightCount = 0;
-	_Valid = true;
-
+	_CameraPos.postype = ptCamera;
+	_LookAtPos.postype = ptLookAt;
 
 	int posstart_cnt = 0;
 	int posend_cnt = 0;

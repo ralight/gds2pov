@@ -48,7 +48,7 @@ public:
 	float YMod;
 	float ZMod;
 
-	Position() : boundarypos(bpCentre),
+	Position() : postype(ptLight), boundarypos(bpCentre),
 		XMod(1.0), YMod(1.0), ZMod(1.0) { };
 };
 
@@ -59,8 +59,6 @@ private:
 	class Position _LookAtPos;
 	vector<class Position *> _Lights;
 	class Position *_currentlight;
-
-	int		_LightCount;
 
 	bool		_Valid;
 
