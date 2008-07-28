@@ -46,7 +46,7 @@ protected:
 	bool IsOutput;
 	int SRefCount, ARefCount;
 
-	char *Name;
+	std::string Name;
 
 	struct _Boundary Boundary;
 	float _width, _height;
@@ -54,7 +54,7 @@ protected:
 	class GDSObject **SRefs;
 	class GDSObject **ARefs;
 public:
-	GDSObject(char *Name);
+	GDSObject(std::string Name);
 	virtual ~GDSObject();
 
 	void AddText(float newX, float newY, float newZ, bool newFlipped, float newMag, int newVJust, int newHJust, struct ProcessLayer *newlayer);
@@ -63,18 +63,18 @@ public:
 	void AddPolygon(float Height, float Thickness, int Points, struct ProcessLayer *layer);
 	class GDSPolygon *GetCurrentPolygon();
 
-	void AddSRef(const char *Name, float X, float Y, int Flipped, float Mag);
+	void AddSRef(std::string Name, float X, float Y, int Flipped, float Mag);
 	void SetSRefRotation(float X, float Y, float Z);
 
-	void AddARef(const char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag);
+	void AddARef(std::string Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag);
 	void SetARefRotation(float X, float Y, float Z);
 
 	void AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *layer);
 	class GDSPath *GetCurrentPath();
 
-	char *GetName();
+	std::string GetName();
 
-	virtual void OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)=0;
+	virtual void OutputToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)=0;
 
 	int HasASRef();
 	class GDSObject *GetSRef(class GDSObjects *Objects, int Index);

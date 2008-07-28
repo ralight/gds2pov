@@ -42,7 +42,7 @@ void GDSObject_svg::SetScale(float scale)
 	_scale = scale;
 }
 
-void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PathItems.empty()){
 		float angleX, angleY;
@@ -122,7 +122,7 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 	}
 }
 
-void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PolygonItems.empty()){
 		class GDSPolygon *polygon;
@@ -139,7 +139,7 @@ void GDSObject_svg::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, c
 	}
 }
 
-void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!TextItems.empty()){
 		std::string str;
@@ -213,7 +213,7 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char
 	}
 }
 
-void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(FirstSRef){
 		SRefElement dummysref;
@@ -260,7 +260,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char
 	}
 }
 
-void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(FirstARef){
 		int i, j;
@@ -332,7 +332,7 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char
 }
 
 
-void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_svg::OutputToFile(FILE *fptr, class GDSObjects *Objects, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(fptr && !IsOutput){
 		fprintf(fptr, "\t\t<symbol id=\"%s\" overflow=\"visible\">\n", Name);

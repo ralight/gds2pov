@@ -26,7 +26,7 @@
 #include "gdsobjects.h"
 #include "gds_globals.h"
 
-GDSObject::GDSObject(char *NewName)
+GDSObject::GDSObject(std::string NewName)
 {
 	FirstSRef = NULL;
 	LastSRef = NULL;
@@ -38,8 +38,7 @@ GDSObject::GDSObject(char *NewName)
 	SRefs = NULL;
 	ARefs = NULL;
 
-	Name = new char[strlen(NewName)+1];
-	strcpy(Name, NewName);
+	Name = NewName;
 
 	GotBoundary = false;
 	Boundary.XMax = Boundary.YMax = -1000000.0;
@@ -74,12 +73,12 @@ GDSObject::~GDSObject()
 		sref1 = FirstSRef;
 		while(sref1->Next){
 			sref2 = sref1->Next;
-			if(sref1->Name) delete [] sref1->Name;
+			if(sref1->Name) delete sref1->Name;
 			delete sref1;
 			sref1 = sref2;
 		}
 		if(sref1){
-			if(sref1->Name) delete [] sref1->Name;
+			if(sref1->Name) delete sref1->Name;
 			delete sref1;
 		}
 	}
@@ -91,12 +90,12 @@ GDSObject::~GDSObject()
 		aref1 = FirstARef;
 		while(aref1->Next){
 			aref2 = aref1->Next;
-			if(aref1->Name) delete [] aref1->Name;
+			if(aref1->Name) delete aref1->Name;
 			delete aref1;
 			aref1 = aref2;
 		}
 		if(aref1){
-			if(aref1->Name) delete [] aref1->Name;
+			if(aref1->Name) delete aref1->Name;
 			delete aref1;
 		}
 	}
@@ -108,8 +107,6 @@ GDSObject::~GDSObject()
 	if(ARefs){
 		delete [] ARefs;
 	}
-
-	delete [] Name;
 }
 
 void GDSObject::AddText(float newX, float newY, float newZ, bool newFlipped, float newMag, int newVJust, int newHJust, struct ProcessLayer *newlayer)
@@ -126,7 +123,7 @@ class GDSText *GDSObject::GetCurrentText()
 	}
 }
 
-char *GDSObject::GetName()
+std::string GDSObject::GetName()
 {
 	return Name;
 }
@@ -141,7 +138,7 @@ class GDSPolygon *GDSObject::GetCurrentPolygon()
 	return PolygonItems[PolygonItems.size()-1];
 }
 
-void GDSObject::AddSRef(const char *Name, float X, float Y, int Flipped, float Mag)
+void GDSObject::AddSRef(std::string Name, float X, float Y, int Flipped, float Mag)
 {
 	SRefElement *NewSRef = new SRefElement;
 
@@ -156,8 +153,7 @@ void GDSObject::AddSRef(const char *Name, float X, float Y, int Flipped, float M
 		LastSRef = NewSRef;
 	}
 
-	NewSRef->Name = new char[strlen(Name)+1];
-	strcpy(NewSRef->Name, Name);
+	NewSRef->Name = strdup(Name.c_str());
 	NewSRef->X = X;
 	NewSRef->Y = Y;
 	NewSRef->Rotate.X = 0.0;
@@ -179,7 +175,7 @@ void GDSObject::SetSRefRotation(float X, float Y, float Z)
 	}
 }
 
-void GDSObject::AddARef(const char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag)
+void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag)
 {
 	ARefElement *NewARef = new ARefElement;
 
@@ -194,8 +190,7 @@ void GDSObject::AddARef(const char *Name, float X1, float Y1, float X2, float Y2
 		LastARef = NewARef;
 	}
 
-	NewARef->Name = new char[strlen(Name)+1];
-	strcpy(NewARef->Name, Name);
+	NewARef->Name = strdup(Name.c_str());
 	NewARef->X1 = X1;
 	NewARef->Y1 = Y1;
 	NewARef->X2 = X2;
@@ -285,12 +280,12 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 
 		while(sref->Next){
 			sref = sref->Next;
-			if(strcmp(sref->Name, this->Name)!=0){
+			if(Name == sref->Name){
 				object = &dummyobject;
 
 				while(object->Next){
 					object = object->Next;
-					if(strcmp(object->Object->GetName(), sref->Name)==0){
+					if(object->Object->GetName() == sref->Name){
 						NewBound = object->Object->GetBoundary(objectlist);
 						if(sref->X + NewBound->XMax > Boundary.XMax){
 							Boundary.XMax = sref->X + NewBound->XMax;
@@ -323,12 +318,12 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		struct _Boundary *NewBound;
 		while(aref->Next){
 			aref = aref->Next;
-			if(strcmp(aref->Name, this->Name)!=0){
+			if(Name == aref->Name){
 				object = &dummyobject;
 				object = &dummyobject;
 				while(object->Next){
 					object = object->Next;
-					if(strcmp(object->Object->GetName(), aref->Name)==0){
+					if(object->Object->GetName() == aref->Name){
 						NewBound = object->Object->GetBoundary(objectlist);
 						if(aref->X2 + NewBound->XMax > Boundary.XMax){
 							Boundary.XMax = aref->X2 + NewBound->XMax;
@@ -353,7 +348,7 @@ struct _Boundary *GDSObject::GetBoundary(struct ObjectList *objectlist)
 		Boundary.XMax = Boundary.XMin = Boundary.YMax = Boundary.YMin = 0;
 	}
 
-	v_printf(2, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name, Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
+	v_printf(2, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name.c_str(), Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
 	GotBoundary = true;
 
 	_width = Boundary.XMax - Boundary.XMin;
