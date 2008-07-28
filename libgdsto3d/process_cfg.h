@@ -51,20 +51,20 @@ public:
 	GDSProcess ();
 	~GDSProcess ();
 
-	void Parse(char *processfile);
-	//bool Parse(char *processfile);
+	void Parse(std::string processfile);
+	//bool Parse(std::string processfile);
 
 	void AddLayer(class ProcessLayer *NewLayer);
 	void AddLayer(int Layer, int Datatype);
 	class ProcessLayer *GetLayer(int Number, int Datatype);
 	class ProcessLayer *GetLayer();
 	class ProcessLayer *GetLayer(int index);
-	class ProcessLayer *GetLayer(const char *Name);
+	class ProcessLayer *GetLayer(std::string Name);
 	int LayerCount();
 	bool IsValid();
 	float GetHighest();
 	float GetLowest();
-	bool Save(const char *filename);
+	bool Save(std::string filename);
 };
 
 #endif // _PROCESS_CFG_H

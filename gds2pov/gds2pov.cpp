@@ -65,8 +65,8 @@ int main(int argc, char *argv[])
 	char *povfile=NULL;
 	char *camfile=NULL;
 
-	char *configfile=NULL;
-	char *processfile=NULL;
+	std::string configfile="";
+	std::string processfile="";
 	std::string topcell="";
 
 	verbose_output = 1;
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 
 	class GDSConfig *config=NULL;
 
-	if(configfile){
+	if(configfile.length() > 0){
 		config = new GDSConfig(configfile);
 	}else{
 		config = new GDSConfig(); // Start with default positions
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 	if(!config){
 		fprintf(stderr, "Error: Out of memory.\n");
 	}else if(!config->IsValid()){
-		fprintf(stderr, "Error: %s is not a valid config file.\n", configfile);
+		fprintf(stderr, "Error: %s is not a valid config file.\n", configfile.c_str());
 		delete config;
 		return -1;
 	}
@@ -178,12 +178,11 @@ int main(int argc, char *argv[])
 	** Specified in config file
 	** Use process.txt if none others specified.
 	*/
-	if(processfile == NULL){
-		if(config->GetProcessFile()!=NULL){
+	if(processfile == ""){
+		if(config->GetProcessFile()!=""){
 			processfile = config->GetProcessFile();
 		}else{
-			processfile = new char[13];
-			strncpy(processfile, "process.txt", strlen("process.txt")+1);
+			processfile = "process.txt";
 		}
 	}
 	process = new GDSProcess();
@@ -195,12 +194,12 @@ int main(int argc, char *argv[])
 	if(!generate_process){
 		process->Parse(processfile);
 		if(!process->IsValid()){
-			fprintf(stderr, "Error: %s is not a valid process file\n", processfile);
+			fprintf(stderr, "Error: %s is not a valid process file\n", processfile.c_str());
 			delete config;
 			delete process;
 			return -1;
 		}else if(process->LayerCount()==0){
-			fprintf(stderr, "Error: No layers found in \"%s\".\n", processfile);
+			fprintf(stderr, "Error: No layers found in \"%s\".\n", processfile.c_str());
 			delete config;
 			delete process;
 			return -1;

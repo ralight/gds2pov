@@ -34,15 +34,15 @@
 #include "config_cfg.h"
 
 GDSConfig::GDSConfig() :
-	_ProcessFile(NULL), _Font(NULL),
+	_ProcessFile(""), _Font(""),
 	_Ambient(1.2), _Scale(1.0), _Valid(true)
 {
 	_CameraPos.postype = ptCamera;
 	_LookAtPos.postype = ptLookAt;
 }
 
-GDSConfig::GDSConfig(char *configfile) : 
-	_ProcessFile(NULL), _Font(NULL),
+GDSConfig::GDSConfig(std::string configfile) : 
+	_ProcessFile(""), _Font(""),
 	_Ambient(1.2), _Scale(1.0), _Valid(true)
 {
 	_CameraPos.postype = ptCamera;
@@ -74,10 +74,10 @@ GDSConfig::GDSConfig(char *configfile) :
 
 	int i;
 
-	cptr = fopen(configfile, "rt");
+	cptr = fopen(configfile.c_str(), "rt");
 	
 	if(!cptr){
-		fprintf(stderr, "Error: Unable to open config file \"%s\"\n", configfile);
+		fprintf(stderr, "Error: Unable to open config file \"%s\"\n", configfile.c_str());
 		_Valid = false;
 		return;
 	}
@@ -166,14 +166,10 @@ GDSConfig::GDSConfig(char *configfile) :
 				if(got_processfile){
 					fprintf(stderr, "Warning: Duplicate ProcessFile definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
-					if(_ProcessFile){
-						delete [] _ProcessFile;
-						_ProcessFile = NULL;
-					}
-					_ProcessFile = new char[256];
-				
-					strncpy(_ProcessFile, &line[13], 256);
-					for(i=strlen(_ProcessFile)-1; i>=0; i--){
+					_ProcessFile = line;
+					_ProcessFile = _ProcessFile.substr(13);
+
+					for(i=_ProcessFile.length()-1; i>=0; i--){
 						if(_ProcessFile[i] == '\n'){
 							_ProcessFile[i] = '\0';
 							break;
@@ -191,14 +187,9 @@ GDSConfig::GDSConfig(char *configfile) :
 				if(got_font){
 					fprintf(stderr, "Warning: Duplicate Font definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
-					if(_Font){
-						delete [] _Font;
-						_Font = NULL;
-					}
-					_Font = new char[256];
-				
-					strncpy(_Font, &line[6], 256);
-					for(i=strlen(_Font)-1; i>=0; i--){
+					_Font = line;
+					_Font = _Font.substr(6);
+					for(i=_Font.length()-1; i>=0; i--){
 						if(_Font[i] == '\n'){
 							_Font[i] = '\0';
 							break;
@@ -311,7 +302,6 @@ GDSConfig::GDSConfig(char *configfile) :
 					}
 					got_position = true;
 				}
-				
 			}else if(strstr(line, "XMod:")){
 				if(!in_position){
 					fprintf(stderr, "Error: XMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
@@ -458,16 +448,9 @@ GDSConfig::GDSConfig(char *configfile) :
 
 GDSConfig::~GDSConfig()
 {
-	if(_ProcessFile){
-		delete [] _ProcessFile;
-	}
-
 	while(!_Lights.empty()){
 		delete _Lights[_Lights.size()-1];
 		_Lights.pop_back();
-	}
-	if(_Font){
-		delete [] _Font;
 	}
 }
 
@@ -486,12 +469,12 @@ float GDSConfig::GetScale()
 	return _Scale;
 }
 
-char *GDSConfig::GetProcessFile()
+std::string GDSConfig::GetProcessFile()
 {
 	return _ProcessFile;
 }
 
-char *GDSConfig::GetFont()
+std::string GDSConfig::GetFont()
 {
 	return _Font;
 }

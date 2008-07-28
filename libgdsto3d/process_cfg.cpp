@@ -60,8 +60,8 @@ GDSProcess::~GDSProcess ()
 	}
 }
 
-//bool GDSProcess::Parse(char *processfile)
-void GDSProcess::Parse(char *processfile)
+//bool GDSProcess::Parse(std::string processfile)
+void GDSProcess::Parse(std::string processfile)
 {
 	int layerstart_cnt = 0;
 	int layerend_cnt = 0;
@@ -89,10 +89,10 @@ void GDSProcess::Parse(char *processfile)
 
 	FILE *pptr = NULL;
 
-	pptr = fopen(processfile, "rt");
+	pptr = fopen(processfile.c_str(), "rt");
 	
 	if(!pptr){
-		fprintf(stderr, "Unable to open process file \"%s\".\n", processfile);
+		fprintf(stderr, "Unable to open process file \"%s\".\n", processfile.c_str());
 		_Valid = false;
 		return;
 	}
@@ -334,10 +334,10 @@ class ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 	return NULL;
 }
 
-class ProcessLayer *GDSProcess::GetLayer(const char *Name)
+class ProcessLayer *GDSProcess::GetLayer(std::string Name)
 {
 	for(int i = 0; i < _FirstLayer.size(); i++){
-		if(strcmp(_FirstLayer[i]->Name.c_str(), Name) == 0){
+		if(_FirstLayer[i]->Name == Name){
 			return _FirstLayer[i];
 		}
 	}
@@ -432,13 +432,13 @@ float GDSProcess::GetLowest()
 }
 
 
-bool GDSProcess::Save(const char *filename)
+bool GDSProcess::Save(std::string filename)
 {
 	FILE *fptr = NULL;
 
-	if(!filename) return false;
+	if(filename == "") return false;
 
-	fptr = fopen(filename, "wt");
+	fptr = fopen(filename.c_str(), "wt");
 	if(!fptr) return false;
 
 	for(int i = 0; i < _FirstLayer.size(); i++){

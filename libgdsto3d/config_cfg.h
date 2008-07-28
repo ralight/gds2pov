@@ -22,6 +22,7 @@
 #ifndef _CONFIG_CFG_H
 #define _CONFIG_CFG_H
 
+#include <string>
 #include <vector>
 using namespace std;
 
@@ -62,21 +63,21 @@ private:
 
 	bool _Valid;
 
-	char *_Font;
-	char *_ProcessFile;
+	std::string _Font;
+	std::string _ProcessFile;
 	float _Ambient;
 	float _Scale;
 
 public:
-	GDSConfig(char *filename);
+	GDSConfig(std::string filename);
 	GDSConfig();
 	~GDSConfig();
 
-	char *GetProcessFile();
+	std::string GetProcessFile();
 	float GetAmbient();
 	float GetScale();
 	bool IsValid();
-	char *GetFont();
+	std::string GetFont();
 
 	class Position *GetLookAtPos();
 	class Position *GetCameraPos();

@@ -175,8 +175,8 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx,
 
 	}
 
-	struct ProcessLayer *layer = NULL;
-	if(_process != NULL){
+	class ProcessLayer *layer = NULL;
+	if(_process){
 		layer = _process->GetLayer();
 	}
 
@@ -689,7 +689,7 @@ void GDSParse::ParseXYPath()
 	float X, Y;
 	int points = _recordlen/8;
 	int i;
-	struct ProcessLayer *thislayer = NULL;
+	class ProcessLayer *thislayer = NULL;
 
 	if(_process != NULL){
 		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
@@ -758,7 +758,7 @@ void GDSParse::ParseXYBoundary()
 	float firstX=0.0, firstY=0.0;
 	int points = _recordlen/8;
 	int i;
-	struct ProcessLayer *thislayer = NULL;
+	class ProcessLayer *thislayer = NULL;
 
 	if(_process != NULL){
 		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
@@ -823,7 +823,7 @@ void GDSParse::ParseXY()
 {
 	float X, Y;
 	float firstX=0.0, firstY=0.0, secondX=0.0, secondY=0.0;
-	struct ProcessLayer *thislayer = NULL;
+	class ProcessLayer *thislayer = NULL;
 	int Flipped;
 
 	if(_process != NULL){
