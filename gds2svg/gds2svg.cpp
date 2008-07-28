@@ -55,9 +55,8 @@ void printusage()
 
 int main(int argc, char *argv[])
 {
-	char *gdsfile=NULL;
-	char *svgfile=NULL;
-
+	std::string gdsfile="";
+	std::string svgfile="";
 	std::string configfile="";
 	std::string processfile="";
 	std::string topcell="";
@@ -188,8 +187,8 @@ int main(int argc, char *argv[])
 	}
 
 	FILE *iptr;
-	if(gdsfile){
-		iptr = fopen(gdsfile, "rb");
+	if(gdsfile != ""){
+		iptr = fopen(gdsfile.c_str(), "rb");
 	}else{
 		iptr = stdin;
 	}
@@ -198,8 +197,8 @@ int main(int argc, char *argv[])
 		if(!Parser->Parse(iptr)){
 			if(!generate_process){
 				FILE *optr;
-				if(svgfile){
-					optr = fopen(svgfile, "wt");
+				if(svgfile != ""){
+					optr = fopen(svgfile.c_str(), "wt");
 				}else{
 					optr = stdout;
 				}
@@ -210,7 +209,7 @@ int main(int argc, char *argv[])
 						fclose(optr);
 					}
 				}else{
-					fprintf(stderr, "Error: Unable to open %s.\n", svgfile);
+					fprintf(stderr, "Error: Unable to open %s.\n", svgfile.c_str());
 				}
 			}else{
 				process->Save(processfile);
@@ -225,7 +224,7 @@ int main(int argc, char *argv[])
 		delete config;
 		delete process;
 	}else{
-		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile);
+		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile.c_str());
 		delete config;
 		delete process;
 		return -1;
