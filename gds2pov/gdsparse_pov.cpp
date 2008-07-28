@@ -58,8 +58,8 @@ class GDSObject *GDSParse_pov::NewObject(char *Name)
 void GDSParse_pov::OutputFooter()
 {
 	if(!_bounding_output){
-		if(_topcellname){
-			fprintf(_optr, "object { str_%s }\n", _topcellname);
+		if(_topcellname.length() > 0){
+			fprintf(_optr, "object { str_%s }\n", _topcellname.c_str());
 		}else{
 			if(_Objects->GetObjectRef(0)){
 				fprintf(_optr, "object { str_%s }\n", _Objects->GetObjectRef(0)->GetName());

@@ -63,10 +63,10 @@ public:
 	void AddPolygon(float Height, float Thickness, int Points, struct ProcessLayer *layer);
 	class GDSPolygon *GetCurrentPolygon();
 
-	void AddSRef(char *Name, float X, float Y, int Flipped, float Mag);
+	void AddSRef(const char *Name, float X, float Y, int Flipped, float Mag);
 	void SetSRefRotation(float X, float Y, float Z);
 
-	void AddARef(char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag);
+	void AddARef(const char *Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag);
 	void SetARefRotation(float X, float Y, float Z);
 
 	void AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *layer);

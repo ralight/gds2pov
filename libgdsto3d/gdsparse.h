@@ -50,40 +50,40 @@ typedef enum{
 class GDSParse
 {
 protected:
-	char			*_libname;
-	char			*_topcellname;
+	std::string _libname;
+	std::string _topcellname;
 
-	int16_t			_currentlayer;
-	float			_currentwidth;
-	int16_t			_currentpathtype;
-	gds_element_type	_currentelement;
-	int16_t			_currenttexttype;
-	int16_t			_currentpresentation;
-	char			*_textstring;
-	int16_t			_currentstrans;
-	float			_currentangle;
-	int16_t			_currentdatatype;
-	float			_currentmag;
-	float			_currentbgnextn;
-	float			_currentendextn;
+	int16_t _currentlayer;
+	float _currentwidth;
+	int16_t _currentpathtype;
+	gds_element_type _currentelement;
+	int16_t _currenttexttype;
+	int16_t _currentpresentation;
+	char *_textstring;
+	int16_t _currentstrans;
+	float _currentangle;
+	int16_t _currentdatatype;
+	float _currentmag;
+	float _currentbgnextn;
+	float _currentendextn;
 
-	char			*_sname;
-	int16_t			_arrayrows, _arraycols;
-	float			_units;
-	float			_angle;
-	FILE			*_iptr;
-	FILE			*_optr;
-	class GDSProcess	*_process;
-	class GDSConfig		*_config;
+	std::string _sname;
+	int16_t _arrayrows, _arraycols;
+	float _units;
+	float _angle;
+	FILE *_iptr;
+	FILE *_optr;
+	class GDSProcess *_process;
+	class GDSConfig	 *_config;
 	
-	int16_t			_recordlen;
+	int16_t _recordlen;
 
 	/* Output options */
-	bool			_allow_multiple_output;
-	bool			_output_children_first;
-	bool			_bounding_output;
-	bool			_use_outfile;
-	bool			_generate_process;
+	bool _allow_multiple_output;
+	bool _output_children_first;
+	bool _bounding_output;
+	bool _use_outfile;
+	bool _generate_process;
 
 	/*
 	** Both of these variables have fixed bounds because
@@ -95,18 +95,18 @@ protected:
 	** the way they are stored (2 byte int). It might be worth
 	** checking if they are greater than 255
 	*/
-	bool			_unsupported[70];
-	bool			_layer_warning[256][256];
+	bool _unsupported[70];
+	bool _layer_warning[256][256];
 
-	long			_PathElements;
-	long			_BoundaryElements;
-	long			_BoxElements;
-	long			_TextElements;
-	long			_SRefElements;
-	long			_ARefElements;
-
-	class GDSObjects	*_Objects;
-	class GDSObject		*_CurrentObject;
+	long _PathElements;
+	long _BoundaryElements;
+	long _BoxElements;
+	long _TextElements;
+	long _SRefElements;
+	long _ARefElements;
+ 
+	class GDSObjects *_Objects;
+	class GDSObject *_CurrentObject;
 
 	/* gds_parse.h functions */
 	void ParseHeader();
@@ -130,7 +130,7 @@ protected:
 	int16_t GetTwoByteSignedInt();
 	char *GetAsciiString();
 
-	void ReportUnsupported(const char *Name, enum RecordNumbers rn);
+	void ReportUnsupported(char *Name, enum RecordNumbers rn);
 	
 	bool ParseFile();
 

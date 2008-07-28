@@ -33,8 +33,8 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool gen
 {
 	_iptr = NULL;
 	_optr = NULL;
-	_libname = NULL;
-	_sname = NULL;
+	_libname = "";
+	_sname = "";
 	_textstring = NULL;
 	_Objects = NULL;
 
@@ -85,12 +85,6 @@ GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool gen
 
 GDSParse::~GDSParse ()
 {
-	if(_libname){
-		delete [] _libname;
-	}
-	if(_sname){
-		delete [] _sname;
-	}
 	if(_textstring){
 		delete [] _textstring;
 	}
@@ -196,7 +190,7 @@ bool GDSParse::ParseFile()
 {
 	byte recordtype, datatype;
 	char *tempstr;
-	struct ProcessLayer *layer = NULL;
+	class ProcessLayer *layer;
 
 	if(!_iptr){
 		return -1;
@@ -644,17 +638,8 @@ void GDSParse::ParseLibName()
 {
 	char *str;
 	str = GetAsciiString();
-	if(_libname){
-		delete [] _libname;
-		_libname = NULL;
-	}
-	_libname = new char[strlen(str)+1];
-	if(_libname){
-		strcpy(_libname, str);
-		v_printf(2, " (\"%s\")\n", _libname);
-	}else{
-		fprintf(stderr, "\nUnable to allocate memory for string (%d)\n", strlen(str)+1);
-	}
+	_libname = str;
+	v_printf(2, " (\"%s\")\n", _libname.c_str());
 	delete [] str;
 }
 
@@ -664,22 +649,13 @@ void GDSParse::ParseSName()
 
 	char *str;
 	str = GetAsciiString();
-	if(_sname){
-		delete [] _sname;
-		_sname = NULL;
-	}
-	_sname = new char[strlen(str)+1];
-	if(_sname){
-		strcpy(_sname, str);
-		for(unsigned int i=0; i<strlen(_sname); i++){
-			if(_sname[i] && (_sname[i] < 48 || _sname[i] > 57) && (_sname[i] < 65 || _sname[i] > 90) && (_sname[i] < 97 || _sname[i] > 122)){
-				_sname[i] = '_';
-			}
+	_sname = str;
+	for(unsigned int i=0; i<_sname.length(); i++){
+		if(_sname[i] && (_sname[i] < 48 || _sname[i] > 57) && (_sname[i] < 65 || _sname[i] > 90) && (_sname[i] < 97 || _sname[i] > 122)){
+			_sname[i] = '_';
 		}
-		v_printf(2, "(\"%s\")\n", _sname);
-	}else{
-		fprintf(stderr, "Unable to allocate memory for string (%d)\n", strlen(str)+1);
 	}
+	v_printf(2, "(\"%s\")\n", _sname.c_str());
 	delete [] str;
 }
 
@@ -869,7 +845,7 @@ void GDSParse::ParseXY()
 			v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
 			if(_CurrentObject){
-				_CurrentObject->AddSRef(_sname, X, Y, Flipped, _currentmag);
+				_CurrentObject->AddSRef(_sname.c_str(), X, Y, Flipped, _currentmag);
 				if(_currentangle){
 					_CurrentObject->SetSRefRotation(0, -_currentangle, 0);
 				}
@@ -889,7 +865,7 @@ void GDSParse::ParseXY()
 			v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
 			if(_CurrentObject){
-				_CurrentObject->AddARef(_sname, firstX, firstY, secondX, secondY, X, Y, _arraycols, _arrayrows, Flipped, _currentmag);
+				_CurrentObject->AddARef(_sname.c_str(), firstX, firstY, secondX, secondY, X, Y, _arraycols, _arrayrows, Flipped, _currentmag);
 				if(_currentangle){
 					_CurrentObject->SetARefRotation(0, -_currentangle, 0);
 				}
@@ -1053,7 +1029,7 @@ char *GDSParse::GetAsciiString()
 	return str;
 }
 
-void GDSParse::ReportUnsupported(const char *Name, enum RecordNumbers rn)
+void GDSParse::ReportUnsupported(char *Name, enum RecordNumbers rn)
 {
 	if(!_unsupported[rn]){
 		v_printf(1, "Unsupported GDS2 record type: %s\n", Name);
