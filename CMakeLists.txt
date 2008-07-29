@@ -1,7 +1,7 @@
 project (gdsto3d)
 set (VERSION 20080229)
 
-add_definitions (-DVERSION=\\\"${VERSION}\\\" -DHAVE_CONFIG_H -ggdb -Wall)
+add_definitions (-DVERSION=\\\"${VERSION}\\\" -DHAVE_CONFIG_H -ggdb -Wall -O2)
 include_directories (${gdsto3d_BINARY_DIR})
 
 include (CheckIncludeFile)

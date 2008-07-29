@@ -185,7 +185,7 @@ void GDSParse_pov::OutputHeader()
 		fprintf(_optr, "global_settings { ambient_light rgb <%.2f,%.2f,%.2f> }\n", _config->GetAmbient(), _config->GetAmbient(), _config->GetAmbient());
 
 		/* Output layer texture information */
-		class ProcessLayer *firstlayer;
+		class ProcessLayer *firstlayer = NULL;
 		for(int i = 0; i < _process->LayerCount(); i++){
 			firstlayer = _process->GetLayer(i);
 			if(firstlayer->Show){
@@ -196,7 +196,7 @@ void GDSParse_pov::OutputHeader()
 				}
 			}
 		}
-		if(firstlayer->Show){
+		if(firstlayer && firstlayer->Show){
 			if(!firstlayer->Metal){
 				fprintf(_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n", firstlayer->Name.c_str(), firstlayer->Red, firstlayer->Green, firstlayer->Blue, firstlayer->Filter);
 			}else{
