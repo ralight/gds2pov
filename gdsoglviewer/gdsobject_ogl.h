@@ -28,15 +28,14 @@ class GDSObject_ogl : public GDSObject
 private:
 	void DecomposePolygons(class GDSPolygon *polygon);
 public:
-	GDSObject_ogl(char *Name);
+	GDSObject_ogl(std::string Name);
 	~GDSObject_ogl();
 
-	virtual void OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
+	virtual void OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputOGLVertices(float offx, float offy);
-	void OutputOGLSRefs(class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
-	void OutputOGLARefs(class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
+	void OutputOGLSRefs(std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
+	void OutputOGLARefs(std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 
 };
 
 #endif // __GDSOBJECT_OGL_H__
-

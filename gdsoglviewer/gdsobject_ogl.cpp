@@ -38,7 +38,6 @@
 #include "gds_globals.h"
 #include "gdsoglviewer.h"
 #include "gdsobject_ogl.h"
-#include "gdsobjects.h"
 #include "process_cfg.h"
 
 typedef struct{
@@ -47,7 +46,7 @@ typedef struct{
 	float Z;
 } Point3D;
 
-GDSObject_ogl::GDSObject_ogl(char *Name) : GDSObject(Name){
+GDSObject_ogl::GDSObject_ogl(std::string Name) : GDSObject(Name){
 }
 
 GDSObject_ogl::~GDSObject_ogl()
@@ -271,110 +270,90 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 	}
 }
 
-void GDSObject_ogl::OutputOGLSRefs(class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_ogl::OutputOGLSRefs(std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	GDSObject *obj;
-
-	if(FirstSRef){
-		SRefElement dummysref;
-		dummysref.Next = FirstSRef;
-
-		SRefElement *sref = &dummysref;
-
-		while(sref->Next){
-			sref = sref->Next;
-
-			obj = Objects->GetObjectRef(sref->Name);
-			//obj = sref->object; //FIXME - shouldn't use GetObject() as it is inefficient, should have object references assigned to sref->object instead
-			if(obj){
-				glPushMatrix();
-				if(sref->Mag!=1.0){
-					glScalef(sref->Mag, sref->Mag, 1);
-				}
-				glTranslatef(offx+sref->X, offy+sref->Y, 0.0f);
-				if(sref->Rotate.Y){
-				//	fprintf(NULL, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
-					glRotatef(-sref->Rotate.Y, 0.0f, 0.0f, 1.0f);
-				}
-				if(sref->Flipped){
-					glScalef(1.0f, -1.0f, 1.0f);
-				}
-				obj->OutputToFile(NULL, Objects, Font, offx+sref->X, offy+sref->Y, objectid, firstlayer);
-				glPopMatrix();
+	for(unsigned int i = 0; i < FirstSRef.size(); i++){
+		ASRefElement *sref = FirstSRef[i];
+		GDSObject *obj = sref->object;
+		if(obj){
+			glPushMatrix();
+			if(sref->Mag!=1.0){
+				glScalef(sref->Mag, sref->Mag, 1);
 			}
+			glTranslatef(offx+sref->X1, offy+sref->Y1, 0.0f);
+			if(sref->Rotate.Y){
+			//	fprintf(NULL, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
+				glRotatef(-sref->Rotate.Y, 0.0f, 0.0f, 1.0f);
+			}
+			if(sref->Flipped){
+				glScalef(1.0f, -1.0f, 1.0f);
+			}
+			obj->OutputToFile(NULL, Font, offx+sref->X1, offy+sref->Y1, objectid, firstlayer);
+			glPopMatrix();
 		}
 	}
 }
 
-void GDSObject_ogl::OutputOGLARefs(class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_ogl::OutputOGLARefs(std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	GDSObject *obj;
-	int i, j;
+	float dx, dy;
 
-	if(FirstARef){
-		ARefElement dummyaref;
-		dummyaref.Next = FirstARef;
-		ARefElement *aref = &dummyaref;
+	for(unsigned int k = 0; k < FirstARef.size(); k++){
+		ASRefElement *aref = FirstARef[k];
+		GDSObject *obj = aref->object;
+		//obj = aref->object; //FIXME - see same line for OutputOGLSRefs()
+		if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
+			if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
+				dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
+				dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
 
-		float dx, dy;
-
-		while(aref->Next){
-			aref = aref->Next;
-			obj = Objects->GetObjectRef(aref->Name);
-			//obj = aref->object; //FIXME - see same line for OutputOGLSRefs()
-			if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
-				if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
-					dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
-					dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
-
-					if(obj){
-						for(i=0; i<aref->Rows; i++){
-							for(j=0; j<aref->Columns; j++){
-								glPushMatrix();
-								if(aref->Mag!=1.0){
-									glScalef(aref->Mag, aref->Mag, 1);
-								}
-								//glTranslatef(offx+aref->X1, offy+aref->Y1, 0.0f);
-								glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
-								if(aref->Rotate.Y){
-									glRotatef(-aref->Rotate.Y, 0.0f, 0.0f, 1.0f);
-								}
-								if(aref->Flipped){
-									glScalef(1.0f, -1.0f, 1.0f);
-								}
-								//glTranslatef(dx*(float)j, dy*(float)i, 0.0f);
-								//obj->OutputToFile(NULL, Objects, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
-								//obj->OutputToFile(NULL, Objects, Font, dx*(float)j, dy*(float)i, objectid, firstlayer);
-								obj->OutputToFile(NULL, Objects, Font, 0.0,0.0, objectid, firstlayer);
-								glPopMatrix();
+				if(obj){
+					for(int i=0; i<aref->Rows; i++){
+						for(int j=0; j<aref->Columns; j++){
+							glPushMatrix();
+							if(aref->Mag!=1.0){
+								glScalef(aref->Mag, aref->Mag, 1);
 							}
+							//glTranslatef(offx+aref->X1, offy+aref->Y1, 0.0f);
+							glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
+							if(aref->Rotate.Y){
+									glRotatef(-aref->Rotate.Y, 0.0f, 0.0f, 1.0f);
+							}
+							if(aref->Flipped){
+								glScalef(1.0f, -1.0f, 1.0f);
+							}
+							//glTranslatef(dx*(float)j, dy*(float)i, 0.0f);
+							//obj->OutputToFile(NULL, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
+							//obj->OutputToFile(NULL, Font, dx*(float)j, dy*(float)i, objectid, firstlayer);
+							obj->OutputToFile(NULL, Font, 0.0,0.0, objectid, firstlayer);
+							glPopMatrix();
 						}
 					}
 				}
-			}else{
-				if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
-					dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
-					dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
+			}
+		}else{
+			if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
+				dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
+				dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
 
-					if(obj){
-						for(i=0; i<aref->Rows; i++){
-							for(j=0; j<aref->Columns; j++){
-								glPushMatrix();
-								if(aref->Mag!=1.0){
-									glScalef(aref->Mag, aref->Mag, 1);
-								}
-								//glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
-								glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
-								if(aref->Rotate.Y){
-									glRotatef(-aref->Rotate.Y, 0.0f, 0.0f, 1.0f);
-								}
-								if(aref->Flipped){
-									glScalef(1.0f, -1.0f, 1.0f);
-								}
-								//glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
-								obj->OutputToFile(NULL, Objects, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
-								glPopMatrix();
+				if(obj){
+					for(int i=0; i<aref->Rows; i++){
+						for(int j=0; j<aref->Columns; j++){
+							glPushMatrix();
+							if(aref->Mag!=1.0){
+								glScalef(aref->Mag, aref->Mag, 1);
 							}
+							//glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
+							glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
+							if(aref->Rotate.Y){
+								glRotatef(-aref->Rotate.Y, 0.0f, 0.0f, 1.0f);
+							}
+							if(aref->Flipped){
+								glScalef(1.0f, -1.0f, 1.0f);
+							}
+							//glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
+							obj->OutputToFile(NULL, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
+							glPopMatrix();
 						}
 					}
 				}
@@ -383,15 +362,15 @@ void GDSObject_ogl::OutputOGLARefs(class GDSObjects *Objects, char *Font, float 
 	}
 }
 
-void GDSObject_ogl::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_ogl::OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	OutputOGLVertices(offx, offy);
 
-	if(FirstSRef){
-		OutputOGLSRefs(Objects, Font, offx, offy, objectid, firstlayer);
+	if(!FirstSRef.empty()){
+		OutputOGLSRefs(Font, offx, offy, objectid, firstlayer);
 	}
-	if(FirstARef){
-		OutputOGLARefs(Objects, Font, offx, offy, objectid, firstlayer);
+	if(!FirstARef.empty()){
+		OutputOGLARefs(Font, offx, offy, objectid, firstlayer);
 	}
 }
 

@@ -23,6 +23,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <string>
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -91,10 +92,10 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	char *gdsfile=NULL;
-	char *configfile=NULL;
-	char *processfile=NULL;
-	char *topcell=NULL;
+	std::string gdsfile="";
+	std::string configfile="";
+	std::string processfile="";
+	std::string topcell="";
 
 	for(int i=1; i<argc; i++){
 		if(argv[i][0] == '-'){
@@ -162,7 +163,7 @@ int main(int argc, char *argv[])
 
 	class GDSConfig *config=NULL;
 
-	if(configfile){
+	if(configfile != ""){
 		config = new GDSConfig(configfile);
 	}else{
 		config = new GDSConfig(); // Start with default positions
@@ -171,7 +172,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Error: Out of memory.\n");
 		return -1;
 	}else if(!config->IsValid()){
-		fprintf(stderr, "Error: %s is not a valid config file.\n", configfile);
+		fprintf(stderr, "Error: %s is not a valid config file.\n", configfile.c_str());
 		delete config;
 		return -1;
 	}
@@ -183,12 +184,11 @@ int main(int argc, char *argv[])
 	** Specified in config file
 	** Use process.txt if none specified.
 	*/
-	if(processfile == NULL){
-		if(config->GetProcessFile()!=NULL){
+	if(processfile == ""){
+		if(config->GetProcessFile() != ""){
 			processfile = config->GetProcessFile();
 		}else{
-			processfile = new char[13];
-			strncpy(processfile, "process.txt", 13);
+			processfile = "process.txt";
 		}
 	}
 	process = new GDSProcess();
@@ -198,20 +198,20 @@ int main(int argc, char *argv[])
 		delete config;
 		return -1;
 	}else if(!process->IsValid()){
-		fprintf(stderr, "Error: %s is not a valid process file\n");
+		fprintf(stderr, "Error: %s is not a valid process file\n", processfile.c_str());
 		delete config;
 		delete process;
 		return -1;
 	}else if(process->LayerCount()==0){
-		fprintf(stderr, "Error: No layers found in \"%s\".\n", processfile);
+		fprintf(stderr, "Error: No layers found in \"%s\".\n", processfile.c_str());
 		delete config;
 		delete process;
 		return -1;
 	}
 
 	FILE *iptr=NULL;
-	if(gdsfile){
-		iptr = fopen(gdsfile, "rb");
+	if(gdsfile != ""){
+		iptr = fopen(gdsfile.c_str(), "rb");
 	}else{
 		iptr = stdin;
 	}
@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
 		delete config;
 		delete process;
 	}else{
-		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile);
+		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile.c_str());
 		delete config;
 		delete process;
 		return -1;

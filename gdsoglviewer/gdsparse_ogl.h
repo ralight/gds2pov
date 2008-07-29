@@ -64,7 +64,6 @@ private:
 	GLfloat _xmin,_xmax,_ymin,_ymax; /* the bounding box for the gds features, FIXME: include z values */
 
 	struct htime _tv, _mt;
-	char *_topcell;
 
 #ifdef HAVE_X11_XLIB_H
 	Display *dpy;
@@ -91,16 +90,16 @@ public:
 	GDSParse_ogl (class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	~GDSParse_ogl ();
 
-	//class GDSObject_ogl *NewObject(char *Name);
-	class GDSObject *NewObject(char *Name);
+	//class GDSObject_ogl *NewObject(std::string Name);
+	class GDSObject *NewObject(std::string Name);
 	void OutputHeader();
 	void OutputFooter();
 
-	void SetTopcell(char *topcell);
+	void SetTopcell(std::string topcell);
 	int gl_data();
 	int gl_init();
 	void gl_draw();
-	void gl_printf( GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, \
+	void gl_printf(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha, \
                 GLint x, GLint y, GLuint font, const char *format, ... );
 	void gl_resize(void);
 	void gl_event( int event, int data, int xpos, int ypos );
@@ -113,5 +112,3 @@ public:
 };
 
 #endif // __GDSPARSE_OGL_H__
-
-

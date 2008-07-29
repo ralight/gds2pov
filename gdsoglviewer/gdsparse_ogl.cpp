@@ -70,32 +70,21 @@ extern int verbose_output;
 
 GDSParse_ogl::GDSParse_ogl(class GDSConfig *config, class GDSProcess *process, bool generate_process) : GDSParse(config, process, generate_process)
 {
-	_topcell = NULL;
 	SetOutputOptions(false, false, true, false);
 }
 
 GDSParse_ogl::~GDSParse_ogl()
 {
-	if(_topcell){
-		delete [] _topcell;
-	}
 }
 
-class GDSObject *GDSParse_ogl::NewObject(char *Name)
+class GDSObject *GDSParse_ogl::NewObject(std::string Name)
 {
 	return new class GDSObject_ogl(Name);
 }
 
-void GDSParse_ogl::SetTopcell(char *topcell)
+void GDSParse_ogl::SetTopcell(std::string topcell)
 {
-	if(topcell){
-		if(_topcell){
-			delete [] _topcell;
-			_topcell = NULL;
-		}
-		_topcell = new char[strlen(topcell) + 1];
-		strcpy(_topcell, topcell);
-	}
+	_topcellname = topcell;
 }
 
 void GDSParse_ogl::OutputHeader()
@@ -156,7 +145,7 @@ int GDSParse_ogl::gl_init()
   
   glNewList(1, GL_COMPILE);
   //glBegin(GL_TRIANGLES);
-  Output(NULL, _topcell);
+  Output(NULL, _topcellname);
   //glEnd();
   glEndList();
   
@@ -166,8 +155,8 @@ int GDSParse_ogl::gl_init()
   
   
   /* init view position, same as in gds2pov */
-  if( _Objects){
-    struct _Boundary *Boundary = _Objects->GetBoundary();
+  if(!_Objects.empty()){
+    struct _Boundary *Boundary = GetBoundary();
     
     float half_widthX = (Boundary->XMax - Boundary->XMin)/2;
     float half_widthY = (Boundary->YMax - Boundary->YMin)/2;
@@ -233,7 +222,6 @@ void GDSParse_ogl::gl_draw()
 {
 	GLfloat M[16],G[16];
 	GLfloat R1x,R1y,R1z;
-	long objectid=0;
 
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	//glClear( GL_COLOR_BUFFER_BIT );
@@ -255,7 +243,6 @@ void GDSParse_ogl::gl_draw()
 			_vx = 0.0f;
 		}
 	}
-
 
 	/* make sure angles are in [-180,+180] */
 	if( _ry >  180.0f ) _ry += -360.0f;
