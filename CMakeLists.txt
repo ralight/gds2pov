@@ -1,6 +1,8 @@
 project (gdsto3d)
 set (VERSION 20080229)
 
+cmake_minimum_required(VERSION 2.4)
+
 add_definitions (-DVERSION=\\\"${VERSION}\\\" -DHAVE_CONFIG_H -ggdb -Wall -O2)
 include_directories (${gdsto3d_BINARY_DIR})
 
