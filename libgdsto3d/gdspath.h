@@ -26,15 +26,15 @@
 class GDSPath
 {
 private:
-	int 			_Type;
-	float			_Height;
-	float			_Thickness;
-	unsigned int		_Points;
-	float			_Width;
-	float			_BgnExtn;
-	float			_EndExtn;
-	Point			*_Coords;
-	Transform		_Rotate;
+	int _Type;
+	float _Height;
+	float _Thickness;
+	unsigned int _Points;
+	float _Width;
+	float _BgnExtn;
+	float _EndExtn;
+	Point *_Coords;
+	Transform _Rotate;
 	struct ProcessLayer	*_Layer;
 
 public:
@@ -59,4 +59,3 @@ public:
 };
 
 #endif // __GDSPATH_H__
-

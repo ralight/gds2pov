@@ -23,17 +23,11 @@
 #include "gdsobject.h"
 #include "gdspath.h"
 
-GDSPath::GDSPath(int Type, float Height, float Thickness, unsigned int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *Layer)
+GDSPath::GDSPath(int Type, float Height, float Thickness, unsigned int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *Layer) :
+	_Type(Type), _Height(Height), _Thickness(Thickness), _Points(Points),
+	_Width(Width), _BgnExtn(BgnExtn), _EndExtn(EndExtn), _Layer(Layer)
 {
-	_Type = Type;
 	_Coords = new Point[Points];
-	_Height = Height;
-	_Thickness = Thickness;
-	_Points = Points;
-	_Width = Width;
-	_BgnExtn = BgnExtn;
-	_EndExtn = EndExtn;
-	_Layer = Layer;
 }
 
 GDSPath::~GDSPath()

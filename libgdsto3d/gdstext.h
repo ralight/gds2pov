@@ -32,13 +32,13 @@ private:
 	float _X;
 	float _Y;
 	float _Z;
+	bool _Flipped;
 	float _Mag;
 	int _VJust;
 	int _HJust;
 	struct ProcessLayer *_Layer;
 	std::string _String;
 	Transform _Rotate;
-	bool _Flipped;
 
 public:
 	GDSText(float X, float Y, float Z, bool Flipped, float Mag, int VJust, int HJust, struct ProcessLayer *Layer);

@@ -24,14 +24,10 @@
 #include "gdsobject.h"
 #include "gdspolygon.h"
 
-GDSPolygon::GDSPolygon(float Height, float Thickness, unsigned int Points, struct ProcessLayer *Layer)
+GDSPolygon::GDSPolygon(float Height, float Thickness, unsigned int Points, struct ProcessLayer *Layer) :
+	_Height(Height), _Thickness(Thickness), _Points(Points), _Layer(Layer)
 {
-	_Coords = NULL;
 	_Coords = new Point[Points+1]; //FIXME - debug +1
-	_Height = Height;
-	_Thickness = Thickness;
-	_Points = Points;
-	_Layer = Layer;
 }
 
 GDSPolygon::~GDSPolygon()
@@ -94,6 +90,4 @@ struct ProcessLayer *GDSPolygon::GetLayer()
 {
 	return _Layer;
 }
-
-
 

@@ -26,11 +26,11 @@
 class GDSPolygon
 {
 private:
-	float			_Height;
-	float			_Thickness;
-	unsigned int		_Points;
-	Point			*_Coords;
-	Transform		_Rotate;
+	float _Height;
+	float _Thickness;
+	unsigned int _Points;
+	Point *_Coords;
+	Transform _Rotate;
 	struct ProcessLayer	*_Layer;
 
 public:

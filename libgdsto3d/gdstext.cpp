@@ -25,19 +25,10 @@
 #include "gdsobject.h"
 #include "gdstext.h"
 
-GDSText::GDSText(float X, float Y, float Z, bool Flipped, float Mag, int VJust, int HJust, struct ProcessLayer *Layer)
+GDSText::GDSText(float X, float Y, float Z, bool Flipped, float Mag, int VJust, int HJust, struct ProcessLayer *Layer) :
+	_X(X), _Y(Y), _Z(Z), _Flipped(Flipped), _Mag(Mag), _VJust(VJust),
+	_HJust(HJust), _Layer(Layer), _String("")
 {
-	_X = X;
-	_Y = Y;
-	_Z = Z;
-	_Rotate.X = 0.0;
-	_Rotate.Y = 0.0;
-	_Rotate.Z = 0.0;
-	_Flipped = Flipped;
-	_Mag = Mag;
-	_HJust = HJust;
-	_VJust = VJust;
-	_Layer = Layer;
 }
 
 GDSText::~GDSText()
