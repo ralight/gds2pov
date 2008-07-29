@@ -136,7 +136,7 @@ protected:
 	void ReportUnsupported(std::string Name, enum RecordNumbers rn);
 	
 	bool ParseFile();
-	struct _Boundary *GDSParse::GetBoundary();
+	struct _Boundary *GetBoundary();
 
 	/* Abstract functions to be implemented be inheriting class */
 	virtual void OutputHeader() = 0;
