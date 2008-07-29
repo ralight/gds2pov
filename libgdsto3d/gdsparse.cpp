@@ -108,6 +108,41 @@ bool GDSParse::Parse(FILE *iptr)
 		v_printf(1, "\nSummary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tBoxes:\t\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
 			_PathElements, _BoundaryElements, _BoxElements, _TextElements, _SRefElements, _ARefElements);
 
+		/* Assign objects to srefs and arefs */
+		/* FIXME - surely there is a better way than 3n^3 loop */
+		for(unsigned int i = 0; i < _Objects.size(); i++){
+			GDSObject *object = _Objects[i];
+			
+			for(unsigned int j = 0; j < object->GetSRefCount(); j++){
+				ASRefElement *sref = object->GetSRef(j);
+
+				if(sref){
+					for(unsigned int k = 0; k < _Objects.size(); k++){
+						if(sref->Name == _Objects[k]->GetName()){
+							sref->object = _Objects[k];
+							break;
+						}
+					}
+				}else{
+					break;
+				}
+			}
+
+			for(unsigned int j = 0; j < object->GetARefCount(); j++){
+				ASRefElement *aref = object->GetARef(j);
+
+				if(aref){
+					for(unsigned int k = 0; k < _Objects.size(); k++){
+						if(aref->Name == _Objects[k]->GetName()){
+							aref->object = _Objects[k];
+							break;
+						}
+					}
+				}else{
+					break;
+				}
+			}
+		}
 		return result;
 	}else{
 		return -1;
@@ -158,24 +193,19 @@ void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx,
 	if(_output_children_first && Object->HasASRef()){
 		GDSObject *child;
 
-		int i=0;
-		do{
-			child = Object->GetSRef(i);
+		for(unsigned int i = 0; i < Object->GetSRefCount(); i++){
+			child = Object->GetSRef(i)->object;
 			if(child && (child != Object)){
 				RecursiveOutput(child, _optr, offx, offy, objectid);
 			}
+		}
 
-			i++;
-		}while(child);
-
-		i = 0;
-		do{
-			child = Object->GetARef(i);
+		for(unsigned int i = 0; i < Object->GetARefCount(); i++){
+			child = Object->GetARef(i)->object;
 			if(child && (child != Object)){
 				RecursiveOutput(child, _optr, offx, offy, objectid);
 			}
-			i++;
-		}while(child);
+		}
 
 	}
 
@@ -332,7 +362,7 @@ bool GDSParse::ParseFile()
 				tempstr = GetAsciiString();
 				if(tempstr){
 					_textstring = tempstr;
-					delete tempstr;
+					delete [] tempstr;
 				}
 				/* Only set string if the current object is valid, the text string is valid 
 				 * and we are using a layer that is defined and being shown.

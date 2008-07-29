@@ -257,25 +257,35 @@ class GDSPath *GDSObject::GetCurrentPath()
 	return PathItems[PathItems.size()-1];
 }
 
-int GDSObject::HasASRef()
+bool GDSObject::HasASRef()
 {
 	return (!FirstARef.empty() || !FirstSRef.empty());
 }
 
-class GDSObject *GDSObject::GetSRef(unsigned int Index)
+ASRefElement *GDSObject::GetSRef(unsigned int Index)
 {
 	if(FirstSRef.size() > 0 && Index < FirstSRef.size()){
-		return FirstSRef[Index]->object;
+		return FirstSRef[Index];
 	}
 	return NULL;
 }
 
-class GDSObject *GDSObject::GetARef(unsigned int Index)
+ASRefElement *GDSObject::GetARef(unsigned int Index)
 {
 	if(FirstARef.size() > 0 && Index < FirstARef.size()){
-		return FirstARef[Index]->object;
+		return FirstARef[Index];
 	}
 	return NULL;
+}
+
+unsigned int GDSObject::GetSRefCount(void)
+{
+	return FirstSRef.size();
+}
+
+unsigned int GDSObject::GetARefCount(void)
+{
+	return FirstARef.size();
 }
 
 bool GDSObject::GetIsOutput()

@@ -71,9 +71,11 @@ public:
 
 	virtual void OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)=0;
 
-	int HasASRef();
-	class GDSObject *GetSRef(unsigned int Index);
-	class GDSObject *GetARef(unsigned int Index);
+	bool HasASRef();
+	ASRefElement *GetSRef(unsigned int Index);
+	ASRefElement *GetARef(unsigned int Index);
+	unsigned int GetSRefCount(void);
+	unsigned int GetARefCount(void);
 
 	//struct _Boundary *GetBoundary(struct ObjectList *objectlist);
 	struct _Boundary *GetBoundary(void);
