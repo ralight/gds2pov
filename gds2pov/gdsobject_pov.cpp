@@ -260,7 +260,7 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, std::string Font, float offx, f
 void GDSObject_pov::OutputSRefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < FirstSRef.size(); i++){
-		SRefElement *sref = FirstSRef[i];
+		ASRefElement *sref = FirstSRef[i];
 
 		fprintf(fptr, "object{str_%s ", sref->Name.c_str());
 		if(sref->Mag!=1.0){
@@ -269,9 +269,9 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 		if(sref->Flipped){
 			fprintf(fptr, "scale <1,-1,1> ");
 		}
-		fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X, sref->Y);
+		fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X1, sref->Y1);
 		if(sref->Rotate.Y){
-			fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
+			fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X1, sref->Y1);
 		}
 		fprintf(fptr, "}\n");
 	}
@@ -280,7 +280,7 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < FirstARef.size(); i++){
-		ARefElement *aref = FirstARef[i];
+		ASRefElement *aref = FirstARef[i];
 
 		float dx, dy;
 

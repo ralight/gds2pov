@@ -29,11 +29,13 @@ typedef struct {
 	float Angle;
 } Point;
 
-typedef struct {
+class Transform {
+public:
 	float X;
 	float Y;
 	float Z;
-} Transform;
+	Transform() : X(0.0), Y(0.0), Z(0.0) {};
+};
 
 typedef struct {
 	float R;
@@ -43,17 +45,8 @@ typedef struct {
 	int Metal;
 } ElementColour;
 
-typedef struct _SRefElement {
-	float X;
-	float Y;
-	float Mag;
-	std::string Name;
-	Transform Rotate;
-	int Flipped;
-	class GDSObject *object;
-} SRefElement;
-
-typedef struct _ARefElement {
+class ASRefElement {
+public:
 	float X1;
 	float Y1;
 	float X2;
@@ -64,10 +57,14 @@ typedef struct _ARefElement {
 	int Columns;
 	int Rows;
 	std::string Name;
-	Transform Rotate;
 	int Flipped;
 	class GDSObject *object;
-} ARefElement;
+	Transform Rotate;
+	
+	ASRefElement() : X1(0.0), Y1(0.0), X2(0.0), Y2(0.0),
+			X3(0.0), Y3(0.0), Mag(1.0), Columns(0),
+			Rows(0), Name(""), Flipped(0), object(NULL) {};
+};
 
 struct _Boundary {
 	float XMin;

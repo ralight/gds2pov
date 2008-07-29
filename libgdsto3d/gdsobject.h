@@ -38,8 +38,8 @@ protected:
 	vector<class GDSText*> TextItems;
 	vector<class GDSPolygon*> PolygonItems;
 
-	vector<SRefElement*> FirstSRef;
-	vector<ARefElement*> FirstARef;
+	vector<ASRefElement*> FirstSRef;
+	vector<ASRefElement*> FirstARef;
 	bool GotBoundary;
 	bool IsOutput;
 
@@ -48,8 +48,6 @@ protected:
 	struct _Boundary Boundary;
 	float _width, _height;
 
-	class GDSObject **SRefs;
-	class GDSObject **ARefs;
 public:
 	GDSObject(std::string Name);
 	virtual ~GDSObject();

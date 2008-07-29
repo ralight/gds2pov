@@ -217,7 +217,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 	float height, x, angle;
 
 	for(unsigned int i = 0; i < FirstSRef.size(); i++){
-		SRefElement *sref = FirstSRef[i];
+		ASRefElement *sref = FirstSRef[i];
 
 		GDSObject *obj = sref->object;
 		if(obj){
@@ -226,13 +226,13 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 			height = 0.0f;
 		}
 
-		x = sref->X;
+		x = sref->X1;
 		angle = 180/M_PI*asin(sin(sref->Rotate.Y*M_PI/180));
 
 		if(sref->Flipped){
 			x = -x;
 		}
-		fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*x, _scale*(this->GetHeight() - sref->Y - height), sref->Name.c_str());
+		fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*x, _scale*(this->GetHeight() - sref->Y1 - height), sref->Name.c_str());
 
 		if(sref->Mag!=1.0 || sref->Flipped || fabs(angle) > 0.0f){
 			fprintf(fptr, " transform=\"");
@@ -244,7 +244,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 				fprintf(fptr, " scale(-1,1)");
 			}
 			if(fabs(angle) > 0.0f){
-				fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - sref->Y));
+				fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - sref->Y1));
 			}
 			fprintf(fptr, "\"");
 		}
@@ -255,7 +255,7 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 void GDSObject_svg::OutputARefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < FirstARef.size(); i++){
-		ARefElement *aref = FirstARef[i];
+		ASRefElement *aref = FirstARef[i];
 		float x, y, angle;
 		float height;
 		float dx, dy;

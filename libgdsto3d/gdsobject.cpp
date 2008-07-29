@@ -27,9 +27,6 @@
 
 GDSObject::GDSObject(std::string NewName)
 {
-	SRefs = NULL;
-	ARefs = NULL;
-
 	Name = NewName;
 
 	GotBoundary = false;
@@ -67,14 +64,6 @@ GDSObject::~GDSObject()
 		delete FirstARef[FirstARef.size()-1];
 		FirstARef.pop_back();
 	}
-
-	if(SRefs){
-		delete [] SRefs;
-	}
-
-	if(ARefs){
-		delete [] ARefs;
-	}
 }
 
 void GDSObject::AddText(float newX, float newY, float newZ, bool newFlipped, float newMag, int newVJust, int newHJust, struct ProcessLayer *newlayer)
@@ -108,17 +97,13 @@ class GDSPolygon *GDSObject::GetCurrentPolygon()
 
 void GDSObject::AddSRef(std::string Name, float X, float Y, int Flipped, float Mag)
 {
-	SRefElement *NewSRef = new SRefElement;
+	ASRefElement *NewSRef = new ASRefElement;
 
 	NewSRef->Name = Name;
-	NewSRef->X = X;
-	NewSRef->Y = Y;
-	NewSRef->Rotate.X = 0.0;
-	NewSRef->Rotate.Y = 0.0;
-	NewSRef->Rotate.Z = 0.0;
+	NewSRef->X1 = X;
+	NewSRef->Y1 = Y;
 	NewSRef->Flipped = Flipped;
 	NewSRef->Mag = Mag;
-	NewSRef->object = NULL;
 
 	FirstSRef.push_back(NewSRef);
 }
@@ -134,7 +119,7 @@ void GDSObject::SetSRefRotation(float X, float Y, float Z)
 
 void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag)
 {
-	ARefElement *NewARef = new ARefElement;
+	ASRefElement *NewARef = new ASRefElement;
 
 	NewARef->Name = Name;
 	NewARef->X1 = X1;
@@ -145,12 +130,8 @@ void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2
 	NewARef->Y3 = Y3;
 	NewARef->Columns = Columns;
 	NewARef->Rows = Rows;
-	NewARef->Rotate.X = 0.0;
-	NewARef->Rotate.Y = 0.0;
-	NewARef->Rotate.Z = 0.0;
 	NewARef->Flipped = Flipped;
 	NewARef->Mag = Mag;
-	NewARef->object = NULL;
 
 	FirstARef.push_back(NewARef);
 }
@@ -212,28 +193,28 @@ struct _Boundary *GDSObject::GetBoundary(void)
 	}
 
 	for(unsigned int i = 0; i < FirstSRef.size(); i++){
-		SRefElement *sref = FirstSRef[i];
+		ASRefElement *sref = FirstSRef[i];
 		if(Name == sref->Name && sref->object){
 			class GDSObject *object = sref->object;
 			struct _Boundary *NewBound;
 			NewBound = object->GetBoundary();
-			if(sref->X + NewBound->XMax > Boundary.XMax){
-				Boundary.XMax = sref->X + NewBound->XMax;
+			if(sref->X1 + NewBound->XMax > Boundary.XMax){
+				Boundary.XMax = sref->X1 + NewBound->XMax;
 			}
-			if(sref->X - NewBound->XMin < Boundary.XMin){
-				Boundary.XMin = sref->X - NewBound->XMin;
+			if(sref->X1 - NewBound->XMin < Boundary.XMin){
+				Boundary.XMin = sref->X1 - NewBound->XMin;
 			}
-			if(sref->Y + NewBound->YMax > Boundary.YMax){
-				Boundary.YMax = sref->Y + NewBound->YMax;
+			if(sref->Y1 + NewBound->YMax > Boundary.YMax){
+				Boundary.YMax = sref->Y1 + NewBound->YMax;
 			}
-			if(sref->Y - NewBound->YMin < Boundary.YMin){
-				Boundary.YMin = sref->Y - NewBound->YMin;
+			if(sref->Y1 - NewBound->YMin < Boundary.YMin){
+				Boundary.YMin = sref->Y1 - NewBound->YMin;
 			}
 		}
 	}
 
 	for(unsigned int i = 0; i < FirstARef.size(); i++){
-		ARefElement *aref = FirstARef[i];
+		ASRefElement *aref = FirstARef[i];
 		if(Name == aref->Name && aref->object){
 			class GDSObject *object = aref->object;
 			struct _Boundary *NewBound;
@@ -284,7 +265,7 @@ int GDSObject::HasASRef()
 class GDSObject *GDSObject::GetSRef(unsigned int Index)
 {
 	if(FirstSRef.size() > 0 && Index < FirstSRef.size()){
-		return SRefs[Index];
+		return FirstSRef[Index]->object;
 	}
 	return NULL;
 }
@@ -292,7 +273,7 @@ class GDSObject *GDSObject::GetSRef(unsigned int Index)
 class GDSObject *GDSObject::GetARef(unsigned int Index)
 {
 	if(FirstARef.size() > 0 && Index < FirstARef.size()){
-		return ARefs[Index];
+		return FirstARef[Index]->object;
 	}
 	return NULL;
 }
