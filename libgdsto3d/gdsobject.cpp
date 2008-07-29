@@ -25,17 +25,11 @@
 #include "gdsobject.h"
 #include "gds_globals.h"
 
-GDSObject::GDSObject(std::string NewName)
+GDSObject::GDSObject(std::string NewName) :
+	Name(NewName), _width(0.0), _height(0.0), GotBoundary(false), IsOutput(false)
 {
-	Name = NewName;
-
-	GotBoundary = false;
 	Boundary.XMax = Boundary.YMax = -1000000.0;
 	Boundary.XMin = Boundary.YMin =  1000000.0;
-	_width = 0.0;
-	_height = 0.0;
-
-	IsOutput = false;
 }
 
 GDSObject::~GDSObject()

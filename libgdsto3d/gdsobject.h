@@ -34,19 +34,19 @@ using namespace std;
 class GDSObject
 {
 protected:
+	std::string Name;
+	float _width, _height;
+
+	bool GotBoundary;
+	bool IsOutput;
+
 	vector<class GDSPath*> PathItems;
 	vector<class GDSText*> TextItems;
 	vector<class GDSPolygon*> PolygonItems;
 
 	vector<ASRefElement*> FirstSRef;
 	vector<ASRefElement*> FirstARef;
-	bool GotBoundary;
-	bool IsOutput;
-
-	std::string Name;
-
 	struct _Boundary Boundary;
-	float _width, _height;
 
 public:
 	GDSObject(std::string Name);
