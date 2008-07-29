@@ -859,12 +859,12 @@ void GDSParse::ParseXY()
 	float X, Y;
 	float firstX=0.0, firstY=0.0, secondX=0.0, secondY=0.0;
 	class ProcessLayer *thislayer = NULL;
-	int Flipped;
+	bool Flipped;
 
 	if(_process != NULL){
 		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
 	}
-	Flipped = ((u_int16_t)(_currentstrans & 0x8000) == (u_int16_t)0x8000) ? 1 : 0;
+	Flipped = ((u_int16_t)(_currentstrans & 0x8000) == (u_int16_t)0x8000) ? true : false;
 
 	switch(_currentelement){
 		case elSRef:

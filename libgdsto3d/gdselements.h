@@ -57,13 +57,13 @@ public:
 	int Columns;
 	int Rows;
 	std::string Name;
-	int Flipped;
+	bool Flipped;
 	class GDSObject *object;
 	Transform Rotate;
 	
 	ASRefElement() : X1(0.0), Y1(0.0), X2(0.0), Y2(0.0),
 			X3(0.0), Y3(0.0), Mag(1.0), Columns(0),
-			Rows(0), Name(""), Flipped(0), object(NULL) {};
+			Rows(0), Name(""), Flipped(false), object(NULL) {};
 };
 
 struct _Boundary {

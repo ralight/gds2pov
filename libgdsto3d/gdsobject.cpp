@@ -89,7 +89,7 @@ class GDSPolygon *GDSObject::GetCurrentPolygon()
 	return PolygonItems[PolygonItems.size()-1];
 }
 
-void GDSObject::AddSRef(std::string Name, float X, float Y, int Flipped, float Mag)
+void GDSObject::AddSRef(std::string Name, float X, float Y, bool Flipped, float Mag)
 {
 	ASRefElement *NewSRef = new ASRefElement;
 
@@ -111,7 +111,7 @@ void GDSObject::SetSRefRotation(float X, float Y, float Z)
 	}
 }
 
-void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, int Flipped, float Mag)
+void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, bool Flipped, float Mag)
 {
 	ASRefElement *NewARef = new ASRefElement;
 
