@@ -68,4 +68,3 @@ public:
 };
 
 #endif // _PROCESS_CFG_H
-

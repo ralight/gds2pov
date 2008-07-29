@@ -33,21 +33,78 @@
 
 #include "config_cfg.h"
 
-GDSConfig::GDSConfig() :
+GDSConfig::GDSConfig(std::string filename) : 
 	_ProcessFile(""), _Font(""),
 	_Ambient(1.2), _Scale(1.0), _Valid(true)
 {
 	_CameraPos.postype = ptCamera;
 	_LookAtPos.postype = ptLookAt;
+
+	if(filename != ""){
+		ReadFile(filename);
+	}
 }
 
-GDSConfig::GDSConfig(std::string configfile) : 
-	_ProcessFile(""), _Font(""),
-	_Ambient(1.2), _Scale(1.0), _Valid(true)
+GDSConfig::~GDSConfig()
 {
-	_CameraPos.postype = ptCamera;
-	_LookAtPos.postype = ptLookAt;
+	while(!_Lights.empty()){
+		delete _Lights[_Lights.size()-1];
+		_Lights.pop_back();
+	}
+}
 
+bool GDSConfig::IsValid()
+{
+	return _Valid;
+}
+
+float GDSConfig::GetAmbient()
+{
+	return _Ambient;
+}
+
+float GDSConfig::GetScale()
+{
+	return _Scale;
+}
+
+std::string GDSConfig::GetProcessFile()
+{
+	return _ProcessFile;
+}
+
+std::string GDSConfig::GetFont()
+{
+	return _Font;
+}
+
+Position *GDSConfig::GetLookAtPos()
+{
+	return &_LookAtPos;
+}
+
+Position *GDSConfig::GetCameraPos()
+{
+	return &_CameraPos;
+}
+
+Position *GDSConfig::GetLightPos()
+{
+	return _Lights[0];
+}
+
+Position *GDSConfig::GetLightPos(int index)
+{
+	return _Lights[index];
+}
+
+int GDSConfig::GetLightCount()
+{
+	return _Lights.size();
+}
+
+void GDSConfig::ReadFile(std::string configfile)
+{
 	int posstart_cnt = 0;
 	int posend_cnt = 0;
 	int globalstart_cnt = 0;
@@ -444,62 +501,4 @@ GDSConfig::GDSConfig(std::string configfile) :
 		}
 	}
 	fclose(cptr);
-}
-
-GDSConfig::~GDSConfig()
-{
-	while(!_Lights.empty()){
-		delete _Lights[_Lights.size()-1];
-		_Lights.pop_back();
-	}
-}
-
-bool GDSConfig::IsValid()
-{
-	return _Valid;
-}
-
-float GDSConfig::GetAmbient()
-{
-	return _Ambient;
-}
-
-float GDSConfig::GetScale()
-{
-	return _Scale;
-}
-
-std::string GDSConfig::GetProcessFile()
-{
-	return _ProcessFile;
-}
-
-std::string GDSConfig::GetFont()
-{
-	return _Font;
-}
-
-Position *GDSConfig::GetLookAtPos()
-{
-	return &_LookAtPos;
-}
-
-Position *GDSConfig::GetCameraPos()
-{
-	return &_CameraPos;
-}
-
-Position *GDSConfig::GetLightPos()
-{
-	return _Lights[0];
-}
-
-Position *GDSConfig::GetLightPos(int index)
-{
-	return _Lights[index];
-}
-
-int GDSConfig::GetLightCount()
-{
-	return _Lights.size();
 }

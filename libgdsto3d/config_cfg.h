@@ -68,8 +68,7 @@ private:
 	class Position *_currentlight;
 
 public:
-	GDSConfig(std::string filename);
-	GDSConfig();
+	GDSConfig(std::string filename="");
 	~GDSConfig();
 
 	std::string GetProcessFile();
@@ -83,6 +82,7 @@ public:
 	class Position *GetLightPos();
 	class Position *GetLightPos(int index);
 	int GetLightCount();
+	void ReadFile(std::string configfile);
 };
 
 #endif // _PROCESS_CFG_H

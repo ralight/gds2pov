@@ -44,12 +44,8 @@
 #include "process_cfg.h"
 #include "gds_globals.h"
 
-GDSProcess::GDSProcess()
+GDSProcess::GDSProcess() : _Count(0), _Valid(true)
 {
-	_Count = 0;
-	_Valid = true;
-
-	//_FirstLayer = NULL;
 }
 
 GDSProcess::~GDSProcess ()
