@@ -44,15 +44,15 @@
 #include "process_cfg.h"
 #include "gds_globals.h"
 
-GDSProcess::GDSProcess() : _Count(0), _Valid(true)
+GDSProcess::GDSProcess() : m_valid(true)
 {
 }
 
 GDSProcess::~GDSProcess ()
 {
-	while(!_FirstLayer.empty()){
-		delete _FirstLayer[_FirstLayer.size()-1];
-		_FirstLayer.pop_back();
+	while(!m_layers.empty()){
+		delete m_layers[m_layers.size()-1];
+		m_layers.pop_back();
 	}
 }
 
@@ -89,7 +89,7 @@ void GDSProcess::Parse(std::string processfile)
 	
 	if(!pptr){
 		fprintf(stderr, "Unable to open process file \"%s\".\n", processfile.c_str());
-		_Valid = false;
+		m_valid = false;
 		return;
 	}
 
@@ -106,12 +106,10 @@ void GDSProcess::Parse(std::string processfile)
 		fprintf(stderr, "Invalid process file. ");
 		fprintf(stderr, "There should be equal numbers of LayerStart and LayerEnd elements! ");
 		fprintf(stderr, "(%d and %d found respectively)\n", layerstart_cnt, layerend_cnt);
-		_Valid = false;
+		m_valid = false;
 		fclose(pptr);
 		return;
 	}
-
-	_Count = layerstart_cnt;
 
 	fseek(pptr, 0, SEEK_SET);
 	while(!feof(pptr) && fgets(line, 1024, pptr)){
@@ -120,7 +118,7 @@ void GDSProcess::Parse(std::string processfile)
 			if(strstr(line, "LayerStart:")){
 				if(in_layer){
 					fprintf(stderr, "Error: LayerStart without LayerEnd not allowed. LayerEnd should appear before line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
@@ -148,12 +146,12 @@ void GDSProcess::Parse(std::string processfile)
 				NewLayer.Green = 0.0;
 				NewLayer.Blue = 0.0;
 				NewLayer.Filter = 0.0;
-				NewLayer.Metal = 0;
+				NewLayer.Metal = false;
 				NewLayer.Show = false;
 			}else if(strstr(line, "Layer:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Layer definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
@@ -166,7 +164,7 @@ void GDSProcess::Parse(std::string processfile)
 			}else if(strstr(line, "Datatype:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Datatype definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
@@ -179,7 +177,7 @@ void GDSProcess::Parse(std::string processfile)
 			}else if(strstr(line, "Height:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Height definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
@@ -192,7 +190,7 @@ void GDSProcess::Parse(std::string processfile)
 			}else if(strstr(line, "Thickness:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Thickness definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
@@ -205,7 +203,7 @@ void GDSProcess::Parse(std::string processfile)
 			}else if(strstr(line, "Red:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Red definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
@@ -218,7 +216,7 @@ void GDSProcess::Parse(std::string processfile)
 			}else if(strstr(line, "Green:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Green definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
@@ -231,7 +229,7 @@ void GDSProcess::Parse(std::string processfile)
 			}else if(strstr(line, "Blue:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Blue definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
@@ -244,7 +242,7 @@ void GDSProcess::Parse(std::string processfile)
 			}else if(strstr(line, "Filter:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Filter definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
@@ -257,39 +255,52 @@ void GDSProcess::Parse(std::string processfile)
 			}else if(strstr(line, "Metal:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Metal definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
 				if(got_metal){
 					fprintf(stderr, "Warning: Duplicate Metal definition on line %d of process file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Metal: %d", &NewLayer.Metal);
+					int met;
+					sscanf(line, "Metal: %d", &met);
+					if(met){
+						NewLayer.Metal = true;
+					}else{
+						NewLayer.Metal = false;
+					}
 					got_metal = true;
 				}
 			}else if(strstr(line, "Show:")){
 				if(!in_layer){
 					fprintf(stderr, "Error: Show definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}
 				if(got_show){
 					fprintf(stderr, "Warning: Duplicate Show definition on line %d of process file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Show: %d", &NewLayer.Show);
+					int show;
+					sscanf(line, "Show: %d", &show);
+					if(show){
+						NewLayer.Show = true;
+					}else{
+						NewLayer.Show = false;
+					}
+
 					got_show = true;
 				}
 			}else if(strstr(line, "LayerEnd")){
 				showing = NewLayer.Show;
 				if(!in_layer){
 					fprintf(stderr, "Error: LayerEnd without LayerStart on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}else if(!got_layer){
 					fprintf(stderr, "Error: LayerEnd without Layer on line %d of process file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(pptr);
 					return;
 				}else if(!got_height){
@@ -320,11 +331,11 @@ class ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 {
 	if(Number == -1) return NULL;
 
-	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
-		if(_FirstLayer[i]->Layer == Number && _FirstLayer[i]->Datatype == -1){
-			return _FirstLayer[i];
-		}else if(_FirstLayer[i]->Layer == Number && _FirstLayer[i]->Datatype == Datatype){
-			return _FirstLayer[i];
+	for(unsigned int i = 0; i < m_layers.size(); i++){
+		if(m_layers[i]->Layer == Number && m_layers[i]->Datatype == -1){
+			return m_layers[i];
+		}else if(m_layers[i]->Layer == Number && m_layers[i]->Datatype == Datatype){
+			return m_layers[i];
 		}
 	}
 	return NULL;
@@ -332,9 +343,9 @@ class ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 
 class ProcessLayer *GDSProcess::GetLayer(std::string Name)
 {
-	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
-		if(_FirstLayer[i]->Name == Name){
-			return _FirstLayer[i];
+	for(unsigned int i = 0; i < m_layers.size(); i++){
+		if(m_layers[i]->Name == Name){
+			return m_layers[i];
 		}
 	}
 	return NULL;
@@ -342,13 +353,13 @@ class ProcessLayer *GDSProcess::GetLayer(std::string Name)
 
 class ProcessLayer *GDSProcess::GetLayer()
 {
-	return _FirstLayer[0];
+	return m_layers[0];
 }
 
 class ProcessLayer *GDSProcess::GetLayer(unsigned int index)
 {
-	if(index >=0 && index < _FirstLayer.size()){
-		return _FirstLayer[index];
+	if(index >=0 && index < m_layers.size()){
+		return m_layers[index];
 	}else{
 		return NULL;
 	}
@@ -356,7 +367,7 @@ class ProcessLayer *GDSProcess::GetLayer(unsigned int index)
 
 int GDSProcess::LayerCount()
 {
-	return _FirstLayer.size();
+	return m_layers.size();
 }
 
 
@@ -372,7 +383,7 @@ void GDSProcess::AddLayer(int Layer, int Datatype)
 	NewLayer.Green = 0.0;
 	NewLayer.Blue = 0.0;
 	NewLayer.Filter = 0.0;
-	NewLayer.Metal = 0;
+	NewLayer.Metal = false;
 	NewLayer.Show = false;
 
 	AddLayer(&NewLayer);
@@ -395,21 +406,21 @@ void GDSProcess::AddLayer(class ProcessLayer *NewLayer)
 	layer->Filter = NewLayer->Filter;
 	layer->Metal = NewLayer->Metal;
 
-	_FirstLayer.push_back(layer);
+	m_layers.push_back(layer);
 }
 
 bool GDSProcess::IsValid()
 {
-	return _Valid;
+	return m_valid;
 }
 
 float GDSProcess::GetHighest()
 {
 	float Highest = -10000.0;
 
-	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
-		if(_FirstLayer[i]->Height + _FirstLayer[i]->Thickness > Highest && _FirstLayer[i]->Show){
-			Highest = _FirstLayer[i]->Height + _FirstLayer[i]->Thickness;
+	for(unsigned int i = 0; i < m_layers.size(); i++){
+		if(m_layers[i]->Height + m_layers[i]->Thickness > Highest && m_layers[i]->Show){
+			Highest = m_layers[i]->Height + m_layers[i]->Thickness;
 		}
 	}
 	return Highest;
@@ -419,9 +430,9 @@ float GDSProcess::GetLowest()
 {
 	float Lowest = 10000.0;
 
-	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
-		if(_FirstLayer[i]->Height < Lowest && _FirstLayer[i]->Show){
-			Lowest = _FirstLayer[i]->Height;
+	for(unsigned int i = 0; i < m_layers.size(); i++){
+		if(m_layers[i]->Height < Lowest && m_layers[i]->Show){
+			Lowest = m_layers[i]->Height;
 		}
 	}
 	return Lowest;
@@ -437,9 +448,9 @@ bool GDSProcess::Save(std::string filename)
 	fptr = fopen(filename.c_str(), "wt");
 	if(!fptr) return false;
 
-	for(unsigned int i = 0; i < _FirstLayer.size(); i++){
-		fprintf(fptr, "LayerStart: LAYER-%d-%d\n", _FirstLayer[i]->Layer, _FirstLayer[i]->Datatype);
-		fprintf(fptr, "Layer: %d\n", _FirstLayer[i]->Layer);
+	for(unsigned int i = 0; i < m_layers.size(); i++){
+		fprintf(fptr, "LayerStart: LAYER-%d-%d\n", m_layers[i]->Layer, m_layers[i]->Datatype);
+		fprintf(fptr, "Layer: %d\n", m_layers[i]->Layer);
 		fprintf(fptr, "Height: 0\n");
 		fprintf(fptr, "Thickness: 0\n");
 		fprintf(fptr, "Red: 0.0\n");

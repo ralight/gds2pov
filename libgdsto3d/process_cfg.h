@@ -32,21 +32,23 @@ public:
 	int Datatype;
 	float Height;
 	float Thickness;
-	int Show;
+	bool Show;
 	float Red;
 	float Green;
 	float Blue;
 	float Filter;
-	int Metal;
+	bool Metal;
+
+	ProcessLayer() : Name(""), Layer(-1), Datatype(-1), 
+					Height(0.0), Thickness(0.0), Show(false),
+					Red(0.5), Green(0.5), Blue(0.5), Metal(false) {}
 };
 
 class GDSProcess
 {
 private:
-	vector<class ProcessLayer*> _FirstLayer;
-	int _Count;		/* Number of layers found */
-
-	bool _Valid;		/* Is the process file valid? */
+	vector<class ProcessLayer*> m_layers;
+	bool m_valid;		/* Is the process file valid? */
 public:
 	GDSProcess ();
 	~GDSProcess ();
