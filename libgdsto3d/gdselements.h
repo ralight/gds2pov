@@ -24,53 +24,45 @@
 #include <string>
 
 typedef struct {
-	float X;
-	float Y;
-	float Angle;
+	float x;
+	float y;
+	float angle;
 } Point;
 
 class Transform {
 public:
-	float X;
-	float Y;
-	float Z;
-	Transform() : X(0.0), Y(0.0), Z(0.0) {};
+	float x;
+	float y;
+	float z;
+	Transform() : x(0.0), y(0.0), z(0.0) {};
 };
-
-typedef struct {
-	float R;
-	float G;
-	float B;
-	float F;
-	int Metal;
-} ElementColour;
 
 class ASRefElement {
 public:
-	float X1;
-	float Y1;
-	float X2;
-	float Y2;
-	float X3;
-	float Y3;
-	float Mag;
-	int Columns;
-	int Rows;
-	std::string Name;
-	bool Flipped;
+	float x1;
+	float y1;
+	float x2;
+	float y2;
+	float x3;
+	float y3;
+	float mag;
+	int columns;
+	int rows;
+	std::string name;
+	bool flipped;
 	class GDSObject *object;
-	Transform Rotate;
+	Transform rotate;
 	
-	ASRefElement() : X1(0.0), Y1(0.0), X2(0.0), Y2(0.0),
-			X3(0.0), Y3(0.0), Mag(1.0), Columns(0),
-			Rows(0), Name(""), Flipped(false), object(NULL) {};
+	ASRefElement() : x1(0.0), y1(0.0), x2(0.0), y2(0.0),
+			x3(0.0), y3(0.0), mag(1.0), columns(0),
+			rows(0), name(""), flipped(false), object(NULL) {};
 };
 
 struct _Boundary {
-	float XMin;
-	float XMax;
-	float YMin;
-	float YMax;
+	float xmin;
+	float xmax;
+	float ymin;
+	float ymax;
 };
 
 #endif

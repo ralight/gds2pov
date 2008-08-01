@@ -118,7 +118,7 @@ bool GDSParse::Parse(FILE *iptr)
 
 				if(sref){
 					for(unsigned int k = 0; k < _Objects.size(); k++){
-						if(sref->Name == _Objects[k]->GetName()){
+						if(sref->name == _Objects[k]->GetName()){
 							sref->object = _Objects[k];
 							break;
 						}
@@ -133,7 +133,7 @@ bool GDSParse::Parse(FILE *iptr)
 
 				if(aref){
 					for(unsigned int k = 0; k < _Objects.size(); k++){
-						if(aref->Name == _Objects[k]->GetName()){
+						if(aref->name == _Objects[k]->GetName()){
 							aref->object = _Objects[k];
 							break;
 						}
@@ -1074,23 +1074,23 @@ struct _Boundary *GDSParse::GetBoundary()
 		Boundary = new struct _Boundary;
 	}
 
-	Boundary->XMax = Boundary->YMax = -10000000.0;
-	Boundary->XMin = Boundary->YMin =  10000000.0;
+	Boundary->xmax = Boundary->ymax = -10000000.0;
+	Boundary->xmin = Boundary->ymin =  10000000.0;
 
 	for(unsigned int i = 0; i < _Objects.size(); i++){
 		struct _Boundary *object_bound = _Objects[i]->GetBoundary();
 
-		if(object_bound->XMax > Boundary->XMax){
-			Boundary->XMax = object_bound->XMax;
+		if(object_bound->xmax > Boundary->xmax){
+			Boundary->xmax = object_bound->xmax;
 		}
-		if(object_bound->XMin < Boundary->XMin){
-			Boundary->XMin = object_bound->XMin;
+		if(object_bound->xmin < Boundary->xmin){
+			Boundary->xmin = object_bound->xmin;
 		}
-		if(object_bound->YMax > Boundary->YMax){
-			Boundary->YMax = object_bound->YMax;
+		if(object_bound->ymax > Boundary->ymax){
+			Boundary->ymax = object_bound->ymax;
 		}
-		if(object_bound->YMin < Boundary->YMin){
-			Boundary->YMin = object_bound->YMin;
+		if(object_bound->ymin < Boundary->ymin){
+			Boundary->ymin = object_bound->ymin;
 		}
 	}
 	return Boundary;

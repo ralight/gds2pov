@@ -26,28 +26,28 @@
 class GDSPolygon
 {
 private:
-	float _Height;
-	float _Thickness;
-	unsigned int _Points;
-	Point *_Coords;
-	Transform _Rotate;
-	struct ProcessLayer	*_Layer;
+	float m_height;
+	float m_thickness;
+	unsigned int m_points;
+	Point *m_coords;
+	Transform m_rotate;
+	struct ProcessLayer	*m_layer;
 
 public:
-	GDSPolygon(float Height, float Thickness, unsigned int Points, struct ProcessLayer *Layer);
+	GDSPolygon(float height, float thickness, unsigned int points, struct ProcessLayer *layer);
 	~GDSPolygon();
 
-	void AddPoint(unsigned int Index, float X, float Y);
-	void SetRotation(float X, float Y, float Z);
+	void AddPoint(unsigned int index, float x, float y);
+	void SetRotation(float x, float y, float z);
 
-	float GetHeight();
-	float GetThickness();
-	unsigned int GetPoints();
-	float GetXCoords(unsigned int Index);
-	float GetYCoords(unsigned int Index);
-	float GetAngleCoords(unsigned int Index);
-	void SetAngleCoords(unsigned int Index, float value);
-	struct ProcessLayer *GetLayer();
+	float GetHeight(void);
+	float GetThickness(void);
+	unsigned int GetPoints(void);
+	float GetXCoords(unsigned int index);
+	float GetYCoords(unsigned int index);
+	float GetAngleCoords(unsigned int index);
+	void SetAngleCoords(unsigned int index, float value);
+	struct ProcessLayer *GetLayer(void);
 };
 
 #endif

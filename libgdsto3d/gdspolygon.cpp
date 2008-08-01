@@ -24,70 +24,74 @@
 #include "gdsobject.h"
 #include "gdspolygon.h"
 
-GDSPolygon::GDSPolygon(float Height, float Thickness, unsigned int Points, struct ProcessLayer *Layer) :
-	_Height(Height), _Thickness(Thickness), _Points(Points), _Layer(Layer)
+GDSPolygon::GDSPolygon(float height, float thickness, unsigned int points, struct ProcessLayer *layer) :
+	m_height(height), m_thickness(thickness), m_points(points), m_layer(layer)
 {
-	_Coords = new Point[Points+1]; //FIXME - debug +1
+	m_coords = new Point[points+1]; //FIXME - debug +1
 }
 
 GDSPolygon::~GDSPolygon()
 {
-	if(_Coords) delete [] _Coords;
+	if(m_coords) delete [] m_coords;
 }
 
-void GDSPolygon::AddPoint(unsigned int Index, float X, float Y)
+void GDSPolygon::AddPoint(unsigned int index, float x, float y)
 {
-	if(_Points >= Index){
-		_Coords[Index].X = X;
-		_Coords[Index].Y = Y;
+	if(m_points >= index){
+		m_coords[index].x = x;
+		m_coords[index].y = y;
 	}
 }
 
 
-void GDSPolygon::SetRotation(float X, float Y, float Z)
+void GDSPolygon::SetRotation(float x, float y, float z)
 {
-	_Rotate.X = X;
-	_Rotate.Y = Y;
-	_Rotate.Z = Z;
+	m_rotate.x = x;
+	m_rotate.y = y;
+	m_rotate.z = z;
 }
 
-float GDSPolygon::GetXCoords(unsigned int Index)
+float GDSPolygon::GetXCoords(unsigned int index)
 {
-	return _Coords[Index].X;
+	// FIXME - check index bounds
+	return m_coords[index].x;
 }
 
-float GDSPolygon::GetYCoords(unsigned int Index)
+float GDSPolygon::GetYCoords(unsigned int index)
 {
-	return _Coords[Index].Y;
+	// FIXME - check index bounds
+	return m_coords[index].y;
 }
 
-float GDSPolygon::GetAngleCoords(unsigned int Index)
+float GDSPolygon::GetAngleCoords(unsigned int index)
 {
-	return _Coords[Index].Angle;
+	// FIXME - check index bounds
+	return m_coords[index].angle;
 }
 
-void GDSPolygon::SetAngleCoords(unsigned int Index, float Value)
+void GDSPolygon::SetAngleCoords(unsigned int index, float value)
 {
-	_Coords[Index].Angle = Value;
+	// FIXME - check index bounds
+	m_coords[index].angle = value;
 }
 
-unsigned int GDSPolygon::GetPoints()
+unsigned int GDSPolygon::GetPoints(void)
 {
-	return _Points;
+	return m_points;
 }
 
-float GDSPolygon::GetHeight()
+float GDSPolygon::GetHeight(void)
 {
-	return _Height;
+	return m_height;
 }
 
-float GDSPolygon::GetThickness()
+float GDSPolygon::GetThickness(void)
 {
-	return _Thickness;
+	return m_thickness;
 }
 
-struct ProcessLayer *GDSPolygon::GetLayer()
+struct ProcessLayer *GDSPolygon::GetLayer(void)
 {
-	return _Layer;
+	return m_layer;
 }
 

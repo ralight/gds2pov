@@ -28,8 +28,8 @@
 GDSObject::GDSObject(std::string NewName) :
 	Name(NewName), _width(0.0), _height(0.0), GotBoundary(false), IsOutput(false)
 {
-	Boundary.XMax = Boundary.YMax = -1000000.0;
-	Boundary.XMin = Boundary.YMin =  1000000.0;
+	Boundary.xmax = Boundary.ymax = -1000000.0;
+	Boundary.xmin = Boundary.ymin =  1000000.0;
 }
 
 GDSObject::~GDSObject()
@@ -93,11 +93,11 @@ void GDSObject::AddSRef(std::string Name, float X, float Y, bool Flipped, float 
 {
 	ASRefElement *NewSRef = new ASRefElement;
 
-	NewSRef->Name = Name;
-	NewSRef->X1 = X;
-	NewSRef->Y1 = Y;
-	NewSRef->Flipped = Flipped;
-	NewSRef->Mag = Mag;
+	NewSRef->name = Name;
+	NewSRef->x1 = X;
+	NewSRef->y1 = Y;
+	NewSRef->flipped = Flipped;
+	NewSRef->mag = Mag;
 
 	FirstSRef.push_back(NewSRef);
 }
@@ -105,27 +105,27 @@ void GDSObject::AddSRef(std::string Name, float X, float Y, bool Flipped, float 
 void GDSObject::SetSRefRotation(float X, float Y, float Z)
 {
 	if(!FirstSRef.empty()){
-		FirstSRef[FirstSRef.size()-1]->Rotate.X = X;
-		FirstSRef[FirstSRef.size()-1]->Rotate.Y = Y;
-		FirstSRef[FirstSRef.size()-1]->Rotate.Z = Z;
+		FirstSRef[FirstSRef.size()-1]->rotate.x = X;
+		FirstSRef[FirstSRef.size()-1]->rotate.y = Y;
+		FirstSRef[FirstSRef.size()-1]->rotate.z = Z;
 	}
 }
 
-void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2, float X3, float Y3, int Columns, int Rows, bool Flipped, float Mag)
+void GDSObject::AddARef(std::string Name, float x1, float y1, float x2, float y2, float x3, float y3, int Columns, int Rows, bool Flipped, float Mag)
 {
 	ASRefElement *NewARef = new ASRefElement;
 
-	NewARef->Name = Name;
-	NewARef->X1 = X1;
-	NewARef->Y1 = Y1;
-	NewARef->X2 = X2;
-	NewARef->Y2 = Y2;
-	NewARef->X3 = X3;
-	NewARef->Y3 = Y3;
-	NewARef->Columns = Columns;
-	NewARef->Rows = Rows;
-	NewARef->Flipped = Flipped;
-	NewARef->Mag = Mag;
+	NewARef->name = Name;
+	NewARef->x1 = x1;
+	NewARef->y1 = y1;
+	NewARef->x2 = x2;
+	NewARef->y2 = y2;
+	NewARef->x3 = x3;
+	NewARef->y3 = y3;
+	NewARef->columns = Columns;
+	NewARef->rows = Rows;
+	NewARef->flipped = Flipped;
+	NewARef->mag = Mag;
 
 	FirstARef.push_back(NewARef);
 }
@@ -133,9 +133,9 @@ void GDSObject::AddARef(std::string Name, float X1, float Y1, float X2, float Y2
 void GDSObject::SetARefRotation(float X, float Y, float Z)
 {
 	if(!FirstARef.empty()){
-		FirstARef[FirstARef.size()-1]->Rotate.X = X;
-		FirstARef[FirstARef.size()-1]->Rotate.Y = Y;
-		FirstARef[FirstARef.size()-1]->Rotate.Z = Z;
+		FirstARef[FirstARef.size()-1]->rotate.x = X;
+		FirstARef[FirstARef.size()-1]->rotate.y = Y;
+		FirstARef[FirstARef.size()-1]->rotate.z = Z;
 	}
 }
 
@@ -149,17 +149,17 @@ struct _Boundary *GDSObject::GetBoundary(void)
 		for(unsigned long i=0; i<PolygonItems.size(); i++){
 			class GDSPolygon *polygon = PolygonItems[i];
 			for(unsigned int j=0; j<polygon->GetPoints(); j++){
-				if(polygon->GetXCoords(j) > Boundary.XMax){
-					Boundary.XMax = polygon->GetXCoords(j);
+				if(polygon->GetXCoords(j) > Boundary.xmax){
+					Boundary.xmax = polygon->GetXCoords(j);
 				}
-				if(polygon->GetXCoords(j) < Boundary.XMin){
-					Boundary.XMin = polygon->GetXCoords(j);
+				if(polygon->GetXCoords(j) < Boundary.xmin){
+					Boundary.xmin = polygon->GetXCoords(j);
 				}
-				if(polygon->GetYCoords(j) > Boundary.YMax){
-					Boundary.YMax = polygon->GetYCoords(j);
+				if(polygon->GetYCoords(j) > Boundary.ymax){
+					Boundary.ymax = polygon->GetYCoords(j);
 				}
-				if(polygon->GetYCoords(j) < Boundary.YMin){
-					Boundary.YMin = polygon->GetYCoords(j);
+				if(polygon->GetYCoords(j) < Boundary.ymin){
+					Boundary.ymin = polygon->GetYCoords(j);
 				}
 			}
 		}
@@ -170,17 +170,17 @@ struct _Boundary *GDSObject::GetBoundary(void)
 		for(unsigned long i=0; i<PathItems.size(); i++){
 			class GDSPath *path = PathItems[i];
 			for(unsigned int j=0; j<path->GetPoints(); j++){
-				if(path->GetXCoords(j) > Boundary.XMax){
-					Boundary.XMax = path->GetXCoords(j);
+				if(path->GetXCoords(j) > Boundary.xmax){
+					Boundary.xmax = path->GetXCoords(j);
 				}
-				if(path->GetXCoords(j) < Boundary.XMin){
-					Boundary.XMin = path->GetXCoords(j);
+				if(path->GetXCoords(j) < Boundary.xmin){
+					Boundary.xmin = path->GetXCoords(j);
 				}
-				if(path->GetYCoords(j) > Boundary.YMax){
-					Boundary.YMax = path->GetYCoords(j);
+				if(path->GetYCoords(j) > Boundary.ymax){
+					Boundary.ymax = path->GetYCoords(j);
 				}
-				if(path->GetYCoords(j) < Boundary.YMin){
-					Boundary.YMin = path->GetYCoords(j);
+				if(path->GetYCoords(j) < Boundary.ymin){
+					Boundary.ymin = path->GetYCoords(j);
 				}
 			}
 		}
@@ -188,55 +188,55 @@ struct _Boundary *GDSObject::GetBoundary(void)
 
 	for(unsigned int i = 0; i < FirstSRef.size(); i++){
 		ASRefElement *sref = FirstSRef[i];
-		if(Name == sref->Name && sref->object){
+		if(Name == sref->name && sref->object){
 			class GDSObject *object = sref->object;
 			struct _Boundary *NewBound;
 			NewBound = object->GetBoundary();
-			if(sref->X1 + NewBound->XMax > Boundary.XMax){
-				Boundary.XMax = sref->X1 + NewBound->XMax;
+			if(sref->x1 + NewBound->xmax > Boundary.xmax){
+				Boundary.xmax = sref->x1 + NewBound->xmax;
 			}
-			if(sref->X1 - NewBound->XMin < Boundary.XMin){
-				Boundary.XMin = sref->X1 - NewBound->XMin;
+			if(sref->x1 - NewBound->xmin < Boundary.xmin){
+				Boundary.xmin = sref->x1 - NewBound->xmin;
 			}
-			if(sref->Y1 + NewBound->YMax > Boundary.YMax){
-				Boundary.YMax = sref->Y1 + NewBound->YMax;
+			if(sref->y1 + NewBound->ymax > Boundary.ymax){
+				Boundary.ymax = sref->y1 + NewBound->ymax;
 			}
-			if(sref->Y1 - NewBound->YMin < Boundary.YMin){
-				Boundary.YMin = sref->Y1 - NewBound->YMin;
+			if(sref->y1 - NewBound->ymin < Boundary.ymin){
+				Boundary.ymin = sref->y1 - NewBound->ymin;
 			}
 		}
 	}
 
 	for(unsigned int i = 0; i < FirstARef.size(); i++){
 		ASRefElement *aref = FirstARef[i];
-		if(Name == aref->Name && aref->object){
+		if(Name == aref->name && aref->object){
 			class GDSObject *object = aref->object;
 			struct _Boundary *NewBound;
 			NewBound = object->GetBoundary();
-			if(aref->X2 + NewBound->XMax > Boundary.XMax){
-					Boundary.XMax = aref->X2 + NewBound->XMax;
+			if(aref->x2 + NewBound->xmax > Boundary.xmax){
+					Boundary.xmax = aref->x2 + NewBound->xmax;
 			}
-			if(aref->X1 - NewBound->XMin < Boundary.XMin){
-				Boundary.XMin = aref->X1 - NewBound->XMin;
+			if(aref->x1 - NewBound->xmin < Boundary.xmin){
+				Boundary.xmin = aref->x1 - NewBound->xmin;
 			}
-			if(aref->Y3 + NewBound->YMax > Boundary.YMax){
-				Boundary.YMax = aref->Y3 + NewBound->YMax;
+			if(aref->y3 + NewBound->ymax > Boundary.ymax){
+				Boundary.ymax = aref->y3 + NewBound->ymax;
 			}
-			if(aref->Y1 - NewBound->YMin < Boundary.YMin){
-				Boundary.YMin = aref->Y1 - NewBound->YMin;
+			if(aref->y1 - NewBound->ymin < Boundary.ymin){
+				Boundary.ymin = aref->y1 - NewBound->ymin;
 			}
 		}
 	}
 
 	if(PathItems.empty() && PolygonItems.empty() && FirstSRef.empty() && FirstARef.empty()){
-		Boundary.XMax = Boundary.XMin = Boundary.YMax = Boundary.YMin = 0;
+		Boundary.xmax = Boundary.xmin = Boundary.ymax = Boundary.ymin = 0;
 	}
 
-	v_printf(2, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name.c_str(), Boundary.XMax, Boundary.XMin, Boundary.YMax, Boundary.YMin);
+	v_printf(2, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", Name.c_str(), Boundary.xmax, Boundary.xmin, Boundary.ymax, Boundary.ymin);
 	GotBoundary = true;
 
-	_width = Boundary.XMax - Boundary.XMin;
-	_height = Boundary.YMax - Boundary.YMin;
+	_width = Boundary.xmax - Boundary.xmin;
+	_height = Boundary.ymax - Boundary.ymin;
 
 	return &Boundary;
 }

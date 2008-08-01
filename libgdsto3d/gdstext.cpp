@@ -42,9 +42,9 @@ void GDSText::SetString(std::string String)
 
 void GDSText::SetRotation(float X, float Y, float Z)
 {
-	_Rotate.X = X;
-	_Rotate.Y = Y;
-	_Rotate.Z = Z;
+	_Rotate.x = X;
+	_Rotate.y = Y;
+	_Rotate.z = Z;
 }
 
 std::string GDSText::GetString()
@@ -69,7 +69,7 @@ float GDSText::GetZ()
 
 float GDSText::GetRY()
 {
-	return _Rotate.Y;
+	return _Rotate.y;
 }
 
 float GDSText::GetMag()

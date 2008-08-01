@@ -71,10 +71,10 @@ void GDSParse_pov::OutputHeader()
 		fprintf(_optr, "#include \"transforms.inc\"\n");
 
 		struct _Boundary *Boundary = GetBoundary();
-		float half_widthX = (Boundary->XMax - Boundary->XMin)/2;
-		float half_widthY = (Boundary->YMax - Boundary->YMin)/2;
-		float centreX = half_widthX + Boundary->XMin;
-		float centreY = half_widthY + Boundary->YMin;
+		float half_widthX = (Boundary->xmax - Boundary->xmin)/2;
+		float half_widthY = (Boundary->ymax - Boundary->ymin)/2;
+		float centreX = half_widthX + Boundary->xmin;
+		float centreY = half_widthY + Boundary->ymin;
 
 		float distance;
 		if(half_widthX > half_widthY){
@@ -83,14 +83,14 @@ void GDSParse_pov::OutputHeader()
 			distance = half_widthY * 1.8;
 		}
 
-		fprintf(_optr, "#declare sizeX = %.2f;\n", Boundary->XMax - Boundary->XMin);
-		fprintf(_optr, "#declare sizeY = %.2f;\n", Boundary->YMax - Boundary->YMin);
+		fprintf(_optr, "#declare sizeX = %.2f;\n", Boundary->xmax - Boundary->xmin);
+		fprintf(_optr, "#declare sizeY = %.2f;\n", Boundary->ymax - Boundary->ymin);
 //		fprintf(_optr, "#declare sizeZ = %.2f\n", Boundary->ZMax - Boundary->ZMin);
 
-		fprintf(_optr, "// TopLeft: %.2f, %.2f\n", Boundary->XMin, Boundary->YMax);
-		fprintf(_optr, "// TopRight: %.2f, %.2f\n", Boundary->XMax, Boundary->YMax);
-		fprintf(_optr, "// BottomLeft: %.2f, %.2f\n", Boundary->XMin, Boundary->YMin);
-		fprintf(_optr, "// BottomRight: %.2f, %.2f\n", Boundary->XMax, Boundary->YMin);
+		fprintf(_optr, "// TopLeft: %.2f, %.2f\n", Boundary->xmin, Boundary->ymax);
+		fprintf(_optr, "// TopRight: %.2f, %.2f\n", Boundary->xmax, Boundary->ymax);
+		fprintf(_optr, "// BottomLeft: %.2f, %.2f\n", Boundary->xmin, Boundary->ymin);
+		fprintf(_optr, "// BottomRight: %.2f, %.2f\n", Boundary->xmax, Boundary->ymin);
 		fprintf(_optr, "// Centre: %.2f, %.2f\n", centreX, centreY);
 
 		float XMod = _config->GetCameraPos()->XMod;
@@ -110,16 +110,16 @@ void GDSParse_pov::OutputHeader()
 					fprintf(_optr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n", centreX*XMod, centreY*YMod, -distance*ZMod);
 					break;
 				case bpTopLeft:
-					fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
+					fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->xmin*XMod, Boundary->ymax*YMod, -distance*ZMod);
 					break;
 				case bpTopRight:
-					fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
+					fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->xmax*XMod, Boundary->ymax*YMod, -distance*ZMod);
 					break;
 					case bpBottomLeft:
-				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
+				fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->xmin*XMod, Boundary->ymin*YMod, -distance*ZMod);
 						break;
 				case bpBottomRight:
-					fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
+					fprintf(_optr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n", Boundary->xmax*XMod, Boundary->ymin*YMod, -distance*ZMod);
 					break;
 			}
 
@@ -134,16 +134,16 @@ void GDSParse_pov::OutputHeader()
 					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", centreX*XMod, centreY*YMod, -distance*ZMod);
 					break;
 				case bpTopLeft:
-					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
+					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->xmin*XMod, Boundary->ymax*YMod, -distance*ZMod);
 					break;
 				case bpTopRight:
-					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
+					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->xmax*XMod, Boundary->ymax*YMod, -distance*ZMod);
 					break;
 				case bpBottomLeft:
-					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
+					fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->xmin*XMod, Boundary->ymin*YMod, -distance*ZMod);
 					break;
 				case bpBottomRight:
-						fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
+						fprintf(_optr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n", Boundary->xmax*XMod, Boundary->ymin*YMod, -distance*ZMod);
 				break;
 			}
 		}else{
@@ -164,16 +164,16 @@ void GDSParse_pov::OutputHeader()
 						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", centreX*XMod, centreY*YMod, -distance*ZMod);
 						break;
 					case bpTopLeft:
-						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMax*YMod, -distance*ZMod);
+						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->xmin*XMod, Boundary->ymax*YMod, -distance*ZMod);
 						break;
 					case bpTopRight:
-						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMax*YMod, -distance*ZMod);
+						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->xmax*XMod, Boundary->ymax*YMod, -distance*ZMod);
 						break;
 					case bpBottomLeft:
-						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMin*XMod, Boundary->YMin*YMod, -distance*ZMod);
+						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->xmin*XMod, Boundary->ymin*YMod, -distance*ZMod);
 						break;
 					case bpBottomRight:
-						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->XMax*XMod, Boundary->YMin*YMod, -distance*ZMod);
+						fprintf(_optr, "light_source {<%.2f,%.2f,%.2f> White }\n", Boundary->xmax*XMod, Boundary->ymin*YMod, -distance*ZMod);
 						break;
 				}
 			}
@@ -205,7 +205,7 @@ void GDSParse_pov::OutputHeader()
 		}
 
 		if(_bounding_output){
-			fprintf(_optr, "box {<%.2f,%.2f,%.2f> <%.2f,%.2f,%.2f> texture { pigment { rgb <0.75, 0.75, 0.75> } } }", Boundary->XMin, Boundary->YMin,_units*_process->GetLowest(),Boundary->XMax, Boundary->YMax,_units*_process->GetHighest());
+			fprintf(_optr, "box {<%.2f,%.2f,%.2f> <%.2f,%.2f,%.2f> texture { pigment { rgb <0.75, 0.75, 0.75> } } }", Boundary->xmin, Boundary->ymin,_units*_process->GetLowest(),Boundary->xmax, Boundary->ymax,_units*_process->GetHighest());
 		}
 	}
 }

@@ -226,25 +226,25 @@ void GDSObject_svg::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 			height = 0.0f;
 		}
 
-		x = sref->X1;
-		angle = 180/M_PI*asin(sin(sref->Rotate.Y*M_PI/180));
+		x = sref->x1;
+		angle = 180/M_PI*asin(sin(sref->rotate.y*M_PI/180));
 
-		if(sref->Flipped){
+		if(sref->flipped){
 			x = -x;
 		}
-		fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*x, _scale*(this->GetHeight() - sref->Y1 - height), sref->Name.c_str());
+		fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*x, _scale*(this->GetHeight() - sref->y1 - height), sref->name.c_str());
 
-		if(sref->Mag!=1.0 || sref->Flipped || fabs(angle) > 0.0f){
+		if(sref->mag!=1.0 || sref->flipped || fabs(angle) > 0.0f){
 			fprintf(fptr, " transform=\"");
-			/* FIXME - Mag isn't tested */
-			/* if(sref->Mag!=1.0){
-				fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
+			/* FIXME - mag isn't tested */
+			/* if(sref->mag!=1.0){
+				fprintf(fptr, " scale(%.2f)", sref->mag, sref->mag);
 			} */
-			if(sref->Flipped){
+			if(sref->flipped){
 				fprintf(fptr, " scale(-1,1)");
 			}
 			if(fabs(angle) > 0.0f){
-				fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - sref->Y1));
+				fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - sref->y1));
 			}
 			fprintf(fptr, "\"");
 		}
@@ -268,41 +268,41 @@ void GDSObject_svg::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 		}
 
 		fprintf(fptr, "<!-- ARef Start -->\n");
-		if(aref->Columns && aref->Rows){
-			x = aref->X1;
-			y = aref->Y1;
-			if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
-				dy = fabs((float)(aref->X3 - aref->X1) / (float)aref->Columns);
-				dx = fabs((float)(aref->Y2 - aref->Y1) / (float)aref->Rows);
+		if(aref->columns && aref->rows){
+			x = aref->x1;
+			y = aref->y1;
+			if(aref->rotate.y == 90.0 || aref->rotate.y == -90.0){
+				dy = fabs((float)(aref->x3 - aref->x1) / (float)aref->columns);
+				dx = fabs((float)(aref->y2 - aref->y1) / (float)aref->rows);
 				/* FIXME - untested */
-				if(aref->Flipped){
+				if(aref->flipped){
 					x = -x;
 				}
 			}else{
-				dx = fabs((float)(aref->X2 - aref->X1) / (float)aref->Columns);
-				dy = fabs((float)(aref->Y3 - aref->Y1) / (float)aref->Rows);
-				if(aref->Flipped){
+				dx = fabs((float)(aref->x2 - aref->x1) / (float)aref->columns);
+				dy = fabs((float)(aref->y3 - aref->y1) / (float)aref->rows);
+				if(aref->flipped){
 					x = -x;
 				}
 
 			}
 
-			angle = 180/M_PI*asin(sin(aref->Rotate.Y*M_PI/180));
+			angle = 180/M_PI*asin(sin(aref->rotate.y*M_PI/180));
 
-			for(int j=0; j<aref->Columns; j++){
-				for(int k=0; k<aref->Rows; k++){
-					fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(x + dx * j), _scale*(this->GetHeight() - (y + dy * k) - height), aref->Name.c_str());
-					if(aref->Mag!=1.0f || aref->Flipped || fabs(angle)>0.0f){
+			for(int j=0; j<aref->columns; j++){
+				for(int k=0; k<aref->rows; k++){
+					fprintf(fptr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", _scale*(x + dx * j), _scale*(this->GetHeight() - (y + dy * k) - height), aref->name.c_str());
+					if(aref->mag!=1.0f || aref->flipped || fabs(angle)>0.0f){
 						fprintf(fptr, " transform=\"");
-						/* FIXME - Mag isn't tested */
-						/* if(sref->Mag!=1.0){
-							fprintf(fptr, " scale(%.2f)", sref->Mag, sref->Mag);
+						/* FIXME - mag isn't tested */
+						/* if(sref->mag!=1.0){
+							fprintf(fptr, " scale(%.2f)", sref->mag, sref->mag);
 						} */
-						if(aref->Flipped){
+						if(aref->flipped){
 							fprintf(fptr, " scale(-1,1)");
 						}
 						if(fabs(angle)>0.0f){
-							fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - aref->Y1));
+							fprintf(fptr, " rotate(%.2f,%.2f,%.2f)", angle, _scale*x, _scale*(this->GetHeight() - aref->y1));
 						}
 						fprintf(fptr, "\"");
 					}

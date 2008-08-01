@@ -262,16 +262,16 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 	for(unsigned int i = 0; i < FirstSRef.size(); i++){
 		ASRefElement *sref = FirstSRef[i];
 
-		fprintf(fptr, "object{str_%s ", sref->Name.c_str());
-		if(sref->Mag!=1.0){
-			fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->Mag, sref->Mag);
+		fprintf(fptr, "object{str_%s ", sref->name.c_str());
+		if(sref->mag!=1.0){
+			fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->mag, sref->mag);
 		}
-		if(sref->Flipped){
+		if(sref->flipped){
 			fprintf(fptr, "scale <1,-1,1> ");
 		}
-		fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->X1, sref->Y1);
-		if(sref->Rotate.Y){
-			fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X1, sref->Y1);
+		fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->x1, sref->y1);
+		if(sref->rotate.y){
+			fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->rotate.y, sref->x1, sref->y1);
 		}
 		fprintf(fptr, "}\n");
 	}
@@ -284,30 +284,30 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 
 		float dx, dy;
 
-		if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
-			if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
-				dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
-				dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
+		if(aref->rotate.y == 90.0 || aref->rotate.y == -90.0){
+			if(aref->columns && aref->rows && (aref->x3 - aref->x1) && (aref->y2 - aref->y1)){
+				dx = (float)(aref->x3 - aref->x1) / (float)aref->columns;
+				dy = (float)(aref->y2 - aref->y1) / (float)aref->rows;
 
 				fprintf(fptr, "#declare dx = %.2f;\n", dx);
 				fprintf(fptr, "#declare dy = %.2f;\n", dy);
 
 				fprintf(fptr, "#declare colcount = 0;\n");
-				fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-				fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
+				fprintf(fptr, "#declare cols = %d;\n", aref->columns);
+				fprintf(fptr, "#declare rows = %d;\n", aref->rows);
 				fprintf(fptr, "#while (colcount < cols)\n");
 				fprintf(fptr, "\t#declare rowcount = 0;");
 				fprintf(fptr, "\t#while (rowcount < rows)\n");
-				fprintf(fptr, "\t\tobject{str_%s ", aref->Name.c_str());
-				if(aref->Mag!=1.0){
-					fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->Mag, aref->Mag);
+				fprintf(fptr, "\t\tobject{str_%s ", aref->name.c_str());
+				if(aref->mag!=1.0){
+					fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->mag, aref->mag);
 				}
-				if(aref->Flipped){
+				if(aref->flipped){
 					fprintf(fptr, "scale <1,-1,1> ");
 				}
-				fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-				if(aref->Rotate.Y){
-					fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
+				fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
+				if(aref->rotate.y){
+					fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
 				}
 				fprintf(fptr, "}\n");
 
@@ -317,26 +317,26 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 				fprintf(fptr, "#end\n");
 			}
 		}else{
-			if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
-				dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
-				dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
+			if(aref->columns && aref->rows && (aref->x2 - aref->x1) && (aref->y3 - aref->y1)){
+				dx = (float)(aref->x2 - aref->x1) / (float)aref->columns;
+				dy = (float)(aref->y3 - aref->y1) / (float)aref->rows;
 
 				fprintf(fptr, "#declare dx = %.2f;\n", dx);
 				fprintf(fptr, "#declare dy = %.2f;\n", dy);
 
 				fprintf(fptr, "#declare colcount = 0;\n");
-				fprintf(fptr, "#declare cols = %d;\n", aref->Columns);
-				fprintf(fptr, "#declare rows = %d;\n", aref->Rows);
+				fprintf(fptr, "#declare cols = %d;\n", aref->columns);
+				fprintf(fptr, "#declare rows = %d;\n", aref->rows);
 				fprintf(fptr, "#while (colcount < cols)\n");
 				fprintf(fptr, "\t#declare rowcount = 0;");
 				fprintf(fptr, "\t#while (rowcount < rows)\n");
-				fprintf(fptr, "\t\tobject{str_%s ", aref->Name.c_str());
-				if(aref->Flipped){
+				fprintf(fptr, "\t\tobject{str_%s ", aref->name.c_str());
+				if(aref->flipped){
 					fprintf(fptr, "scale <1,-1,1> ");
 				}
-				fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->X1, aref->Y1);
-				if(aref->Rotate.Y){
-					fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->Rotate.Y, aref->X1, aref->Y1);
+				fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
+				if(aref->rotate.y){
+					fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
 				}
 				fprintf(fptr, "}\n");
 
@@ -407,27 +407,27 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 
 			Point pA, pB;
 
-			pA.X = polygon->GetXCoords(0)-polygon->GetXCoords(polygon->GetPoints()-2);
-			pA.Y = polygon->GetYCoords(0)-polygon->GetYCoords(polygon->GetPoints()-2);
-			pB.X = polygon->GetXCoords(1)-polygon->GetXCoords(0);
-			pB.Y = polygon->GetYCoords(1)-polygon->GetYCoords(0);
+			pA.x = polygon->GetXCoords(0)-polygon->GetXCoords(polygon->GetPoints()-2);
+			pA.y = polygon->GetYCoords(0)-polygon->GetYCoords(polygon->GetPoints()-2);
+			pB.x = polygon->GetXCoords(1)-polygon->GetXCoords(0);
+			pB.y = polygon->GetYCoords(1)-polygon->GetYCoords(0);
 
 			float theta1;
 			float theta2;
 
-			theta1 = atan2(pA.X, pA.Y);
-			theta2 = atan2(pB.X, pB.Y);
+			theta1 = atan2(pA.x, pA.y);
+			theta2 = atan2(pB.x, pB.y);
 			polygon->SetAngleCoords(0, theta1 - theta2);
 
 			for(unsigned int j=1; j<polygon->GetPoints()-1; j++){
-				pA.X = polygon->GetXCoords(j)-polygon->GetXCoords(j-1);
-				pA.Y = polygon->GetYCoords(j)-polygon->GetYCoords(j-1);
+				pA.x = polygon->GetXCoords(j)-polygon->GetXCoords(j-1);
+				pA.y = polygon->GetYCoords(j)-polygon->GetYCoords(j-1);
 
-				pB.X = polygon->GetXCoords(j+1)-polygon->GetXCoords(j);
-				pB.Y = polygon->GetYCoords(j+1)-polygon->GetYCoords(j);
+				pB.x = polygon->GetXCoords(j+1)-polygon->GetXCoords(j);
+				pB.y = polygon->GetYCoords(j+1)-polygon->GetYCoords(j);
 
-				theta1 = atan2(pA.X, pA.Y);
-				theta2 = atan2(pB.X, pB.Y);
+				theta1 = atan2(pA.x, pA.y);
+				theta2 = atan2(pB.x, pB.y);
 
 				polygon->SetAngleCoords(j, theta1 - theta2);
 			}
