@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __GDSPARSE_INFO_H__
-#define __GDSPARSE_INFO_H__
+#ifndef GDSPARSE_INFO_H
+#define GDSPARSE_INFO_H
 
 #include "config_cfg.h"
 #include "gdsparse.h"
@@ -35,5 +35,4 @@ public:
 	void OutputFooter();
 };
 
-#endif // __GDSPARSE_INFO_H__
-
+#endif

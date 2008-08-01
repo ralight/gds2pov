@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __GDSOBJECT_SVG_H__
-#define __GDSOBJECT_SVG_H__
+#ifndef GDSOBJECT_SVG_H
+#define GDSOBJECT_SVG_H
 
 #include <string>
 
@@ -45,5 +45,4 @@ public:
 
 };
 
-#endif // __GDSOBJECT_SVG_H__
-
+#endif

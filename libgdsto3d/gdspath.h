@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __GDSPATH_H__
-#define __GDSPATH_H__
+#ifndef _GDSPATH_H_
+#define _GDSPATH_H_
 
 #include "process_cfg.h"
 
@@ -58,4 +58,4 @@ public:
 	struct ProcessLayer *GetLayer();
 };
 
-#endif // __GDSPATH_H__
+#endif

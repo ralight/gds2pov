@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef _PROCESS_CFG_H
-#define _PROCESS_CFG_H
+#ifndef _PROCESS_CFG_H_
+#define _PROCESS_CFG_H_
 
 #include <string>
 #include <vector>
@@ -67,4 +67,4 @@ public:
 	bool Save(std::string filename);
 };
 
-#endif // _PROCESS_CFG_H
+#endif

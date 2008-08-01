@@ -19,8 +19,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef _CONFIG_CFG_H
-#define _CONFIG_CFG_H
+#ifndef _CONFIG_CFG_H_
+#define _CONFIG_CFG_H_
 
 #include <string>
 #include <vector>
@@ -85,5 +85,4 @@ public:
 	void ReadFile(std::string configfile);
 };
 
-#endif // _PROCESS_CFG_H
-
+#endif

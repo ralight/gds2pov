@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __GDSPARSE_H__
-#define __GDSPARSE_H__
+#ifndef _GDSPARSE_H_
+#define _GDSPARSE_H_
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -155,5 +155,4 @@ public:
 	virtual class GDSObject *NewObject(std::string Name) = 0;
 };
 
-#endif // __GDSPARSE_H__
-
+#endif

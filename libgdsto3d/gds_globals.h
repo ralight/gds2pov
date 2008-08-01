@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef _GDS_GLOBALS_H
-#define _GDS_GLOBALS_H
+#ifndef _GDS_GLOBALS_H_
+#define _GDS_GLOBALS_H_
 
 extern int verbose_output;
 

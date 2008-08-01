@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef _GDS_TYPES_H
-#define _GDS_TYPES_H
+#ifndef _GDS_TYPES_H_
+#define _GDS_TYPES_H_
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -58,4 +58,3 @@
 #endif
 
 #endif
-

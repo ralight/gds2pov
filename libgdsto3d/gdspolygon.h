@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __GDSPOLYGON_H__
-#define __GDSPOLYGON_H__
+#ifndef _GDSPOLYGON_H_
+#define _GDSPOLYGON_H_
 
 #include "process_cfg.h"
 
@@ -50,4 +50,4 @@ public:
 	struct ProcessLayer *GetLayer();
 };
 
-#endif // __GDSPOLYGON_H__
+#endif

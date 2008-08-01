@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __GDSOBJECT_H__
-#define __GDSOBJECT_H__
+#ifndef _GDSOBJECT_H_
+#define _GDSOBJECT_H_
 
 #include <cstdio>
 #include <vector>
@@ -85,7 +85,4 @@ public:
 	bool GetIsOutput();
 };
 
-typedef class GDSObject * GDSObjectRef;
-
-#endif // __GDSOBJECT_H__
-
+#endif

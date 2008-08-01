@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef __GDSELEMENTS_H__
-#define __GDSELEMENTS_H__
+#ifndef _GDSELEMENTS_H_
+#define _GDSELEMENTS_H_
 
 #include <string>
 
@@ -73,4 +73,4 @@ struct _Boundary {
 	float YMax;
 };
 
-#endif // __GDSELEMENTS_H__
+#endif
