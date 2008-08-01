@@ -25,9 +25,14 @@
 #include "gdsobject.h"
 #include "gdstext.h"
 
-GDSText::GDSText(float X, float Y, float Z, bool Flipped, float Mag, int VJust, int HJust, struct ProcessLayer *Layer) :
-	_X(X), _Y(Y), _Z(Z), _Flipped(Flipped), _Mag(Mag), _VJust(VJust),
-	_HJust(HJust), _Layer(Layer), _String("")
+GDSText::GDSText(float x, float y, float z,
+				bool flipped, float mag,
+				int vjust, int hjust,
+				struct ProcessLayer *layer) :
+				m_x(x), m_y(y), m_z(z),
+				m_flipped(flipped), m_mag(mag),
+				m_vjust(vjust), m_hjust(hjust),
+				m_layer(layer), m_string("")
 {
 }
 
@@ -37,63 +42,63 @@ GDSText::~GDSText()
 
 void GDSText::SetString(std::string String)
 {
-	_String = String;
+	m_string = String;
 }
 
-void GDSText::SetRotation(float X, float Y, float Z)
+void GDSText::SetRotation(float x, float y, float z)
 {
-	_Rotate.x = X;
-	_Rotate.y = Y;
-	_Rotate.z = Z;
+	m_rotate.x = x;
+	m_rotate.y = y;
+	m_rotate.z = z;
 }
 
 std::string GDSText::GetString()
 {
-	return _String;
+	return m_string;
 }
 
 float GDSText::GetX()
 {
-	return _X;
+	return m_x;
 }
 
 float GDSText::GetY()
 {
-	return _Y;
+	return m_y;
 }
 
 float GDSText::GetZ()
 {
-	return _Z;
+	return m_z;
 }
 
 float GDSText::GetRY()
 {
-	return _Rotate.y;
+	return m_rotate.y;
 }
 
 float GDSText::GetMag()
 {
-	return _Mag;
+	return m_mag;
 }
 
 int GDSText::GetVJust()
 {
-	return _VJust;
+	return m_vjust;
 }
 
 int GDSText::GetHJust()
 {
-	return _HJust;
+	return m_hjust;
 }
 
 bool GDSText::GetFlipped()
 {
-	return _Flipped;
+	return m_flipped;
 }
 
 struct ProcessLayer *GDSText::GetLayer()
 {
-	return _Layer;
+	return m_layer;
 }
 

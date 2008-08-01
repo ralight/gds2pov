@@ -29,23 +29,23 @@
 class GDSText
 {
 private:
-	float _X;
-	float _Y;
-	float _Z;
-	bool _Flipped;
-	float _Mag;
-	int _VJust;
-	int _HJust;
-	struct ProcessLayer *_Layer;
-	std::string _String;
-	Transform _Rotate;
+	float m_x;
+	float m_y;
+	float m_z;
+	bool m_flipped;
+	float m_mag;
+	int m_vjust;
+	int m_hjust;
+	struct ProcessLayer *m_layer;
+	std::string m_string;
+	Transform m_rotate;
 
 public:
-	GDSText(float X, float Y, float Z, bool Flipped, float Mag, int VJust, int HJust, struct ProcessLayer *Layer);
+	GDSText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, struct ProcessLayer *layer);
 	~GDSText();
 
 	void SetString(std::string String);
-	void SetRotation(float X, float Y, float Z);
+	void SetRotation(float x, float y, float z);
 
 	std::string GetString();
 	float GetX();
