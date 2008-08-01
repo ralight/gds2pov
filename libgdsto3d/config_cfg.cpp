@@ -34,11 +34,11 @@
 #include "config_cfg.h"
 
 GDSConfig::GDSConfig(std::string filename) : 
-	_ProcessFile(""), _Font(""),
-	_Ambient(1.2), _Scale(1.0), _Valid(true)
+	m_processfile(""), m_font(""),
+	m_ambient(1.2), m_scale(1.0), m_valid(true)
 {
-	_CameraPos.postype = ptCamera;
-	_LookAtPos.postype = ptLookAt;
+	m_camerapos.postype = ptCamera;
+	m_lookatpos.postype = ptLookAt;
 
 	if(filename != ""){
 		ReadFile(filename);
@@ -47,60 +47,60 @@ GDSConfig::GDSConfig(std::string filename) :
 
 GDSConfig::~GDSConfig()
 {
-	while(!_Lights.empty()){
-		delete _Lights[_Lights.size()-1];
-		_Lights.pop_back();
+	while(!m_lights.empty()){
+		delete m_lights[m_lights.size()-1];
+		m_lights.pop_back();
 	}
 }
 
 bool GDSConfig::IsValid()
 {
-	return _Valid;
+	return m_valid;
 }
 
 float GDSConfig::GetAmbient()
 {
-	return _Ambient;
+	return m_ambient;
 }
 
 float GDSConfig::GetScale()
 {
-	return _Scale;
+	return m_scale;
 }
 
 std::string GDSConfig::GetProcessFile()
 {
-	return _ProcessFile;
+	return m_processfile;
 }
 
 std::string GDSConfig::GetFont()
 {
-	return _Font;
+	return m_font;
 }
 
 Position *GDSConfig::GetLookAtPos()
 {
-	return &_LookAtPos;
+	return &m_lookatpos;
 }
 
 Position *GDSConfig::GetCameraPos()
 {
-	return &_CameraPos;
+	return &m_camerapos;
 }
 
 Position *GDSConfig::GetLightPos()
 {
-	return _Lights[0];
+	return m_lights[0];
 }
 
 Position *GDSConfig::GetLightPos(int index)
 {
-	return _Lights[index];
+	return m_lights[index];
 }
 
 int GDSConfig::GetLightCount()
 {
-	return _Lights.size();
+	return m_lights.size();
 }
 
 void GDSConfig::ReadFile(std::string configfile)
@@ -135,7 +135,7 @@ void GDSConfig::ReadFile(std::string configfile)
 	
 	if(!cptr){
 		fprintf(stderr, "Error: Unable to open config file \"%s\"\n", configfile.c_str());
-		_Valid = false;
+		m_valid = false;
 		return;
 	}
 
@@ -156,7 +156,7 @@ void GDSConfig::ReadFile(std::string configfile)
 		fprintf(stderr, "Invalid config file. ");
 		fprintf(stderr, "There should be equal numbers of PositionStart and PositionEnd elements! ");
 		fprintf(stderr, "(%d and %d found respectively)\n", posstart_cnt, posend_cnt);
-		_Valid = false;
+		m_valid = false;
 		return;
 	}
 
@@ -164,7 +164,7 @@ void GDSConfig::ReadFile(std::string configfile)
 		fprintf(stderr, "Invalid config file. ");
 		fprintf(stderr, "There should be either 1 or 0 of both of GlobalStart and GlobalEnd elements! ");
 		fprintf(stderr, "(%d and %d found respectively)\n", globalstart_cnt, globalend_cnt);
-		_Valid = false;
+		m_valid = false;
 		return;
 	}
 
@@ -177,7 +177,7 @@ void GDSConfig::ReadFile(std::string configfile)
 			if(strstr(line, "GlobalStart")){
 				if(in_position){
 					fprintf(stderr, "Error: GlobalStart inside PositionStart on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
@@ -187,28 +187,28 @@ void GDSConfig::ReadFile(std::string configfile)
 			}else if(strstr(line, "Ambient:")){
 				if(!in_global){
 					fprintf(stderr, "Error: Ambient definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(got_ambient){
 					fprintf(stderr, "Warning: Duplicate Ambient definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Ambient: %f", &_Ambient);
+					sscanf(line, "Ambient: %f", &m_ambient);
 				}
 				got_ambient = true;
 			}else if(strstr(line, "Scale:")){
 				if(!in_global){
 					fprintf(stderr, "Error: Scale definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(got_scale){
 					fprintf(stderr, "Warning: Duplicate Scale definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Scale: %f", &_Scale);
-					if(_Scale<0.001){
+					sscanf(line, "Scale: %f", &m_scale);
+					if(m_scale<0.001){
 						fprintf(stderr, "Warning: Scale is very small (<0.001)\n");
 					}
 				}
@@ -216,19 +216,19 @@ void GDSConfig::ReadFile(std::string configfile)
 			}else if(strstr(line, "ProcessFile:")){
 				if(!in_global){
 					fprintf(stderr, "Error: ProcessFile definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(got_processfile){
 					fprintf(stderr, "Warning: Duplicate ProcessFile definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
-					_ProcessFile = line;
-					_ProcessFile = _ProcessFile.substr(13);
+					m_processfile = line;
+					m_processfile = m_processfile.substr(13);
 
-					for(i=_ProcessFile.length()-1; i>=0; i--){
-						if(_ProcessFile[i] == '\n'){
-							_ProcessFile[i] = '\0';
+					for(i=m_processfile.length()-1; i>=0; i--){
+						if(m_processfile[i] == '\n'){
+							m_processfile[i] = '\0';
 							break;
 						}
 					}
@@ -237,18 +237,18 @@ void GDSConfig::ReadFile(std::string configfile)
 			}else if(strstr(line, "Font:")){
 				if(!in_global){
 					fprintf(stderr, "Error: Font definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(got_font){
 					fprintf(stderr, "Warning: Duplicate Font definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
-					_Font = line;
-					_Font = _Font.substr(6);
-					for(i=_Font.length()-1; i>=0; i--){
-						if(_Font[i] == '\n'){
-							_Font[i] = '\0';
+					m_font = line;
+					m_font = m_font.substr(6);
+					for(i=m_font.length()-1; i>=0; i--){
+						if(m_font[i] == '\n'){
+							m_font[i] = '\0';
 							break;
 						}
 					}
@@ -259,12 +259,12 @@ void GDSConfig::ReadFile(std::string configfile)
 			}else if(strstr(line, "PositionStart")){
 				if(in_position){
 					fprintf(stderr, "Error: PositionStart without PositionEnd not allowed. PositionEnd should appear before line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}else if(in_global){
 					fprintf(stderr, "Error: PositionStart inside GlobalStart on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
@@ -278,7 +278,7 @@ void GDSConfig::ReadFile(std::string configfile)
 			}else if(strstr(line, "Type:")){
 				if(!in_position){
 					fprintf(stderr, "Error: Type definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
@@ -292,11 +292,11 @@ void GDSConfig::ReadFile(std::string configfile)
 					}else if(strstr(line, "Type: Light")){
 						current_type = ptLight;
 
-						_currentlight = new Position;
-						_Lights.push_back(_currentlight);
+						m_currentlight = new Position;
+						m_lights.push_back(m_currentlight);
 					}else{
 						fprintf(stderr, "Error: Unknown position type \"%s\" on line %d of config file.\n", line, current_line);
-						_Valid = false;
+						m_valid = false;
 						fclose(cptr);
 						return;
 					}
@@ -305,13 +305,13 @@ void GDSConfig::ReadFile(std::string configfile)
 			}else if(strstr(line, "Position:")){
 				if(!in_position){
 					fprintf(stderr, "Error: Position definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(!got_type){
 					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
@@ -331,23 +331,23 @@ void GDSConfig::ReadFile(std::string configfile)
 						thispos = bpBottomRight;
 					}else{
 						fprintf(stderr, "Error: Unknown Position \"%s\" on line %d of config file.\n", line, current_line);
-						_Valid = false;
+						m_valid = false;
 						fclose(cptr);
 						return;
 					}
 					switch(current_type){
 						case ptCamera:
-							_CameraPos.boundarypos = thispos;
+							m_camerapos.boundarypos = thispos;
 							break;
 						case ptLookAt:
-							_LookAtPos.boundarypos = thispos;
+							m_lookatpos.boundarypos = thispos;
 							break;
 						case ptLight:
-							if(_currentlight){
-								_currentlight->boundarypos = thispos;
+							if(m_currentlight){
+								m_currentlight->boundarypos = thispos;
 							}else{
 								fprintf(stderr, "Error: Position found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
-								_Valid = false;
+								m_valid = false;
 								fclose(cptr);
 								return;
 							}
@@ -359,35 +359,35 @@ void GDSConfig::ReadFile(std::string configfile)
 					}
 					got_position = true;
 				}
-			}else if(strstr(line, "XMod:")){
+			}else if(strstr(line, "xmod:")){
 				if(!in_position){
-					fprintf(stderr, "Error: XMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
-					_Valid = false;
+					fprintf(stderr, "Error: xmod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(!got_type){
 					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(got_xmod){
-					fprintf(stderr, "Error: Duplicate XMod definition on line %d of config file. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate xmod definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
-							sscanf(line, "XMod: %f", &_CameraPos.XMod);
+							sscanf(line, "xmod: %f", &m_camerapos.xmod);
 							break;
 						case ptLookAt:
-							sscanf(line, "XMod: %f", &_LookAtPos.XMod);
+							sscanf(line, "xmod: %f", &m_lookatpos.xmod);
 							break;
 						case ptLight:
-							if(_currentlight){
-								sscanf(line, "XMod: %f", &_currentlight->XMod);
+							if(m_currentlight){
+								sscanf(line, "xmod: %f", &m_currentlight->xmod);
 							}else{
-								fprintf(stderr, "Error: XMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
-								_Valid = false;
+								fprintf(stderr, "Error: xmod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								m_valid = false;
 								fclose(cptr);
 								return;
 							}
@@ -399,35 +399,35 @@ void GDSConfig::ReadFile(std::string configfile)
 					}
 					got_xmod = true;
 				}
-			}else if(strstr(line, "YMod:")){
+			}else if(strstr(line, "ymod:")){
 				if(!in_position){
-					fprintf(stderr, "Error: YMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
-					_Valid = false;
+					fprintf(stderr, "Error: ymod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(!got_type){
 					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(got_ymod){
-					fprintf(stderr, "Error: Duplicate YMod definition on line %d of config file. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate ymod definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
-							sscanf(line, "YMod: %f", &_CameraPos.YMod);
+							sscanf(line, "ymod: %f", &m_camerapos.ymod);
 							break;
 						case ptLookAt:
-							sscanf(line, "YMod: %f", &_LookAtPos.YMod);
+							sscanf(line, "ymod: %f", &m_lookatpos.ymod);
 							break;
 						case ptLight:
-							if(_currentlight){
-								sscanf(line, "YMod: %f", &_currentlight->YMod);
+							if(m_currentlight){
+								sscanf(line, "ymod: %f", &m_currentlight->ymod);
 							}else{
-								fprintf(stderr, "Error: YMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
-								_Valid = false;
+								fprintf(stderr, "Error: ymod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								m_valid = false;
 								fclose(cptr);
 								return;
 							}
@@ -439,35 +439,35 @@ void GDSConfig::ReadFile(std::string configfile)
 					}
 					got_ymod = true;
 				}
-			}else if(strstr(line, "ZMod:")){
+			}else if(strstr(line, "zmod:")){
 				if(!in_position){
-					fprintf(stderr, "Error: ZMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
-					_Valid = false;
+					fprintf(stderr, "Error: zmod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(!got_type){
 					fprintf(stderr, "Error: Type must be defined before any other elements in a Position block.\n");
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}
 				if(got_zmod){
-					fprintf(stderr, "Error: Duplicate ZMod definition on line %d of config file. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate zmod definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
-							sscanf(line, "ZMod: %f", &_CameraPos.ZMod);
+							sscanf(line, "zmod: %f", &m_camerapos.zmod);
 							break;
 						case ptLookAt:
-							sscanf(line, "ZMod: %f", &_LookAtPos.ZMod);
+							sscanf(line, "zmod: %f", &m_lookatpos.zmod);
 							break;
 						case ptLight:
-							if(_currentlight){
-								sscanf(line, "ZMod: %f", &_currentlight->ZMod);
+							if(m_currentlight){
+								sscanf(line, "zmod: %f", &m_currentlight->zmod);
 							}else{
-								fprintf(stderr, "Error: ZMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
-								_Valid = false;
+								fprintf(stderr, "Error: zmod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								m_valid = false;
 								fclose(cptr);
 								return;
 							}
@@ -482,17 +482,17 @@ void GDSConfig::ReadFile(std::string configfile)
 			}else if(strstr(line, "PositionEnd")){
 				if(!in_position){
 					fprintf(stderr, "Error: PositionEnd without PositionStart on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}else if(!got_type){
 					fprintf(stderr, "Error: PositionEnd without Type on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}else if(!got_position){
 					fprintf(stderr, "Error: PositionEnd without Position on line %d of config file.\n", current_line);
-					_Valid = false;
+					m_valid = false;
 					fclose(cptr);
 					return;
 				}

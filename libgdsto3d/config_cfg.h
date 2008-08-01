@@ -45,27 +45,27 @@ class Position {
 public: 
 	PosType postype;
 	BoundaryPos boundarypos;
-	float XMod;
-	float YMod;
-	float ZMod;
+	float xmod;
+	float ymod;
+	float zmod;
 
 	Position() : postype(ptLight), boundarypos(bpCentre),
-		XMod(1.0), YMod(1.0), ZMod(1.0) { };
+		xmod(1.0), ymod(1.0), zmod(1.0) { };
 };
 
 class GDSConfig
 {
 private:
-	std::string _ProcessFile;
-	std::string _Font;
-	float _Ambient;
-	float _Scale;
-	bool _Valid;
+	std::string m_processfile;
+	std::string m_font;
+	float m_ambient;
+	float m_scale;
+	bool m_valid;
 
-	class Position _CameraPos;
-	class Position _LookAtPos;
-	vector<class Position *> _Lights;
-	class Position *_currentlight;
+	class Position m_camerapos;
+	class Position m_lookatpos;
+	vector<class Position *> m_lights;
+	class Position *m_currentlight;
 
 public:
 	GDSConfig(std::string filename="");
