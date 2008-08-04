@@ -31,7 +31,6 @@
 #include "gdsparse_pov.h"
 
 extern int verbose_output;
-bool decompose;
 
 void printusage()
 {
@@ -70,7 +69,7 @@ int main(int argc, char *argv[])
 	std::string topcell="";
 
 	verbose_output = 1;
-	decompose = false;
+	bool decompose = false;
 
 	if(argc>21){
 		fprintf(stderr, "Error: Invalid number of arguments.\n\n");
@@ -218,6 +217,9 @@ int main(int argc, char *argv[])
 		class GDSParse_pov *Parser = new class GDSParse_pov(config, process, bounding_output, camfile, generate_process);
 		if(!Parser->Parse(iptr)){
 			if(!generate_process){
+				if(decompose){
+					Parser->Decompose(decompose);
+				}
 				FILE *optr;
 				if(povfile != ""){
 					optr = fopen(povfile.c_str(), "wt");

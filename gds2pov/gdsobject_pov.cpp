@@ -28,7 +28,7 @@
 #include "gdsobject_pov.h"
 #include "gds2pov.h"
 
-GDSObject_pov::GDSObject_pov(std::string Name) : GDSObject(Name){
+GDSObject_pov::GDSObject_pov(std::string Name) : GDSObject(Name), m_decompose(false){
 }
 
 GDSObject_pov::~GDSObject_pov()
@@ -175,7 +175,7 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, std::string Font, float offx, f
 void GDSObject_pov::OutputPolygonToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PolygonItems.empty()){
-		if(decompose){
+		if(m_decompose){
 			DecomposePOVPolygons(fptr);
 		}else{
 			class GDSPolygon *polygon;
@@ -529,5 +529,11 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 		}
 
 	}
+}
+
+
+void GDSObject_pov::Decompose(bool value)
+{
+	m_decompose = value;
 }
 

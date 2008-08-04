@@ -27,11 +27,15 @@
 
 class GDSObject_pov : public GDSObject
 {
+private:
+	bool m_decompose;
+
+	void DecomposePOVPolygons(FILE *fptr);
 public:
 	GDSObject_pov(std::string Name);
 	~GDSObject_pov();
 
-	void DecomposePOVPolygons(FILE *fptr);
+	void Decompose(bool value);
 	virtual void OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputPathToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputPolygonToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);

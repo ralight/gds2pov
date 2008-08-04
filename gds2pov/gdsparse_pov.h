@@ -38,6 +38,8 @@ public:
 	class GDSObject *NewObject(std::string Name);
 	void OutputHeader();
 	void OutputFooter();
+
+	void Decompose(bool value);
 };
 
 #endif

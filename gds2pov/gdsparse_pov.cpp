@@ -210,3 +210,11 @@ void GDSParse_pov::OutputHeader()
 	}
 }
 
+
+void GDSParse_pov::Decompose(bool value)
+{
+	for(unsigned int i = 0; i < _Objects.size(); i++){
+		static_cast<GDSObject_pov*>(_Objects[i])->Decompose(value);
+	}
+}
+
