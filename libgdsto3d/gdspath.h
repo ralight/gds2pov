@@ -26,26 +26,26 @@
 class GDSPath
 {
 private:
-	int _Type;
-	float _Height;
-	float _Thickness;
-	unsigned int _Points;
-	float _Width;
-	float _BgnExtn;
-	float _EndExtn;
-	Point *_Coords;
-	Transform _Rotate;
-	struct ProcessLayer	*_Layer;
+	int m_type;
+	float m_height;
+	float m_thickness;
+	unsigned int m_points;
+	float m_width;
+	float m_bgnextn;
+	float m_endextn;
+	Point *m_coords;
+	Transform m_rotate;
+	struct ProcessLayer	*m_layer;
 
 public:
-	GDSPath(int PathType, float Height, float Thickness, unsigned int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *layer);
+	GDSPath(int pathtype, float height, float thickness, unsigned int points, float width, float bgnextn, float endextn, struct ProcessLayer *layer);
 	~GDSPath();
 
-	void AddPoint(unsigned int Index, float X, float Y);
-	void SetRotation(float X, float Y, float Z);
+	void AddPoint(unsigned int index, float x, float y);
+	void SetRotation(float x, float y, float z);
 
-	float GetXCoords(unsigned int Index);
-	float GetYCoords(unsigned int Index);
+	float GetXCoords(unsigned int index);
+	float GetYCoords(unsigned int index);
 	unsigned int GetPoints();
 
 	float GetHeight();

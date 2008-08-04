@@ -23,81 +23,84 @@
 #include "gdsobject.h"
 #include "gdspath.h"
 
-GDSPath::GDSPath(int Type, float Height, float Thickness, unsigned int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *Layer) :
-	_Type(Type), _Height(Height), _Thickness(Thickness), _Points(Points),
-	_Width(Width), _BgnExtn(BgnExtn), _EndExtn(EndExtn), _Layer(Layer)
+GDSPath::GDSPath(int type, float height, float thickness,
+				unsigned int points, float width,
+				float bgnextn, float endextn,
+				struct ProcessLayer *layer) :
+				m_type(type), m_height(height), m_thickness(thickness), m_points(points),
+				m_width(width), m_bgnextn(bgnextn), m_endextn(endextn), m_layer(layer)
 {
-	_Coords = new Point[Points];
+	m_coords = new Point[points];
 }
 
 GDSPath::~GDSPath()
 {
-	if(_Coords) delete [] _Coords;
+	if(m_coords) delete [] m_coords;
 }
 
-void GDSPath::AddPoint(unsigned int Index, float X, float Y)
+void GDSPath::AddPoint(unsigned int index, float x, float y)
 {
-	if(_Points >= Index){
-		_Coords[Index].x = X;
-		_Coords[Index].y = Y;
+	if(m_points >= index){
+		m_coords[index].x = x;
+		m_coords[index].y = y;
 	}
 }
 
 
-void GDSPath::SetRotation(float X, float Y, float Z)
+void GDSPath::SetRotation(float x, float y, float z)
 {
-	_Rotate.x = X;
-	_Rotate.y = Y;
-	_Rotate.z = Z;
+	m_rotate.x = x;
+	m_rotate.y = y;
+	m_rotate.z = z;
 }
 
-float GDSPath::GetXCoords(unsigned int Index)
+float GDSPath::GetXCoords(unsigned int index)
 {
-	return _Coords[Index].x;
+	return m_coords[index].x;
 }
 
-float GDSPath::GetYCoords(unsigned int Index)
+float GDSPath::GetYCoords(unsigned int index)
 {
-	return _Coords[Index].y;
+	return m_coords[index].y;
 }
 
 unsigned int GDSPath::GetPoints()
 {
-	return _Points;
+	return m_points;
 }
 
 float GDSPath::GetHeight()
 {
-	return _Height;
+	return m_height;
 }
 
 float GDSPath::GetThickness()
 {
-	return _Thickness;
+	return m_thickness;
 }
 
 float GDSPath::GetWidth()
 {
-	return _Width;
+	return m_width;
 }
 
 float GDSPath::GetBgnExtn()
 {
-	return _BgnExtn;
+	return m_bgnextn;
 }
 
 float GDSPath::GetEndExtn()
 {
-	return _EndExtn;
+	return m_endextn;
 }
 
 int GDSPath::GetType()
 {
-	return _Type;
+	return m_type;
 }
 
 struct ProcessLayer *GDSPath::GetLayer()
 {
-	return _Layer;
+	return m_layer;
 }
 
