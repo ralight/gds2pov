@@ -29,97 +29,77 @@
 
 extern int verbose_output;
 
-GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool generate_process)
+GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool generate_process) :
+	m_libname(""), m_topcellname(""),
+	m_currentlayer(-1), m_currentdatatype(-1),  m_currentwidth(0.0),
+	m_currentpathtype(0),
+	m_currenttexttype(0), m_currentpresentation(0),
+	m_textstring(""), m_currentstrans(0),
+	m_currentangle(0.0), m_currentmag(1.0),
+	m_currentbgnextn(0.0), m_currentendextn(0.0),
+	m_sname(""), m_arrayrows(0), m_arraycols(0),
+	m_units(0.0), m_angle(0.0),
+	m_iptr(NULL), m_optr(NULL),
+
+	m_process(process), m_config(config),
+	m_boundary(NULL),
+	m_recordlen(0),
+
+	m_bounding_output(false), m_use_outfile(false), m_allow_multiple_output(false),
+	m_output_children_first(false), m_generate_process(generate_process),
+
+	m_pathelements(0), m_boundaryelements(0), m_boxelements(0),
+	m_textelements(0), m_srefelements(0), m_arefelements(0),
+	m_currentobject(NULL)
 {
-	_iptr = NULL;
-	_optr = NULL;
-	_libname = "";
-	_sname = "";
-	_textstring = "";
-
-	_PathElements = 0;
-	_BoundaryElements = 0;
-	_BoxElements = 0;
-	_TextElements = 0;
-	_SRefElements = 0;
-	_ARefElements = 0;
-
-	_currentangle = 0.0;
-	_currentwidth = 0.0;
-	_currentstrans = 0;
-	_currentpathtype = 0;
-	_currentlayer = -1;
-	_currentdatatype = -1;
-	_currentmag = 1.0;
-	_currentbgnextn = 0.0;
-	_currentendextn = 0.0;
-	_currenttexttype = 0;
-	_currentpresentation = 0;
-//	_currentelement = 0;
-	_arrayrows = 0;
-	_arraycols = 0;
-	_angle = 0.0;
-	_units = 0.0;
-	_recordlen = 0;
-	_CurrentObject = NULL;
-
-	_bounding_output = false;
-	_use_outfile = false;
-	_allow_multiple_output = false;
-	_output_children_first = false;
-	_generate_process = generate_process;
-
-	_process = process;
-	_config = config;
 
 	for(int i=0; i<70; i++){
-		_unsupported[i] = false;
+		m_unsupported[i] = false;
 	}
 	for(int i=0; i<256; i++){
 		for(int j=0; j<256; j++){
-			_layer_warning[i][j] = false;
+			m_layer_warning[i][j] = false;
 		}
 	}
 
-	Boundary = NULL;
 }
 
 GDSParse::~GDSParse ()
 {
-	while(!_Objects.empty()){
-		delete _Objects[_Objects.size()-1];
-		_Objects.pop_back();
+	while(!m_objects.empty()){
+		delete m_objects[m_objects.size()-1];
+		m_objects.pop_back();
 	}
 
-	if(Boundary){
-		delete Boundary;
+	if(m_boundary){
+		delete m_boundary;
 	}
 }
 
 bool GDSParse::Parse(FILE *iptr)
 {
-	_iptr = iptr;
-	if(_iptr){
+	m_iptr = iptr;
+	if(m_iptr){
 		//DEBUG
 		//printf("GDSParse::Parse(%p)\n",iptr);
 
 		bool result = ParseFile();
 
-		v_printf(1, "\nSummary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tBoxes:\t\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
-			_PathElements, _BoundaryElements, _BoxElements, _TextElements, _SRefElements, _ARefElements);
+		v_printf(1, "\nSumary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tBoxes:\t\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
+			m_pathelements, m_boundaryelements, m_boxelements, m_textelements, m_srefelements, m_arefelements);
 
 		/* Assign objects to srefs and arefs */
 		/* FIXME - surely there is a better way than 3n^3 loop */
-		for(unsigned int i = 0; i < _Objects.size(); i++){
-			GDSObject *object = _Objects[i];
+		for(unsigned int i = 0; i < m_objects.size(); i++){
+			GDSObject *object = m_objects[i];
 			
 			for(unsigned int j = 0; j < object->GetSRefCount(); j++){
 				ASRefElement *sref = object->GetSRef(j);
 
 				if(sref){
-					for(unsigned int k = 0; k < _Objects.size(); k++){
-						if(sref->name == _Objects[k]->GetName()){
-							sref->object = _Objects[k];
+					for(unsigned int k = 0; k < m_objects.size(); k++){
+						if(sref->name == m_objects[k]->GetName()){
+							sref->object = m_objects[k];
 							break;
 						}
 					}
@@ -132,9 +112,9 @@ bool GDSParse::Parse(FILE *iptr)
 				ASRefElement *aref = object->GetARef(j);
 
 				if(aref){
-					for(unsigned int k = 0; k < _Objects.size(); k++){
-						if(aref->name == _Objects[k]->GetName()){
-							aref->object = _Objects[k];
+					for(unsigned int k = 0; k < m_objects.size(); k++){
+						if(aref->name == m_objects[k]->GetName()){
+							aref->object = m_objects[k];
 							break;
 						}
 					}
@@ -151,20 +131,20 @@ bool GDSParse::Parse(FILE *iptr)
 
 void GDSParse::Output(FILE *optr, std::string topcell)
 {
-	_topcellname = topcell;
+	m_topcellname = topcell;
 
-	if(_use_outfile){
-		_optr = optr;
+	if(m_use_outfile){
+		m_optr = optr;
 	}
-	if(_optr || !_use_outfile){
+	if(m_optr || !m_use_outfile){
 		OutputHeader();
 
-		if(!_bounding_output){
+		if(!m_bounding_output){
 			long objectid = 0;
 			if(topcell.length() > 0){
-				RecursiveOutput(GetObjectRef(topcell), _optr, 0.0, 0.0, &objectid);
+				RecursiveOutput(GetObjectRef(topcell), m_optr, 0.0, 0.0, &objectid);
 			}else{
-				RecursiveOutput(_Objects[0], _optr, 0.0, 0.0, &objectid);
+				RecursiveOutput(m_objects[0], m_optr, 0.0, 0.0, &objectid);
 			}
 		}
 
@@ -174,47 +154,47 @@ void GDSParse::Output(FILE *optr, std::string topcell)
 
 void GDSParse::SetOutputOptions(bool bounding_output, bool use_outfile, bool allow_multiple_output, bool output_children_first)
 {
-	_bounding_output = bounding_output;
-	_use_outfile = use_outfile;
-	_allow_multiple_output = allow_multiple_output;
-	_output_children_first = output_children_first;
+	m_bounding_output = bounding_output;
+	m_use_outfile = use_outfile;
+	m_allow_multiple_output = allow_multiple_output;
+	m_output_children_first = output_children_first;
 }
 
-void GDSParse::RecursiveOutput(class GDSObject *Object, FILE *_optr, float offx, float offy, long *objectid)
+void GDSParse::RecursiveOutput(class GDSObject *object, FILE *m_optr, float offx, float offy, long *objectid)
 {
-	if(!Object){
+	if(!object){
 		return;
 	}
 	
-	if(Object->GetIsOutput() && _allow_multiple_output == false){
+	if(object->GetIsOutput() && m_allow_multiple_output == false){
 		return;
 	}
 
-	if(_output_children_first && Object->HasASRef()){
+	if(m_output_children_first && object->HasASRef()){
 		GDSObject *child;
 
-		for(unsigned int i = 0; i < Object->GetSRefCount(); i++){
-			child = Object->GetSRef(i)->object;
-			if(child && (child != Object)){
-				RecursiveOutput(child, _optr, offx, offy, objectid);
+		for(unsigned int i = 0; i < object->GetSRefCount(); i++){
+			child = object->GetSRef(i)->object;
+			if(child && (child != object)){
+				RecursiveOutput(child, m_optr, offx, offy, objectid);
 			}
 		}
 
-		for(unsigned int i = 0; i < Object->GetARefCount(); i++){
-			child = Object->GetARef(i)->object;
-			if(child && (child != Object)){
-				RecursiveOutput(child, _optr, offx, offy, objectid);
+		for(unsigned int i = 0; i < object->GetARefCount(); i++){
+			child = object->GetARef(i)->object;
+			if(child && (child != object)){
+				RecursiveOutput(child, m_optr, offx, offy, objectid);
 			}
 		}
 
 	}
 
 	class ProcessLayer *layer = NULL;
-	if(_process){
-		layer = _process->GetLayer();
+	if(m_process){
+		layer = m_process->GetLayer();
 	}
 
-	Object->OutputToFile(_optr, _config->GetFont(), offx, offy, objectid, layer);
+	object->OutputToFile(m_optr, m_config->GetFont(), offx, offy, objectid, layer);
 }
 
 bool GDSParse::ParseFile()
@@ -223,16 +203,16 @@ bool GDSParse::ParseFile()
 	char *tempstr;
 	class ProcessLayer *layer;
 
-	if(!_iptr){
+	if(!m_iptr){
 		return -1;
 	}
 
-	fseek(_iptr, 0, SEEK_SET);
-	while(!feof(_iptr)){
-		_recordlen = GetTwoByteSignedInt();
-		fread(&recordtype, 1, 1, _iptr);
-		fread(&datatype, 1, 1, _iptr);
-		_recordlen -= 4;
+	fseek(m_iptr, 0, SEEK_SET);
+	while(!feof(m_iptr)){
+		m_recordlen = GetTwoByteSignedInt();
+		fread(&recordtype, 1, 1, m_iptr);
+		fread(&datatype, 1, 1, m_iptr);
+		m_recordlen -= 4;
 		switch(recordtype){
 			case rnHeader:
 				v_printf(2, "HEADER\n");
@@ -240,7 +220,7 @@ bool GDSParse::ParseFile()
 				break;
 			case rnBgnLib:
 				v_printf(2, "BGNLIB\n");
-				while(_recordlen){
+				while(m_recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
@@ -254,7 +234,7 @@ bool GDSParse::ParseFile()
 				break;
 			case rnEndLib:
 				v_printf(2, "ENDLIB\n");
-				fseek(_iptr, 0, SEEK_END);
+				fseek(m_iptr, 0, SEEK_END);
 				return 0;
 				break;
 			case rnEndStr:
@@ -266,7 +246,7 @@ bool GDSParse::ParseFile()
 				break;
 			case rnBgnStr:
 				v_printf(2, "BGNSTR\n");
-				while(_recordlen){
+				while(m_recordlen){
 					GetTwoByteSignedInt();
 				}
 				break;
@@ -276,54 +256,54 @@ bool GDSParse::ParseFile()
 				break;
 			case rnBoundary:
 				v_printf(2, "BOUNDARY ");
-				_currentelement = elBoundary;
+				m_currentelement = elBoundary;
 				break;
 			case rnPath:
 				v_printf(2, "PATH ");
-				_currentelement = elPath;
+				m_currentelement = elPath;
 				break;
 			case rnSRef:
 				v_printf(2, "SREF ");
-				_currentelement = elSRef;
+				m_currentelement = elSRef;
 				break;
 			case rnARef:
 				v_printf(2, "AREF ");
-				_currentelement = elARef;
+				m_currentelement = elARef;
 				break;
 			case rnText:
 				v_printf(2, "TEXT ");
-				_currentelement = elText;
+				m_currentelement = elText;
 				break;
 			case rnLayer:
-				_currentlayer = GetTwoByteSignedInt();
-				v_printf(2, "LAYER (%d)\n", _currentlayer);
+				m_currentlayer = GetTwoByteSignedInt();
+				v_printf(2, "LAYER (%d)\n", m_currentlayer);
 				break;
 			case rnDataType:
-				_currentdatatype = GetTwoByteSignedInt();
-				v_printf(2, "DATATYPE (%d)\n", _currentdatatype);
+				m_currentdatatype = GetTwoByteSignedInt();
+				v_printf(2, "DATATYPE (%d)\n", m_currentdatatype);
 				break;
 			case rnWidth:
-				_currentwidth = (float)(GetFourByteSignedInt()/2);
-				if(_currentwidth > 0){
-					_currentwidth *= _units;
+				m_currentwidth = (float)(GetFourByteSignedInt()/2);
+				if(m_currentwidth > 0){
+					m_currentwidth *= m_units;
 				}
-				v_printf(2, "WIDTH (%.3f)\n", _currentwidth*2);
+				v_printf(2, "WIDTH (%.3f)\n", m_currentwidth*2);
 				// Scale to a half to make width correct when adding and
 				// subtracting
 				break;
 			case rnXY:
 				v_printf(2, "XY ");
-				switch(_currentelement){
+				switch(m_currentelement){
 					case elBoundary:
-						_BoundaryElements++;
+						m_boundaryelements++;
 						ParseXYBoundary();
 						break;
 					case elBox:
-						_BoxElements++;
+						m_boxelements++;
 						ParseXYBoundary();
 						break;
 					case elPath:
-						_PathElements++;
+						m_pathelements++;
 						ParseXYPath();
 						break;
 					default:
@@ -332,72 +312,72 @@ bool GDSParse::ParseFile()
 				}
 				break;
 			case rnColRow:
-				_arraycols = GetTwoByteSignedInt();
-				_arrayrows = GetTwoByteSignedInt();
-				v_printf(2, "COLROW (Columns = %d Rows = %d)\n", _arraycols, _arrayrows);
+				m_arraycols = GetTwoByteSignedInt();
+				m_arrayrows = GetTwoByteSignedInt();
+				v_printf(2, "COLROW (Columns = %d Rows = %d)\n", m_arraycols, m_arrayrows);
 				break;
 			case rnSName:
 				ParseSName();
 				break;
 			case rnPathType:
-				if(!_unsupported[rnPathType]){
+				if(!m_unsupported[rnPathType]){
 					v_printf(1, "Incomplete support for GDS2 record type: PATHTYPE\n");
-					_unsupported[rnPathType] = true;
+					m_unsupported[rnPathType] = true;
 				}
 				//FIXME
-				_currentpathtype = GetTwoByteSignedInt();
-				v_printf(2, "PATHTYPE (%d)\n", _currentpathtype);
+				m_currentpathtype = GetTwoByteSignedInt();
+				v_printf(2, "PATHTYPE (%d)\n", m_currentpathtype);
 				break;
 			case rnTextType:
 				ReportUnsupported("TEXTTYPE", rnTextType);
-				_currenttexttype = GetTwoByteSignedInt();
-				v_printf(2, "TEXTTYPE (%d)\n", _currenttexttype);
+				m_currenttexttype = GetTwoByteSignedInt();
+				v_printf(2, "TEXTTYPE (%d)\n", m_currenttexttype);
 				break;
 			case rnPresentation:
-				_currentpresentation = GetTwoByteSignedInt();
-				v_printf(2, "PRESENTATION (%d)\n", _currentpresentation);
+				m_currentpresentation = GetTwoByteSignedInt();
+				v_printf(2, "PRESENTATION (%d)\n", m_currentpresentation);
 				break;
 			case rnString:
 				v_printf(2, "STRING ");
 				tempstr = GetAsciiString();
 				if(tempstr){
-					_textstring = tempstr;
+					m_textstring = tempstr;
 					delete [] tempstr;
 				}
 				/* Only set string if the current object is valid, the text string is valid 
 				 * and we are using a layer that is defined and being shown.
 				 */
-				if(_CurrentObject && _CurrentObject->GetCurrentText() && _textstring.length() > 0){
-					if(_process != NULL){
-						layer = _process->GetLayer(_currentlayer, _currentdatatype);
+				if(m_currentobject && m_currentobject->GetCurrentText() && m_textstring.length() > 0){
+					if(m_process != NULL){
+						layer = m_process->GetLayer(m_currentlayer, m_currentdatatype);
 						if(layer && layer->Show){
-							_CurrentObject->GetCurrentText()->SetString(_textstring);
+							m_currentobject->GetCurrentText()->SetString(m_textstring);
 						}
 					}else{
-						_CurrentObject->GetCurrentText()->SetString(_textstring);
+						m_currentobject->GetCurrentText()->SetString(m_textstring);
 					}
-					v_printf(2, "(\"%s\")", _textstring.c_str());
-				}else if(_textstring.length() == 0){
+					v_printf(2, "(\"%s\")", m_textstring.c_str());
+				}else if(m_textstring.length() == 0){
 					return -1;
 				}
 				v_printf(2, "\n");
 				break;
 			case rnSTrans:
-				if(!_unsupported[rnSTrans]){
+				if(!m_unsupported[rnSTrans]){
 					v_printf(1, "Incomplete support for GDS2 record type: STRANS\n");
-					_unsupported[rnSTrans] = true;
+					m_unsupported[rnSTrans] = true;
 				}
 				//FIXME
-				_currentstrans = GetTwoByteSignedInt();
-				v_printf(2, "STRANS (%d)\n", _currentstrans);
+				m_currentstrans = GetTwoByteSignedInt();
+				v_printf(2, "STRANS (%d)\n", m_currentstrans);
 				break;
 			case rnMag:
-				_currentmag = GetEightByteReal();
-				v_printf(2, "MAG (%f)\n", _currentmag);
+				m_currentmag = GetEightByteReal();
+				v_printf(2, "MAG (%f)\n", m_currentmag);
 				break;
 			case rnAngle:
-				_currentangle = (float)GetEightByteReal();
-				v_printf(2, "ANGLE (%f)\n", _currentangle);
+				m_currentangle = (float)GetEightByteReal();
+				v_printf(2, "ANGLE (%f)\n", m_currentangle);
 				break;
 /*			case rnUInteger:
 				break;
@@ -420,7 +400,7 @@ Not used in GDS2 spec	case rnUString:
 				ReportUnsupported("GENERATIONS", rnGenerations);
 				v_printf(2, "GENERATIONS\n");
 				v_printf(2, "\t");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, "\n");
@@ -444,7 +424,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnElFlags:
 				ReportUnsupported("ELFLAGS", rnElFlags);
 				v_printf(2, "ELFLAGS (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -452,7 +432,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnElKey:
 				ReportUnsupported("ELKEY", rnElKey);
 				v_printf(2, "ELKEY (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -460,7 +440,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnLinkType:
 				ReportUnsupported("LINKTYPE", rnLinkType);
 				v_printf(2, "LINKTYPE (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -468,7 +448,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnLinkKeys:
 				ReportUnsupported("LINKKEYS", rnLinkKeys);
 				v_printf(2, "LINKKEYS (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%ld ", GetFourByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -476,7 +456,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnNodeType:
 				ReportUnsupported("NODETYPE", rnNodeType);
 				v_printf(2, "NODETYPE (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -484,7 +464,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnPropAttr:
 				ReportUnsupported("PROPATTR", rnPropAttr);
 				v_printf(2, "PROPATTR (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -499,7 +479,7 @@ Not used in GDS2 spec	case rnUString:
 				ReportUnsupported("BOX", rnBox);
 				v_printf(2, "BOX\n");
 				/* Empty */
-				_currentelement = elBox;
+				m_currentelement = elBox;
 				break;
 			case rnBoxType:
 				ReportUnsupported("BOXTYPE", rnBoxType);
@@ -508,26 +488,26 @@ Not used in GDS2 spec	case rnUString:
 			case rnPlex:
 				ReportUnsupported("PLEX", rnPlex);
 				v_printf(2, "PLEX (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%ld ", GetFourByteSignedInt());
 				}
 				v_printf(2, ")\n");
 				break;
 			case rnBgnExtn:
 				ReportUnsupported("BGNEXTN", rnBgnExtn);
-				_currentbgnextn = _units * (float)GetFourByteSignedInt();
-				v_printf(2, "BGNEXTN (%f)\n", _currentbgnextn);
+				m_currentbgnextn = m_units * (float)GetFourByteSignedInt();
+				v_printf(2, "BGNEXTN (%f)\n", m_currentbgnextn);
 				break;
 			case rnEndExtn:
 				ReportUnsupported("ENDEXTN", rnEndExtn);
-				_currentendextn = _units * (float)GetFourByteSignedInt();
-				v_printf(2, "ENDEXTN (%ld)\n", _currentendextn);
+				m_currentendextn = m_units * (float)GetFourByteSignedInt();
+				v_printf(2, "ENDEXTN (%ld)\n", m_currentendextn);
 				break;
 			case rnTapeNum:
 				ReportUnsupported("TAPENUM", rnTapeNum);
 				v_printf(2, "TAPENUM\n");
 				v_printf(2, "\t");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, "\n");
@@ -536,7 +516,7 @@ Not used in GDS2 spec	case rnUString:
 				ReportUnsupported("TAPECODE", rnTapeCode);
 				v_printf(2, "TAPECODE\n");
 				v_printf(2, "\t");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, "\n");
@@ -544,7 +524,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnStrClass:
 				ReportUnsupported("STRCLASS", rnStrClass);
 				v_printf(2, "STRCLASS (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -557,7 +537,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnFormat:
 				ReportUnsupported("FORMAT", rnFormat);
 				v_printf(2, "FORMAT (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -576,7 +556,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnLibDirSize:
 				ReportUnsupported("LIBDIRSIZE", rnLibDirSize);
 				v_printf(2, "LIBDIRSIZE (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -590,7 +570,7 @@ Not used in GDS2 spec	case rnUString:
 			case rnLibSecur:
 				ReportUnsupported("LIBSECUR", rnLibSecur);
 				v_printf(2, "LIBSECUR (");
-				while(_recordlen){
+				while(m_recordlen){
 					v_printf(2, "%d ", GetTwoByteSignedInt());
 				}
 				v_printf(2, ")\n");
@@ -646,7 +626,7 @@ Not used in GDS2 spec	case rnUString:
 				/* Empty */
 				break;
 			default:
-				v_printf(1, "Unknown record type (%d) at position %ld.", recordtype, ftell(_iptr));
+				v_printf(1, "Unknown record type (%d) at position %ld.", recordtype, ftell(m_iptr));
 
 				return -1;
 				break;
@@ -667,8 +647,8 @@ void GDSParse::ParseLibName()
 {
 	char *str;
 	str = GetAsciiString();
-	_libname = str;
-	v_printf(2, " (\"%s\")\n", _libname.c_str());
+	m_libname = str;
+	v_printf(2, " (\"%s\")\n", m_libname.c_str());
 	delete [] str;
 }
 
@@ -678,22 +658,22 @@ void GDSParse::ParseSName()
 
 	char *str;
 	str = GetAsciiString();
-	_sname = str;
-	for(unsigned int i=0; i<_sname.length(); i++){
-		if(_sname[i] && (_sname[i] < 48 || _sname[i] > 57) && (_sname[i] < 65 || _sname[i] > 90) && (_sname[i] < 97 || _sname[i] > 122)){
-			_sname[i] = '_';
+	m_sname = str;
+	for(unsigned int i=0; i<m_sname.length(); i++){
+		if(m_sname[i] && (m_sname[i] < 48 || m_sname[i] > 57) && (m_sname[i] < 65 || m_sname[i] > 90) && (m_sname[i] < 97 || m_sname[i] > 122)){
+			m_sname[i] = '_';
 		}
 	}
-	v_printf(2, "(\"%s\")\n", _sname.c_str());
+	v_printf(2, "(\"%s\")\n", m_sname.c_str());
 	delete [] str;
 }
 
 void GDSParse::ParseUnits()
 {
 	double tmp;
-	_units = (float)GetEightByteReal() * _config->GetScale(); 
+	m_units = (float)GetEightByteReal() * m_config->GetScale(); 
 	tmp = GetEightByteReal();
-	v_printf(1, "DB units/user units = %g\nSize of DB units in metres = %g\nSize of user units in m = %g\n\n", 1/_units, tmp, tmp/_units);
+	v_printf(1, "DB units/user units = %g\nSize of DB units in metres = %g\nSize of user units in m = %g\n\n", 1/m_units, tmp, tmp/m_units);
 }
 
 void GDSParse::ParseStrName()
@@ -712,8 +692,8 @@ void GDSParse::ParseStrName()
 		// This calls our own NewObject function which is pure virtual so the end 
 		// user must define it. This means we can always add a unknown object as
 		// long as it inherits from GDSObject.
-		_Objects.push_back(NewObject(str));
-		_CurrentObject = _Objects[_Objects.size()-1];
+		m_objects.push_back(NewObject(str));
+		m_currentobject = m_objects[m_objects.size()-1];
 		delete [] str;
 	}
 	v_printf(2, "\n");
@@ -722,52 +702,52 @@ void GDSParse::ParseStrName()
 void GDSParse::ParseXYPath()
 {
 	float X, Y;
-	int points = _recordlen/8;
+	int points = m_recordlen/8;
 	int i;
 	class ProcessLayer *thislayer = NULL;
 
-	if(_process != NULL){
-		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
+	if(m_process != NULL){
+		thislayer = m_process->GetLayer(m_currentlayer, m_currentdatatype);
 
 		if(thislayer==NULL){
-			// _layer_warning only has fixed bounds at the moment.
+			// m_layer_warning only has fixed bounds at the moment.
 			// Not sure how to best make it dynamic.
 
-			if(!_generate_process){
-				if(_currentlayer == -1 || _currentdatatype == -1 || !_layer_warning[_currentlayer][_currentdatatype]){
-					v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+			if(!m_generate_process){
+				if(m_currentlayer == -1 || m_currentdatatype == -1 || !m_layer_warning[m_currentlayer][m_currentdatatype]){
+					v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", m_currentlayer, m_currentdatatype);
 					v_printf(1, "\tIgnoring this layer.\n");
-					_layer_warning[_currentlayer][_currentdatatype] = true;
+					m_layer_warning[m_currentlayer][m_currentdatatype] = true;
 				}
 			}else{
-				if(!_layer_warning[_currentlayer][_currentdatatype]){
-					_process->AddLayer(_currentlayer, _currentdatatype);
-					_layer_warning[_currentlayer][_currentdatatype] = true;
+				if(!m_layer_warning[m_currentlayer][m_currentdatatype]){
+					m_process->AddLayer(m_currentlayer, m_currentdatatype);
+					m_layer_warning[m_currentlayer][m_currentdatatype] = true;
 				}
 			}
-			while(_recordlen){
+			while(m_recordlen){
 				GetFourByteSignedInt();
 			}
-			_currentwidth = 0.0; // Always reset to default for paths in case width not specified
-			_currentpathtype = 0;
-			_currentangle = 0.0;
-			_currentdatatype = -1;
-			_currentmag = 1.0;
+			m_currentwidth = 0.0; // Always reset to default for paths in case width not specified
+			m_currentpathtype = 0;
+			m_currentangle = 0.0;
+			m_currentdatatype = -1;
+			m_currentmag = 1.0;
 			return;
 		}
 	}
 
-	if(_currentwidth){
+	if(m_currentwidth){
 		/* FIXME - need to check for -ve value and then not scale */
-		if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
-			_CurrentObject->AddPath(_currentpathtype, _units*thislayer->Height, _units*thislayer->Thickness, points, _currentwidth, _currentbgnextn, _currentendextn, thislayer);
+		if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
+			m_currentobject->AddPath(m_currentpathtype, m_units*thislayer->Height, m_units*thislayer->Thickness, points, m_currentwidth, m_currentbgnextn, m_currentendextn, thislayer);
 		}
 		for(i=0; i<points; i++){
-			X = _units * (float)GetFourByteSignedInt();
-			Y = _units * (float)GetFourByteSignedInt();
+			X = m_units * (float)GetFourByteSignedInt();
+			Y = m_units * (float)GetFourByteSignedInt();
 			v_printf(2, "(%.3f,%.3f) ", X, Y);
-			if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
-				_CurrentObject->GetCurrentPath()->AddPoint(i, X, Y);
+			if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
+				m_currentobject->GetCurrentPath()->AddPoint(i, X, Y);
 			}
 		}
 	}else{
@@ -777,13 +757,13 @@ void GDSParse::ParseXYPath()
 		}
 	}
 	v_printf(2, "\n");
-	_currentwidth = 0.0; // Always reset to default for paths in case width not specified
-	_currentpathtype = 0;
-	_currentangle = 0.0;
-	_currentdatatype = -1;
-	_currentmag = 1.0;
-	_currentbgnextn = 0.0;
-	_currentendextn = 0.0;
+	m_currentwidth = 0.0; // Always reset to default for paths in case width not specified
+	m_currentpathtype = 0;
+	m_currentangle = 0.0;
+	m_currentdatatype = -1;
+	m_currentmag = 1.0;
+	m_currentbgnextn = 0.0;
+	m_currentendextn = 0.0;
 }
 
 
@@ -791,67 +771,67 @@ void GDSParse::ParseXYBoundary()
 {
 	float X, Y;
 	float firstX=0.0, firstY=0.0;
-	int points = _recordlen/8;
+	int points = m_recordlen/8;
 	int i;
 	class ProcessLayer *thislayer = NULL;
 
-	if(_process != NULL){
-		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
+	if(m_process != NULL){
+		thislayer = m_process->GetLayer(m_currentlayer, m_currentdatatype);
 
 		if(thislayer==NULL){
-			if(!_generate_process){
-				if(_currentlayer == -1 || _currentdatatype == -1 || !_layer_warning[_currentlayer][_currentdatatype]){
-					v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+			if(!m_generate_process){
+				if(m_currentlayer == -1 || m_currentdatatype == -1 || !m_layer_warning[m_currentlayer][m_currentdatatype]){
+					v_printf(1, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", m_currentlayer, m_currentdatatype);
 					v_printf(1, "\tIgnoring this layer.\n");
-					_layer_warning[_currentlayer][_currentdatatype] = true;
+					m_layer_warning[m_currentlayer][m_currentdatatype] = true;
 				}
 			}else{
-				if(!_layer_warning[_currentlayer][_currentdatatype]){
-					_process->AddLayer(_currentlayer, _currentdatatype);
-					_layer_warning[_currentlayer][_currentdatatype] = true;
+				if(!m_layer_warning[m_currentlayer][m_currentdatatype]){
+					m_process->AddLayer(m_currentlayer, m_currentdatatype);
+					m_layer_warning[m_currentlayer][m_currentdatatype] = true;
 				}
 			}
-			while(_recordlen){
+			while(m_recordlen){
 				GetFourByteSignedInt();
 			}
-			_currentwidth = 0.0; // Always reset to default for paths in case width not specified
-			_currentpathtype = 0;
-			_currentangle = 0.0;
-			_currentdatatype = -1;
-			_currentmag = 1.0;
+			m_currentwidth = 0.0; // Always reset to default for paths in case width not specified
+			m_currentpathtype = 0;
+			m_currentangle = 0.0;
+			m_currentdatatype = -1;
+			m_currentmag = 1.0;
 			return;
 		}
 	}
 
-	if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
-		//FIXME - why was this points+1 ? _CurrentObject->AddPolygon(_units*thislayer->Height, _units*thislayer->Thickness, points+1, thislayer->Name);
-		_CurrentObject->AddPolygon(_units*thislayer->Height, _units*thislayer->Thickness, points, thislayer);
+	if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
+		//FIXME - why was this points+1 ? m_currentobject->AddPolygon(m_units*thislayer->Height, m_units*thislayer->Thickness, points+1, thislayer->Name);
+		m_currentobject->AddPolygon(m_units*thislayer->Height, m_units*thislayer->Thickness, points, thislayer);
 	}
 
 	for(i=0; i<points; i++){
-		X = _units * (float)GetFourByteSignedInt();
-		Y = _units * (float)GetFourByteSignedInt();
+		X = m_units * (float)GetFourByteSignedInt();
+		Y = m_units * (float)GetFourByteSignedInt();
 		v_printf(2, "(%.3f,%.3f) ", X, Y);
 		if(i==0){
 			firstX = X;
 			firstY = Y;
 		}
-		if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
-			_CurrentObject->GetCurrentPolygon()->AddPoint(i, X, Y);
+		if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
+			m_currentobject->GetCurrentPolygon()->AddPoint(i, X, Y);
 		}
 	}
 	v_printf(2, "\n");
-	if(thislayer && thislayer->Thickness && thislayer->Show && _CurrentObject){
-		_CurrentObject->GetCurrentPolygon()->AddPoint(i, firstX, firstY);
-		//_CurrentObject->GetCurrentPolygon()->SetColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
+	if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
+		m_currentobject->GetCurrentPolygon()->AddPoint(i, firstX, firstY);
+		//m_currentobject->GetCurrentPolygon()->SetColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
 	}
-	_currentwidth = 0.0; // Always reset to default for paths in case width not specified
-	_currentpathtype = 0;
-	_currentangle = 0.0;
-	_currentdatatype = -1;
-	_currentmag = 1.0;
-	_currentbgnextn = 0.0;
-	_currentendextn = 0.0;
+	m_currentwidth = 0.0; // Always reset to default for paths in case width not specified
+	m_currentpathtype = 0;
+	m_currentangle = 0.0;
+	m_currentdatatype = -1;
+	m_currentmag = 1.0;
+	m_currentbgnextn = 0.0;
+	m_currentendextn = 0.0;
 }
 
 void GDSParse::ParseXY()
@@ -861,108 +841,108 @@ void GDSParse::ParseXY()
 	class ProcessLayer *thislayer = NULL;
 	bool Flipped;
 
-	if(_process != NULL){
-		thislayer = _process->GetLayer(_currentlayer, _currentdatatype);
+	if(m_process != NULL){
+		thislayer = m_process->GetLayer(m_currentlayer, m_currentdatatype);
 	}
-	Flipped = ((u_int16_t)(_currentstrans & 0x8000) == (u_int16_t)0x8000) ? true : false;
+	Flipped = ((u_int16_t)(m_currentstrans & 0x8000) == (u_int16_t)0x8000) ? true : false;
 
-	switch(_currentelement){
+	switch(m_currentelement){
 		case elSRef:
-			_SRefElements++;
-			X = _units * (float)GetFourByteSignedInt();
-			Y = _units * (float)GetFourByteSignedInt();
+			m_srefelements++;
+			X = m_units * (float)GetFourByteSignedInt();
+			Y = m_units * (float)GetFourByteSignedInt();
 			v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
-			if(_CurrentObject){
-				_CurrentObject->AddSRef(_sname, X, Y, Flipped, _currentmag);
-				if(_currentangle){
-					_CurrentObject->SetSRefRotation(0, -_currentangle, 0);
+			if(m_currentobject){
+				m_currentobject->AddSRef(m_sname, X, Y, Flipped, m_currentmag);
+				if(m_currentangle){
+					m_currentobject->SetSRefRotation(0, -m_currentangle, 0);
 				}
 			}
 			break;
 
 		case elARef:
-			_ARefElements++;
-			firstX = _units * (float)GetFourByteSignedInt();
-			firstY = _units * (float)GetFourByteSignedInt();
-			secondX = _units * (float)GetFourByteSignedInt();
-			secondY = _units * (float)GetFourByteSignedInt();
-			X = _units * (float)GetFourByteSignedInt();
-			Y = _units * (float)GetFourByteSignedInt();
+			m_arefelements++;
+			firstX = m_units * (float)GetFourByteSignedInt();
+			firstY = m_units * (float)GetFourByteSignedInt();
+			secondX = m_units * (float)GetFourByteSignedInt();
+			secondY = m_units * (float)GetFourByteSignedInt();
+			X = m_units * (float)GetFourByteSignedInt();
+			Y = m_units * (float)GetFourByteSignedInt();
 			v_printf(2, "(%.3f,%.3f) ", firstX, firstY);
 			v_printf(2, "(%.3f,%.3f) ", secondX, secondY);
 			v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
-			if(_CurrentObject){
-				_CurrentObject->AddARef(_sname, firstX, firstY, secondX, secondY, X, Y, _arraycols, _arrayrows, Flipped, _currentmag);
-				if(_currentangle){
-					_CurrentObject->SetARefRotation(0, -_currentangle, 0);
+			if(m_currentobject){
+				m_currentobject->AddARef(m_sname, firstX, firstY, secondX, secondY, X, Y, m_arraycols, m_arrayrows, Flipped, m_currentmag);
+				if(m_currentangle){
+					m_currentobject->SetARefRotation(0, -m_currentangle, 0);
 				}
 			}
 			break;
 
 		case elText:
-			_TextElements++;
+			m_textelements++;
 
 			if(thislayer==NULL){
-				if(!_generate_process){
-					v_printf(2, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", _currentlayer, _currentdatatype);
+				if(!m_generate_process){
+					v_printf(2, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", m_currentlayer, m_currentdatatype);
 					v_printf(2, "\tIgnoring this string.\n");
 				}else{
-					if(!_layer_warning[_currentlayer][_currentdatatype]){
-						_process->AddLayer(_currentlayer, _currentdatatype);
-						_layer_warning[_currentlayer][_currentdatatype] = true;
+					if(!m_layer_warning[m_currentlayer][m_currentdatatype]){
+						m_process->AddLayer(m_currentlayer, m_currentdatatype);
+						m_layer_warning[m_currentlayer][m_currentdatatype] = true;
 					}
 				}
-				while(_recordlen){
+				while(m_recordlen){
 					GetFourByteSignedInt();
 				}
-				_currentwidth = 0.0; // Always reset to default for paths in case width not specified
-				_currentpathtype = 0;
-				_currentangle = 0.0;
-				_currentdatatype = 0;
-				_currentmag = 1.0;
+				m_currentwidth = 0.0; // Always reset to default for paths in case width not specified
+				m_currentpathtype = 0;
+				m_currentangle = 0.0;
+				m_currentdatatype = 0;
+				m_currentmag = 1.0;
 				return;
 			}
 
-			X = _units * (float)GetFourByteSignedInt();
-			Y = _units * (float)GetFourByteSignedInt();
+			X = m_units * (float)GetFourByteSignedInt();
+			Y = m_units * (float)GetFourByteSignedInt();
 			v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
-			if(_CurrentObject && _CurrentObject->GetCurrentText()){
+			if(m_currentobject && m_currentobject->GetCurrentText()){
 				int vert_just, horiz_just;
 
-				vert_just = (((((unsigned long)_currentpresentation & 0x8 ) == (unsigned long)0x8 ) ? 2 : 0) + (((((unsigned long)_currentpresentation & 0x4 ) == (unsigned long)0x4 ) ? 1 : 0)));
-				horiz_just = (((((unsigned long)_currentpresentation & 0x2 ) == (unsigned long)0x2 ) ? 2 : 0) + (((((unsigned long)_currentpresentation & 0x1 ) == (unsigned long)0x1 ) ? 1 : 0)));
+				vert_just = (((((unsigned long)m_currentpresentation & 0x8 ) == (unsigned long)0x8 ) ? 2 : 0) + (((((unsigned long)m_currentpresentation & 0x4 ) == (unsigned long)0x4 ) ? 1 : 0)));
+				horiz_just = (((((unsigned long)m_currentpresentation & 0x2 ) == (unsigned long)0x2 ) ? 2 : 0) + (((((unsigned long)m_currentpresentation & 0x1 ) == (unsigned long)0x1 ) ? 1 : 0)));
 
-				_CurrentObject->AddText(X, Y, _units*thislayer->Height, Flipped, _currentmag, vert_just, horiz_just, thislayer);
-				if(_currentangle){
-					_CurrentObject->GetCurrentText()->SetRotation(0.0, -_currentangle, 0.0);
+				m_currentobject->AddText(X, Y, m_units*thislayer->Height, Flipped, m_currentmag, vert_just, horiz_just, thislayer);
+				if(m_currentangle){
+					m_currentobject->GetCurrentText()->SetRotation(0.0, -m_currentangle, 0.0);
 				}
 			}
 			break;
 		default:
-			while(_recordlen){
+			while(m_recordlen){
 				GetFourByteSignedInt();
 			}
 			break;
 	}
-	_currentwidth = 0.0; // Always reset to default for paths in case width not specified
-	_currentpathtype = 0;
-	_currentangle = 0.0;
-	_currentdatatype = -1;
-	_currentmag = 1.0;
-	_currentpresentation = 0;
+	m_currentwidth = 0.0; // Always reset to default for paths in case width not specified
+	m_currentpathtype = 0;
+	m_currentangle = 0.0;
+	m_currentdatatype = -1;
+	m_currentmag = 1.0;
+	m_currentpresentation = 0;
 }
 
 short GDSParse::GetBitArray()
 {
 	byte byte1;
 
-	fread(&byte1, 1, 1, _iptr);
-	fread(&byte1, 1, 1, _iptr);
+	fread(&byte1, 1, 1, m_iptr);
+	fread(&byte1, 1, 1, m_iptr);
 
-	_recordlen-=2;
+	m_recordlen-=2;
 	return 0;
 }
 
@@ -974,7 +954,7 @@ double GDSParse::GetEightByteReal()
 	double exponent;
 	double mant;
 
-	fread(&value, 1, 1, _iptr);
+	fread(&value, 1, 1, m_iptr);
 	if(value & 128){
 		value -= 128;
 		sign = -1.0;
@@ -983,13 +963,13 @@ double GDSParse::GetEightByteReal()
 	exponent -= 64.0;
 	mant=0.0;
 
-	fread(&b2, 1, 1, _iptr);
-	fread(&b3, 1, 1, _iptr);
-	fread(&b4, 1, 1, _iptr);
-	fread(&b5, 1, 1, _iptr);
-	fread(&b6, 1, 1, _iptr);
-	fread(&b7, 1, 1, _iptr);
-	fread(&b8, 1, 1, _iptr);
+	fread(&b2, 1, 1, m_iptr);
+	fread(&b3, 1, 1, m_iptr);
+	fread(&b4, 1, 1, m_iptr);
+	fread(&b5, 1, 1, m_iptr);
+	fread(&b6, 1, 1, m_iptr);
+	fread(&b7, 1, 1, m_iptr);
+	fread(&b8, 1, 1, m_iptr);
 
 	mant += b8;
 	mant /= 256.0;
@@ -1006,7 +986,7 @@ double GDSParse::GetEightByteReal()
 	mant += b2;
 	mant /= 256.0;
 
-	_recordlen-=8;
+	m_recordlen-=8;
 
 	return sign*(mant*pow(16.0,exponent));
 }
@@ -1014,9 +994,9 @@ double GDSParse::GetEightByteReal()
 int32_t GDSParse::GetFourByteSignedInt()
 {
 	int32_t value;
-	fread(&value, 4, 1, _iptr);
+	fread(&value, 4, 1, m_iptr);
 	
-	_recordlen-=4;
+	m_recordlen-=4;
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 	return endian_swap_long(value);
@@ -1029,9 +1009,9 @@ int16_t GDSParse::GetTwoByteSignedInt()
 {
 	int16_t value;
 
-	fread(&value, 2, 1, _iptr);
+	fread(&value, 2, 1, m_iptr);
 
-	_recordlen-=2;
+	m_recordlen-=2;
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 	return endian_swap_short(value);
@@ -1044,25 +1024,25 @@ char *GDSParse::GetAsciiString()
 {
 	char *str=NULL;
 	
-	if(_recordlen>0){
-		_recordlen += _recordlen%2; /* Make sure length is even */
-		str = new char[_recordlen+1];
+	if(m_recordlen>0){
+		m_recordlen += m_recordlen%2; /* Make sure length is even */
+		str = new char[m_recordlen+1];
 		if(!str){
-			fprintf(stderr, "Unable to allocate memory for ascii string (%d)\n", _recordlen);
+			fprintf(stderr, "Unable to allocate memory for ascii string (%d)\n", m_recordlen);
 			return NULL;
 		}
-		fread(str, 1, _recordlen, _iptr);
-		str[_recordlen] = 0;
-		_recordlen = 0;
+		fread(str, 1, m_recordlen, m_iptr);
+		str[m_recordlen] = 0;
+		m_recordlen = 0;
 	}
 	return str;
 }
 
-void GDSParse::ReportUnsupported(std::string Name, enum RecordNumbers rn)
+void GDSParse::ReportUnsupported(std::string name, enum RecordNumbers rn)
 {
-	if(!_unsupported[rn]){
-		v_printf(1, "Unsupported GDS2 record type: %s\n", Name.c_str());
-		_unsupported[rn] = true;
+	if(!m_unsupported[rn]){
+		v_printf(1, "Unsupported GDS2 record type: %s\n", name.c_str());
+		m_unsupported[rn] = true;
 	}
 
 }
@@ -1070,38 +1050,38 @@ void GDSParse::ReportUnsupported(std::string Name, enum RecordNumbers rn)
 
 struct _Boundary *GDSParse::GetBoundary()
 {
-	if(!Boundary){
-		Boundary = new struct _Boundary;
+	if(!m_boundary){
+		m_boundary = new struct _Boundary;
 	}
 
-	Boundary->xmax = Boundary->ymax = -10000000.0;
-	Boundary->xmin = Boundary->ymin =  10000000.0;
+	m_boundary->xmax = m_boundary->ymax = -10000000.0;
+	m_boundary->xmin = m_boundary->ymin =  10000000.0;
 
-	for(unsigned int i = 0; i < _Objects.size(); i++){
-		struct _Boundary *object_bound = _Objects[i]->GetBoundary();
+	for(unsigned int i = 0; i < m_objects.size(); i++){
+		struct _Boundary *object_bound = m_objects[i]->GetBoundary();
 
-		if(object_bound->xmax > Boundary->xmax){
-			Boundary->xmax = object_bound->xmax;
+		if(object_bound->xmax > m_boundary->xmax){
+			m_boundary->xmax = object_bound->xmax;
 		}
-		if(object_bound->xmin < Boundary->xmin){
-			Boundary->xmin = object_bound->xmin;
+		if(object_bound->xmin < m_boundary->xmin){
+			m_boundary->xmin = object_bound->xmin;
 		}
-		if(object_bound->ymax > Boundary->ymax){
-			Boundary->ymax = object_bound->ymax;
+		if(object_bound->ymax > m_boundary->ymax){
+			m_boundary->ymax = object_bound->ymax;
 		}
-		if(object_bound->ymin < Boundary->ymin){
-			Boundary->ymin = object_bound->ymin;
+		if(object_bound->ymin < m_boundary->ymin){
+			m_boundary->ymin = object_bound->ymin;
 		}
 	}
-	return Boundary;
+	return m_boundary;
 }
 
-class GDSObject *GDSParse::GetObjectRef(std::string Name)
+class GDSObject *GDSParse::GetObjectRef(std::string name)
 {
-	if(!_Objects.empty() && Name.length() > 0){	
-		for(unsigned int i = 0; i < _Objects.size(); i++){
-			if(Name == _Objects[i]->GetName()){
-				return _Objects[i];
+	if(!m_objects.empty() && name.length() > 0){	
+		for(unsigned int i = 0; i < m_objects.size(); i++){
+			if(name == m_objects[i]->GetName()){
+				return m_objects[i];
 			}
 		}
 	}

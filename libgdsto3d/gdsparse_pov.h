@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef GDSPARSE_POV_H
-#define GDSPARSE_POV_H
+#ifndef _GDSPARSE_POV_H_
+#define _GDSPARSE_POV_H_
 
 #include <string>
 
@@ -30,12 +30,12 @@
 class GDSParse_pov : public GDSParse
 {
 private:
-	std::string _camfile;
+	std::string m_camfile;
 public:
 	GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, std::string camfile, bool generate_process);
 	~GDSParse_pov ();
 
-	class GDSObject *NewObject(std::string Name);
+	class GDSObject *NewObject(std::string name);
 	void OutputHeader();
 	void OutputFooter();
 

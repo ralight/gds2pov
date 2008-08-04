@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef GDSPARSE_SVG_H
-#define GDSPARSE_SVG_H
+#ifndef _GDSPARSE_SVG_H_
+#define _GDSPARSE_SVG_H_
 
 #include <string>
 
@@ -30,13 +30,13 @@
 class GDSParse_svg : public GDSParse
 {
 private:
-	float _scale;
+	float m_scale;
 
 public:
 	GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	~GDSParse_svg ();
 
-	class GDSObject *NewObject(std::string Name);
+	class GDSObject *NewObject(std::string name);
 	void OutputHeader();
 	void OutputFooter();
 };

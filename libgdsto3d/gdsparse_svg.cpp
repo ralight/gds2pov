@@ -38,77 +38,81 @@
 
 extern int verbose_output;
 
-GDSParse_svg::GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool generate_process) : GDSParse(config, process, generate_process)
+GDSParse_svg::GDSParse_svg(class GDSConfig *config, class GDSProcess *process, bool generate_process) :
+		GDSParse(config, process, generate_process),
+		m_scale(100.0)
 {
-	_config = config;
-	_scale = 100.0;
-	_generate_process = generate_process;
 	// FIXME - check multiple output and output children first
-	SetOutputOptions(false, true, false, true);
+	m_bounding_output = false;
+	m_use_outfile = true;
+	m_allow_multiple_output = false;
+	m_output_children_first = true;
 }
 
 GDSParse_svg::~GDSParse_svg ()
 {
 }
 
-class GDSObject *GDSParse_svg::NewObject(std::string Name)
+class GDSObject *GDSParse_svg::NewObject(std::string name)
 {
-	return new class GDSObject_svg(Name);
+	return new class GDSObject_svg(name);
 }
 
 void GDSParse_svg::OutputFooter()
 {
-	if(_optr && !_Objects.empty()){
-		struct _Boundary *Boundary = GetBoundary();
+	if(m_optr && !m_objects.empty()){
+		struct _Boundary *boundary = GetBoundary();
 		
-		fprintf(_optr, "\t</defs>\n");
-		if(_topcellname.length() > 0){
-			fprintf(_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%%\" height=\"100%%\" xlink:href=\"#%s\"/>\n", -_scale*Boundary->xmin/2, -_scale*Boundary->ymin/2, _topcellname.c_str());
+		fprintf(m_optr, "\t</defs>\n");
+		if(m_topcellname.length() > 0){
+			fprintf(m_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%%\" height=\"100%%\" xlink:href=\"#%s\"/>\n",
+					-m_scale*boundary->xmin/2, -m_scale*boundary->ymin/2, m_topcellname.c_str());
 		}else{
-			if(_Objects[0]){
-				fprintf(_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%%\" height=\"100%%\" xlink:href=\"#%s\"/>\n", -_scale*Boundary->xmin/2, -_scale*Boundary->ymin/2, _Objects[0]->GetName().c_str());
+			if(m_objects[0]){
+				fprintf(m_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%%\" height=\"100%%\" xlink:href=\"#%s\"/>\n",
+						-m_scale*boundary->xmin/2, -m_scale*boundary->ymin/2, m_objects[0]->GetName().c_str());
 		}else{
 			}
 		}
-		fprintf(_optr, "</svg>");
+		fprintf(m_optr, "</svg>");
 	}
 }
 
 void GDSParse_svg::OutputHeader()
 {
-	if(_optr && !_Objects.empty()){
-		struct _Boundary *Boundary = GetBoundary();
-		float width = (Boundary->xmax - Boundary->xmin);
-		float height = (Boundary->ymax - Boundary->ymin);
-		GDSObject_svg *obj;
+	if(m_optr && !m_objects.empty()){
+		struct _Boundary *boundary = GetBoundary();
+		float width = (boundary->xmax - boundary->xmin);
+		float height = (boundary->ymax - boundary->ymin);
 
-		for(unsigned int i = 0; i < _Objects.size(); i++){
-			/* FIXME - use c++ style casts */
-			obj = (GDSObject_svg *)_Objects[i];
-			obj->SetScale(_scale);
+		for(unsigned int i = 0; i < m_objects.size(); i++){
+			GDSObject_svg *obj = static_cast<GDSObject_svg*>(m_objects[i]);
+			obj->SetScale(m_scale);
 		}
 
-		fprintf(_optr, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
-		fprintf(_optr, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
+		fprintf(m_optr, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
+		fprintf(m_optr, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 
-		fprintf(_optr, "<svg width=\"%.2f\" height=\"%.2f\" viewBox=\"0 0 %.2f %.2f\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n", width*20, height*20, width*_scale, height*_scale);
+		fprintf(m_optr, "<svg width=\"%.2f\" height=\"%.2f\" viewBox=\"0 0 %.2f %.2f\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n",
+				width*20, height*20, width*m_scale, height*m_scale);
 
 		/* Output layer texture information */
 
-		class ProcessLayer *firstlayer;
-		fprintf(_optr, "\t<style>\n");
-		for(int i=0; i < _process->LayerCount(); i++){
-			firstlayer = _process->GetLayer(i);
-			if(firstlayer->Show){
-				fprintf(_optr, "\t\t.%s { fill: #%02x%02x%02x; opacity:0.75; }\n", firstlayer->Name.c_str(), (int)(255*firstlayer->Red), (int)(255*firstlayer->Green), (int)(255*firstlayer->Blue));
+		class ProcessLayer *layer;
+		fprintf(m_optr, "\t<style>\n");
+		for(int i = 0; i < m_process->LayerCount(); i++){
+			layer = m_process->GetLayer(i);
+			if(layer->Show){
+				fprintf(m_optr, "\t\t.%s { fill: #%02x%02x%02x; opacity:0.75; }\n",
+						layer->Name.c_str(), (int)(255*layer->Red), (int)(255*layer->Green), (int)(255*layer->Blue));
 			}
 		}
-		fprintf(_optr, "\t</style>\n");
+		fprintf(m_optr, "\t</style>\n");
 
 		/* Finish styles */
 
-		fprintf(_optr, "\t<title></title>");
-		fprintf(_optr, "\t<desc></desc>\n");
+		fprintf(m_optr, "\t<title></title>");
+		fprintf(m_optr, "\t<desc></desc>\n");
 
 		float distance;
 		if(width/2 > height/2){
@@ -117,7 +121,7 @@ void GDSParse_svg::OutputHeader()
 			distance = height * 1.8/2;
 		}
 
-		fprintf(_optr, "\t<defs>\n");
+		fprintf(m_optr, "\t<defs>\n");
 
 	}
 }

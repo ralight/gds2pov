@@ -52,41 +52,41 @@ typedef enum{
 class GDSParse
 {
 protected:
-	std::string _libname;
-	std::string _topcellname;
+	std::string m_libname;
+	std::string m_topcellname;
 
-	int16_t _currentlayer;
-	float _currentwidth;
-	int16_t _currentpathtype;
-	gds_element_type _currentelement;
-	int16_t _currenttexttype;
-	int16_t _currentpresentation;
-	std::string _textstring;
-	int16_t _currentstrans;
-	float _currentangle;
-	int16_t _currentdatatype;
-	float _currentmag;
-	float _currentbgnextn;
-	float _currentendextn;
+	int16_t m_currentlayer;
+	int16_t m_currentdatatype;
+	float m_currentwidth;
+	int16_t m_currentpathtype;
+	gds_element_type m_currentelement;
+	int16_t m_currenttexttype;
+	int16_t m_currentpresentation;
+	std::string m_textstring;
+	int16_t m_currentstrans;
+	float m_currentangle;
+	float m_currentmag;
+	float m_currentbgnextn;
+	float m_currentendextn;
 
-	std::string _sname;
-	int16_t _arrayrows, _arraycols;
-	float _units;
-	float _angle;
-	FILE *_iptr;
-	FILE *_optr;
-	class GDSProcess *_process;
-	class GDSConfig	 *_config;
+	std::string m_sname;
+	int16_t m_arrayrows, m_arraycols;
+	float m_units;
+	float m_angle;
+	FILE *m_iptr;
+	FILE *m_optr;
+	class GDSProcess *m_process;
+	class GDSConfig	 *m_config;
 	
-	struct _Boundary *Boundary;
-	int16_t _recordlen;
+	struct _Boundary *m_boundary;
+	int16_t m_recordlen;
 
 	/* Output options */
-	bool _allow_multiple_output;
-	bool _output_children_first;
-	bool _bounding_output;
-	bool _use_outfile;
-	bool _generate_process;
+	bool m_bounding_output;
+	bool m_use_outfile;
+	bool m_allow_multiple_output;
+	bool m_output_children_first;
+	bool m_generate_process;
 
 	/*
 	** Both of these variables have fixed bounds because
@@ -98,20 +98,19 @@ protected:
 	** the way they are stored (2 byte int). It might be worth
 	** checking if they are greater than 255
 	*/
-	bool _unsupported[70];
-	bool _layer_warning[256][256];
+	bool m_unsupported[70];
+	bool m_layer_warning[256][256];
 
-	long _PathElements;
-	long _BoundaryElements;
-	long _BoxElements;
-	long _TextElements;
-	long _SRefElements;
-	long _ARefElements;
+	long m_pathelements;
+	long m_boundaryelements;
+	long m_boxelements;
+	long m_textelements;
+	long m_srefelements;
+	long m_arefelements;
  
-	vector<class GDSObject*> _Objects;
-	class GDSObject *_CurrentObject;
+	vector<class GDSObject*> m_objects;
+	class GDSObject *m_currentobject;
 
-	/* gds_parse.h functions */
 	void ParseHeader();
 	void ParseLibName();
 	void ParseSName();
@@ -133,7 +132,7 @@ protected:
 	int16_t GetTwoByteSignedInt();
 	char *GetAsciiString();
 
-	void ReportUnsupported(std::string Name, enum RecordNumbers rn);
+	void ReportUnsupported(std::string name, enum RecordNumbers rn);
 	
 	bool ParseFile();
 	struct _Boundary *GetBoundary();
@@ -143,8 +142,8 @@ protected:
 	virtual void OutputFooter() = 0;
 	/* End abstract functions */
 
-	void RecursiveOutput(class GDSObject *Object, FILE *optr, float offx, float offy, long *objectid);
-	class GDSObject *GetObjectRef(std::string Name);
+	void RecursiveOutput(class GDSObject *object, FILE *optr, float offx, float offy, long *objectid);
+	class GDSObject *GetObjectRef(std::string name);
 public:
 	GDSParse (class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	virtual ~GDSParse ();
@@ -152,7 +151,7 @@ public:
 	void SetOutputOptions(bool bounding_output, bool use_outfile, bool allow_multiple_output, bool output_children_first);
 	bool Parse(FILE *iptr);
 	void Output(FILE *optr, std::string topcell);
-	virtual class GDSObject *NewObject(std::string Name) = 0;
+	virtual class GDSObject *NewObject(std::string name) = 0;
 };
 
 #endif
