@@ -152,14 +152,6 @@ void GDSParse::Output(FILE *optr, std::string topcell)
 	}
 }
 
-void GDSParse::SetOutputOptions(bool bounding_output, bool use_outfile, bool allow_multiple_output, bool output_children_first)
-{
-	m_bounding_output = bounding_output;
-	m_use_outfile = use_outfile;
-	m_allow_multiple_output = allow_multiple_output;
-	m_output_children_first = output_children_first;
-}
-
 void GDSParse::RecursiveOutput(class GDSObject *object, FILE *m_optr, float offx, float offy, long *objectid)
 {
 	if(!object){

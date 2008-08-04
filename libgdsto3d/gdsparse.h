@@ -148,7 +148,6 @@ public:
 	GDSParse (class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	virtual ~GDSParse ();
 
-	void SetOutputOptions(bool bounding_output, bool use_outfile, bool allow_multiple_output, bool output_children_first);
 	bool Parse(FILE *iptr);
 	void Output(FILE *optr, std::string topcell);
 	virtual class GDSObject *NewObject(std::string name) = 0;
