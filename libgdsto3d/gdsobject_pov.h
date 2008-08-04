@@ -32,7 +32,7 @@ private:
 
 	void DecomposePOVPolygons(FILE *fptr);
 public:
-	GDSObject_pov(std::string Name);
+	GDSObject_pov(std::string name);
 	~GDSObject_pov();
 
 	void Decompose(bool value);

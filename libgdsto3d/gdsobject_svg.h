@@ -28,10 +28,9 @@
 class GDSObject_svg : public GDSObject
 {
 private:
-	float _scale;
-	float _oheight;
+	float m_scale;
 public:
-	GDSObject_svg(std::string Name);
+	GDSObject_svg(std::string name);
 	~GDSObject_svg();
 
 	void SetScale(float scale);
@@ -42,7 +41,6 @@ public:
 	void OutputTextToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputSRefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
 	void OutputARefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
-
 };
 
 #endif

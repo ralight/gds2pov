@@ -27,7 +27,7 @@
 #include "gds_globals.h" //FIXME - this should be removed
 #include "gdsobject_pov.h"
 
-GDSObject_pov::GDSObject_pov(std::string Name) : GDSObject(Name), m_decompose(false){
+GDSObject_pov::GDSObject_pov(std::string name) : GDSObject(name), m_decompose(false){
 }
 
 GDSObject_pov::~GDSObject_pov()
@@ -36,13 +36,13 @@ GDSObject_pov::~GDSObject_pov()
 
 void GDSObject_pov::OutputPathToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	if(!PathItems.empty()){
+	if(!m_paths.empty()){
 		float angleX, angleY;
 
 		class GDSPath *path;
 
-		for(unsigned long i=0; i<PathItems.size(); i++){
-			path = PathItems[i];
+		for(unsigned long i=0; i<m_paths.size(); i++){
+			path = m_paths[i];
 
 			if(path->GetWidth()){
 				fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->GetPoints()-1));
@@ -173,14 +173,14 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, std::string Font, float offx, f
 
 void GDSObject_pov::OutputPolygonToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	if(!PolygonItems.empty()){
+	if(!m_polygons.empty()){
 		if(m_decompose){
 			DecomposePOVPolygons(fptr);
 		}else{
 			class GDSPolygon *polygon;
 
-			for(unsigned long i=0; i<PolygonItems.size(); i++){
-				polygon = PolygonItems[i];
+			for(unsigned long i=0; i<m_polygons.size(); i++){
+				polygon = m_polygons[i];
 
 				fprintf(fptr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
 				for(unsigned int j=0; j<polygon->GetPoints(); j++){
@@ -197,11 +197,11 @@ void GDSObject_pov::OutputPolygonToFile(FILE *fptr, std::string Font, float offx
 
 void GDSObject_pov::OutputTextToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	if(!TextItems.empty()){
+	if(!m_texts.empty()){
 		class GDSText *text;
-		//for (vector<class GDSText>::const_iterator text=TextItems.begin(); text!=TextItems.end(); ++text){
-		for (unsigned int i=0; i<TextItems.size(); i++){
-			text = TextItems[i];
+		//for (vector<class GDSText>::const_iterator text=m_texts.begin(); text!=m_texts.end(); ++text){
+		for (unsigned int i=0; i<m_texts.size(); i++){
+			text = m_texts[i];
 			if(text->GetString().length() > 0){
 				if(Font.length() > 0){
 					fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font.c_str(), text->GetString().c_str());
@@ -258,8 +258,8 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, std::string Font, float offx, f
 
 void GDSObject_pov::OutputSRefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	for(unsigned int i = 0; i < FirstSRef.size(); i++){
-		ASRefElement *sref = FirstSRef[i];
+	for(unsigned int i = 0; i < m_srefs.size(); i++){
+		ASRefElement *sref = m_srefs[i];
 
 		fprintf(fptr, "object{str_%s ", sref->name.c_str());
 		if(sref->mag!=1.0){
@@ -278,8 +278,8 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 
 void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	for(unsigned int i = 0; i < FirstARef.size(); i++){
-		ASRefElement *aref = FirstARef[i];
+	for(unsigned int i = 0; i < m_arefs.size(); i++){
+		ASRefElement *aref = m_arefs[i];
 
 		float dx, dy;
 
@@ -351,8 +351,8 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 
 void GDSObject_pov::OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	if(fptr && !IsOutput){
-		fprintf(fptr, "#declare str_%s = union {\n", Name.c_str());
+	if(fptr && !m_isoutput){
+		fprintf(fptr, "#declare str_%s = union {\n", m_name.c_str());
 
 		OutputPolygonToFile(fptr, Font, offx, offy, objectid, firstlayer);
 		OutputPathToFile(fptr, Font, offx, offy, objectid, firstlayer);
@@ -362,20 +362,20 @@ void GDSObject_pov::OutputToFile(FILE *fptr, std::string Font, float offx, float
 
 		fprintf(fptr, "}\n");
 	}
-	IsOutput = true;
+	m_isoutput = true;
 }
 
 void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 {
 	unsigned long faceindex;
 
-	if(!PolygonItems.empty()){
+	if(!m_polygons.empty()){
 		class GDSPolygon *polygon;
 
 		faceindex = 0;
 
-		for(unsigned long i=0; i<PolygonItems.size(); i++){
-			polygon = PolygonItems[i];
+		for(unsigned long i=0; i<m_polygons.size(); i++){
+			polygon = m_polygons[i];
 
 			/* Output vertices */
 			fprintf(fptr, "mesh2 { vertex_vectors { %d", 2*(polygon->GetPoints()-1));
