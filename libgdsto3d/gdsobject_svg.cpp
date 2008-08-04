@@ -27,7 +27,6 @@
 
 #include "gds_globals.h" //FIXME - this should be removed
 #include "gdsobject_svg.h"
-#include "gds2svg.h"
 
 GDSObject_svg::GDSObject_svg(std::string Name) : GDSObject(Name){
 }
