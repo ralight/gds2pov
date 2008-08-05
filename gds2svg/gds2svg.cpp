@@ -27,7 +27,6 @@
 #include "config_cfg.h"
 #include "process_cfg.h"
 #include "gds_globals.h"
-#include "gds2svg.h"
 #include "gdsparse_svg.h"
 
 extern int verbose_output;
