@@ -49,21 +49,21 @@ struct htime{
 class GDSParse_ogl : public GDSParse
 {
 private:
-	bool _bounding_output;
+	bool m_bounding_output;
 
-	int _info;
-	int _frames;
-	GLfloat _fps;
-	GLfloat _rx, _ry;
-	GLfloat _x, _y, _z;
-	GLfloat _vx, _vy, _vz;
-	GLfloat _dir[8][3];
-	GLfloat _phi[8][3];
+	int m_info;
+	int m_frames;
+	GLfloat m_fps;
+	GLfloat m_rx, m_ry;
+	GLfloat m_x, m_y, m_z;
+	GLfloat m_vx, m_vy, m_vz;
+	GLfloat m_dir[8][3];
+	GLfloat m_phi[8][3];
 
-	GLfloat _speed_factor; /* to have a similar speed independent of the feature size */
-	GLfloat _xmin,_xmax,_ymin,_ymax; /* the bounding box for the gds features, FIXME: include z values */
+	GLfloat m_speed_factor; /* to have a similar speed independent of the feature size */
+	GLfloat m_xmin,m_xmax,m_ymin,m_ymax; /* the bounding box for the gds features, FIXME: include z values */
 
-	struct htime _tv, _mt;
+	struct htime m_tv, m_mt;
 
 #ifdef HAVE_X11_XLIB_H
 	Display *dpy;
@@ -73,17 +73,17 @@ private:
 	Cursor null_cursor;
 #endif
 public:
-	GLuint _font;
-	int _width, _height;
+	GLuint m_font;
+	int m_width, m_height;
 
-	int _modeswitch;
-	int _active;
-	int _run;
+	int m_modeswitch;
+	int m_active;
+	int m_run;
 
 #ifdef HAVE_WINDOWS_H
-	HDC _hDC;
-	HGLRC _hRC;
-	HWND _hWnd;
+	HDC m_hDC;
+	HGLRC m_hRC;
+	HWND m_hWnd;
 #endif
 
 

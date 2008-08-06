@@ -65,10 +65,10 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 	struct ProcessLayer *layer;
 	class GDSPath *path;
 
-	if(!PathItems.empty()){
+	if(!m_paths.empty()){
 		glBegin(GL_TRIANGLES);
-		for(unsigned long i=0; i<PathItems.size(); i++){
-			path = PathItems[i];
+		for(unsigned long i=0; i<m_paths.size(); i++){
+			path = m_paths[i];
 
 			layer = path->GetLayer();
 			int plist[] = {7,4,5, 5,6,7, 2,1,0, 0,3,2, 6,5,1, 1,2,6, 4,7,3, 3,0,4, 6,2,3, 3,7,6, 4,0,1, 1,5,4};
@@ -194,12 +194,12 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 		glEnd();
 	}
 
-	if(!PolygonItems.empty()){
+	if(!m_polygons.empty()){
 		class GDSPolygon *polygon;
 
 		glBegin(GL_TRIANGLES);
-		for(unsigned long i=0; i<PolygonItems.size(); i++){
-			polygon = PolygonItems[i];
+		for(unsigned long i=0; i<m_polygons.size(); i++){
+			polygon = m_polygons[i];
 			layer = polygon->GetLayer();
 
 			//glPolygonMode(GL_FRONT_AND_BACK, render_mode);
@@ -272,23 +272,23 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 
 void GDSObject_ogl::OutputOGLSRefs(std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
-	for(unsigned int i = 0; i < FirstSRef.size(); i++){
-		ASRefElement *sref = FirstSRef[i];
+	for(unsigned int i = 0; i < m_srefs.size(); i++){
+		ASRefElement *sref = m_srefs[i];
 		GDSObject *obj = sref->object;
 		if(obj){
 			glPushMatrix();
-			if(sref->Mag!=1.0){
-				glScalef(sref->Mag, sref->Mag, 1);
+			if(sref->mag!=1.0){
+				glScalef(sref->mag, sref->mag, 1);
 			}
-			glTranslatef(offx+sref->X1, offy+sref->Y1, 0.0f);
-			if(sref->Rotate.Y){
+			glTranslatef(offx+sref->x1, offy+sref->y1, 0.0f);
+			if(sref->rotate.y){
 			//	fprintf(NULL, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->Rotate.Y, sref->X, sref->Y);
-				glRotatef(-sref->Rotate.Y, 0.0f, 0.0f, 1.0f);
+				glRotatef(-sref->rotate.y, 0.0f, 0.0f, 1.0f);
 			}
-			if(sref->Flipped){
+			if(sref->flipped){
 				glScalef(1.0f, -1.0f, 1.0f);
 			}
-			obj->OutputToFile(NULL, Font, offx+sref->X1, offy+sref->Y1, objectid, firstlayer);
+			obj->OutputToFile(NULL, Font, offx+sref->x1, offy+sref->y1, objectid, firstlayer);
 			glPopMatrix();
 		}
 	}
@@ -298,28 +298,28 @@ void GDSObject_ogl::OutputOGLARefs(std::string Font, float offx, float offy, lon
 {
 	float dx, dy;
 
-	for(unsigned int k = 0; k < FirstARef.size(); k++){
-		ASRefElement *aref = FirstARef[k];
+	for(unsigned int k = 0; k < m_arefs.size(); k++){
+		ASRefElement *aref = m_arefs[k];
 		GDSObject *obj = aref->object;
 		//obj = aref->object; //FIXME - see same line for OutputOGLSRefs()
-		if(aref->Rotate.Y == 90.0 || aref->Rotate.Y == -90.0){
-			if(aref->Columns && aref->Rows && (aref->X3 - aref->X1) && (aref->Y2 - aref->Y1)){
-				dx = (float)(aref->X3 - aref->X1) / (float)aref->Columns;
-				dy = (float)(aref->Y2 - aref->Y1) / (float)aref->Rows;
+		if(aref->rotate.y == 90.0 || aref->rotate.y == -90.0){
+			if(aref->columns && aref->rows && (aref->x3 - aref->x1) && (aref->y2 - aref->y1)){
+				dx = (float)(aref->x3 - aref->x1) / (float)aref->columns;
+				dy = (float)(aref->y2 - aref->y1) / (float)aref->rows;
 
 				if(obj){
-					for(int i=0; i<aref->Rows; i++){
-						for(int j=0; j<aref->Columns; j++){
+					for(int i=0; i<aref->rows; i++){
+						for(int j=0; j<aref->columns; j++){
 							glPushMatrix();
-							if(aref->Mag!=1.0){
-								glScalef(aref->Mag, aref->Mag, 1);
+							if(aref->mag!=1.0){
+								glScalef(aref->mag, aref->mag, 1);
 							}
 							//glTranslatef(offx+aref->X1, offy+aref->Y1, 0.0f);
-							glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
-							if(aref->Rotate.Y){
-									glRotatef(-aref->Rotate.Y, 0.0f, 0.0f, 1.0f);
+							glTranslatef(offx+aref->x1+dx*(float)j, offy+aref->y1+dy*(float)i, 0.0f);
+							if(aref->rotate.y){
+									glRotatef(-aref->rotate.y, 0.0f, 0.0f, 1.0f);
 							}
-							if(aref->Flipped){
+							if(aref->flipped){
 								glScalef(1.0f, -1.0f, 1.0f);
 							}
 							//glTranslatef(dx*(float)j, dy*(float)i, 0.0f);
@@ -332,27 +332,27 @@ void GDSObject_ogl::OutputOGLARefs(std::string Font, float offx, float offy, lon
 				}
 			}
 		}else{
-			if(aref->Columns && aref->Rows && (aref->X2 - aref->X1) && (aref->Y3 - aref->Y1)){
-				dx = (float)(aref->X2 - aref->X1) / (float)aref->Columns;
-				dy = (float)(aref->Y3 - aref->Y1) / (float)aref->Rows;
+			if(aref->columns && aref->rows && (aref->x2 - aref->x1) && (aref->y3 - aref->y1)){
+				dx = (float)(aref->x2 - aref->x1) / (float)aref->columns;
+				dy = (float)(aref->y3 - aref->y1) / (float)aref->rows;
 
 				if(obj){
-					for(int i=0; i<aref->Rows; i++){
-						for(int j=0; j<aref->Columns; j++){
+					for(int i=0; i<aref->rows; i++){
+						for(int j=0; j<aref->columns; j++){
 							glPushMatrix();
-							if(aref->Mag!=1.0){
-								glScalef(aref->Mag, aref->Mag, 1);
+							if(aref->mag!=1.0){
+								glScalef(aref->mag, aref->mag, 1);
 							}
 							//glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
-							glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
-							if(aref->Rotate.Y){
-								glRotatef(-aref->Rotate.Y, 0.0f, 0.0f, 1.0f);
+							glTranslatef(offx+aref->x1+dx*(float)j, offy+aref->y1+dy*(float)i, 0.0f);
+							if(aref->rotate.y){
+								glRotatef(-aref->rotate.y, 0.0f, 0.0f, 1.0f);
 							}
-							if(aref->Flipped){
+							if(aref->flipped){
 								glScalef(1.0f, -1.0f, 1.0f);
 							}
 							//glTranslatef(offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, 0.0f);
-							obj->OutputToFile(NULL, Font, offx+aref->X1+dx*(float)j, offy+aref->Y1+dy*(float)i, objectid, firstlayer);
+							obj->OutputToFile(NULL, Font, offx+aref->x1+dx*(float)j, offy+aref->y1+dy*(float)i, objectid, firstlayer);
 							glPopMatrix();
 						}
 					}
@@ -366,43 +366,41 @@ void GDSObject_ogl::OutputToFile(FILE *fptr, std::string Font, float offx, float
 {
 	OutputOGLVertices(offx, offy);
 
-	if(!FirstSRef.empty()){
+	if(!m_srefs.empty()){
 		OutputOGLSRefs(Font, offx, offy, objectid, firstlayer);
 	}
-	if(!FirstARef.empty()){
+	if(!m_arefs.empty()){
 		OutputOGLARefs(Font, offx, offy, objectid, firstlayer);
 	}
 }
 
 void GDSObject_ogl::DecomposePolygons(class GDSPolygon *polygon)
 {
-	unsigned long faceindex = 0;
-
 	if(!polygon){
 		return;
 	}
 	Point pA, pB;
 
-	pA.X = polygon->GetXCoords(0)-polygon->GetXCoords(polygon->GetPoints()-2);
-	pA.Y = polygon->GetYCoords(0)-polygon->GetYCoords(polygon->GetPoints()-2);
-	pB.X = polygon->GetXCoords(1)-polygon->GetXCoords(0);
-	pB.Y = polygon->GetYCoords(1)-polygon->GetYCoords(0);
+	pA.x = polygon->GetXCoords(0)-polygon->GetXCoords(polygon->GetPoints()-2);
+	pA.y = polygon->GetYCoords(0)-polygon->GetYCoords(polygon->GetPoints()-2);
+	pB.x = polygon->GetXCoords(1)-polygon->GetXCoords(0);
+	pB.y = polygon->GetYCoords(1)-polygon->GetYCoords(0);
 
 	float theta1;
 	float theta2;
 
-	theta1 = atan2(pA.X, pA.Y);
-	theta2 = atan2(pB.X, pB.Y);
+	theta1 = atan2(pA.x, pA.y);
+	theta2 = atan2(pB.x, pB.y);
 	polygon->SetAngleCoords(0, theta1 - theta2);
 
 	for(unsigned int j=1; j<polygon->GetPoints()-1; j++){
-		pA.X = polygon->GetXCoords(j)-polygon->GetXCoords(j-1);
-		pA.Y = polygon->GetYCoords(j)-polygon->GetYCoords(j-1);
-		pB.X = polygon->GetXCoords(j+1)-polygon->GetXCoords(j);
-		pB.Y = polygon->GetYCoords(j+1)-polygon->GetYCoords(j);
+		pA.x = polygon->GetXCoords(j)-polygon->GetXCoords(j-1);
+		pA.y = polygon->GetYCoords(j)-polygon->GetYCoords(j-1);
+		pB.x = polygon->GetXCoords(j+1)-polygon->GetXCoords(j);
+		pB.y = polygon->GetYCoords(j+1)-polygon->GetYCoords(j);
 
-		theta1 = atan2(pA.X, pA.Y);
-		theta2 = atan2(pB.X, pB.Y);
+		theta1 = atan2(pA.x, pA.y);
+		theta2 = atan2(pB.x, pB.y);
 		polygon->SetAngleCoords(j, theta1 - theta2);
 	}
 	int positives = 0;
@@ -417,10 +415,6 @@ void GDSObject_ogl::DecomposePolygons(class GDSPolygon *polygon)
 		}
 	}
 	
-	//printf("+ve %d, -ve %d\n", positives, negatives);
-	int bendindex1;
-	int bendindex2;
-
 	if(!positives || !negatives){
 		float z1 = polygon->GetHeight();
 		float z2 = polygon->GetHeight() + polygon->GetThickness();
