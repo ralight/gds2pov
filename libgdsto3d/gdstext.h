@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include "gdselements.h"
+#include "gdsto3d.h"
 #include "process_cfg.h"
 
 class GDSText
