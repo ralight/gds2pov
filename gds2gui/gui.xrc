@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<resource>
+  <object class="wxFrame">
+    <object class="wxMenuBar">
+      <object class="wxMenu">
+        <object class="wxMenuItem">
+          <label>Example</label>
+        </object>
+        <label>Example</label>
+      </object>
+    </object>
+    <object class="wxBoxSizer">
+      <orient>wxHORIZONTAL</orient>
+      <object class="sizeritem">
+        <object class="wxNotebook">
+          <object class="notebookpage">
+            <object class="wxPanel">
+              <object class="wxTreeCtrl"/>
+            </object>
+            <label>Cells</label>
+          </object>
+          <object class="notebookpage">
+            <object class="wxPanel">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+              </object>
+            </object>
+            <label>Layers</label>
+          </object>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticBox">
+          <label>Example</label>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+    </object>
+    <object class="wxStatusBar"/>
+  </object>
+</resource>
