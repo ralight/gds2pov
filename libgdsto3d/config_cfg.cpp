@@ -93,7 +93,7 @@ Position *GDSConfig::GetLightPos()
 	return m_lights[0];
 }
 
-Position *GDSConfig::GetLightPos(int index)
+Position *GDSConfig::GetLightPos(unsigned int index)
 {
 	if(index < m_lights.size()){
 		return m_lights[index];

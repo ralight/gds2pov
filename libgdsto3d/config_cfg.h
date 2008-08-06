@@ -80,7 +80,7 @@ public:
 	class Position *GetLookAtPos();
 	class Position *GetCameraPos();
 	class Position *GetLightPos();
-	class Position *GetLightPos(int index);
+	class Position *GetLightPos(unsigned int index);
 	int GetLightCount();
 	void ReadFile(std::string configfile);
 };
