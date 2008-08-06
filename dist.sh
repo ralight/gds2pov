@@ -66,7 +66,7 @@ cp	gds2pov/gds2pov.cpp \
 	${DISTDIR}/gds2pov/
 
 mkdir -p ${DISTDIR}/gds2svg
-	gds2svg/gds2svg.cpp \
+cp	gds2svg/gds2svg.cpp \
 	gds2svg/CMakeLists.txt \
 	${DISTDIR}/gds2svg/
 

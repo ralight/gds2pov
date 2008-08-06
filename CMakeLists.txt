@@ -57,6 +57,5 @@ endif (OPENGL_FOUND)
 install (FILES changes.txt example.cmd example.gds example_process.txt example_config.txt readme.txt todo.txt DESTINATION ${SHAREDEST})
 
 iF (UNIX)
-	add_custom_target (dist ${PROJECT_SOURCE_DIR}/dist.sh
-	${PROJECT_SOURCE_DIR} ${gdsto3d_BINARY_DIR} ${VERSION})
+	add_custom_target (dist ${PROJECT_SOURCE_DIR}/dist.sh ${PROJECT_SOURCE_DIR} ${gdsto3d_BINARY_DIR} ${VERSION})
 endif (UNIX)

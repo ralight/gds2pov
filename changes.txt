@@ -1,3 +1,9 @@
+Version xxxxxxxx
+================
+
+- Big rewrite using more STL features, carrying out general tidying up and
+  breaking library compatibility.
+
 Version 20080229
 ================
 
