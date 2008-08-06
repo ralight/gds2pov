@@ -22,8 +22,6 @@
 
 
 #include <cstdio>
-//#include <cstdlib>
-//#include <cmath>
 
 #include "config_cfg.h"
 #include "process_cfg.h"

@@ -95,7 +95,10 @@ Position *GDSConfig::GetLightPos()
 
 Position *GDSConfig::GetLightPos(int index)
 {
-	return m_lights[index];
+	if(index < m_lights.size()){
+		return m_lights[index];
+	}
+	return NULL;
 }
 
 int GDSConfig::GetLightCount()

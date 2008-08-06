@@ -40,7 +40,7 @@ GDSPath::~GDSPath()
 
 void GDSPath::AddPoint(unsigned int index, float x, float y)
 {
-	if(m_points >= index){
+	if(index < m_points){
 		m_coords[index].x = x;
 		m_coords[index].y = y;
 	}
@@ -56,12 +56,18 @@ void GDSPath::SetRotation(float x, float y, float z)
 
 float GDSPath::GetXCoords(unsigned int index)
 {
-	return m_coords[index].x;
+	if(index < m_points){
+		return m_coords[index].x;
+	}
+	return 0.0;
 }
 
 float GDSPath::GetYCoords(unsigned int index)
 {
-	return m_coords[index].y;
+	if(index < m_points){
+		return m_coords[index].y;
+	}
+	return 0.0;
 }
 
 unsigned int GDSPath::GetPoints()

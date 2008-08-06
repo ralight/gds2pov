@@ -353,12 +353,15 @@ class ProcessLayer *GDSProcess::GetLayer(std::string Name)
 
 class ProcessLayer *GDSProcess::GetLayer()
 {
-	return m_layers[0];
+	if(!m_layers.empty()){
+		return m_layers[0];
+	}
+	return NULL;
 }
 
 class ProcessLayer *GDSProcess::GetLayer(unsigned int index)
 {
-	if(index >=0 && index < m_layers.size()){
+	if(index < m_layers.size()){
 		return m_layers[index];
 	}else{
 		return NULL;
