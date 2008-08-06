@@ -25,7 +25,6 @@
 #include <cmath>
 #include <cstdlib>
 
-#include "gds_globals.h" //FIXME - this should be removed
 #include "gdsobject_svg.h"
 
 GDSObject_svg::GDSObject_svg(std::string name) : GDSObject(name){

@@ -24,7 +24,6 @@
 #include <cstring>
 #include <cmath>
 
-#include "gds_globals.h" //FIXME - this should be removed
 #include "gdsobject_pov.h"
 
 GDSObject_pov::GDSObject_pov(std::string name) : GDSObject(name), m_decompose(false){
