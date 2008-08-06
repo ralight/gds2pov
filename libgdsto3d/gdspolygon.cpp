@@ -37,7 +37,7 @@ GDSPolygon::~GDSPolygon()
 
 void GDSPolygon::AddPoint(unsigned int index, float x, float y)
 {
-	if(m_points >= index){
+	if(index < m_points){
 		m_coords[index].x = x;
 		m_coords[index].y = y;
 	}
@@ -53,26 +53,37 @@ void GDSPolygon::SetRotation(float x, float y, float z)
 
 float GDSPolygon::GetXCoords(unsigned int index)
 {
-	// FIXME - check index bounds
-	return m_coords[index].x;
+	// FIXME - should probably use exceptions here
+	if(index < m_points){
+		return m_coords[index].x;
+	}
+	return 0.0; 
 }
 
 float GDSPolygon::GetYCoords(unsigned int index)
 {
-	// FIXME - check index bounds
-	return m_coords[index].y;
+	// FIXME - should probably use exceptions here
+	if(index < m_points){
+		return m_coords[index].y;
+	}
+	return 0.0; 
 }
 
 float GDSPolygon::GetAngleCoords(unsigned int index)
 {
-	// FIXME - check index bounds
+	// FIXME - should probably use exceptions here
+	if(index < m_points){
 	return m_coords[index].angle;
+	}
+	return 0.0; 
 }
 
 void GDSPolygon::SetAngleCoords(unsigned int index, float value)
 {
-	// FIXME - check index bounds
-	m_coords[index].angle = value;
+	// FIXME - should probably use exceptions here
+	if(index < m_points){
+		m_coords[index].angle = value;
+	}
 }
 
 unsigned int GDSPolygon::GetPoints(void)
