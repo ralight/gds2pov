@@ -39,7 +39,6 @@ using namespace std;
 #include "process_cfg.h"
 #include "gds_globals.h"
 #include "gdsobject.h"
-#include "gds_types.h"
 
 /*
  * We need byte swapping functions.
