@@ -71,14 +71,6 @@ using namespace std;
 #	define endian_swap_short(A) htons((A))
 #endif
 
-typedef enum{
-	cpCentre,
-	cpBottomLeft,
-	cpBottomRight,
-	cpTopLeft,
-	cpTopRight
-} CameraPosition;
-
 class GDSParse
 {
 protected:
