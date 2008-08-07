@@ -34,6 +34,7 @@ private:
 
 public:
 	GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool generate_process);
+	GDSParse_svg(class GDSParse *parse);
 	~GDSParse_svg ();
 
 	class GDSObject *NewObject(std::string name);

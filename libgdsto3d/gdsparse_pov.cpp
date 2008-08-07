@@ -29,10 +29,9 @@
 #include "gdsparse_pov.h"
 #include "gdsobject_pov.h"
 
-
 extern int verbose_output;
 
-GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process,
+GDSParse_pov::GDSParse_pov(class GDSConfig *config, class GDSProcess *process,
 		bool bounding_output, std::string camfile, bool generate_process) :
 		GDSParse(config, process, generate_process)
 {
@@ -42,9 +41,28 @@ GDSParse_pov::GDSParse_pov (class GDSConfig *config, class GDSProcess *process,
 	m_output_children_first = true;
 }
 
+
+GDSParse_pov::GDSParse_pov(const GDSParse& parse)
+{
+	m_bounding_output = false; // FIXME
+	m_use_outfile = true;
+	m_allow_multiple_output = false;
+	m_output_children_first = true;
+
+	m_units = parse.m_units;
+	m_process = parse.m_process;
+	m_config = parse.m_config;
+
+	for(unsigned int i = 0; i < parse.m_objects.size(); i++){
+		m_objects.push_back(new GDSObject_pov(parse.m_objects[i]));
+	}
+}
+
+
 GDSParse_pov::~GDSParse_pov ()
 {
 }
+
 
 class GDSObject *GDSParse_pov::NewObject(std::string name)
 {

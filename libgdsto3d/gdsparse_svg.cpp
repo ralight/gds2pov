@@ -49,6 +49,24 @@ GDSParse_svg::GDSParse_svg(class GDSConfig *config, class GDSProcess *process, b
 	m_output_children_first = true;
 }
 
+
+GDSParse_svg::GDSParse_svg(class GDSParse *parse)
+{
+	m_bounding_output = false;
+	m_use_outfile = true;
+	m_allow_multiple_output = false;
+	m_output_children_first = true;
+
+	m_units = parse->m_units;
+	m_process = parse->m_process;
+	m_config = parse->m_config;
+
+	for(unsigned int i = 0; i < parse->m_objects.size(); i++){
+		m_objects.push_back(new GDSObject_svg(parse->m_objects[i]));
+	}
+}
+
+
 GDSParse_svg::~GDSParse_svg ()
 {
 }

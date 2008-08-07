@@ -33,6 +33,7 @@ private:
 	std::string m_camfile;
 public:
 	GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, std::string camfile, bool generate_process);
+	GDSParse_pov(const GDSParse& parse);
 	~GDSParse_pov ();
 
 	class GDSObject *NewObject(std::string name);

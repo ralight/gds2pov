@@ -71,6 +71,9 @@ using namespace std;
 #	define endian_swap_short(A) htons((A))
 #endif
 
+class GDSParse_pov;
+class GDSParse_svg;
+
 class GDSParse
 {
 protected:
@@ -159,20 +162,22 @@ protected:
 	bool ParseFile();
 	struct _Boundary *GetBoundary();
 
-	/* Abstract functions to be implemented be inheriting class */
-	virtual void OutputHeader() = 0;
-	virtual void OutputFooter() = 0;
-	/* End abstract functions */
+	virtual void OutputHeader() { };
+	virtual void OutputFooter() { };
 
 	void RecursiveOutput(class GDSObject *object, FILE *optr, float offx, float offy, long *objectid);
 	class GDSObject *GetObjectRef(std::string name);
 public:
-	GDSParse (class GDSConfig *config, class GDSProcess *process, bool generate_process);
+	GDSParse() { };
+	GDSParse(class GDSConfig *config, class GDSProcess *process, bool generate_process);
 	virtual ~GDSParse ();
 
 	bool Parse(FILE *iptr);
 	void Output(FILE *optr, std::string topcell);
-	virtual class GDSObject *NewObject(std::string name) = 0;
+	virtual class GDSObject *NewObject(std::string name) { return NULL; };
+
+	friend class GDSParse_pov;
+	friend class GDSParse_svg;
 };
 
 #endif

@@ -49,6 +49,10 @@ protected:
 	struct _Boundary m_boundary;
 
 public:
+	friend class GDSObject_pov;
+	friend class GDSObject_svg;
+
+	GDSObject() { };
 	GDSObject(std::string name);
 	virtual ~GDSObject();
 
@@ -69,7 +73,7 @@ public:
 
 	std::string GetName();
 
-	virtual void OutputToFile(FILE *fptr, std::string font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)=0;
+	virtual void OutputToFile(FILE *fptr, std::string font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer) { };
 
 	bool HasASRef();
 	ASRefElement *GetSRef(unsigned int index);

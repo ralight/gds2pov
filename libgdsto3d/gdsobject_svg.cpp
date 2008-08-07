@@ -30,6 +30,24 @@
 GDSObject_svg::GDSObject_svg(std::string name) : GDSObject(name){
 }
 
+GDSObject_svg::GDSObject_svg(class GDSObject *object)
+{
+	m_name = object->m_name;
+	m_width = object->m_width;
+	m_height = object->m_height;
+
+	m_gotboundary = false;
+	m_isoutput = false;
+
+	m_paths = object->m_paths;
+	m_texts = object->m_texts;
+	m_polygons = object->m_polygons;
+
+	m_srefs = object->m_srefs;
+	m_arefs = object->m_arefs;
+}
+
+
 GDSObject_svg::~GDSObject_svg()
 {
 }

@@ -31,6 +31,7 @@ private:
 	float m_scale;
 public:
 	GDSObject_svg(std::string name);
+	GDSObject_svg(class GDSObject *object);
 	~GDSObject_svg();
 
 	void SetScale(float scale);
