@@ -1,0 +1,8 @@
+include_directories (${gdsto3d_SOURCE_DIR}/libgdsto3d)
+link_directories (${gdsto3d_BINARY_DIR}/libgdsto3d)
+
+add_executable (gds2gui gds2gui.cpp)
+target_link_libraries (gds2gui gdsto3d)
+
+install(TARGETS gds2gui RUNTIME DESTINATION ${BINDEST})
+
