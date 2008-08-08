@@ -48,9 +48,11 @@ add_subdirectory (gds2pov)
 #add_subdirectory (gds23ds)
 add_subdirectory (gds2svg)
 
-# FIXME - check for wx
-add_subdirectory (gds2gui)
-
+SET(wxWidgets_USE_LIBS base core gl)
+FIND_PACKAGE(wxWidgets)
+IF(wxWidgets_FOUND)
+	add_subdirectory (gds2gui)
+ENDIF(wxWidgets_FOUND)
 
 if (OPENGL_FOUND)
 #	add_subdirectory (gds2ogl)
