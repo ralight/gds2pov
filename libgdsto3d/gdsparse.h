@@ -100,8 +100,8 @@ protected:
 	float m_angle;
 	FILE *m_iptr;
 	FILE *m_optr;
-	class GDSProcess *m_process;
-	class GDSConfig	 *m_config;
+	GDSProcess *m_process;
+	GDSConfig	 *m_config;
 	
 	struct _Boundary *m_boundary;
 	int16_t m_recordlen;
@@ -133,8 +133,8 @@ protected:
 	long m_srefelements;
 	long m_arefelements;
  
-	vector<class GDSObject*> m_objects;
-	class GDSObject *m_currentobject;
+	vector<GDSObject*> m_objects;
+	GDSObject *m_currentobject;
 
 	void ParseHeader();
 	void ParseLibName();
@@ -160,21 +160,22 @@ protected:
 	void ReportUnsupported(std::string name, enum RecordNumbers rn);
 	
 	bool ParseFile();
+	void AssignASRefs(void);
 	struct _Boundary *GetBoundary();
 
 	virtual void OutputHeader() { };
 	virtual void OutputFooter() { };
 
-	void RecursiveOutput(class GDSObject *object, FILE *optr, float offx, float offy, long *objectid);
-	class GDSObject *GetObjectRef(std::string name);
+	void RecursiveOutput(GDSObject *object, FILE *optr, float offx, float offy, long *objectid);
+	GDSObject *GetObjectRef(std::string name);
 public:
 	GDSParse() { };
-	GDSParse(class GDSConfig *config, class GDSProcess *process, bool generate_process);
+	GDSParse(GDSConfig *config, GDSProcess *process, bool generate_process);
 	virtual ~GDSParse ();
 
 	bool Parse(FILE *iptr);
 	void Output(FILE *optr, std::string topcell);
-	virtual class GDSObject *NewObject(std::string name) { return NULL; };
+	virtual GDSObject *NewObject(std::string name) { return new GDSObject(name); };
 
 	friend class GDSParse_pov;
 	friend class GDSParse_svg;

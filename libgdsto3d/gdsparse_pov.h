@@ -32,11 +32,11 @@ class GDSParse_pov : public GDSParse
 private:
 	std::string m_camfile;
 public:
-	GDSParse_pov (class GDSConfig *config, class GDSProcess *process, bool bounding_output, std::string camfile, bool generate_process);
-	GDSParse_pov(const GDSParse& parse);
+	GDSParse_pov (GDSConfig *config, GDSProcess *process, bool bounding_output, std::string camfile, bool generate_process);
+	GDSParse_pov(const GDSParse *parse);
 	~GDSParse_pov ();
 
-	class GDSObject *NewObject(std::string name);
+	GDSObject *NewObject(std::string name);
 	void OutputHeader();
 	void OutputFooter();
 

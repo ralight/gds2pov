@@ -21,24 +21,15 @@
  */
 
 
-//#include <cstdio>
-//#include <cstdlib>
-//#include <cmath>
-
 #include "config_cfg.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
 #include "gdsparse_svg.h"
 #include "gdsobject_svg.h"
-//#include "gds_globals.h"
-//#include "gds2svg.h"
-//#include "gdstext.h"
-//#include "gdspolygon.h"
-
 
 extern int verbose_output;
 
-GDSParse_svg::GDSParse_svg(class GDSConfig *config, class GDSProcess *process, bool generate_process) :
+GDSParse_svg::GDSParse_svg(GDSConfig *config, GDSProcess *process, bool generate_process) :
 		GDSParse(config, process, generate_process),
 		m_scale(100.0)
 {
@@ -50,7 +41,7 @@ GDSParse_svg::GDSParse_svg(class GDSConfig *config, class GDSProcess *process, b
 }
 
 
-GDSParse_svg::GDSParse_svg(class GDSParse *parse)
+GDSParse_svg::GDSParse_svg(GDSParse *parse)
 {
 	m_bounding_output = false;
 	m_use_outfile = true;
@@ -71,9 +62,9 @@ GDSParse_svg::~GDSParse_svg ()
 {
 }
 
-class GDSObject *GDSParse_svg::NewObject(std::string name)
+GDSObject *GDSParse_svg::NewObject(std::string name)
 {
-	return new class GDSObject_svg(name);
+	return new GDSObject_svg(name);
 }
 
 void GDSParse_svg::OutputFooter()
@@ -116,7 +107,7 @@ void GDSParse_svg::OutputHeader()
 
 		/* Output layer texture information */
 
-		class ProcessLayer *layer;
+		ProcessLayer *layer;
 		fprintf(m_optr, "\t<style>\n");
 		for(int i = 0; i < m_process->LayerCount(); i++){
 			layer = m_process->GetLayer(i);

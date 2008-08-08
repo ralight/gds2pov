@@ -23,6 +23,8 @@
 
 #include <string>
 
+#include "gdsobject.h"
+
 class Point {
 public:
 	float x;

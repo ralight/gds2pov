@@ -31,7 +31,7 @@
 
 extern int verbose_output;
 
-GDSParse_pov::GDSParse_pov(class GDSConfig *config, class GDSProcess *process,
+GDSParse_pov::GDSParse_pov(GDSConfig *config, GDSProcess *process,
 		bool bounding_output, std::string camfile, bool generate_process) :
 		GDSParse(config, process, generate_process)
 {
@@ -42,19 +42,19 @@ GDSParse_pov::GDSParse_pov(class GDSConfig *config, class GDSProcess *process,
 }
 
 
-GDSParse_pov::GDSParse_pov(const GDSParse& parse)
+GDSParse_pov::GDSParse_pov(const GDSParse *parse)
 {
 	m_bounding_output = false; // FIXME
 	m_use_outfile = true;
 	m_allow_multiple_output = false;
 	m_output_children_first = true;
 
-	m_units = parse.m_units;
-	m_process = parse.m_process;
-	m_config = parse.m_config;
+	m_units = parse->m_units;
+	m_process = parse->m_process;
+	m_config = parse->m_config;
 
-	for(unsigned int i = 0; i < parse.m_objects.size(); i++){
-		m_objects.push_back(new GDSObject_pov(parse.m_objects[i]));
+	for(unsigned int i = 0; i < parse->m_objects.size(); i++){
+		m_objects.push_back(new GDSObject_pov(parse->m_objects[i]));
 	}
 }
 
@@ -64,9 +64,9 @@ GDSParse_pov::~GDSParse_pov ()
 }
 
 
-class GDSObject *GDSParse_pov::NewObject(std::string name)
+GDSObject *GDSParse_pov::NewObject(std::string name)
 {
-	return new class GDSObject_pov(name);
+	return new GDSObject_pov(name);
 }
 
 void GDSParse_pov::OutputFooter()
@@ -221,7 +221,7 @@ void GDSParse_pov::OutputHeader()
 				m_config->GetAmbient(), m_config->GetAmbient(), m_config->GetAmbient());
 
 		/* Output layer texture information */
-		class ProcessLayer *layer = NULL;
+		ProcessLayer *layer = NULL;
 		for(int i = 0; i < m_process->LayerCount(); i++){
 			layer = m_process->GetLayer(i);
 			if(layer->Show){

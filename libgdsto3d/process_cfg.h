@@ -47,7 +47,7 @@ public:
 class GDSProcess
 {
 private:
-	vector<class ProcessLayer*> m_layers;
+	vector<ProcessLayer*> m_layers;
 	bool m_valid;		/* Is the process file valid? */
 public:
 	GDSProcess ();
@@ -56,12 +56,12 @@ public:
 	void Parse(std::string processfile);
 	//bool Parse(std::string processfile);
 
-	void AddLayer(class ProcessLayer *NewLayer);
+	void AddLayer(ProcessLayer *NewLayer);
 	void AddLayer(int Layer, int Datatype);
-	class ProcessLayer *GetLayer(int Number, int Datatype);
-	class ProcessLayer *GetLayer();
-	class ProcessLayer *GetLayer(unsigned int index);
-	class ProcessLayer *GetLayer(std::string Name);
+	ProcessLayer *GetLayer(int Number, int Datatype);
+	ProcessLayer *GetLayer();
+	ProcessLayer *GetLayer(unsigned int index);
+	ProcessLayer *GetLayer(std::string Name);
 	int LayerCount();
 	bool IsValid();
 	float GetHighest();

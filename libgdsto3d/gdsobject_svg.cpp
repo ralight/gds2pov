@@ -30,7 +30,7 @@
 GDSObject_svg::GDSObject_svg(std::string name) : GDSObject(name){
 }
 
-GDSObject_svg::GDSObject_svg(class GDSObject *object)
+GDSObject_svg::GDSObject_svg(GDSObject *object)
 {
 	m_name = object->m_name;
 	m_width = object->m_width;
@@ -62,7 +62,7 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, std::string Font, float offx, f
 	if(!m_paths.empty()){
 		float angleX, angleY;
 
-		class GDSPath *path;
+		GDSPath *path;
 
 		for(unsigned long i=0; i<m_paths.size(); i++){
 			path = m_paths[i];
@@ -140,7 +140,7 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, std::string Font, float offx, f
 void GDSObject_svg::OutputPolygonToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!m_polygons.empty()){
-		class GDSPolygon *polygon;
+		GDSPolygon *polygon;
 
 		for(unsigned long i=0; i<m_polygons.size(); i++){
 			polygon = m_polygons[i];
@@ -158,9 +158,9 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, std::string Font, float offx, f
 {
 	if(!m_texts.empty()){
 		std::string str;
-		class GDSText *text;
+		GDSText *text;
 		float angle;
-		//for (vector<class GDSText>::const_iterator text=m_texts.begin(); text!=m_texts.end(); ++text){
+		//for (vector<GDSText>::const_iterator text=m_texts.begin(); text!=m_texts.end(); ++text){
 		for (unsigned int i=0; i<m_texts.size(); i++){
 			text = m_texts[i];
 			if(text && text->GetString().length() > 0){

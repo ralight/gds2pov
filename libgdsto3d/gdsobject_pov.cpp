@@ -30,7 +30,7 @@ GDSObject_pov::GDSObject_pov(std::string name) : GDSObject(name), m_decompose(fa
 }
 
 
-GDSObject_pov::GDSObject_pov(const GDSObject *object)
+GDSObject_pov::GDSObject_pov(const GDSObject *object) : m_decompose(false)
 {
 	m_name = object->m_name;
 	m_width = object->m_width;
@@ -57,7 +57,7 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, std::string Font, float offx, f
 	if(!m_paths.empty()){
 		float angleX, angleY;
 
-		class GDSPath *path;
+		GDSPath *path;
 
 		for(unsigned long i=0; i<m_paths.size(); i++){
 			path = m_paths[i];
@@ -195,7 +195,7 @@ void GDSObject_pov::OutputPolygonToFile(FILE *fptr, std::string Font, float offx
 		if(m_decompose){
 			DecomposePOVPolygons(fptr);
 		}else{
-			class GDSPolygon *polygon;
+			GDSPolygon *polygon;
 
 			for(unsigned long i=0; i<m_polygons.size(); i++){
 				polygon = m_polygons[i];
@@ -216,8 +216,8 @@ void GDSObject_pov::OutputPolygonToFile(FILE *fptr, std::string Font, float offx
 void GDSObject_pov::OutputTextToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!m_texts.empty()){
-		class GDSText *text;
-		//for (vector<class GDSText>::const_iterator text=m_texts.begin(); text!=m_texts.end(); ++text){
+		GDSText *text;
+		//for (vector<GDSText>::const_iterator text=m_texts.begin(); text!=m_texts.end(); ++text){
 		for (unsigned int i=0; i<m_texts.size(); i++){
 			text = m_texts[i];
 			if(text->GetString().length() > 0){
@@ -388,7 +388,7 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 	unsigned long faceindex;
 
 	if(!m_polygons.empty()){
-		class GDSPolygon *polygon;
+		GDSPolygon *polygon;
 
 		faceindex = 0;
 
@@ -541,10 +541,7 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 						polygon->GetXCoords(j), \
 						polygon->GetYCoords(j), polygon->GetHeight() - 1);
 			}
-
-			printf("+ve %d, -ve %d\n\n", positives, negatives);
 		}
-
 	}
 }
 

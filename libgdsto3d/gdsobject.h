@@ -40,9 +40,9 @@ protected:
 	bool m_gotboundary;
 	bool m_isoutput;
 
-	vector<class GDSPath*> m_paths;
-	vector<class GDSText*> m_texts;
-	vector<class GDSPolygon*> m_polygons;
+	vector<GDSPath*> m_paths;
+	vector<GDSText*> m_texts;
+	vector<GDSPolygon*> m_polygons;
 
 	vector<ASRefElement*> m_srefs;
 	vector<ASRefElement*> m_arefs;
@@ -57,10 +57,10 @@ public:
 	virtual ~GDSObject();
 
 	void AddText(float x, float Y, float Z, bool flipped, float mag, int vjust, int hjust, struct ProcessLayer *layer);
-	class GDSText *GetCurrentText();
+	GDSText *GetCurrentText();
 
 	void AddPolygon(float height, float thickness, int points, struct ProcessLayer *layer);
-	class GDSPolygon *GetCurrentPolygon();
+	GDSPolygon *GetCurrentPolygon();
 
 	void AddSRef(std::string name, float x, float y, bool flipped, float mag);
 	void SetSRefRotation(float x, float y, float z);
@@ -69,11 +69,11 @@ public:
 	void SetARefRotation(float x, float y, float z);
 
 	void AddPath(int pathtype, float height, float thickness, int points, float width, float bgnextn, float endextn, struct ProcessLayer *layer);
-	class GDSPath *GetCurrentPath();
+	GDSPath *GetCurrentPath();
 
 	std::string GetName();
 
-	virtual void OutputToFile(FILE *fptr, std::string font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer) { };
+	virtual void OutputToFile(FILE *fptr, std::string font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer) { printf("["); };
 
 	bool HasASRef();
 	ASRefElement *GetSRef(unsigned int index);

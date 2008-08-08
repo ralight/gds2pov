@@ -29,7 +29,7 @@
 
 extern int verbose_output;
 
-GDSParse::GDSParse (class GDSConfig *config, class GDSProcess *process, bool generate_process) :
+GDSParse::GDSParse (GDSConfig *config, GDSProcess *process, bool generate_process) :
 	m_libname(""), m_topcellname(""),
 	m_currentlayer(-1), m_currentdatatype(-1),  m_currentwidth(0.0),
 	m_currentpathtype(0),
@@ -88,50 +88,56 @@ bool GDSParse::Parse(FILE *iptr)
 		v_printf(1, "\nSumary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tBoxes:\t\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
 			m_pathelements, m_boundaryelements, m_boxelements, m_textelements, m_srefelements, m_arefelements);
 
-		/* Assign objects to srefs and arefs */
-		/* FIXME - surely there is a better way than 3n^3 loop */
-		for(unsigned int i = 0; i < m_objects.size(); i++){
-			GDSObject *object = m_objects[i];
-			
-			for(unsigned int j = 0; j < object->GetSRefCount(); j++){
-				ASRefElement *sref = object->GetSRef(j);
-
-				if(sref){
-					for(unsigned int k = 0; k < m_objects.size(); k++){
-						if(sref->name == m_objects[k]->GetName()){
-							sref->object = m_objects[k];
-							break;
-						}
-					}
-				}else{
-					break;
-				}
-			}
-
-			for(unsigned int j = 0; j < object->GetARefCount(); j++){
-				ASRefElement *aref = object->GetARef(j);
-
-				if(aref){
-					for(unsigned int k = 0; k < m_objects.size(); k++){
-						if(aref->name == m_objects[k]->GetName()){
-							aref->object = m_objects[k];
-							break;
-						}
-					}
-				}else{
-					break;
-				}
-			}
-		}
 		return result;
 	}else{
 		return -1;
 	}
 }
 
+void GDSParse::AssignASRefs(void)
+{
+	/* Assign objects to srefs and arefs */
+	/* FIXME - surely there is a better way than 3n^3 loop */
+	for(unsigned int i = 0; i < m_objects.size(); i++){
+		GDSObject *object = m_objects[i];
+
+		for(unsigned int j = 0; j < object->GetSRefCount(); j++){
+			ASRefElement *sref = object->GetSRef(j);
+
+			if(sref){
+				for(unsigned int k = 0; k < m_objects.size(); k++){
+					if(sref->name == m_objects[k]->GetName()){
+						sref->object = m_objects[k];
+						break;
+					}
+				}
+			}else{
+				break;
+			}
+		}
+
+		for(unsigned int j = 0; j < object->GetARefCount(); j++){
+			ASRefElement *aref = object->GetARef(j);
+
+			if(aref){
+				for(unsigned int k = 0; k < m_objects.size(); k++){
+					if(aref->name == m_objects[k]->GetName()){
+						aref->object = m_objects[k];
+						break;
+					}
+				}
+			}else{
+				break;
+			}
+		}
+	}
+}
+
 void GDSParse::Output(FILE *optr, std::string topcell)
 {
 	m_topcellname = topcell;
+
+	AssignASRefs();
 
 	if(m_use_outfile){
 		m_optr = optr;
@@ -152,12 +158,12 @@ void GDSParse::Output(FILE *optr, std::string topcell)
 	}
 }
 
-void GDSParse::RecursiveOutput(class GDSObject *object, FILE *m_optr, float offx, float offy, long *objectid)
+void GDSParse::RecursiveOutput(GDSObject *object, FILE *m_optr, float offx, float offy, long *objectid)
 {
 	if(!object){
 		return;
 	}
-	
+
 	if(object->GetIsOutput() && m_allow_multiple_output == false){
 		return;
 	}
@@ -181,7 +187,7 @@ void GDSParse::RecursiveOutput(class GDSObject *object, FILE *m_optr, float offx
 
 	}
 
-	class ProcessLayer *layer = NULL;
+	ProcessLayer *layer = NULL;
 	if(m_process){
 		layer = m_process->GetLayer();
 	}
@@ -193,7 +199,7 @@ bool GDSParse::ParseFile()
 {
 	byte recordtype, datatype;
 	char *tempstr;
-	class ProcessLayer *layer;
+	ProcessLayer *layer;
 
 	if(!m_iptr){
 		return -1;
@@ -696,7 +702,7 @@ void GDSParse::ParseXYPath()
 	float X, Y;
 	int points = m_recordlen/8;
 	int i;
-	class ProcessLayer *thislayer = NULL;
+	ProcessLayer *thislayer = NULL;
 
 	if(m_process != NULL){
 		thislayer = m_process->GetLayer(m_currentlayer, m_currentdatatype);
@@ -765,7 +771,7 @@ void GDSParse::ParseXYBoundary()
 	float firstX=0.0, firstY=0.0;
 	int points = m_recordlen/8;
 	int i;
-	class ProcessLayer *thislayer = NULL;
+	ProcessLayer *thislayer = NULL;
 
 	if(m_process != NULL){
 		thislayer = m_process->GetLayer(m_currentlayer, m_currentdatatype);
@@ -830,7 +836,7 @@ void GDSParse::ParseXY()
 {
 	float X, Y;
 	float firstX=0.0, firstY=0.0, secondX=0.0, secondY=0.0;
-	class ProcessLayer *thislayer = NULL;
+	ProcessLayer *thislayer = NULL;
 	bool Flipped;
 
 	if(m_process != NULL){
@@ -1068,7 +1074,7 @@ struct _Boundary *GDSParse::GetBoundary()
 	return m_boundary;
 }
 
-class GDSObject *GDSParse::GetObjectRef(std::string name)
+GDSObject *GDSParse::GetObjectRef(std::string name)
 {
 	if(!m_objects.empty() && name.length() > 0){	
 		for(unsigned int i = 0; i < m_objects.size(); i++){

@@ -62,10 +62,10 @@ private:
 	float m_scale;
 	bool m_valid;
 
-	class Position m_camerapos;
-	class Position m_lookatpos;
-	vector<class Position *> m_lights;
-	class Position *m_currentlight;
+	Position m_camerapos;
+	Position m_lookatpos;
+	vector<Position *> m_lights;
+	Position *m_currentlight;
 
 public:
 	GDSConfig(std::string filename="");
@@ -77,10 +77,10 @@ public:
 	bool IsValid();
 	std::string GetFont();
 
-	class Position *GetLookAtPos();
-	class Position *GetCameraPos();
-	class Position *GetLightPos();
-	class Position *GetLightPos(unsigned int index);
+	Position *GetLookAtPos();
+	Position *GetCameraPos();
+	Position *GetLightPos();
+	Position *GetLightPos(unsigned int index);
 	int GetLightCount();
 	void ReadFile(std::string configfile);
 };

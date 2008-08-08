@@ -33,11 +33,11 @@ private:
 	float m_scale;
 
 public:
-	GDSParse_svg (class GDSConfig *config, class GDSProcess *process, bool generate_process);
-	GDSParse_svg(class GDSParse *parse);
+	GDSParse_svg (GDSConfig *config, GDSProcess *process, bool generate_process);
+	GDSParse_svg(GDSParse *parse);
 	~GDSParse_svg ();
 
-	class GDSObject *NewObject(std::string name);
+	GDSObject *NewObject(std::string name);
 	void OutputHeader();
 	void OutputFooter();
 };

@@ -62,10 +62,10 @@ GDSObject::~GDSObject()
 
 void GDSObject::AddText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, struct ProcessLayer *layer)
 {
-	m_texts.push_back(new class GDSText(x, y, z, flipped, mag, vjust, hjust, layer));
+	m_texts.push_back(new GDSText(x, y, z, flipped, mag, vjust, hjust, layer));
 }
 
-class GDSText *GDSObject::GetCurrentText()
+GDSText *GDSObject::GetCurrentText()
 {
 	if(m_texts.size()){
 		return m_texts[m_texts.size()-1];
@@ -81,10 +81,10 @@ std::string GDSObject::GetName()
 
 void GDSObject::AddPolygon(float height, float thickness, int points, struct ProcessLayer *layer)
 {
-	m_polygons.push_back(new class GDSPolygon(height, thickness, points, layer));
+	m_polygons.push_back(new GDSPolygon(height, thickness, points, layer));
 }
 
-class GDSPolygon *GDSObject::GetCurrentPolygon()
+GDSPolygon *GDSObject::GetCurrentPolygon()
 {
 	return m_polygons[m_polygons.size()-1];
 }
@@ -147,7 +147,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 
 	if(!m_polygons.empty()){
 		for(unsigned long i=0; i<m_polygons.size(); i++){
-			class GDSPolygon *polygon = m_polygons[i];
+			GDSPolygon *polygon = m_polygons[i];
 			for(unsigned int j=0; j<polygon->GetPoints(); j++){
 				if(polygon->GetXCoords(j) > m_boundary.xmax){
 					m_boundary.xmax = polygon->GetXCoords(j);
@@ -168,7 +168,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 	/* FIXME - need to take width into account? */
 	if(!m_paths.empty()){
 		for(unsigned long i=0; i<m_paths.size(); i++){
-			class GDSPath *path = m_paths[i];
+			GDSPath *path = m_paths[i];
 			for(unsigned int j=0; j<path->GetPoints(); j++){
 				if(path->GetXCoords(j) > m_boundary.xmax){
 					m_boundary.xmax = path->GetXCoords(j);
@@ -189,7 +189,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
 		ASRefElement *sref = m_srefs[i];
 		if(m_name == sref->name && sref->object){
-			class GDSObject *object = sref->object;
+			GDSObject *object = sref->object;
 			struct _Boundary *NewBound;
 			NewBound = object->GetBoundary();
 			if(sref->x1 + NewBound->xmax > m_boundary.xmax){
@@ -210,7 +210,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		ASRefElement *aref = m_arefs[i];
 		if(m_name == aref->name && aref->object){
-			class GDSObject *object = aref->object;
+			GDSObject *object = aref->object;
 			struct _Boundary *NewBound;
 			NewBound = object->GetBoundary();
 			if(aref->x2 + NewBound->xmax > m_boundary.xmax){
@@ -245,10 +245,10 @@ struct _Boundary *GDSObject::GetBoundary(void)
 
 void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *layer)
 {
-	m_paths.push_back(new class GDSPath(PathType, Height, Thickness, Points, Width, BgnExtn, EndExtn, layer));
+	m_paths.push_back(new GDSPath(PathType, Height, Thickness, Points, Width, BgnExtn, EndExtn, layer));
 }
 
-class GDSPath *GDSObject::GetCurrentPath()
+GDSPath *GDSObject::GetCurrentPath()
 {
 	return m_paths[m_paths.size()-1];
 }

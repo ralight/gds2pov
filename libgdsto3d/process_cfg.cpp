@@ -81,7 +81,7 @@ void GDSProcess::Parse(std::string processfile)
 	/* End State variables */
 	bool showing;
 
-	class ProcessLayer NewLayer;
+	ProcessLayer NewLayer;
 
 	FILE *pptr = NULL;
 
@@ -325,7 +325,7 @@ void GDSProcess::Parse(std::string processfile)
 	v_printf(1, "\n");
 }
 
-class ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
+ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 {
 	if(Number == -1) return NULL;
 
@@ -339,7 +339,7 @@ class ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 	return NULL;
 }
 
-class ProcessLayer *GDSProcess::GetLayer(std::string Name)
+ProcessLayer *GDSProcess::GetLayer(std::string Name)
 {
 	for(unsigned int i = 0; i < m_layers.size(); i++){
 		if(m_layers[i]->Name == Name){
@@ -349,7 +349,7 @@ class ProcessLayer *GDSProcess::GetLayer(std::string Name)
 	return NULL;
 }
 
-class ProcessLayer *GDSProcess::GetLayer()
+ProcessLayer *GDSProcess::GetLayer()
 {
 	if(!m_layers.empty()){
 		return m_layers[0];
@@ -357,7 +357,7 @@ class ProcessLayer *GDSProcess::GetLayer()
 	return NULL;
 }
 
-class ProcessLayer *GDSProcess::GetLayer(unsigned int index)
+ProcessLayer *GDSProcess::GetLayer(unsigned int index)
 {
 	if(index < m_layers.size()){
 		return m_layers[index];
@@ -374,7 +374,7 @@ int GDSProcess::LayerCount()
 
 void GDSProcess::AddLayer(int Layer, int Datatype)
 {
-	class ProcessLayer NewLayer;
+	ProcessLayer NewLayer;
 
 	NewLayer.Layer = Layer;
 	NewLayer.Datatype = Datatype;
@@ -391,9 +391,9 @@ void GDSProcess::AddLayer(int Layer, int Datatype)
 }
 
 
-void GDSProcess::AddLayer(class ProcessLayer *NewLayer)
+void GDSProcess::AddLayer(ProcessLayer *NewLayer)
 {
-	class ProcessLayer *layer = new ProcessLayer;
+	ProcessLayer *layer = new ProcessLayer;
 
 	layer->Name = NewLayer->Name;
 	layer->Layer = NewLayer->Layer;
