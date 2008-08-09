@@ -1,9 +1,10 @@
 <?xml version="1.0" ?>
 <resource>
   <object class="wxFrame">
-    <object class="wxMenuBar">
-      <object class="wxMenu">
-        <object class="wxMenuItem">
+    
+    <object class="wxMenuBar" name="ID_MENU">
+      <object class="wxMenu" name="ID_Menu_File">
+        <object class="wxMenuItem" name="ID_Menu_Example">
           <label>Example</label>
         </object>
         <label>Example</label>
@@ -12,10 +13,18 @@
     <object class="wxBoxSizer">
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
-        <object class="wxNotebook">
+        <object class="wxNotebook" name="ID_Notebook">
           <object class="notebookpage">
             <object class="wxPanel">
-              <object class="wxTreeCtrl"/>
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxTreeCtrl" name="ID_CellTree"/>
+                  <option>1</option>
+                  <flag>wxALL|wxEXPAND|wxGROW</flag>
+                  <border>5</border>
+                </object>
+              </object>
             </object>
             <label>Cells</label>
           </object>
@@ -28,18 +37,18 @@
             <label>Layers</label>
           </object>
         </object>
+        <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>5</border>
       </object>
       <object class="sizeritem">
-        <object class="wxStaticBox">
-          <label>Example</label>
-        </object>
+        <object class="wxPanel" name="ID_FIXME"/>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>5</border>
       </object>
     </object>
     <object class="wxStatusBar"/>
+    <title>gds2gui</title>
   </object>
 </resource>
