@@ -313,7 +313,7 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 				fprintf(fptr, "#declare cols = %d;\n", aref->columns);
 				fprintf(fptr, "#declare rows = %d;\n", aref->rows);
 				fprintf(fptr, "#while (colcount < cols)\n");
-				fprintf(fptr, "\t#declare rowcount = 0;");
+				fprintf(fptr, "\t#declare rowcount = 0;\n");
 				fprintf(fptr, "\t#while (rowcount < rows)\n");
 				fprintf(fptr, "\t\tobject{str_%s ", aref->name.c_str());
 				if(aref->mag!=1.0){
