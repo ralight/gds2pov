@@ -362,9 +362,9 @@ void GDSConfig::ReadFile(std::string configfile)
 					}
 					got_position = true;
 				}
-			}else if(strstr(line, "xmod:")){
+			}else if(strstr(line, "XMod:")){
 				if(!in_position){
-					fprintf(stderr, "Error: xmod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
+					fprintf(stderr, "Error: XMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					m_valid = false;
 					fclose(cptr);
 					return;
@@ -376,20 +376,20 @@ void GDSConfig::ReadFile(std::string configfile)
 					return;
 				}
 				if(got_xmod){
-					fprintf(stderr, "Error: Duplicate xmod definition on line %d of config file. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate XMod definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
-							sscanf(line, "xmod: %f", &m_camerapos.xmod);
+							sscanf(line, "XMod: %f", &m_camerapos.xmod);
 							break;
 						case ptLookAt:
-							sscanf(line, "xmod: %f", &m_lookatpos.xmod);
+							sscanf(line, "XMod: %f", &m_lookatpos.xmod);
 							break;
 						case ptLight:
 							if(m_currentlight){
-								sscanf(line, "xmod: %f", &m_currentlight->xmod);
+								sscanf(line, "XMod: %f", &m_currentlight->xmod);
 							}else{
-								fprintf(stderr, "Error: xmod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								fprintf(stderr, "Error: XMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								m_valid = false;
 								fclose(cptr);
 								return;
@@ -402,9 +402,9 @@ void GDSConfig::ReadFile(std::string configfile)
 					}
 					got_xmod = true;
 				}
-			}else if(strstr(line, "ymod:")){
+			}else if(strstr(line, "YMod:")){
 				if(!in_position){
-					fprintf(stderr, "Error: ymod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
+					fprintf(stderr, "Error: YMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					m_valid = false;
 					fclose(cptr);
 					return;
@@ -416,20 +416,20 @@ void GDSConfig::ReadFile(std::string configfile)
 					return;
 				}
 				if(got_ymod){
-					fprintf(stderr, "Error: Duplicate ymod definition on line %d of config file. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate YMod definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
-							sscanf(line, "ymod: %f", &m_camerapos.ymod);
+							sscanf(line, "YMod: %f", &m_camerapos.ymod);
 							break;
 						case ptLookAt:
-							sscanf(line, "ymod: %f", &m_lookatpos.ymod);
+							sscanf(line, "YMod: %f", &m_lookatpos.ymod);
 							break;
 						case ptLight:
 							if(m_currentlight){
-								sscanf(line, "ymod: %f", &m_currentlight->ymod);
+								sscanf(line, "YMod: %f", &m_currentlight->ymod);
 							}else{
-								fprintf(stderr, "Error: ymod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								fprintf(stderr, "Error: YMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								m_valid = false;
 								fclose(cptr);
 								return;
@@ -442,9 +442,9 @@ void GDSConfig::ReadFile(std::string configfile)
 					}
 					got_ymod = true;
 				}
-			}else if(strstr(line, "zmod:")){
+			}else if(strstr(line, "ZMod:")){
 				if(!in_position){
-					fprintf(stderr, "Error: zmod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
+					fprintf(stderr, "Error: ZMod definition outside of PositionStart and PositionEnd on line %d of config file.\n", current_line);
 					m_valid = false;
 					fclose(cptr);
 					return;
@@ -456,20 +456,20 @@ void GDSConfig::ReadFile(std::string configfile)
 					return;
 				}
 				if(got_zmod){
-					fprintf(stderr, "Error: Duplicate zmod definition on line %d of config file. Ignoring new definition.\n", current_line);
+					fprintf(stderr, "Error: Duplicate ZMod definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
 					switch(current_type){
 						case ptCamera:
-							sscanf(line, "zmod: %f", &m_camerapos.zmod);
+							sscanf(line, "ZMod: %f", &m_camerapos.zmod);
 							break;
 						case ptLookAt:
-							sscanf(line, "zmod: %f", &m_lookatpos.zmod);
+							sscanf(line, "ZMod: %f", &m_lookatpos.zmod);
 							break;
 						case ptLight:
 							if(m_currentlight){
-								sscanf(line, "zmod: %f", &m_currentlight->zmod);
+								sscanf(line, "ZMod: %f", &m_currentlight->zmod);
 							}else{
-								fprintf(stderr, "Error: zmod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
+								fprintf(stderr, "Error: ZMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								m_valid = false;
 								fclose(cptr);
 								return;
