@@ -33,7 +33,7 @@ extern int verbose_output;
 
 GDSParse_pov::GDSParse_pov(GDSConfig *config, GDSProcess *process,
 		bool bounding_output, std::string camfile, bool generate_process) :
-		GDSParse(config, process, generate_process)
+		GDSParse(config, process, generate_process), m_camfile(camfile)
 {
 	m_bounding_output = bounding_output;
 	m_use_outfile = true;
@@ -48,6 +48,7 @@ GDSParse_pov::GDSParse_pov(const GDSParse *parse)
 	m_use_outfile = true;
 	m_allow_multiple_output = false;
 	m_output_children_first = true;
+	m_camfile = "";
 
 	m_units = parse->m_units;
 	m_process = parse->m_process;
@@ -116,9 +117,9 @@ void GDSParse_pov::OutputHeader()
 		float ymod = m_config->GetCameraPos()->ymod;
 		float zmod = m_config->GetCameraPos()->zmod;
 
-		/* _camfile is a possible camera include file. Depends on the -e option
+		/* m_camfile is a possible camera include file. Depends on the -e option
 		 * If it is null, use the normal camera else use the include */
-		if(m_camfile != ""){
+		if(m_camfile == ""){
 			switch(m_config->GetCameraPos()->boundarypos){
 				case bpCentre:
 					// Default camera angle = 67.38
