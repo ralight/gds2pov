@@ -3,6 +3,7 @@ Version xxxxxxxx
 
 - Big rewrite using more STL features, carrying out general tidying up and
   breaking library compatibility.
+- gds2pov output optimisations - only include loops for AREFs where necessary.
 
 Version 20080229
 ================
