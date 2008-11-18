@@ -307,20 +307,20 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 				dy = (float)(aref->y2 - aref->y1) / (float)aref->rows;
 
 				if(aref->columns > 1){
-					fprintf(fptr, "#declare dx = %.2f;\n", dx);
-					fprintf(fptr, "#declare colcount = 0;\n");
-					fprintf(fptr, "#declare cols = %d;\n", aref->columns);
+					fprintf(fptr, "#local dx = %.2f;\n", dx);
+					fprintf(fptr, "#local colcount = 0;\n");
+					fprintf(fptr, "#local cols = %d;\n", aref->columns);
 				}
 				if(aref->rows > 1){
-					fprintf(fptr, "#declare dy = %.2f;\n", dy);
-					fprintf(fptr, "#declare rows = %d;\n", aref->rows);
+					fprintf(fptr, "#local dy = %.2f;\n", dy);
+					fprintf(fptr, "#local rows = %d;\n", aref->rows);
 				}
 
 				if(aref->columns > 1){
 					fprintf(fptr, "#while (colcount < cols)\n");
 				}
 				if(aref->rows > 1){
-					fprintf(fptr, "\t#declare rowcount = 0;\n");
+					fprintf(fptr, "\t#local rowcount = 0;\n");
 					fprintf(fptr, "\t#while (rowcount < rows)\n");
 				}
 				fprintf(fptr, "\t\tobject{str_%s ", aref->name.c_str());
@@ -356,11 +356,11 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 				fprintf(fptr, "}\n");
 
 				if(aref->rows > 1){
-					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
+					fprintf(fptr, "\t\t#local rowcount = rowcount + 1;\n");
 					fprintf(fptr, "\t#end\n");
 				}
 				if(aref->columns > 1){
-					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
+					fprintf(fptr, "\t#local colcount = colcount + 1;\n");
 					fprintf(fptr, "#end\n");
 				}
 			}
@@ -370,20 +370,20 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 				dy = (float)(aref->y3 - aref->y1) / (float)aref->rows;
 
 				if(aref->columns > 1){
-					fprintf(fptr, "#declare dx = %.2f;\n", dx);
-					fprintf(fptr, "#declare colcount = 0;\n");
-					fprintf(fptr, "#declare cols = %d;\n", aref->columns);
+					fprintf(fptr, "#local dx = %.2f;\n", dx);
+					fprintf(fptr, "#local colcount = 0;\n");
+					fprintf(fptr, "#local cols = %d;\n", aref->columns);
 				}
 				if(aref->rows > 1){
-					fprintf(fptr, "#declare dy = %.2f;\n", dy);
-					fprintf(fptr, "#declare rows = %d;\n", aref->rows);
+					fprintf(fptr, "#local dy = %.2f;\n", dy);
+					fprintf(fptr, "#local rows = %d;\n", aref->rows);
 				}
 
 				if(aref->columns > 1){
 					fprintf(fptr, "#while (colcount < cols)\n");
 				}
 				if(aref->rows > 1){
-					fprintf(fptr, "\t#declare rowcount = 0;");
+					fprintf(fptr, "\t#local rowcount = 0;\n");
 					fprintf(fptr, "\t#while (rowcount < rows)\n");
 				}
 
@@ -416,11 +416,11 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 				fprintf(fptr, "}\n");
 
 				if(aref->rows > 1){
-					fprintf(fptr, "\t\t#declare rowcount = rowcount + 1;\n");
+					fprintf(fptr, "\t\t#local rowcount = rowcount + 1;\n");
 					fprintf(fptr, "\t#end\n");
 				}
 				if(aref->columns > 1){
-					fprintf(fptr, "\t#declare colcount = colcount + 1;\n");
+					fprintf(fptr, "\t#local colcount = colcount + 1;\n");
 					fprintf(fptr, "#end\n");
 				}
 			}
