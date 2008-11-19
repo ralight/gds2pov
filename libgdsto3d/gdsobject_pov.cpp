@@ -301,11 +301,42 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 
 		float dx, dy;
 
-		if(aref->rotate.y == 90.0 || aref->rotate.y == -90.0){
-			if(aref->columns && aref->rows && (aref->x3 - aref->x1) && (aref->y2 - aref->y1)){
-				dx = (float)(aref->x3 - aref->x1) / (float)aref->columns;
-				dy = (float)(aref->y2 - aref->y1) / (float)aref->rows;
+		printf("rotate: %.2f\n", aref->rotate.y);
+		printf("flipped: %i\n", aref->flipped);
 
+		switch((int)round(aref->rotate.y)){
+			case 0:
+			case 360:
+				dx = 50.0;
+				dy = 50.0;
+				break;
+
+			case 90:
+			case -270:
+				dx = 50.0;
+				dy = 50.0;
+				break;
+
+			case 180:
+			case -180:
+				dx = 50.0;
+				dy = 50.0;
+				break;
+
+			case 270:
+			case -90:
+				dx = 50.0;
+				dy = 50.0;
+				break;
+		}
+
+/*
+		if(aref->rotate.y) == 90.0 || fabs(aref->rotate.y) == 270.0){
+			if(aref->columns && aref->rows && (aref->x3 - aref->x1) && (aref->y2 - aref->y1)){
+				//dx = (float)(aref->x3 - aref->x1) / (float)aref->columns;
+				//dy = (float)(aref->y2 - aref->y1) / (float)aref->rows;
+				dx = (float)(aref->x3 - aref->x1) / (float)aref->rows;
+				dy = (float)(aref->y2 - aref->y1) / (float)aref->columns;
 			}
 		}else{
 			if(aref->columns && aref->rows && (aref->x2 - aref->x1) && (aref->y3 - aref->y1)){
@@ -313,7 +344,7 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 				dy = (float)(aref->y3 - aref->y1) / (float)aref->rows;
 			}
 		}
-
+*/
 		if(aref->columns > 1){
 			fprintf(fptr, "#local dx = %.2f;\n", dx);
 			fprintf(fptr, "#local colcount = 0;\n");

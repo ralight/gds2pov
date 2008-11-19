@@ -177,7 +177,7 @@ void GDSParse_pov::OutputHeader()
 				break;
 			}
 		}else{
-			fprintf(m_optr, "#include %s\n", m_camfile.c_str());
+			fprintf(m_optr, "#include \"%s\"\n", m_camfile.c_str());
 		}
 
 		if(m_config->GetLightPos()!=NULL){
