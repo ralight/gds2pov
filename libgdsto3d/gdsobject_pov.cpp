@@ -306,124 +306,70 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 				dx = (float)(aref->x3 - aref->x1) / (float)aref->columns;
 				dy = (float)(aref->y2 - aref->y1) / (float)aref->rows;
 
-				if(aref->columns > 1){
-					fprintf(fptr, "#local dx = %.2f;\n", dx);
-					fprintf(fptr, "#local colcount = 0;\n");
-					fprintf(fptr, "#local cols = %d;\n", aref->columns);
-				}
-				if(aref->rows > 1){
-					fprintf(fptr, "#local dy = %.2f;\n", dy);
-					fprintf(fptr, "#local rows = %d;\n", aref->rows);
-				}
-
-				if(aref->columns > 1){
-					fprintf(fptr, "#while (colcount < cols)\n");
-				}
-				if(aref->rows > 1){
-					fprintf(fptr, "\t#local rowcount = 0;\n");
-					fprintf(fptr, "\t#while (rowcount < rows)\n");
-				}
-				fprintf(fptr, "\t\tobject{str_%s ", aref->name.c_str());
-				if(aref->mag!=1.0){
-					fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->mag, aref->mag);
-				}
-				if(aref->flipped){
-					fprintf(fptr, "scale <1,-1,1> ");
-				}
-
-				if(aref->columns > 1 && aref->rows > 1){
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
-					if(aref->rotate.y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
-					}
-				}else if(aref->columns > 1){
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f,0>", aref->x1, aref->y1);
-					if(aref->rotate.y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
-					}
-				}else if(aref->rows > 1){
-					fprintf(fptr, "translate <%.2f,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
-					if(aref->rotate.y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
-					}
-				}else{
-					fprintf(fptr, "translate <%.2f,%.2f,0>", aref->x1, aref->y1);
-					if(aref->rotate.y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
-					}
-				}
-
-				fprintf(fptr, "}\n");
-
-				if(aref->rows > 1){
-					fprintf(fptr, "\t\t#local rowcount = rowcount + 1;\n");
-					fprintf(fptr, "\t#end\n");
-				}
-				if(aref->columns > 1){
-					fprintf(fptr, "\t#local colcount = colcount + 1;\n");
-					fprintf(fptr, "#end\n");
-				}
 			}
 		}else{
 			if(aref->columns && aref->rows && (aref->x2 - aref->x1) && (aref->y3 - aref->y1)){
 				dx = (float)(aref->x2 - aref->x1) / (float)aref->columns;
 				dy = (float)(aref->y3 - aref->y1) / (float)aref->rows;
-
-				if(aref->columns > 1){
-					fprintf(fptr, "#local dx = %.2f;\n", dx);
-					fprintf(fptr, "#local colcount = 0;\n");
-					fprintf(fptr, "#local cols = %d;\n", aref->columns);
-				}
-				if(aref->rows > 1){
-					fprintf(fptr, "#local dy = %.2f;\n", dy);
-					fprintf(fptr, "#local rows = %d;\n", aref->rows);
-				}
-
-				if(aref->columns > 1){
-					fprintf(fptr, "#while (colcount < cols)\n");
-				}
-				if(aref->rows > 1){
-					fprintf(fptr, "\t#local rowcount = 0;\n");
-					fprintf(fptr, "\t#while (rowcount < rows)\n");
-				}
-
-				fprintf(fptr, "\t\tobject{str_%s ", aref->name.c_str());
-				if(aref->flipped){
-					fprintf(fptr, "scale <1,-1,1> ");
-				}
-
-				if(aref->columns > 1 && aref->rows > 1){
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
-					if(aref->rotate.y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
-					}
-				}else if(aref->columns > 1){
-					fprintf(fptr, "translate <%.2f+dx*colcount,%.2f,0>", aref->x1, aref->y1);
-					if(aref->rotate.y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
-					}
-				}else if(aref->rows > 1){
-					fprintf(fptr, "translate <%.2f,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
-					if(aref->rotate.y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
-					}
-				}else{
-					fprintf(fptr, "translate <%.2f,%.2f,0>", aref->x1, aref->y1);
-					if(aref->rotate.y){
-						fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
-					}
-				}
-				fprintf(fptr, "}\n");
-
-				if(aref->rows > 1){
-					fprintf(fptr, "\t\t#local rowcount = rowcount + 1;\n");
-					fprintf(fptr, "\t#end\n");
-				}
-				if(aref->columns > 1){
-					fprintf(fptr, "\t#local colcount = colcount + 1;\n");
-					fprintf(fptr, "#end\n");
-				}
 			}
+		}
+
+		if(aref->columns > 1){
+			fprintf(fptr, "#local dx = %.2f;\n", dx);
+			fprintf(fptr, "#local colcount = 0;\n");
+			fprintf(fptr, "#local cols = %d;\n", aref->columns);
+		}
+		if(aref->rows > 1){
+			fprintf(fptr, "#local dy = %.2f;\n", dy);
+					fprintf(fptr, "#local rows = %d;\n", aref->rows);
+		}
+
+		if(aref->columns > 1){
+			fprintf(fptr, "#while (colcount < cols)\n");
+		}
+		if(aref->rows > 1){
+			fprintf(fptr, "\t#local rowcount = 0;\n");
+			fprintf(fptr, "\t#while (rowcount < rows)\n");
+		}
+
+		fprintf(fptr, "\t\tobject{str_%s ", aref->name.c_str());
+		if(aref->mag!=1.0){
+			fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->mag, aref->mag);
+		}
+		if(aref->flipped){
+			fprintf(fptr, "scale <1,-1,1> ");
+		}
+
+		if(aref->columns > 1 && aref->rows > 1){
+			fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
+			if(aref->rotate.y){
+				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
+			}
+		}else if(aref->columns > 1){
+			fprintf(fptr, "translate <%.2f+dx*colcount,%.2f,0>", aref->x1, aref->y1);
+			if(aref->rotate.y){
+				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
+			}
+		}else if(aref->rows > 1){
+			fprintf(fptr, "translate <%.2f,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
+			if(aref->rotate.y){
+				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
+			}
+		}else{
+			fprintf(fptr, "translate <%.2f,%.2f,0>", aref->x1, aref->y1);
+			if(aref->rotate.y){
+				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
+			}
+		}
+		fprintf(fptr, "}\n");
+
+		if(aref->rows > 1){
+			fprintf(fptr, "\t\t#local rowcount = rowcount + 1;\n");
+			fprintf(fptr, "\t#end\n");
+		}
+		if(aref->columns > 1){
+					fprintf(fptr, "\t#local colcount = colcount + 1;\n");
+			fprintf(fptr, "#end\n");
 		}
 	}
 }
