@@ -299,66 +299,45 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		ASRefElement *aref = m_arefs[i];
 
-		float dx, dy;
-
-		printf("rotate: %.2f\n", aref->rotate.y);
-		printf("flipped: %i\n", aref->flipped);
+		float dx = 0.0, dy = 0.0;
+		int columns, rows;
 
 		switch((int)round(aref->rotate.y)){
 			case 0:
 			case 360:
-				dx = 50.0;
-				dy = 50.0;
+			case 180:
+			case -180:
+				dx = (float)(aref->x2 - aref->x1) / (float)aref->columns;
+				dy = (float)(aref->y3 - aref->y1) / (float)aref->rows;
+				columns = aref->columns;
+				rows = aref->rows;
 				break;
 
 			case 90:
 			case -270:
-				dx = 50.0;
-				dy = 50.0;
-				break;
-
-			case 180:
-			case -180:
-				dx = 50.0;
-				dy = 50.0;
-				break;
-
 			case 270:
 			case -90:
-				dx = 50.0;
-				dy = 50.0;
+				dx = (float)(aref->x3 - aref->x1) / (float)aref->rows;
+				dy = (float)(aref->y2 - aref->y1) / (float)aref->columns;
+				columns = aref->rows;
+				rows = aref->columns;
 				break;
 		}
 
-/*
-		if(aref->rotate.y) == 90.0 || fabs(aref->rotate.y) == 270.0){
-			if(aref->columns && aref->rows && (aref->x3 - aref->x1) && (aref->y2 - aref->y1)){
-				//dx = (float)(aref->x3 - aref->x1) / (float)aref->columns;
-				//dy = (float)(aref->y2 - aref->y1) / (float)aref->rows;
-				dx = (float)(aref->x3 - aref->x1) / (float)aref->rows;
-				dy = (float)(aref->y2 - aref->y1) / (float)aref->columns;
-			}
-		}else{
-			if(aref->columns && aref->rows && (aref->x2 - aref->x1) && (aref->y3 - aref->y1)){
-				dx = (float)(aref->x2 - aref->x1) / (float)aref->columns;
-				dy = (float)(aref->y3 - aref->y1) / (float)aref->rows;
-			}
-		}
-*/
-		if(aref->columns > 1){
+		if(columns > 1){
 			fprintf(fptr, "#local dx = %.2f;\n", dx);
 			fprintf(fptr, "#local colcount = 0;\n");
-			fprintf(fptr, "#local cols = %d;\n", aref->columns);
+			fprintf(fptr, "#local cols = %d;\n", columns);
 		}
-		if(aref->rows > 1){
+		if(rows > 1){
 			fprintf(fptr, "#local dy = %.2f;\n", dy);
-					fprintf(fptr, "#local rows = %d;\n", aref->rows);
+					fprintf(fptr, "#local rows = %d;\n", rows);
 		}
 
-		if(aref->columns > 1){
+		if(columns > 1){
 			fprintf(fptr, "#while (colcount < cols)\n");
 		}
-		if(aref->rows > 1){
+		if(rows > 1){
 			fprintf(fptr, "\t#local rowcount = 0;\n");
 			fprintf(fptr, "\t#while (rowcount < rows)\n");
 		}
@@ -371,17 +350,17 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 			fprintf(fptr, "scale <1,-1,1> ");
 		}
 
-		if(aref->columns > 1 && aref->rows > 1){
+		if(columns > 1 && rows > 1){
 			fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
 			if(aref->rotate.y){
 				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
 			}
-		}else if(aref->columns > 1){
+		}else if(columns > 1){
 			fprintf(fptr, "translate <%.2f+dx*colcount,%.2f,0>", aref->x1, aref->y1);
 			if(aref->rotate.y){
 				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
 			}
-		}else if(aref->rows > 1){
+		}else if(rows > 1){
 			fprintf(fptr, "translate <%.2f,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
 			if(aref->rotate.y){
 				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
@@ -394,11 +373,11 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 		}
 		fprintf(fptr, "}\n");
 
-		if(aref->rows > 1){
+		if(rows > 1){
 			fprintf(fptr, "\t\t#local rowcount = rowcount + 1;\n");
 			fprintf(fptr, "\t#end\n");
 		}
-		if(aref->columns > 1){
+		if(columns > 1){
 					fprintf(fptr, "\t#local colcount = colcount + 1;\n");
 			fprintf(fptr, "#end\n");
 		}
