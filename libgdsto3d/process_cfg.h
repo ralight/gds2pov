@@ -62,7 +62,7 @@ public:
 	ProcessLayer *GetLayer();
 	ProcessLayer *GetLayer(unsigned int index);
 	ProcessLayer *GetLayer(std::string Name);
-	int LayerCount();
+	unsigned int LayerCount();
 	bool IsValid();
 	float GetHighest();
 	float GetLowest();

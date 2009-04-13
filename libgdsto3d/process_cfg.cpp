@@ -366,7 +366,7 @@ ProcessLayer *GDSProcess::GetLayer(unsigned int index)
 	}
 }
 
-int GDSProcess::LayerCount()
+unsigned int GDSProcess::LayerCount()
 {
 	return m_layers.size();
 }

@@ -223,7 +223,7 @@ void GDSParse_pov::OutputHeader()
 
 		/* Output layer texture information */
 		ProcessLayer *layer = NULL;
-		for(int i = 0; i < m_process->LayerCount(); i++){
+		for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 			layer = m_process->GetLayer(i);
 			if(layer->Show){
 				if(!layer->Metal){

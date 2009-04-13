@@ -109,7 +109,7 @@ void GDSParse_svg::OutputHeader()
 
 		ProcessLayer *layer;
 		fprintf(m_optr, "\t<style>\n");
-		for(int i = 0; i < m_process->LayerCount(); i++){
+		for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 			layer = m_process->GetLayer(i);
 			if(layer->Show){
 				fprintf(m_optr, "\t\t.%s { fill: #%02x%02x%02x; opacity:0.75; }\n",
