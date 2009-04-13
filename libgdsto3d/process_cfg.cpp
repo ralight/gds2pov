@@ -135,7 +135,7 @@ void GDSProcess::Parse(std::string processfile)
 				got_show = false;
 				current_element++;
 
-				NewLayer.Name = (line+strlen("LayerStart: "));
+				NewLayer.Name = (line+strlen("LayerStart: ")); /* FIXME - probably need to trim EOL */
 				NewLayer.Layer = 0;
 				NewLayer.Datatype = -1;
 				NewLayer.Height = 0.0;
