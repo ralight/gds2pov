@@ -47,6 +47,7 @@ add_subdirectory (gds2pov)
 #add_subdirectory (gds2info)
 #add_subdirectory (gds23ds)
 add_subdirectory (gds2svg)
+add_subdirectory (process_editor)
 
 #SET(wxWidgets_USE_LIBS base core gl)
 #FIND_PACKAGE(wxWidgets)
