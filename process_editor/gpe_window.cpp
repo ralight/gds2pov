@@ -82,3 +82,12 @@ void GPEWindow::OnMenuSaveAs( wxCommandEvent& event )
 	}
 }
 
+void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
+{
+	wxColour colour = m_colourPickerLayer->GetColour();
+
+	printf("Red: %f\n", colour.Red() / 255.0);
+	printf("Green: %f\n", colour.Green() / 255.0);
+	printf("Blue: %f\n", colour.Blue() / 255.0);
+}
+

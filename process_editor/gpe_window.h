@@ -38,6 +38,7 @@ class GPEWindow : public GPEWindow_fb
 		void OnMenuSave( wxCommandEvent& event );
 		void OnMenuSaveAs( wxCommandEvent& event );
 		void OnMenuImportGDS( wxCommandEvent& event );
+		void OnColourChangedLayer( wxColourPickerEvent& event );
 
 	public:
 		GPEWindow();
