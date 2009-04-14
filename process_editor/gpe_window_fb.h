@@ -45,19 +45,17 @@ class GPEWindow_fb : public wxFrame
 		wxButton* m_buttonAdd;
 		wxButton* m_buttonRemove;
 		wxStaticText* m_staticText1;
-		wxTextCtrl* m_textCtrl1;
+		wxTextCtrl* m_textCtrlName;
 		wxStaticText* m_staticText2;
-		wxTextCtrl* m_textCtrl2;
+		wxTextCtrl* m_textCtrlLayer;
 		wxStaticText* m_staticText3;
-		wxTextCtrl* m_textCtrl3;
-		wxStaticText* m_staticText4;
-		wxTextCtrl* m_textCtrl4;
+		wxTextCtrl* m_textCtrlDatatype;
 		wxStaticText* m_staticText5;
-		wxTextCtrl* m_textCtrl5;
+		wxTextCtrl* m_textCtrlThickness;
 		wxCheckBox* m_checkBox1;
 		wxStaticText* m_staticText6;
 		wxStaticText* m_staticText7;
-		wxColourPickerCtrl* m_colourPicker1;
+		wxColourPickerCtrl* m_colourPickerLayer;
 		wxStaticText* m_staticText8;
 		wxCheckBox* m_checkBox2;
 		
