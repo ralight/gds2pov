@@ -84,11 +84,16 @@ void GPEWindow::OnMenuSaveAs( wxCommandEvent& event )
 
 void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
 {
-	wxColour colour = m_colourPickerLayer->GetColour();
+	int selected = m_checkListBoxLayers->GetSelection();
+	if(selected != wxNOT_FOUND){
+		ProcessLayer *layer = m_process->GetLayer(selected);
 
-	printf("Red: %f\n", colour.Red() / 255.0);
-	printf("Green: %f\n", colour.Green() / 255.0);
-	printf("Blue: %f\n", colour.Blue() / 255.0);
+		wxColour colour = m_colourPickerLayer->GetColour();
+
+		layer->Red = colour.Red() / 255.0;
+		layer->Green = colour.Green() / 255.0;
+		layer->Blue = colour.Blue() / 255.0;
+	}
 }
 
 void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
