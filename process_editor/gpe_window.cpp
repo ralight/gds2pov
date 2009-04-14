@@ -8,6 +8,9 @@ GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 {
 	m_config = new GDSConfig();
 	m_process = new GDSProcess();
+	m_process_path = wxT("");
+	m_defaultSaveDir = wxT("");
+	m_defaultSaveFile = wxT("");
 }
 
 GPEWindow::~GPEWindow()
@@ -50,5 +53,32 @@ void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
 	}
 
 	delete fileDialog;
+}
+
+void GPEWindow::OnMenuSave( wxCommandEvent& event )
+{
+	if(m_process_path == wxT("")){
+		OnMenuSaveAs(event);
+	}else{
+		std::string filename;
+		filename = (char *)m_process_path.char_str();
+		m_process->Save(filename);
+	}
+}
+
+void GPEWindow::OnMenuSaveAs( wxCommandEvent& event )
+{
+	wxFileDialog *fileDialog = new wxFileDialog(this, wxT("Choose a file"),
+			m_defaultSaveDir, m_defaultSaveFile, wxT("*.*"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+	if(fileDialog->ShowModal() == wxID_OK){
+		m_defaultSaveDir = fileDialog->GetDirectory();
+		m_defaultSaveFile = fileDialog->GetFilename();
+		m_process_path = fileDialog->GetPath();
+
+		std::string filename;
+		filename = (char *)m_process_path.char_str();
+		m_process->Save(filename);
+	}
 }
 

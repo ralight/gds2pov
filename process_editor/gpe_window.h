@@ -29,9 +29,14 @@ class GPEWindow : public GPEWindow_fb
 	private:
 		GDSConfig *m_config;
 		GDSProcess *m_process;
+		wxString m_process_path;
+		wxString m_defaultSaveDir;
+		wxString m_defaultSaveFile;
 	
 	protected:
 		
+		void OnMenuSave( wxCommandEvent& event );
+		void OnMenuSaveAs( wxCommandEvent& event );
 		void OnMenuImportGDS( wxCommandEvent& event );
 
 	public:
