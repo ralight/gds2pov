@@ -91,3 +91,19 @@ void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
 	printf("Blue: %f\n", colour.Blue() / 255.0);
 }
 
+void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
+{
+	int selected = m_checkListBoxLayers->GetSelection();
+	if(selected != wxNOT_FOUND){
+		ProcessLayer *layer = m_process->GetLayer(selected);
+		if(layer){
+			m_textCtrlName->SetValue(wxString::FromAscii(layer->Name.c_str()));
+			m_textCtrlLayer->SetValue(wxString::Format(wxT("%d"), layer->Layer));
+			m_textCtrlDatatype->SetValue(wxString::Format(wxT("%d"), layer->Datatype));
+			m_textCtrlThickness->SetValue(wxString::Format(wxT("%f"), layer->Thickness));
+
+			m_colourPickerLayer->SetColour(wxColour(255 * layer->Red, 255 * layer->Green, 255 * layer->Blue));
+		}
+	}
+}
+
