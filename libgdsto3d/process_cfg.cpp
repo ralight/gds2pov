@@ -457,8 +457,8 @@ bool GDSProcess::Save(std::string filename)
 	for(unsigned int i = 0; i < m_layers.size(); i++){
 		fprintf(fptr, "LayerStart: %s\n", m_layers[i]->Name.c_str());
 		fprintf(fptr, "Layer: %d\n", m_layers[i]->Layer);
-		fprintf(fptr, "Height: %d\n", m_layers[i]->Height);
-		fprintf(fptr, "Thickness: %d\n", m_layers[i]->Thickness);
+		fprintf(fptr, "Height: %f\n", m_layers[i]->Height);
+		fprintf(fptr, "Thickness: %f\n", m_layers[i]->Thickness);
 		fprintf(fptr, "Red: %f\n", m_layers[i]->Red);
 		fprintf(fptr, "Green: %f\n", m_layers[i]->Green);
 		fprintf(fptr, "Blue: %f\n", m_layers[i]->Blue);
