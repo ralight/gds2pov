@@ -63,12 +63,15 @@ class GPEWindow_fb : public wxFrame
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnMenuImportGDS( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnCheckListBoxLayersClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnCheckListBoxLayersToggled( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonAddClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonRemoveClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnColourChangedLayer( wxColourPickerEvent& event ){ event.Skip(); }
 		
 	
 	public:
-		GPEWindow_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("GDS2X Process Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,-1 ), long style = wxDEFAULT_FRAME_STYLE|wxRESIZE_BORDER|wxTAB_TRAVERSAL );
+		GPEWindow_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("GDS2X Process Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 550,400 ), long style = wxDEFAULT_FRAME_STYLE|wxRESIZE_BORDER|wxTAB_TRAVERSAL );
 		~GPEWindow_fb();
 	
 };

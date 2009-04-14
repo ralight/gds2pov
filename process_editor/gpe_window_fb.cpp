@@ -151,14 +151,20 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	// Connect Events
 	this->Connect( m_menuItem6->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuImportGDS ) );
+	m_checkListBoxLayers->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersClick ), NULL, this );
+	m_checkListBoxLayers->Connect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersToggled ), NULL, this );
 	m_buttonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonAddClick ), NULL, this );
 	m_buttonRemove->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonRemoveClick ), NULL, this );
+	m_colourPicker1->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( GPEWindow_fb::OnColourChangedLayer ), NULL, this );
 }
 
 GPEWindow_fb::~GPEWindow_fb()
 {
 	// Disconnect Events
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuImportGDS ) );
+	m_checkListBoxLayers->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersClick ), NULL, this );
+	m_checkListBoxLayers->Disconnect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersToggled ), NULL, this );
 	m_buttonAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonAddClick ), NULL, this );
 	m_buttonRemove->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonRemoveClick ), NULL, this );
+	m_colourPicker1->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( GPEWindow_fb::OnColourChangedLayer ), NULL, this );
 }
