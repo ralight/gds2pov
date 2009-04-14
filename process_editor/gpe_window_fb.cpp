@@ -15,33 +15,33 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	m_menubar1 = new wxMenuBar( 0 );
 	m_menu1 = new wxMenu();
-	wxMenuItem* m_menuItem1;
-	m_menuItem1 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("&New") ) + wxT('\t') + wxT("Ctrl+N"), wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem1 );
+	wxMenuItem* m_menuItemNew;
+	m_menuItemNew = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("&New") ) + wxT('\t') + wxT("Ctrl+N"), wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( m_menuItemNew );
 	
-	wxMenuItem* m_menuItem2;
-	m_menuItem2 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("&Open...") ) + wxT('\t') + wxT("Ctrl+O"), wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem2 );
+	wxMenuItem* m_menuItemOpen;
+	m_menuItemOpen = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("&Open...") ) + wxT('\t') + wxT("Ctrl+O"), wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( m_menuItemOpen );
 	
-	wxMenuItem* m_menuItem3;
-	m_menuItem3 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("&Save") ) + wxT('\t') + wxT("Ctrl+S"), wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem3 );
+	wxMenuItem* m_menuItemSave;
+	m_menuItemSave = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("&Save") ) + wxT('\t') + wxT("Ctrl+S"), wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( m_menuItemSave );
 	
-	wxMenuItem* m_menuItem4;
-	m_menuItem4 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Save &As...") ) + wxT('\t') + wxT("Shift+Ctrl+S"), wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem4 );
-	
-	m_menu1->AppendSeparator();
-	
-	wxMenuItem* m_menuItem6;
-	m_menuItem6 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Import GDS...") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem6 );
+	wxMenuItem* m_menuItemSaveAs;
+	m_menuItemSaveAs = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Save &As...") ) + wxT('\t') + wxT("Shift+Ctrl+S"), wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( m_menuItemSaveAs );
 	
 	m_menu1->AppendSeparator();
 	
-	wxMenuItem* m_menuItem5;
-	m_menuItem5 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("E&xit") ) + wxT('\t') + wxT("Alt+F4"), wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem5 );
+	wxMenuItem* m_menuItemImportGDS;
+	m_menuItemImportGDS = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Import GDS...") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( m_menuItemImportGDS );
+	
+	m_menu1->AppendSeparator();
+	
+	wxMenuItem* m_menuItemExit;
+	m_menuItemExit = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("E&xit") ) + wxT('\t') + wxT("Alt+F4"), wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( m_menuItemExit );
 	
 	m_menubar1->Append( m_menu1, wxT("&File") );
 	
@@ -150,7 +150,9 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Layout();
 	
 	// Connect Events
-	this->Connect( m_menuItem6->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuImportGDS ) );
+	this->Connect( m_menuItemSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuSave ) );
+	this->Connect( m_menuItemSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuSaveAs ) );
+	this->Connect( m_menuItemImportGDS->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuImportGDS ) );
 	m_checkListBoxLayers->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersClick ), NULL, this );
 	m_checkListBoxLayers->Connect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersToggled ), NULL, this );
 	m_buttonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonAddClick ), NULL, this );
@@ -161,6 +163,8 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 GPEWindow_fb::~GPEWindow_fb()
 {
 	// Disconnect Events
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuSave ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuSaveAs ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuImportGDS ) );
 	m_checkListBoxLayers->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersClick ), NULL, this );
 	m_checkListBoxLayers->Disconnect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersToggled ), NULL, this );

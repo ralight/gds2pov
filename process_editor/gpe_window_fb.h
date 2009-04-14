@@ -62,6 +62,8 @@ class GPEWindow_fb : public wxFrame
 		wxCheckBox* m_checkBox2;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnMenuSave( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnMenuSaveAs( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMenuImportGDS( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCheckListBoxLayersClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCheckListBoxLayersToggled( wxCommandEvent& event ){ event.Skip(); }
