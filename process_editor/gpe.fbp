@@ -126,7 +126,7 @@
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;New</property>
-                        <property name="name">m_menuItem1</property>
+                        <property name="name">m_menuItemNew</property>
                         <property name="permission">none</property>
                         <property name="shortcut">Ctrl+N</property>
                         <property name="unchecked_bitmap"></property>
@@ -141,7 +141,7 @@
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Open...</property>
-                        <property name="name">m_menuItem2</property>
+                        <property name="name">m_menuItemOpen</property>
                         <property name="permission">none</property>
                         <property name="shortcut">Ctrl+O</property>
                         <property name="unchecked_bitmap"></property>
@@ -156,11 +156,11 @@
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Save</property>
-                        <property name="name">m_menuItem3</property>
+                        <property name="name">m_menuItemSave</property>
                         <property name="permission">none</property>
                         <property name="shortcut">Ctrl+S</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnMenuSave</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
@@ -171,11 +171,11 @@
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Save &amp;As...</property>
-                        <property name="name">m_menuItem4</property>
+                        <property name="name">m_menuItemSaveAs</property>
                         <property name="permission">none</property>
                         <property name="shortcut">Shift+Ctrl+S</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnMenuSaveAs</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="separator" expanded="1">
@@ -189,7 +189,7 @@
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Import GDS...</property>
-                        <property name="name">m_menuItem6</property>
+                        <property name="name">m_menuItemImportGDS</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
@@ -207,7 +207,7 @@
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">E&amp;xit</property>
-                        <property name="name">m_menuItem5</property>
+                        <property name="name">m_menuItemExit</property>
                         <property name="permission">none</property>
                         <property name="shortcut">Alt+F4</property>
                         <property name="unchecked_bitmap"></property>
