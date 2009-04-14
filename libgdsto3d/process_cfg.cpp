@@ -455,16 +455,24 @@ bool GDSProcess::Save(std::string filename)
 	if(!fptr) return false;
 
 	for(unsigned int i = 0; i < m_layers.size(); i++){
-		fprintf(fptr, "LayerStart: LAYER-%d-%d\n", m_layers[i]->Layer, m_layers[i]->Datatype);
+		fprintf(fptr, "LayerStart: %s\n", m_layers[i]->Name.c_str());
 		fprintf(fptr, "Layer: %d\n", m_layers[i]->Layer);
-		fprintf(fptr, "Height: 0\n");
-		fprintf(fptr, "Thickness: 0\n");
-		fprintf(fptr, "Red: 0.0\n");
-		fprintf(fptr, "Green: 0.0\n");
-		fprintf(fptr, "Blue: 0.0\n");
-		fprintf(fptr, "Filter: 0.0\n");
-		fprintf(fptr, "Metal: 0\n");
-		fprintf(fptr, "Show: 1\n");
+		fprintf(fptr, "Height: %d\n", m_layers[i]->Height);
+		fprintf(fptr, "Thickness: %d\n", m_layers[i]->Thickness);
+		fprintf(fptr, "Red: %f\n", m_layers[i]->Red);
+		fprintf(fptr, "Green: %f\n", m_layers[i]->Green);
+		fprintf(fptr, "Blue: %f\n", m_layers[i]->Blue);
+		fprintf(fptr, "Filter: %f\n", m_layers[i]->Filter);
+		if(m_layers[i]->Metal){
+			fprintf(fptr, "Metal: 1\n");
+		}else{
+			fprintf(fptr, "Metal: 0\n");
+		}
+		if(m_layers[i]->Show){
+			fprintf(fptr, "Show: 1\n");
+		}else{
+			fprintf(fptr, "Show: 0\n");
+		}
 		fprintf(fptr, "LayerEnd\n\n");
 	}
 	fclose(fptr);
