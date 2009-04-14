@@ -22,6 +22,8 @@
 
 #include <cstdio>
 #include <cstring>
+#include <sstream>
+#include <string>
 
 
 	/*
@@ -375,7 +377,10 @@ unsigned int GDSProcess::LayerCount()
 void GDSProcess::AddLayer(int Layer, int Datatype)
 {
 	ProcessLayer NewLayer;
+	std::stringstream sName;
 
+	sName << "Layer-" << Layer << ":" << Datatype;
+	NewLayer.Name = sName.str();
 	NewLayer.Layer = Layer;
 	NewLayer.Datatype = Datatype;
 	NewLayer.Height = 0.0;
