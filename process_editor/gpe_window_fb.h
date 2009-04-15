@@ -59,6 +59,8 @@ class GPEWindow_fb : public wxFrame
 		wxStaticText* m_staticText8;
 		wxCheckBox* m_checkBox2;
 		
+		wxButton* m_buttonApply;
+		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnMenuSave( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMenuSaveAs( wxCommandEvent& event ){ event.Skip(); }

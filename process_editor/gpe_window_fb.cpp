@@ -137,6 +137,12 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	fgSizer1->Add( m_checkBox2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	
+	fgSizer1->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_buttonApply = new wxButton( this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_buttonApply, 0, wxALL, 5 );
+	
 	bSizer1->Add( fgSizer1, 2, wxALL|wxEXPAND, 5 );
 	
 	this->SetSizer( bSizer1 );
