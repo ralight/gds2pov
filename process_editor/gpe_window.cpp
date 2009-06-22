@@ -139,6 +139,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			m_textCtrlLayer->SetValue(wxString::Format(wxT("%d"), layer->Layer));
 			m_textCtrlDatatype->SetValue(wxString::Format(wxT("%d"), layer->Datatype));
 			m_textCtrlThickness->SetValue(wxString::Format(wxT("%f"), layer->Thickness));
+			m_spinCtrlTransparency->SetValue(100 * layer->Filter);
 
 			m_colourPickerLayer->SetColour(wxColour(255 * layer->Red, 255 * layer->Green, 255 * layer->Blue));
 
@@ -147,6 +148,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			m_textCtrlDatatype->Enable(true);
 			m_textCtrlThickness->Enable(true);
 			m_colourPickerLayer->Enable(true);
+			m_spinCtrlTransparency->Enable(true);
 
 			SetLayerDirtyState(false);
 		}
@@ -174,6 +176,11 @@ void GPEWindow::SetLayerDirtyState(bool state)
 }
 
 void GPEWindow::OnLayerChange( wxCommandEvent& event )
+{
+	SetLayerDirtyState(true);
+}
+
+void GPEWindow::OnLayerChangeSpin( wxSpinEvent& event )
 {
 	SetLayerDirtyState(true);
 }
@@ -213,6 +220,8 @@ void GPEWindow::SaveLayer(int number)
 		layer->Red = colour.Red() / 255.0;
 		layer->Green = colour.Green() / 255.0;
 		layer->Blue = colour.Blue() / 255.0;
+
+		layer->Filter = m_spinCtrlTransparency->GetValue() / 100.0;
 	}
 }
 

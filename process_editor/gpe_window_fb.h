@@ -24,6 +24,7 @@
 #include <wx/textctrl.h>
 #include <wx/checkbox.h>
 #include <wx/clrpicker.h>
+#include <wx/spinctrl.h>
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -56,6 +57,8 @@ class GPEWindow_fb : public wxFrame
 		wxStaticText* m_staticText6;
 		wxStaticText* m_staticText7;
 		wxColourPickerCtrl* m_colourPickerLayer;
+		wxStaticText* m_staticText81;
+		wxSpinCtrl* m_spinCtrlTransparency;
 		wxStaticText* m_staticText8;
 		wxCheckBox* m_checkBox2;
 		
@@ -71,11 +74,12 @@ class GPEWindow_fb : public wxFrame
 		virtual void OnButtonRemoveClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnLayerChange( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnColourChangedLayer( wxColourPickerEvent& event ){ event.Skip(); }
+		virtual void OnLayerChangeSpin( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnButtonApply( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:
-		GPEWindow_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("GDS2X Process Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 550,400 ), long style = wxDEFAULT_FRAME_STYLE|wxRESIZE_BORDER|wxTAB_TRAVERSAL );
+		GPEWindow_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("GDS2X Process Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 550,500 ), long style = wxDEFAULT_FRAME_STYLE|wxRESIZE_BORDER|wxTAB_TRAVERSAL );
 		~GPEWindow_fb();
 	
 };
