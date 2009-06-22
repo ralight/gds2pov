@@ -24,6 +24,8 @@ void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
 {
 	wxFileDialog *fileDialog = new wxFileDialog(this);
 
+	fileDialog->SetWildcard(wxT("GDS files (*.gds;*.gds2;*.gdsii)|*.gds;*.gds2;*.gdsii|All files (*.*;*)|*.*;*"));
+
 	if(fileDialog->ShowModal() == wxID_OK){
 		/************ Open GDS2 file and parse ****************/
 
