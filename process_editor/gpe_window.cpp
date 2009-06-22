@@ -12,6 +12,7 @@ GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 	m_defaultSaveDir = wxT("");
 	m_defaultSaveFile = wxT("");
 	m_layerIsDirty = false;
+	m_selectedLayer = -1;
 }
 
 GPEWindow::~GPEWindow()
@@ -39,8 +40,10 @@ void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
 
 				for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 					layer = m_process->GetLayer(i);
+					layer->Show = true;
 					printf("%s - %d:%d\n", layer->Name.c_str(), layer->Layer, layer->Datatype);
-					m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
+					int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
+					m_checkListBoxLayers->Check(item, true);
 				}
 			}else{
 				wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Unable to parse GDS file."), wxT("Error"), wxOK | wxICON_ERROR);
@@ -62,39 +65,8 @@ void GPEWindow::OnButtonApply( wxCommandEvent& event )
 {
 	int selected = m_checkListBoxLayers->GetSelection();
 	if(selected != wxNOT_FOUND){
+		SaveLayer(selected);
 		SetLayerDirtyState(false);
-		ProcessLayer *layer = m_process->GetLayer(selected);
-
-		layer->Name = m_textCtrlName->GetValue().ToUTF8();
-
-		long val;
-
-		if(m_textCtrlLayer->GetValue().ToLong(&val)){
-			layer->Layer = val;
-		}else{
-			// FIXME
-		}
-		if(m_textCtrlDatatype->GetValue().ToLong(&val)){
-			layer->Datatype = val;
-		}else{
-			// FIXME
-		}
-
-		double dval;
-		if(m_textCtrlThickness->GetValue().ToDouble(&dval)){
-			layer->Thickness = dval;
-		}else{
-			// FIXME
-		}
-
-
-//		layer->Height = m_textCtrlLayer->GetValue()->;
-
-		wxColour colour = m_colourPickerLayer->GetColour();
-
-		layer->Red = colour.Red() / 255.0;
-		layer->Green = colour.Green() / 255.0;
-		layer->Blue = colour.Blue() / 255.0;
 	}
 }
 
@@ -144,6 +116,21 @@ void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
 
 void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 {
+	if(m_layerIsDirty && m_selectedLayer >= 0 && m_selectedLayer < (int)m_checkListBoxLayers->GetCount()){
+		wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Layer modified. Apply changes?"), wxT("Warning"), wxYES_NO | wxCANCEL);
+		switch(msgDialog->ShowModal()){
+			case wxID_YES:
+				SaveLayer(m_selectedLayer);
+				break;
+			case wxID_NO:
+				break;
+			case wxID_CANCEL:
+				m_checkListBoxLayers->Select(m_selectedLayer);
+				return;
+				break;
+		}
+		delete msgDialog;
+	}
 	int selected = m_checkListBoxLayers->GetSelection();
 	if(selected != wxNOT_FOUND){
 		ProcessLayer *layer = m_process->GetLayer(selected);
@@ -164,6 +151,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			SetLayerDirtyState(false);
 		}
 	}
+	m_selectedLayer = selected;
 }
 
 void GPEWindow::OnCheckListBoxLayersToggled( wxCommandEvent& event )
@@ -188,5 +176,43 @@ void GPEWindow::SetLayerDirtyState(bool state)
 void GPEWindow::OnLayerChange( wxCommandEvent& event )
 {
 	SetLayerDirtyState(true);
+}
+
+void GPEWindow::SaveLayer(int number)
+{
+	ProcessLayer *layer = m_process->GetLayer(number);
+
+	if(layer){
+		layer->Name = m_textCtrlName->GetValue().ToUTF8();
+
+		long val;
+
+		if(m_textCtrlLayer->GetValue().ToLong(&val)){
+			layer->Layer = val;
+		}else{
+			// FIXME
+		}
+		if(m_textCtrlDatatype->GetValue().ToLong(&val)){
+			layer->Datatype = val;
+		}else{
+			// FIXME
+		}
+
+		double dval;
+		if(m_textCtrlThickness->GetValue().ToDouble(&dval)){
+			layer->Thickness = dval;
+		}else{
+			// FIXME
+		}
+
+//		layer->Height = m_textCtrlLayer->GetValue()->;
+
+		wxColour colour = m_colourPickerLayer->GetColour();
+
+
+		layer->Red = colour.Red() / 255.0;
+		layer->Green = colour.Green() / 255.0;
+		layer->Blue = colour.Blue() / 255.0;
+	}
 }
 
