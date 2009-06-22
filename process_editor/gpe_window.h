@@ -42,6 +42,7 @@ class GPEWindow : public GPEWindow_fb
 		void OnMenuImportGDS( wxCommandEvent& event );
 		void OnColourChangedLayer( wxColourPickerEvent& event );
 		void OnCheckListBoxLayersClick( wxCommandEvent& event );
+		void OnCheckListBoxLayersToggled( wxCommandEvent& event );
 		void SetLayerDirtyState(bool state);
 		void OnLayerChange( wxCommandEvent& event );
 

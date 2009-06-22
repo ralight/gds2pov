@@ -166,6 +166,17 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 	}
 }
 
+void GPEWindow::OnCheckListBoxLayersToggled( wxCommandEvent& event )
+{
+	int selected = event.GetSelection();
+	if(selected != wxNOT_FOUND){
+		ProcessLayer *layer = m_process->GetLayer(selected);
+		if(layer){
+			layer->Show = m_checkListBoxLayers->IsChecked(selected);
+		}
+	}
+}
+
 void GPEWindow::SetLayerDirtyState(bool state)
 {
 	m_buttonApply->Enable(state);
