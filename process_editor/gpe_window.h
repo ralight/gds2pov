@@ -33,6 +33,7 @@ class GPEWindow : public GPEWindow_fb
 		wxString m_defaultSaveDir;
 		wxString m_defaultSaveFile;
 		bool m_layerIsDirty;
+		bool m_fileIsDirty;
 		int m_selectedLayer;
 	
 	protected:
