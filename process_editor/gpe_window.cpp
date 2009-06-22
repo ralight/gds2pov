@@ -12,6 +12,7 @@ GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 	m_defaultSaveDir = wxT("");
 	m_defaultSaveFile = wxT("");
 	m_layerIsDirty = false;
+	m_fileIsDirty = false;
 	m_selectedLayer = -1;
 }
 
@@ -45,6 +46,7 @@ void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
 					int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
 					m_checkListBoxLayers->Check(item, true);
 				}
+				m_fileIsDirty = true;
 			}else{
 				wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Unable to parse GDS file."), wxT("Error"), wxOK | wxICON_ERROR);
 				msgDialog->ShowModal();
@@ -67,6 +69,7 @@ void GPEWindow::OnButtonApply( wxCommandEvent& event )
 	if(selected != wxNOT_FOUND){
 		SaveLayer(selected);
 		SetLayerDirtyState(false);
+		m_fileIsDirty = true;
 	}
 }
 
@@ -78,6 +81,7 @@ void GPEWindow::OnMenuSave( wxCommandEvent& event )
 		std::string filename;
 		filename = (char *)m_process_path.char_str();
 		m_process->Save(filename);
+		m_fileIsDirty = false;
 	}
 }
 
@@ -94,6 +98,7 @@ void GPEWindow::OnMenuSaveAs( wxCommandEvent& event )
 		std::string filename;
 		filename = (char *)m_process_path.char_str();
 		m_process->Save(filename);
+		m_fileIsDirty = false;
 	}
 }
 
@@ -172,7 +177,7 @@ void GPEWindow::SetLayerDirtyState(bool state)
 	m_buttonApply->Enable(state);
 	m_layerIsDirty = state;
 
-	printf("SetLayerDirtyState(%d)\n", state);
+	m_fileIsDirty = true;
 }
 
 void GPEWindow::OnLayerChange( wxCommandEvent& event )
