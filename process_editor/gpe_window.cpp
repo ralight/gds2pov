@@ -58,6 +58,46 @@ void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
 	delete fileDialog;
 }
 
+void GPEWindow::OnButtonApply( wxCommandEvent& event )
+{
+	int selected = m_checkListBoxLayers->GetSelection();
+	if(selected != wxNOT_FOUND){
+		SetLayerDirtyState(false);
+		ProcessLayer *layer = m_process->GetLayer(selected);
+
+		layer->Name = m_textCtrlName->GetValue().ToUTF8();
+
+		long val;
+
+		if(m_textCtrlLayer->GetValue().ToLong(&val)){
+			layer->Layer = val;
+		}else{
+			// FIXME
+		}
+		if(m_textCtrlDatatype->GetValue().ToLong(&val)){
+			layer->Datatype = val;
+		}else{
+			// FIXME
+		}
+
+		double dval;
+		if(m_textCtrlThickness->GetValue().ToDouble(&dval)){
+			layer->Thickness = dval;
+		}else{
+			// FIXME
+		}
+
+
+//		layer->Height = m_textCtrlLayer->GetValue()->;
+
+		wxColour colour = m_colourPickerLayer->GetColour();
+
+		layer->Red = colour.Red() / 255.0;
+		layer->Green = colour.Green() / 255.0;
+		layer->Blue = colour.Blue() / 255.0;
+	}
+}
+
 void GPEWindow::OnMenuSave( wxCommandEvent& event )
 {
 	if(m_process_path == wxT("")){

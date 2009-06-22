@@ -36,6 +36,7 @@ class GPEWindow : public GPEWindow_fb
 	
 	protected:
 		
+		void OnButtonApply( wxCommandEvent& event );
 		void OnMenuSave( wxCommandEvent& event );
 		void OnMenuSaveAs( wxCommandEvent& event );
 		void OnMenuImportGDS( wxCommandEvent& event );
