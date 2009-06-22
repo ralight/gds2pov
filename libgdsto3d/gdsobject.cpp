@@ -21,6 +21,7 @@
  */
 
 #include <cstring>
+#include <cmath>
 
 #include "gdsobject.h"
 #include "gds_globals.h"
@@ -192,38 +193,93 @@ struct _Boundary *GDSObject::GetBoundary(void)
 			GDSObject *object = sref->object;
 			struct _Boundary *NewBound;
 			NewBound = object->GetBoundary();
-			if(sref->x1 + NewBound->xmax > m_boundary.xmax){
-				m_boundary.xmax = sref->x1 + NewBound->xmax;
+
+			float xmax, xmin;
+			float ymax, ymin;
+
+			switch((int)round(sref->rotate.y)){
+				case 0:
+				case 360:
+				case 180:
+				case -180:
+					xmax = NewBound->xmax;
+					xmin = NewBound->xmin;
+					ymax = NewBound->ymax;
+					ymin = NewBound->ymin;
+					break;
+
+				case 90:
+				case -270:
+				case 270:
+				case -90:
+					xmax = NewBound->ymax;
+					xmin = NewBound->ymin;
+					ymax = NewBound->xmax;
+					ymin = NewBound->xmin;
+					break;
 			}
-			if(sref->x1 - NewBound->xmin < m_boundary.xmin){
-				m_boundary.xmin = sref->x1 - NewBound->xmin;
+			
+			if(sref->x1 + xmax > m_boundary.xmax){
+				m_boundary.xmax = sref->x1 + xmax;
 			}
-			if(sref->y1 + NewBound->ymax > m_boundary.ymax){
-				m_boundary.ymax = sref->y1 + NewBound->ymax;
+			if(sref->x1 - xmin < m_boundary.xmin){
+				m_boundary.xmin = sref->x1 - xmin;
 			}
-			if(sref->y1 - NewBound->ymin < m_boundary.ymin){
-				m_boundary.ymin = sref->y1 - NewBound->ymin;
+			if(sref->y1 + ymax > m_boundary.ymax){
+				m_boundary.ymax = sref->y1 + ymax;
+			}
+			if(sref->y1 - ymin < m_boundary.ymin){
+				m_boundary.ymin = sref->y1 - ymin;
 			}
 		}
 	}
 
+	printf("boo %s %d\n", this->m_name.c_str(), m_arefs.size());
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		ASRefElement *aref = m_arefs[i];
-		if(m_name == aref->name && aref->object){
+		printf("\t%s %s %p\n", m_name.c_str(), aref->name.c_str(), aref->object);
+		if(m_name != aref->name && aref->object){
 			GDSObject *object = aref->object;
 			struct _Boundary *NewBound;
 			NewBound = object->GetBoundary();
-			if(aref->x2 + NewBound->xmax > m_boundary.xmax){
-				m_boundary.xmax = aref->x2 + NewBound->xmax;
+
+			float xmax, xmin;
+			float ymax, ymin;
+
+			printf("%s\n", aref->name.c_str());
+			switch((int)round(aref->rotate.y)){
+				case 0:
+				case 360:
+				case 180:
+				case -180:
+					xmax = NewBound->xmax;
+					xmin = NewBound->xmin;
+					ymax = NewBound->ymax;
+					ymin = NewBound->ymin;
+					break;
+
+				case 90:
+				case -270:
+				case 270:
+				case -90:
+					xmax = NewBound->ymax;
+					xmin = NewBound->ymin;
+					ymax = NewBound->xmax;
+					ymin = NewBound->xmin;
+					break;
 			}
-			if(aref->x1 - NewBound->xmin < m_boundary.xmin){
-				m_boundary.xmin = aref->x1 - NewBound->xmin;
+			
+			if(aref->x2 + xmax > m_boundary.xmax){
+				m_boundary.xmax = aref->x2 + xmax;
 			}
-			if(aref->y3 + NewBound->ymax > m_boundary.ymax){
-				m_boundary.ymax = aref->y3 + NewBound->ymax;
+			if(aref->x1 - xmin < m_boundary.xmin){
+				m_boundary.xmin = aref->x1 - xmin;
 			}
-			if(aref->y1 - NewBound->ymin < m_boundary.ymin){
-				m_boundary.ymin = aref->y1 - NewBound->ymin;
+			if(aref->y3 + ymax > m_boundary.ymax){
+				m_boundary.ymax = aref->y3 + ymax;
+			}
+			if(aref->y1 - ymin < m_boundary.ymin){
+				m_boundary.ymin = aref->y1 - ymin;
 			}
 		}
 	}
