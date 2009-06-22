@@ -32,6 +32,7 @@ class GPEWindow : public GPEWindow_fb
 		wxString m_process_path;
 		wxString m_defaultSaveDir;
 		wxString m_defaultSaveFile;
+		bool m_layerIsDirty;
 	
 	protected:
 		
@@ -40,6 +41,8 @@ class GPEWindow : public GPEWindow_fb
 		void OnMenuImportGDS( wxCommandEvent& event );
 		void OnColourChangedLayer( wxColourPickerEvent& event );
 		void OnCheckListBoxLayersClick( wxCommandEvent& event );
+		void SetLayerDirtyState(bool state);
+		void OnLayerChange( wxCommandEvent& event );
 
 	public:
 		GPEWindow();

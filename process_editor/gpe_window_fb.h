@@ -69,7 +69,9 @@ class GPEWindow_fb : public wxFrame
 		virtual void OnCheckListBoxLayersToggled( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonAddClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonRemoveClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnLayerChange( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnColourChangedLayer( wxColourPickerEvent& event ){ event.Skip(); }
+		virtual void OnButtonApply( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:

@@ -11,6 +11,7 @@ GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 	m_process_path = wxT("");
 	m_defaultSaveDir = wxT("");
 	m_defaultSaveFile = wxT("");
+	m_layerIsDirty = false;
 }
 
 GPEWindow::~GPEWindow()
@@ -86,6 +87,8 @@ void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
 {
 	int selected = m_checkListBoxLayers->GetSelection();
 	if(selected != wxNOT_FOUND){
+		SetLayerDirtyState(true);
+		/*
 		ProcessLayer *layer = m_process->GetLayer(selected);
 
 		wxColour colour = m_colourPickerLayer->GetColour();
@@ -93,6 +96,7 @@ void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
 		layer->Red = colour.Red() / 255.0;
 		layer->Green = colour.Green() / 255.0;
 		layer->Blue = colour.Blue() / 255.0;
+		*/
 	}
 }
 
@@ -110,5 +114,18 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			m_colourPickerLayer->SetColour(wxColour(255 * layer->Red, 255 * layer->Green, 255 * layer->Blue));
 		}
 	}
+}
+
+void GPEWindow::SetLayerDirtyState(bool state)
+{
+	m_buttonApply->Enable(state);
+	m_layerIsDirty = state;
+
+	printf("SetLayerDirtyState(%d)\n", state);
+}
+
+void GPEWindow::OnLayerChange( wxCommandEvent& event )
+{
+	SetLayerDirtyState(true);
 }
 

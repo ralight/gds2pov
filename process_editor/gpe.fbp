@@ -459,7 +459,7 @@
                                         <property name="bg"></property>
                                         <property name="context_help"></property>
                                         <property name="default">0</property>
-                                        <property name="enabled">1</property>
+                                        <property name="enabled">0</property>
                                         <property name="fg"></property>
                                         <property name="font"></property>
                                         <property name="hidden">0</property>
@@ -581,7 +581,7 @@
                             <object class="wxTextCtrl" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
-                                <property name="enabled">1</property>
+                                <property name="enabled">0</property>
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
@@ -622,7 +622,7 @@
                                 <event name="OnRightUp"></event>
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
-                                <event name="OnText"></event>
+                                <event name="OnText">OnLayerChange</event>
                                 <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
@@ -687,7 +687,7 @@
                             <object class="wxTextCtrl" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
-                                <property name="enabled">1</property>
+                                <property name="enabled">0</property>
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
@@ -728,7 +728,7 @@
                                 <event name="OnRightUp"></event>
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
-                                <event name="OnText"></event>
+                                <event name="OnText">OnLayerChange</event>
                                 <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
@@ -793,7 +793,7 @@
                             <object class="wxTextCtrl" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
-                                <property name="enabled">1</property>
+                                <property name="enabled">0</property>
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
@@ -834,7 +834,7 @@
                                 <event name="OnRightUp"></event>
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
-                                <event name="OnText"></event>
+                                <event name="OnText">OnLayerChange</event>
                                 <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
@@ -899,7 +899,7 @@
                             <object class="wxTextCtrl" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
-                                <property name="enabled">1</property>
+                                <property name="enabled">0</property>
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
@@ -940,7 +940,7 @@
                                 <event name="OnRightUp"></event>
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
-                                <event name="OnText"></event>
+                                <event name="OnText">OnLayerChange</event>
                                 <event name="OnTextEnter"></event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
@@ -1109,7 +1109,7 @@
                                 <property name="bg"></property>
                                 <property name="colour">0,0,0</property>
                                 <property name="context_help"></property>
-                                <property name="enabled">1</property>
+                                <property name="enabled">0</property>
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
@@ -1273,7 +1273,7 @@
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
                                 <property name="default">0</property>
-                                <property name="enabled">1</property>
+                                <property name="enabled">0</property>
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
@@ -1291,7 +1291,7 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
-                                <event name="OnButtonClick"></event>
+                                <event name="OnButtonClick">OnButtonApply</event>
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
