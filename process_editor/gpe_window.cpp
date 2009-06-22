@@ -112,6 +112,8 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			m_textCtrlThickness->SetValue(wxString::Format(wxT("%f"), layer->Thickness));
 
 			m_colourPickerLayer->SetColour(wxColour(255 * layer->Red, 255 * layer->Green, 255 * layer->Blue));
+
+			SetLayerDirtyState(false);
 		}
 	}
 }
