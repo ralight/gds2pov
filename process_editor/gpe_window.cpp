@@ -131,6 +131,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 				break;
 			case wxID_CANCEL:
 				m_checkListBoxLayers->Select(m_selectedLayer);
+				delete msgDialog;
 				return;
 				break;
 		}
