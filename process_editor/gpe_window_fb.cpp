@@ -124,14 +124,6 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	fgSizer1->Add( m_textCtrlThickness, 0, wxALL|wxEXPAND, 5 );
 	
-	m_checkBox1 = new wxCheckBox( this, wxID_ANY, wxT("Check Me!"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-	
-	fgSizer1->Add( m_checkBox1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_staticText6 = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText6->Wrap( -1 );
-	fgSizer1->Add( m_staticText6, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	m_staticText7 = new wxStaticText( this, wxID_ANY, wxT("Colour"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText7->Wrap( -1 );
 	fgSizer1->Add( m_staticText7, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -150,13 +142,14 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	fgSizer1->Add( m_spinCtrlTransparency, 0, wxALL, 5 );
 	
-	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText8->Wrap( -1 );
-	fgSizer1->Add( m_staticText8, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_checkBox2 = new wxCheckBox( this, wxID_ANY, wxT("Check Me!"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	fgSizer1->Add( m_checkBox2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_checkBoxMetal = new wxCheckBox( this, wxID_ANY, wxT("Metal Layer"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	m_checkBoxMetal->Enable( false );
+	
+	fgSizer1->Add( m_checkBoxMetal, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
 	fgSizer1->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -186,6 +179,7 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_colourPickerLayer->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( GPEWindow_fb::OnColourChangedLayer ), NULL, this );
 	m_spinCtrlTransparency->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( GPEWindow_fb::OnLayerChangeSpin ), NULL, this );
 	m_spinCtrlTransparency->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
+	m_checkBoxMetal->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_buttonApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonApply ), NULL, this );
 }
 
@@ -206,5 +200,6 @@ GPEWindow_fb::~GPEWindow_fb()
 	m_colourPickerLayer->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( GPEWindow_fb::OnColourChangedLayer ), NULL, this );
 	m_spinCtrlTransparency->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( GPEWindow_fb::OnLayerChangeSpin ), NULL, this );
 	m_spinCtrlTransparency->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
+	m_checkBoxMetal->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_buttonApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonApply ), NULL, this );
 }

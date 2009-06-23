@@ -145,6 +145,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			m_textCtrlDatatype->SetValue(wxString::Format(wxT("%d"), layer->Datatype));
 			m_textCtrlThickness->SetValue(wxString::Format(wxT("%f"), layer->Thickness));
 			m_spinCtrlTransparency->SetValue(100 * layer->Filter);
+			m_checkBoxMetal->SetValue(layer->Metal);
 
 			m_colourPickerLayer->SetColour(wxColour(255 * layer->Red, 255 * layer->Green, 255 * layer->Blue));
 
@@ -154,6 +155,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			m_textCtrlThickness->Enable(true);
 			m_colourPickerLayer->Enable(true);
 			m_spinCtrlTransparency->Enable(true);
+			m_checkBoxMetal->Enable(true);
 
 			SetLayerDirtyState(false);
 		}
@@ -227,6 +229,8 @@ void GPEWindow::SaveLayer(int number)
 		layer->Blue = colour.Blue() / 255.0;
 
 		layer->Filter = m_spinCtrlTransparency->GetValue() / 100.0;
+
+		layer->Metal = m_checkBoxMetal->IsChecked();
 	}
 }
 

@@ -22,9 +22,9 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/checkbox.h>
 #include <wx/clrpicker.h>
 #include <wx/spinctrl.h>
+#include <wx/checkbox.h>
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -53,14 +53,12 @@ class GPEWindow_fb : public wxFrame
 		wxTextCtrl* m_textCtrlDatatype;
 		wxStaticText* m_staticText5;
 		wxTextCtrl* m_textCtrlThickness;
-		wxCheckBox* m_checkBox1;
-		wxStaticText* m_staticText6;
 		wxStaticText* m_staticText7;
 		wxColourPickerCtrl* m_colourPickerLayer;
 		wxStaticText* m_staticText81;
 		wxSpinCtrl* m_spinCtrlTransparency;
-		wxStaticText* m_staticText8;
-		wxCheckBox* m_checkBox2;
+		
+		wxCheckBox* m_checkBoxMetal;
 		
 		wxButton* m_buttonApply;
 		
