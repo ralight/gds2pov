@@ -58,6 +58,11 @@ void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
 		FILE *iptr;
 		iptr = fopen((char *)fileDialog->GetPath().char_str(), "rb");
 		if(iptr){
+			m_process_path = wxT("");
+			m_defaultSaveDir = wxT("");
+			m_defaultSaveFile = wxT("");
+			m_selectedLayer = -1;
+
 			class GDSParse *Parser = new class GDSParse(m_config, m_process, true);
 			if(!Parser->Parse(iptr)){
 				ProcessLayer *layer;
