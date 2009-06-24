@@ -26,6 +26,9 @@
 #include <wx/spinctrl.h>
 #include <wx/checkbox.h>
 #include <wx/frame.h>
+#include <wx/statbmp.h>
+#include <wx/panel.h>
+#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -39,7 +42,8 @@ class GPEWindow_fb : public wxFrame
 	
 	protected:
 		wxMenuBar* m_menubar1;
-		wxMenu* m_menu1;
+		wxMenu* m_menuFile;
+		wxMenu* m_menuHelp;
 		wxCheckListBox* m_checkListBoxLayers;
 		wxButton* m_buttonUp;
 		wxButton* m_buttonDown;
@@ -68,6 +72,7 @@ class GPEWindow_fb : public wxFrame
 		virtual void OnMenuSaveAs( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMenuImportGDS( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMenuExit( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnMenuAbout( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCheckListBoxLayersClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCheckListBoxLayersToggled( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonAddClick( wxCommandEvent& event ){ event.Skip(); }
@@ -81,6 +86,35 @@ class GPEWindow_fb : public wxFrame
 	public:
 		GPEWindow_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("GDS2X Process Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 550,500 ), long style = wxDEFAULT_FRAME_STYLE|wxRESIZE_BORDER|wxTAB_TRAVERSAL );
 		~GPEWindow_fb();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class GPEAboutDialog_fb
+///////////////////////////////////////////////////////////////////////////////
+class GPEAboutDialog_fb : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxPanel* m_panel1;
+		wxStaticBitmap* m_bitmap1;
+		wxStaticText* m_staticText19;
+		wxStaticText* m_staticText18;
+		
+		wxStaticText* m_staticText10;
+		wxStaticText* m_staticText11;
+		
+		wxStaticText* m_staticText12;
+		wxButton* m_buttonOk;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnButtonOk( wxCommandEvent& event ){ event.Skip(); }
+		
+	
+	public:
+		GPEAboutDialog_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 291,257 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~GPEAboutDialog_fb();
 	
 };
 

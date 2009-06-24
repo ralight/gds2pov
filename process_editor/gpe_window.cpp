@@ -3,6 +3,7 @@
 
 #include "gdsparse.h"
 #include "gpe_window.h"
+#include "gpe_about.h"
 
 GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 {
@@ -43,6 +44,13 @@ bool GPEWindow::DoFileSave( bool forceNewFilename )
 	m_fileIsDirty = false;
 
 	return true;
+}
+
+void GPEWindow::OnMenuAbout( wxCommandEvent& event )
+{
+	GPEAboutDialog *dialog = new GPEAboutDialog();
+	dialog->ShowModal();
+	delete dialog;
 }
 
 void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
