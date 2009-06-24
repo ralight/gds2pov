@@ -22,6 +22,29 @@ GPEWindow::~GPEWindow()
 	delete m_process;
 }
 
+bool GPEWindow::DoFileSave( bool forceNewFilename )
+{
+	if(m_process_path = wxT("") || forceNewFilename){
+		wxFileDialog *fileDialog = new wxFileDialog(this, wxT("Choose a file"),
+				m_defaultSaveDir, m_defaultSaveFile, wxT("*.*"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+		if(fileDialog->ShowModal() == wxID_OK){
+			m_defaultSaveDir = fileDialog->GetDirectory();
+			m_defaultSaveFile = fileDialog->GetFilename();
+			m_process_path = fileDialog->GetPath();
+		}else{
+			return false;
+		}
+	}
+
+	std::string filename;
+	filename = (char *)m_process_path.char_str();
+	m_process->Save(filename);
+	m_fileIsDirty = false;
+
+	return true;
+}
+
 void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
 {
 	wxFileDialog *fileDialog = new wxFileDialog(this);
@@ -79,13 +102,16 @@ void GPEWindow::OnMenuExit( wxCommandEvent& event )
 		wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("File modified. Save changes?"), wxT("Warning"), wxYES_NO | wxCANCEL);
 		switch(msgDialog->ShowModal()){
 			case wxID_YES:
-				// FIXME - save file
+				if(!DoFileSave(false)){
+					/* User cancelled file selection dialog */
+					delete msgDialog;
+					return;
+				}
 			case wxID_NO:
 				delete msgDialog;
 				Close();
 				break;
 			case wxID_CANCEL:
-				m_checkListBoxLayers->Select(m_selectedLayer);
 				delete msgDialog;
 				return;
 				break;
@@ -97,31 +123,12 @@ void GPEWindow::OnMenuExit( wxCommandEvent& event )
 
 void GPEWindow::OnMenuSave( wxCommandEvent& event )
 {
-	if(m_process_path == wxT("")){
-		OnMenuSaveAs(event);
-	}else{
-		std::string filename;
-		filename = (char *)m_process_path.char_str();
-		m_process->Save(filename);
-		m_fileIsDirty = false;
-	}
+	DoFileSave(false);
 }
 
 void GPEWindow::OnMenuSaveAs( wxCommandEvent& event )
 {
-	wxFileDialog *fileDialog = new wxFileDialog(this, wxT("Choose a file"),
-			m_defaultSaveDir, m_defaultSaveFile, wxT("*.*"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-
-	if(fileDialog->ShowModal() == wxID_OK){
-		m_defaultSaveDir = fileDialog->GetDirectory();
-		m_defaultSaveFile = fileDialog->GetFilename();
-		m_process_path = fileDialog->GetPath();
-
-		std::string filename;
-		filename = (char *)m_process_path.char_str();
-		m_process->Save(filename);
-		m_fileIsDirty = false;
-	}
+	DoFileSave(true);
 }
 
 void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
