@@ -24,7 +24,7 @@ GPEWindow::~GPEWindow()
 
 bool GPEWindow::DoFileSave( bool forceNewFilename )
 {
-	if(m_process_path = wxT("") || forceNewFilename){
+	if(m_process_path == wxT("") || forceNewFilename){
 		wxFileDialog *fileDialog = new wxFileDialog(this, wxT("Choose a file"),
 				m_defaultSaveDir, m_defaultSaveFile, wxT("*.*"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
