@@ -73,6 +73,28 @@ void GPEWindow::OnButtonApply( wxCommandEvent& event )
 	}
 }
 
+void GPEWindow::OnMenuExit( wxCommandEvent& event )
+{
+	if(m_fileIsDirty){
+		wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("File modified. Save changes?"), wxT("Warning"), wxYES_NO | wxCANCEL);
+		switch(msgDialog->ShowModal()){
+			case wxID_YES:
+				// FIXME - save file
+			case wxID_NO:
+				delete msgDialog;
+				Close();
+				break;
+			case wxID_CANCEL:
+				m_checkListBoxLayers->Select(m_selectedLayer);
+				delete msgDialog;
+				return;
+				break;
+		}
+	}else{
+		Close();
+	}
+}
+
 void GPEWindow::OnMenuSave( wxCommandEvent& event )
 {
 	if(m_process_path == wxT("")){

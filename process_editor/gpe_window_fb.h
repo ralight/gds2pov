@@ -66,6 +66,7 @@ class GPEWindow_fb : public wxFrame
 		virtual void OnMenuSave( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMenuSaveAs( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMenuImportGDS( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnMenuExit( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCheckListBoxLayersClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCheckListBoxLayersToggled( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonAddClick( wxCommandEvent& event ){ event.Skip(); }
