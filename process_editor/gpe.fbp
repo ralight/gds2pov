@@ -130,7 +130,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut">Ctrl+N</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnMenuFileNew</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="1">

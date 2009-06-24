@@ -48,6 +48,7 @@ class GPEWindow : public GPEWindow_fb
 		void OnLayerChangeSpin( wxSpinEvent& event );
 		void OnMenuAbout( wxCommandEvent& event );
 		void OnMenuExit( wxCommandEvent& event );
+		void OnMenuFileNew( wxCommandEvent& event );
 		void OnMenuFileOpen( wxCommandEvent& event );
 		void OnMenuSave( wxCommandEvent& event );
 		void OnMenuSaveAs( wxCommandEvent& event );

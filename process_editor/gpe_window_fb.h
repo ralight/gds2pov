@@ -68,6 +68,7 @@ class GPEWindow_fb : public wxFrame
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCloseEvent( wxCloseEvent& event ){ event.Skip(); }
+		virtual void OnMenuFileNew( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMenuFileOpen( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMenuSave( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMenuSaveAs( wxCommandEvent& event ){ event.Skip(); }

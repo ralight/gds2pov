@@ -5,15 +5,6 @@
 #include "gpe_window.h"
 #include "gpe_about.h"
 
-inline std::string TrimStr(const std::string& Src, const std::string& c = " \r\n")
-{
-	int p2 = Src.find_last_not_of(c);
-	if (p2 == std::string::npos) return std::string();
-	int p1 = Src.find_first_not_of(c);
-	if (p1 == std::string::npos) p1 = 0;
-	return Src.substr(p1, (p2-p1)+1);
-}
-
 GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 {
 	m_config = new GDSConfig();
@@ -62,6 +53,34 @@ void GPEWindow::OnMenuAbout( wxCommandEvent& event )
 	delete dialog;
 }
 
+void GPEWindow::OnMenuFileNew( wxCommandEvent& event )
+{
+	bool veto;
+	veto = TryFileSave();
+
+	if(!veto){
+		if(m_process){
+			delete m_process;
+			m_process = NULL;
+		}
+		m_process = new GDSProcess();
+		m_checkListBoxLayers->Clear();
+		m_process_path = wxT("");
+		m_defaultSaveDir = wxT("");
+		m_defaultSaveFile = wxT("");
+		m_selectedLayer = -1;
+		m_fileIsDirty = false;
+
+		m_textCtrlName->Enable(false);
+		m_textCtrlLayer->Enable(false);
+		m_textCtrlDatatype->Enable(false);
+		m_textCtrlThickness->Enable(false);
+		m_colourPickerLayer->Enable(false);
+		m_spinCtrlTransparency->Enable(false);
+		m_checkBoxMetal->Enable(false);
+	}
+}
+
 void GPEWindow::OnMenuFileOpen( wxCommandEvent& event )
 {
 	bool veto;
@@ -73,7 +92,6 @@ void GPEWindow::OnMenuFileOpen( wxCommandEvent& event )
 			m_process = NULL;
 		}
 		m_process = new GDSProcess();
-		// FIXME - clear old process file first
 	
 		wxFileDialog *fileDialog = new wxFileDialog(this);
 
