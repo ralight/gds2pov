@@ -48,11 +48,13 @@ class GPEWindow : public GPEWindow_fb
 		void OnLayerChangeSpin( wxSpinEvent& event );
 		void OnMenuAbout( wxCommandEvent& event );
 		void OnMenuExit( wxCommandEvent& event );
+		void OnMenuFileOpen( wxCommandEvent& event );
 		void OnMenuSave( wxCommandEvent& event );
 		void OnMenuSaveAs( wxCommandEvent& event );
 		void OnMenuImportGDS( wxCommandEvent& event );
 		void SaveLayer(int number);
 		void SetLayerDirtyState(bool state);
+		bool TryFileSave(void);
 
 	public:
 		GPEWindow();

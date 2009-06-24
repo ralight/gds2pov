@@ -5,6 +5,15 @@
 #include "gpe_window.h"
 #include "gpe_about.h"
 
+inline std::string TrimStr(const std::string& Src, const std::string& c = " \r\n")
+{
+	int p2 = Src.find_last_not_of(c);
+	if (p2 == std::string::npos) return std::string();
+	int p1 = Src.find_first_not_of(c);
+	if (p1 == std::string::npos) p1 = 0;
+	return Src.substr(p1, (p2-p1)+1);
+}
+
 GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 {
 	m_config = new GDSConfig();
@@ -53,6 +62,52 @@ void GPEWindow::OnMenuAbout( wxCommandEvent& event )
 	delete dialog;
 }
 
+void GPEWindow::OnMenuFileOpen( wxCommandEvent& event )
+{
+	bool veto;
+	veto = TryFileSave();
+
+	if(!veto){
+		if(m_process){
+			delete m_process;
+			m_process = NULL;
+		}
+		m_process = new GDSProcess();
+		// FIXME - clear old process file first
+	
+		wxFileDialog *fileDialog = new wxFileDialog(this);
+
+		fileDialog->SetWildcard(wxT("Process files (*.*;*)|*.*;*"));
+
+		if(fileDialog->ShowModal() == wxID_OK){
+			m_process_path.Printf(wxT("%s"), (char *)fileDialog->GetPath().char_str());
+
+			std::string filename;
+			
+			filename = (char *)(m_process_path.c_str());
+
+			m_process->Parse(filename);
+			if(m_process->IsValid()){
+
+				m_checkListBoxLayers->Clear();
+
+				ProcessLayer *layer;
+				for(unsigned int i = 0; i < m_process->LayerCount(); i++){
+					layer = m_process->GetLayer(i);
+					printf("%s - %d:%d\n", layer->Name.c_str(), layer->Layer, layer->Datatype);
+					int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
+					m_checkListBoxLayers->Check(item, true);
+				}
+				m_fileIsDirty = false;
+			}else{
+				wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Unable to parse process file."), wxT("Error"), wxOK | wxICON_ERROR);
+				msgDialog->ShowModal();
+				delete msgDialog;
+			}
+		}
+	}
+}
+
 void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
 {
 	wxFileDialog *fileDialog = new wxFileDialog(this);
@@ -75,6 +130,7 @@ void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
 			if(!Parser->Parse(iptr)){
 				ProcessLayer *layer;
 
+				m_checkListBoxLayers->Clear();
 				for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 					layer = m_process->GetLayer(i);
 					layer->Show = true;
@@ -199,6 +255,24 @@ void GPEWindow::OnCheckListBoxLayersToggled( wxCommandEvent& event )
 
 void GPEWindow::OnCloseEvent( wxCloseEvent& event )
 {
+	bool veto;
+	
+	veto = TryFileSave();
+
+	if(!event.CanVeto()){
+		/* Must destroy the window */
+		Destroy();
+	}else{
+		if(veto){
+			event.Veto(true);
+		}else{
+			Destroy();
+		}
+	}
+}
+
+bool GPEWindow::TryFileSave(void)
+{
 	bool veto = false;
 
 	if(m_fileIsDirty){
@@ -218,16 +292,7 @@ void GPEWindow::OnCloseEvent( wxCloseEvent& event )
 		delete msgDialog;
 	}
 
-	if(!event.CanVeto()){
-		/* Must destroy the window */
-		Destroy();
-	}else{
-		if(veto){
-			event.Veto(true);
-		}else{
-			Destroy();
-		}
-	}
+	return veto;
 }
 
 void GPEWindow::SetLayerDirtyState(bool state)
