@@ -42,6 +42,7 @@ class GPEWindow : public GPEWindow_fb
 		void OnButtonApply( wxCommandEvent& event );
 		void OnCheckListBoxLayersClick( wxCommandEvent& event );
 		void OnCheckListBoxLayersToggled( wxCommandEvent& event );
+		void OnCloseEvent( wxCloseEvent& event );
 		void OnColourChangedLayer( wxColourPickerEvent& event );
 		void OnLayerChange( wxCommandEvent& event );
 		void OnLayerChangeSpin( wxSpinEvent& event );

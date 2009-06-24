@@ -98,27 +98,7 @@ void GPEWindow::OnButtonApply( wxCommandEvent& event )
 
 void GPEWindow::OnMenuExit( wxCommandEvent& event )
 {
-	if(m_fileIsDirty){
-		wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("File modified. Save changes?"), wxT("Warning"), wxYES_NO | wxCANCEL);
-		switch(msgDialog->ShowModal()){
-			case wxID_YES:
-				if(!DoFileSave(false)){
-					/* User cancelled file selection dialog */
-					delete msgDialog;
-					return;
-				}
-			case wxID_NO:
-				delete msgDialog;
-				Close();
-				break;
-			case wxID_CANCEL:
-				delete msgDialog;
-				return;
-				break;
-		}
-	}else{
-		Close();
-	}
+	Close();
 }
 
 void GPEWindow::OnMenuSave( wxCommandEvent& event )
@@ -200,6 +180,39 @@ void GPEWindow::OnCheckListBoxLayersToggled( wxCommandEvent& event )
 		ProcessLayer *layer = m_process->GetLayer(selected);
 		if(layer){
 			layer->Show = m_checkListBoxLayers->IsChecked(selected);
+		}
+	}
+}
+
+void GPEWindow::OnCloseEvent( wxCloseEvent& event )
+{
+	bool veto = false;
+
+	if(m_fileIsDirty){
+		wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("File modified. Save changes?"), wxT("Warning"), wxYES_NO | wxCANCEL);
+		switch(msgDialog->ShowModal()){
+			case wxID_YES:
+				if(!DoFileSave(false)){
+					/* User cancelled file selection dialog */
+					veto = true;
+				}
+			case wxID_NO:
+				break;
+			case wxID_CANCEL:
+				veto = true;
+				break;
+		}
+		delete msgDialog;
+	}
+
+	if(!event.CanVeto()){
+		/* Must destroy the window */
+		Destroy();
+	}else{
+		if(veto){
+			event.Veto(true);
+		}else{
+			Destroy();
 		}
 	}
 }
