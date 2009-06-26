@@ -46,11 +46,66 @@ bool GPEWindow::DoFileSave( bool forceNewFilename )
 	return true;
 }
 
-void GPEWindow::OnMenuAbout( wxCommandEvent& event )
+void GPEWindow::OnButtonApply( wxCommandEvent& event )
 {
-	GPEAboutDialog *dialog = new GPEAboutDialog();
-	dialog->ShowModal();
-	delete dialog;
+	int selected = m_checkListBoxLayers->GetSelection();
+	if(selected != wxNOT_FOUND){
+		SaveLayer(selected);
+		SetLayerDirtyState(false);
+		m_fileIsDirty = true;
+	}
+}
+
+void GPEWindow::OnMenuFileExit( wxCommandEvent& event )
+{
+	Close();
+}
+
+void GPEWindow::OnMenuFileImportGDS( wxCommandEvent& event )
+{
+	wxFileDialog *fileDialog = new wxFileDialog(this);
+
+	fileDialog->SetWildcard(wxT("GDS files (*.gds;*.gds2;*.gdsii)|*.gds;*.gds2;*.gdsii|All files (*.*;*)|*.*;*"));
+
+	if(fileDialog->ShowModal() == wxID_OK){
+		/************ Open GDS2 file and parse ****************/
+
+		printf("File is '%s'\n", (char*)(fileDialog->GetPath().char_str()));
+		FILE *iptr;
+		iptr = fopen((char *)fileDialog->GetPath().char_str(), "rb");
+		if(iptr){
+			m_process_path = wxT("");
+			m_defaultSaveDir = wxT("");
+			m_defaultSaveFile = wxT("");
+			m_selectedLayer = -1;
+
+			class GDSParse *Parser = new class GDSParse(m_config, m_process, true);
+			if(!Parser->Parse(iptr)){
+				ProcessLayer *layer;
+
+				m_checkListBoxLayers->Clear();
+				for(unsigned int i = 0; i < m_process->LayerCount(); i++){
+					layer = m_process->GetLayer(i);
+					layer->Show = true;
+					printf("%s - %d:%d\n", layer->Name.c_str(), layer->Layer, layer->Datatype);
+					int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
+					m_checkListBoxLayers->Check(item, true);
+				}
+				m_fileIsDirty = true;
+			}else{
+				wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Unable to parse GDS file."), wxT("Error"), wxOK | wxICON_ERROR);
+				msgDialog->ShowModal();
+				delete msgDialog;
+			}
+			delete Parser;
+		}else{
+			wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Unable to open GDS file."), wxT("Error"), wxOK | wxICON_ERROR);
+			msgDialog->ShowModal();
+			delete msgDialog;
+		}
+	}
+
+	delete fileDialog;
 }
 
 void GPEWindow::OnMenuFileNew( wxCommandEvent& event )
@@ -126,76 +181,21 @@ void GPEWindow::OnMenuFileOpen( wxCommandEvent& event )
 	}
 }
 
-void GPEWindow::OnMenuImportGDS( wxCommandEvent& event )
-{
-	wxFileDialog *fileDialog = new wxFileDialog(this);
-
-	fileDialog->SetWildcard(wxT("GDS files (*.gds;*.gds2;*.gdsii)|*.gds;*.gds2;*.gdsii|All files (*.*;*)|*.*;*"));
-
-	if(fileDialog->ShowModal() == wxID_OK){
-		/************ Open GDS2 file and parse ****************/
-
-		printf("File is '%s'\n", (char*)(fileDialog->GetPath().char_str()));
-		FILE *iptr;
-		iptr = fopen((char *)fileDialog->GetPath().char_str(), "rb");
-		if(iptr){
-			m_process_path = wxT("");
-			m_defaultSaveDir = wxT("");
-			m_defaultSaveFile = wxT("");
-			m_selectedLayer = -1;
-
-			class GDSParse *Parser = new class GDSParse(m_config, m_process, true);
-			if(!Parser->Parse(iptr)){
-				ProcessLayer *layer;
-
-				m_checkListBoxLayers->Clear();
-				for(unsigned int i = 0; i < m_process->LayerCount(); i++){
-					layer = m_process->GetLayer(i);
-					layer->Show = true;
-					printf("%s - %d:%d\n", layer->Name.c_str(), layer->Layer, layer->Datatype);
-					int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
-					m_checkListBoxLayers->Check(item, true);
-				}
-				m_fileIsDirty = true;
-			}else{
-				wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Unable to parse GDS file."), wxT("Error"), wxOK | wxICON_ERROR);
-				msgDialog->ShowModal();
-				delete msgDialog;
-			}
-			delete Parser;
-		}else{
-			wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Unable to open GDS file."), wxT("Error"), wxOK | wxICON_ERROR);
-			msgDialog->ShowModal();
-			delete msgDialog;
-		}
-	}
-
-	delete fileDialog;
-}
-
-void GPEWindow::OnButtonApply( wxCommandEvent& event )
-{
-	int selected = m_checkListBoxLayers->GetSelection();
-	if(selected != wxNOT_FOUND){
-		SaveLayer(selected);
-		SetLayerDirtyState(false);
-		m_fileIsDirty = true;
-	}
-}
-
-void GPEWindow::OnMenuExit( wxCommandEvent& event )
-{
-	Close();
-}
-
-void GPEWindow::OnMenuSave( wxCommandEvent& event )
+void GPEWindow::OnMenuFileSave( wxCommandEvent& event )
 {
 	DoFileSave(false);
 }
 
-void GPEWindow::OnMenuSaveAs( wxCommandEvent& event )
+void GPEWindow::OnMenuFileSaveAs( wxCommandEvent& event )
 {
 	DoFileSave(true);
+}
+
+void GPEWindow::OnMenuHelpAbout( wxCommandEvent& event )
+{
+	GPEAboutDialog *dialog = new GPEAboutDialog();
+	dialog->ShowModal();
+	delete dialog;
 }
 
 void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
