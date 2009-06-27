@@ -46,6 +46,16 @@ bool GPEWindow::DoFileSave( bool forceNewFilename )
 	return true;
 }
 
+void GPEWindow::OnButtonAdd( wxCommandEvent& event )
+{
+	ProcessLayer *layer;
+	
+	layer = m_process->AddLayer(0, 0);
+
+	int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
+	m_checkListBoxLayers->Check(item, true);
+}
+
 void GPEWindow::OnButtonApply( wxCommandEvent& event )
 {
 	int selected = m_checkListBoxLayers->GetSelection();

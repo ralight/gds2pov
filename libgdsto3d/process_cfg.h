@@ -56,8 +56,8 @@ public:
 	void Parse(std::string processfile);
 	//bool Parse(std::string processfile);
 
-	void AddLayer(ProcessLayer *NewLayer);
-	void AddLayer(int Layer, int Datatype);
+	ProcessLayer *AddLayer(ProcessLayer *NewLayer);
+	ProcessLayer *AddLayer(int Layer, int Datatype);
 	ProcessLayer *GetLayer(int Number, int Datatype);
 	ProcessLayer *GetLayer();
 	ProcessLayer *GetLayer(unsigned int index);

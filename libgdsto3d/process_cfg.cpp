@@ -379,7 +379,7 @@ unsigned int GDSProcess::LayerCount()
 }
 
 
-void GDSProcess::AddLayer(int Layer, int Datatype)
+ProcessLayer *GDSProcess::AddLayer(int Layer, int Datatype)
 {
 	ProcessLayer NewLayer;
 	std::stringstream sName;
@@ -397,11 +397,11 @@ void GDSProcess::AddLayer(int Layer, int Datatype)
 	NewLayer.Metal = false;
 	NewLayer.Show = false;
 
-	AddLayer(&NewLayer);
+	return AddLayer(&NewLayer);
 }
 
 
-void GDSProcess::AddLayer(ProcessLayer *NewLayer)
+ProcessLayer *GDSProcess::AddLayer(ProcessLayer *NewLayer)
 {
 	ProcessLayer *layer = new ProcessLayer;
 
@@ -418,6 +418,8 @@ void GDSProcess::AddLayer(ProcessLayer *NewLayer)
 	layer->Metal = NewLayer->Metal;
 
 	m_layers.push_back(layer);
+
+	return layer;
 }
 
 bool GDSProcess::IsValid()
