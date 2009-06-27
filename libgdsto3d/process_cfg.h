@@ -66,6 +66,7 @@ public:
 	bool IsValid();
 	float GetHighest();
 	float GetLowest();
+	bool RemoveLayer(unsigned int index);
 	bool Save(std::string filename);
 };
 

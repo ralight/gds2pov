@@ -450,6 +450,16 @@ float GDSProcess::GetLowest()
 }
 
 
+bool GDSProcess::RemoveLayer(unsigned int index)
+{
+	if(index < m_layers.size()){
+		m_layers.erase(m_layers.begin()+index);
+		return true;
+	}else{
+		return false;
+	}
+}
+
 bool GDSProcess::Save(std::string filename)
 {
 	FILE *fptr = NULL;

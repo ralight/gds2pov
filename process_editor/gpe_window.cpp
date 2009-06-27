@@ -56,6 +56,38 @@ void GPEWindow::OnButtonApply( wxCommandEvent& event )
 	}
 }
 
+void GPEWindow::OnButtonRemove( wxCommandEvent& event )
+{
+	int selected = m_checkListBoxLayers->GetSelection();
+	int saveSelected;
+
+	if(selected != wxNOT_FOUND){
+		m_textCtrlName->Enable(false);
+		m_textCtrlLayer->Enable(false);
+		m_textCtrlDatatype->Enable(false);
+		m_textCtrlThickness->Enable(false);
+		m_colourPickerLayer->Enable(false);
+		m_spinCtrlTransparency->Enable(false);
+		m_checkBoxMetal->Enable(false);
+
+		m_buttonRemove->Enable(false);
+
+		SetLayerDirtyState(false);
+		m_fileIsDirty = true;
+
+		printf("msl: %d\n", m_selectedLayer);
+		if(selected == (int)m_checkListBoxLayers->GetCount()-1){
+			saveSelected = m_selectedLayer - 1;
+		}else{
+			saveSelected = m_selectedLayer;
+		}
+		m_process->RemoveLayer(selected);
+		m_checkListBoxLayers->Delete(selected);
+		m_checkListBoxLayers->SetSelection(saveSelected);
+		OnCheckListBoxLayersClick(event);
+	}
+}
+
 void GPEWindow::OnMenuFileExit( wxCommandEvent& event )
 {
 	Close();
@@ -234,6 +266,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 		delete msgDialog;
 	}
 	int selected = m_checkListBoxLayers->GetSelection();
+	printf("%d\n", selected);
 	if(selected != wxNOT_FOUND){
 		ProcessLayer *layer = m_process->GetLayer(selected);
 		if(layer){
@@ -253,6 +286,8 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			m_colourPickerLayer->Enable(true);
 			m_spinCtrlTransparency->Enable(true);
 			m_checkBoxMetal->Enable(true);
+
+			m_buttonRemove->Enable(true);
 
 			SetLayerDirtyState(false);
 		}

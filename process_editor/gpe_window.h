@@ -40,6 +40,7 @@ class GPEWindow : public GPEWindow_fb
 		
 		bool DoFileSave( bool forceNewFilename );
 		void OnButtonApply( wxCommandEvent& event );
+		void OnButtonRemove( wxCommandEvent& event );
 		void OnCheckListBoxLayersClick( wxCommandEvent& event );
 		void OnCheckListBoxLayersToggled( wxCommandEvent& event );
 		void OnCloseEvent( wxCloseEvent& event );
