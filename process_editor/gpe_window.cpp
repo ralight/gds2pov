@@ -66,6 +66,41 @@ void GPEWindow::OnButtonApply( wxCommandEvent& event )
 	}
 }
 
+void GPEWindow::OnButtonDown( wxCommandEvent& event )
+{
+	int selected = m_checkListBoxLayers->GetSelection();
+	if(selected != wxNOT_FOUND && selected != (int)m_checkListBoxLayers->GetCount()-1){
+		wxString s0, s1;
+		bool b0, b1;
+		
+		s0 = m_checkListBoxLayers->GetString(selected);
+		s1 = m_checkListBoxLayers->GetString(selected+1);
+
+		b0 = m_checkListBoxLayers->IsChecked(selected);
+		b1 = m_checkListBoxLayers->IsChecked(selected+1);
+
+		m_checkListBoxLayers->SetString(selected+1, s0);
+		m_checkListBoxLayers->SetString(selected, s1);
+
+		m_checkListBoxLayers->Check(selected+1, b0);
+		m_checkListBoxLayers->Check(selected, b1);
+
+		m_selectedLayer++;
+		m_checkListBoxLayers->SetSelection(selected+1);
+
+		if(m_selectedLayer > 0){
+			m_buttonUp->Enable(true);
+		}else{
+			m_buttonUp->Enable(false);
+		}
+		if(m_selectedLayer < (int)m_checkListBoxLayers->GetCount() - 1){
+			m_buttonDown->Enable(true);
+		}else{
+			m_buttonDown->Enable(false);
+		}
+	}
+}
+
 void GPEWindow::OnButtonRemove( wxCommandEvent& event )
 {
 	int selected = m_checkListBoxLayers->GetSelection();
@@ -95,6 +130,41 @@ void GPEWindow::OnButtonRemove( wxCommandEvent& event )
 		m_checkListBoxLayers->Delete(selected);
 		m_checkListBoxLayers->SetSelection(saveSelected);
 		OnCheckListBoxLayersClick(event);
+	}
+}
+
+void GPEWindow::OnButtonUp( wxCommandEvent& event )
+{
+	int selected = m_checkListBoxLayers->GetSelection();
+	if(selected != wxNOT_FOUND && selected != 0){
+		wxString s0, s1;
+		bool b0, b1;
+		
+		s0 = m_checkListBoxLayers->GetString(selected-1);
+		s1 = m_checkListBoxLayers->GetString(selected);
+
+		b0 = m_checkListBoxLayers->IsChecked(selected-1);
+		b1 = m_checkListBoxLayers->IsChecked(selected);
+
+		m_checkListBoxLayers->SetString(selected, s0);
+		m_checkListBoxLayers->SetString(selected-1, s1);
+
+		m_checkListBoxLayers->Check(selected, b0);
+		m_checkListBoxLayers->Check(selected-1, b1);
+
+		m_selectedLayer--;
+		m_checkListBoxLayers->SetSelection(selected-1);
+
+		if(m_selectedLayer > 0){
+			m_buttonUp->Enable(true);
+		}else{
+			m_buttonUp->Enable(false);
+		}
+		if(m_selectedLayer < (int)m_checkListBoxLayers->GetCount() - 1){
+			m_buttonDown->Enable(true);
+		}else{
+			m_buttonDown->Enable(false);
+		}
 	}
 }
 
@@ -308,7 +378,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 	}else{
 		m_buttonUp->Enable(false);
 	}
-	if(selected < m_checkListBoxLayers->GetCount() - 1){
+	if(selected < (int)m_checkListBoxLayers->GetCount() - 1){
 		m_buttonDown->Enable(true);
 	}else{
 		m_buttonDown->Enable(false);
