@@ -112,6 +112,7 @@ void GPEWindow::OnButtonRemove( wxCommandEvent& event )
 		m_textCtrlName->Enable(false);
 		m_textCtrlLayer->Enable(false);
 		m_textCtrlDatatype->Enable(false);
+		m_textCtrlHeight->Enable(false);
 		m_textCtrlThickness->Enable(false);
 		m_colourPickerLayer->Enable(false);
 		m_spinCtrlTransparency->Enable(false);
@@ -245,6 +246,7 @@ void GPEWindow::OnMenuFileNew( wxCommandEvent& event )
 		m_textCtrlName->Enable(false);
 		m_textCtrlLayer->Enable(false);
 		m_textCtrlDatatype->Enable(false);
+		m_textCtrlHeight->Enable(false);
 		m_textCtrlThickness->Enable(false);
 		m_colourPickerLayer->Enable(false);
 		m_spinCtrlTransparency->Enable(false);
@@ -357,6 +359,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			m_textCtrlName->SetValue(wxString::FromAscii(layer->Name.c_str()));
 			m_textCtrlLayer->SetValue(wxString::Format(wxT("%d"), layer->Layer));
 			m_textCtrlDatatype->SetValue(wxString::Format(wxT("%d"), layer->Datatype));
+			m_textCtrlHeight->SetValue(wxString::Format(wxT("%f"), layer->Height));
 			m_textCtrlThickness->SetValue(wxString::Format(wxT("%f"), layer->Thickness));
 			m_spinCtrlTransparency->SetValue(100 * layer->Filter);
 			m_checkBoxMetal->SetValue(layer->Metal);
@@ -366,6 +369,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 			m_textCtrlName->Enable(true);
 			m_textCtrlLayer->Enable(true);
 			m_textCtrlDatatype->Enable(true);
+			m_textCtrlHeight->Enable(true);
 			m_textCtrlThickness->Enable(true);
 			m_colourPickerLayer->Enable(true);
 			m_spinCtrlTransparency->Enable(true);
@@ -487,7 +491,11 @@ void GPEWindow::SaveLayer(int number)
 			// FIXME
 		}
 
-//		layer->Height = m_textCtrlLayer->GetValue()->;
+		if(m_textCtrlHeight->GetValue().ToDouble(&dval)){
+			layer->Height = dval;
+		}else{
+			// FIXME
+		}
 
 		wxColour colour = m_colourPickerLayer->GetColour();
 

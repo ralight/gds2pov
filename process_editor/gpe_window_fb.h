@@ -82,6 +82,8 @@ class GPEWindow_fb : public wxFrame
 		wxTextCtrl* m_textCtrlLayer;
 		wxStaticText* m_staticText3;
 		wxTextCtrl* m_textCtrlDatatype;
+		wxStaticText* m_staticText13;
+		wxTextCtrl* m_textCtrlHeight;
 		wxStaticText* m_staticText5;
 		wxTextCtrl* m_textCtrlThickness;
 		wxStaticText* m_staticText7;

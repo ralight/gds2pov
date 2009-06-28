@@ -189,6 +189,15 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	fgSizer1->Add( m_textCtrlDatatype, 1, wxALL|wxEXPAND, 5 );
 	
+	m_staticText13 = new wxStaticText( this, wxID_ANY, wxT("Y-Position"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText13->Wrap( -1 );
+	fgSizer1->Add( m_staticText13, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_textCtrlHeight = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textCtrlHeight->Enable( false );
+	
+	fgSizer1->Add( m_textCtrlHeight, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
+	
 	m_staticText5 = new wxStaticText( this, wxID_ANY, wxT("Thickness"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText5->Wrap( -1 );
 	fgSizer1->Add( m_staticText5, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -256,6 +265,7 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_textCtrlName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_textCtrlLayer->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_textCtrlDatatype->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
+	m_textCtrlHeight->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_textCtrlThickness->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_colourPickerLayer->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( GPEWindow_fb::OnColourChangedLayer ), NULL, this );
 	m_spinCtrlTransparency->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( GPEWindow_fb::OnLayerChangeSpin ), NULL, this );
@@ -284,6 +294,7 @@ GPEWindow_fb::~GPEWindow_fb()
 	m_textCtrlName->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_textCtrlLayer->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_textCtrlDatatype->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
+	m_textCtrlHeight->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_textCtrlThickness->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_colourPickerLayer->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( GPEWindow_fb::OnColourChangedLayer ), NULL, this );
 	m_spinCtrlTransparency->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( GPEWindow_fb::OnLayerChangeSpin ), NULL, this );
