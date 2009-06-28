@@ -68,6 +68,7 @@ public:
 	float GetLowest();
 	bool RemoveLayer(unsigned int index);
 	bool Save(std::string filename);
+	void SwapLayers(unsigned int a, unsigned int b);
 };
 
 #endif

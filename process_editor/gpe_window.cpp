@@ -85,6 +85,8 @@ void GPEWindow::OnButtonDown( wxCommandEvent& event )
 		m_checkListBoxLayers->Check(selected+1, b0);
 		m_checkListBoxLayers->Check(selected, b1);
 
+		m_process->SwapLayers(selected, selected+1);
+
 		m_selectedLayer++;
 		m_checkListBoxLayers->SetSelection(selected+1);
 
@@ -151,6 +153,8 @@ void GPEWindow::OnButtonUp( wxCommandEvent& event )
 
 		m_checkListBoxLayers->Check(selected, b0);
 		m_checkListBoxLayers->Check(selected-1, b1);
+
+		m_process->SwapLayers(selected, selected-1);
 
 		m_selectedLayer--;
 		m_checkListBoxLayers->SetSelection(selected-1);

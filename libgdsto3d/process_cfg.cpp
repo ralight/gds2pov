@@ -497,3 +497,14 @@ bool GDSProcess::Save(std::string filename)
 	return true;
 }
 
+void GDSProcess::SwapLayers(unsigned int a, unsigned int b)
+{
+	if(a < m_layers.size() && b < m_layers.size() && a != b){
+		ProcessLayer *tmp;
+
+		tmp = m_layers[a];
+		m_layers[a] = m_layers[b];
+		m_layers[b] = tmp;
+	}
+}
+
