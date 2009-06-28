@@ -303,6 +303,16 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 		}
 	}
 	m_selectedLayer = selected;
+	if(selected > 0){
+		m_buttonUp->Enable(true);
+	}else{
+		m_buttonUp->Enable(false);
+	}
+	if(selected < m_checkListBoxLayers->GetCount() - 1){
+		m_buttonDown->Enable(true);
+	}else{
+		m_buttonDown->Enable(false);
+	}
 }
 
 void GPEWindow::OnCheckListBoxLayersToggled( wxCommandEvent& event )
