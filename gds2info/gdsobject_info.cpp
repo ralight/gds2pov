@@ -34,7 +34,7 @@ GDSObject_info::~GDSObject_info()
 {
 }
 
-void GDSObject_info::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_info::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!PathItems.empty()){
 		float angleX, angleY;
@@ -171,7 +171,7 @@ void GDSObject_info::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, cha
 	}
 }
 
-void GDSObject_info::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_info::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!PolygonItems.empty()){
 		class GDSPolygon *polygon;
@@ -191,7 +191,7 @@ void GDSObject_info::OutputPolygonToFile(FILE *fptr, class GDSObjects *Objects, 
 	}
 }
 
-void GDSObject_info::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_info::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!TextItems.empty()){
 		class GDSText *text;
@@ -252,7 +252,7 @@ void GDSObject_info::OutputTextToFile(FILE *fptr, class GDSObjects *Objects, cha
 	}
 }
 
-void GDSObject_info::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_info::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(FirstSRef){
 		SRefElement dummysref;
@@ -279,7 +279,7 @@ void GDSObject_info::OutputSRefToFile(FILE *fptr, class GDSObjects *Objects, cha
 	}
 }
 
-void GDSObject_info::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_info::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(FirstARef){
 		ARefElement dummyaref;
@@ -357,7 +357,7 @@ void GDSObject_info::OutputARefToFile(FILE *fptr, class GDSObjects *Objects, cha
 }
 
 
-void GDSObject_info::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_info::OutputToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(fptr && !IsOutput){
 		fprintf(fptr, "#declare str_%s = union {\n", Name);

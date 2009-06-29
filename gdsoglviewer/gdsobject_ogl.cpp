@@ -62,7 +62,7 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 	float extn_x;
 	float extn_y;
 	Point3D points[8];
-	struct ProcessLayer *layer;
+	class ProcessLayer *layer;
 	class GDSPath *path;
 
 	if(!m_paths.empty()){
@@ -270,7 +270,7 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 	}
 }
 
-void GDSObject_ogl::OutputOGLSRefs(std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_ogl::OutputOGLSRefs(std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
 		ASRefElement *sref = m_srefs[i];
@@ -294,7 +294,7 @@ void GDSObject_ogl::OutputOGLSRefs(std::string Font, float offx, float offy, lon
 	}
 }
 
-void GDSObject_ogl::OutputOGLARefs(std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_ogl::OutputOGLARefs(std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	float dx, dy;
 
@@ -362,7 +362,7 @@ void GDSObject_ogl::OutputOGLARefs(std::string Font, float offx, float offy, lon
 	}
 }
 
-void GDSObject_ogl::OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject_ogl::OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	OutputOGLVertices(offx, offy);
 

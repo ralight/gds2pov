@@ -172,7 +172,7 @@ void GDSObject::Output3DSVertices(FILE *fptr, float offx, float offy, unsigned l
 	}
 }
 
-void GDSObject::Output3DSFaces(FILE *fptr, unsigned long *facecount, struct ProcessLayer *firstlayer)
+void GDSObject::Output3DSFaces(FILE *fptr, unsigned long *facecount, class ProcessLayer *firstlayer)
 {
 	unsigned short chunk;
 	unsigned long chunklen;
@@ -321,7 +321,7 @@ void GDSObject::Output3DSFaces(FILE *fptr, unsigned long *facecount, struct Proc
 	}
 }
 
-void GDSObject::Output3DSFaceMaterials(FILE *fptr, unsigned long facecount, struct ProcessLayer *firstlayer)
+void GDSObject::Output3DSFaceMaterials(FILE *fptr, unsigned long facecount, class ProcessLayer *firstlayer)
 {
 	unsigned short chunk;
 	unsigned long chunklen;
@@ -330,8 +330,8 @@ void GDSObject::Output3DSFaceMaterials(FILE *fptr, unsigned long facecount, stru
 	unsigned long i;
 	unsigned char tempbyte;
 
-	struct ProcessLayer dummylayer;
-	struct ProcessLayer *thislayer;
+	class ProcessLayer dummylayer;
+	class ProcessLayer *thislayer;
 	dummylayer.Next = firstlayer;
 	thislayer = &dummylayer;
 	
@@ -381,7 +381,7 @@ void GDSObject::Output3DSFaceMaterials(FILE *fptr, unsigned long facecount, stru
 	}
 }
 
-void GDSObject::Output3DSSRefs(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject::Output3DSSRefs(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	GDSObject *obj;
 
@@ -415,7 +415,7 @@ void GDSObject::Output3DSSRefs(FILE *fptr, class GDSObjects *Objects, char *Font
 	}
 }
 
-void GDSObject::Output3DSARefs(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject::Output3DSARefs(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	GDSObject *obj;
 	int i, j;
@@ -514,7 +514,7 @@ void GDSObject::Output3DSARefs(FILE *fptr, class GDSObjects *Objects, char *Font
 	}
 }
 
-void GDSObject::OutputTo3DS(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
+void GDSObject::OutputTo3DS(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	unsigned short chunk;
 	unsigned long chunklen;

@@ -193,8 +193,8 @@ void GDSParse::Output3DSMaterials()
 	unsigned long chunklen;
 	unsigned char tempbyte;
 
-	struct ProcessLayer *firstlayer;
-	struct ProcessLayer dummylayer;
+	class ProcessLayer *firstlayer;
+	class ProcessLayer dummylayer;
 	dummylayer.Next = process->GetLayer();
 	//firstlayer = process->GetLayer();
 	firstlayer = &dummylayer;

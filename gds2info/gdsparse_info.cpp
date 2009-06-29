@@ -181,7 +181,7 @@ void GDSParse_info::OutputHeader()
 		fprintf(_optr, "global_settings { ambient_light rgb <%.2f,%.2f,%.2f> }\n", _config->GetAmbient(), _config->GetAmbient(), _config->GetAmbient());
 
 		/* Output layer texture information */
-		struct ProcessLayer *firstlayer;
+		class ProcessLayer *firstlayer;
 		while(firstlayer && firstlayer->Next){
 			if(firstlayer->Show){
 				if(!firstlayer->Metal){

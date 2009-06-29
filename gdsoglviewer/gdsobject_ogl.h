@@ -31,10 +31,10 @@ public:
 	GDSObject_ogl(std::string Name);
 	~GDSObject_ogl();
 
-	virtual void OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
+	virtual void OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
 	void OutputOGLVertices(float offx, float offy);
-	void OutputOGLSRefs(std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
-	void OutputOGLARefs(std::string Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer);
+	void OutputOGLSRefs(std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputOGLARefs(std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
 
 };
 

@@ -25,7 +25,7 @@ void GDSObject::OutputOGLVertices(FILE *optr, float offx, float offy, class GDSP
 	float extn_x;
 	float extn_y;
 	Point3D points[8];
-	struct ProcessLayer *layer;
+	class ProcessLayer *layer;
 	class GDSPath *path;
 
 	if(!PathItems.empty() || !PolygonItems.empty()){
