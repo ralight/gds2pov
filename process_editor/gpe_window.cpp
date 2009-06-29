@@ -123,7 +123,6 @@ void GPEWindow::OnButtonRemove( wxCommandEvent& event )
 		SetLayerDirtyState(false);
 		m_fileIsDirty = true;
 
-		printf("msl: %d\n", m_selectedLayer);
 		if(selected == (int)m_checkListBoxLayers->GetCount()-1){
 			saveSelected = m_selectedLayer - 1;
 		}else{
@@ -187,7 +186,6 @@ void GPEWindow::OnMenuFileImportGDS( wxCommandEvent& event )
 	if(fileDialog->ShowModal() == wxID_OK){
 		/************ Open GDS2 file and parse ****************/
 
-		printf("File is '%s'\n", (char*)(fileDialog->GetPath().char_str()));
 		FILE *iptr;
 		iptr = fopen((char *)fileDialog->GetPath().char_str(), "rb");
 		if(iptr){
@@ -204,7 +202,6 @@ void GPEWindow::OnMenuFileImportGDS( wxCommandEvent& event )
 				for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 					layer = m_process->GetLayer(i);
 					layer->Show = true;
-					printf("%s - %d:%d\n", layer->Name.c_str(), layer->Layer, layer->Datatype);
 					int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
 					m_checkListBoxLayers->Check(item, true);
 				}
@@ -285,7 +282,6 @@ void GPEWindow::OnMenuFileOpen( wxCommandEvent& event )
 				ProcessLayer *layer;
 				for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 					layer = m_process->GetLayer(i);
-					printf("%s - %d:%d\n", layer->Name.c_str(), layer->Layer, layer->Datatype);
 					int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
 					m_checkListBoxLayers->Check(item, true);
 				}
@@ -352,7 +348,6 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 		delete msgDialog;
 	}
 	int selected = m_checkListBoxLayers->GetSelection();
-	printf("%d\n", selected);
 	if(selected != wxNOT_FOUND){
 		ProcessLayer *layer = m_process->GetLayer(selected);
 		if(layer){
