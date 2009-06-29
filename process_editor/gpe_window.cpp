@@ -172,6 +172,121 @@ void GPEWindow::OnButtonUp( wxCommandEvent& event )
 	}
 }
 
+void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
+{
+	if(m_layerIsDirty && m_selectedLayer >= 0 && m_selectedLayer < (int)m_checkListBoxLayers->GetCount()){
+		wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Layer modified. Apply changes?"), wxT("Warning"), wxYES_NO | wxCANCEL);
+		switch(msgDialog->ShowModal()){
+			case wxID_YES:
+				SaveLayer(m_selectedLayer);
+				break;
+			case wxID_NO:
+				break;
+			case wxID_CANCEL:
+				m_checkListBoxLayers->Select(m_selectedLayer);
+				delete msgDialog;
+				return;
+				break;
+		}
+		delete msgDialog;
+	}
+	int selected = m_checkListBoxLayers->GetSelection();
+	if(selected != wxNOT_FOUND){
+		ProcessLayer *layer = m_process->GetLayer(selected);
+		if(layer){
+			m_textCtrlName->SetValue(wxString::FromAscii(layer->Name.c_str()));
+			m_textCtrlLayer->SetValue(wxString::Format(wxT("%d"), layer->Layer));
+			m_textCtrlDatatype->SetValue(wxString::Format(wxT("%d"), layer->Datatype));
+			m_textCtrlHeight->SetValue(wxString::Format(wxT("%f"), layer->Height));
+			m_textCtrlThickness->SetValue(wxString::Format(wxT("%f"), layer->Thickness));
+			m_spinCtrlTransparency->SetValue(100 * layer->Filter);
+			m_checkBoxMetal->SetValue(layer->Metal);
+
+			m_colourPickerLayer->SetColour(wxColour(255 * layer->Red, 255 * layer->Green, 255 * layer->Blue));
+
+			m_textCtrlName->Enable(true);
+			m_textCtrlLayer->Enable(true);
+			m_textCtrlDatatype->Enable(true);
+			m_textCtrlHeight->Enable(true);
+			m_textCtrlThickness->Enable(true);
+			m_colourPickerLayer->Enable(true);
+			m_spinCtrlTransparency->Enable(true);
+			m_checkBoxMetal->Enable(true);
+
+			m_buttonRemove->Enable(true);
+
+			SetLayerDirtyState(false);
+		}
+	}
+	m_selectedLayer = selected;
+	if(selected > 0){
+		m_buttonUp->Enable(true);
+	}else{
+		m_buttonUp->Enable(false);
+	}
+	if(selected < (int)m_checkListBoxLayers->GetCount() - 1){
+		m_buttonDown->Enable(true);
+	}else{
+		m_buttonDown->Enable(false);
+	}
+}
+
+void GPEWindow::OnCheckListBoxLayersToggled( wxCommandEvent& event )
+{
+	int selected = event.GetSelection();
+	if(selected != wxNOT_FOUND){
+		ProcessLayer *layer = m_process->GetLayer(selected);
+		if(layer){
+			layer->Show = m_checkListBoxLayers->IsChecked(selected);
+		}
+	}
+}
+
+void GPEWindow::OnCloseEvent( wxCloseEvent& event )
+{
+	bool veto;
+	
+	veto = TryFileSave();
+
+	if(!event.CanVeto()){
+		/* Must destroy the window */
+		Destroy();
+	}else{
+		if(veto){
+			event.Veto(true);
+		}else{
+			Destroy();
+		}
+	}
+}
+
+void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
+{
+	int selected = m_checkListBoxLayers->GetSelection();
+	if(selected != wxNOT_FOUND){
+		SetLayerDirtyState(true);
+		/*
+		ProcessLayer *layer = m_process->GetLayer(selected);
+
+		wxColour colour = m_colourPickerLayer->GetColour();
+
+		layer->Red = colour.Red() / 255.0;
+		layer->Green = colour.Green() / 255.0;
+		layer->Blue = colour.Blue() / 255.0;
+		*/
+	}
+}
+
+void GPEWindow::OnLayerChange( wxCommandEvent& event )
+{
+	SetLayerDirtyState(true);
+}
+
+void GPEWindow::OnLayerChangeSpin( wxSpinEvent& event )
+{
+	SetLayerDirtyState(true);
+}
+
 void GPEWindow::OnMenuFileExit( wxCommandEvent& event )
 {
 	Close();
@@ -312,153 +427,6 @@ void GPEWindow::OnMenuHelpAbout( wxCommandEvent& event )
 	delete dialog;
 }
 
-void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
-{
-	int selected = m_checkListBoxLayers->GetSelection();
-	if(selected != wxNOT_FOUND){
-		SetLayerDirtyState(true);
-		/*
-		ProcessLayer *layer = m_process->GetLayer(selected);
-
-		wxColour colour = m_colourPickerLayer->GetColour();
-
-		layer->Red = colour.Red() / 255.0;
-		layer->Green = colour.Green() / 255.0;
-		layer->Blue = colour.Blue() / 255.0;
-		*/
-	}
-}
-
-void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
-{
-	if(m_layerIsDirty && m_selectedLayer >= 0 && m_selectedLayer < (int)m_checkListBoxLayers->GetCount()){
-		wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Layer modified. Apply changes?"), wxT("Warning"), wxYES_NO | wxCANCEL);
-		switch(msgDialog->ShowModal()){
-			case wxID_YES:
-				SaveLayer(m_selectedLayer);
-				break;
-			case wxID_NO:
-				break;
-			case wxID_CANCEL:
-				m_checkListBoxLayers->Select(m_selectedLayer);
-				delete msgDialog;
-				return;
-				break;
-		}
-		delete msgDialog;
-	}
-	int selected = m_checkListBoxLayers->GetSelection();
-	if(selected != wxNOT_FOUND){
-		ProcessLayer *layer = m_process->GetLayer(selected);
-		if(layer){
-			m_textCtrlName->SetValue(wxString::FromAscii(layer->Name.c_str()));
-			m_textCtrlLayer->SetValue(wxString::Format(wxT("%d"), layer->Layer));
-			m_textCtrlDatatype->SetValue(wxString::Format(wxT("%d"), layer->Datatype));
-			m_textCtrlHeight->SetValue(wxString::Format(wxT("%f"), layer->Height));
-			m_textCtrlThickness->SetValue(wxString::Format(wxT("%f"), layer->Thickness));
-			m_spinCtrlTransparency->SetValue(100 * layer->Filter);
-			m_checkBoxMetal->SetValue(layer->Metal);
-
-			m_colourPickerLayer->SetColour(wxColour(255 * layer->Red, 255 * layer->Green, 255 * layer->Blue));
-
-			m_textCtrlName->Enable(true);
-			m_textCtrlLayer->Enable(true);
-			m_textCtrlDatatype->Enable(true);
-			m_textCtrlHeight->Enable(true);
-			m_textCtrlThickness->Enable(true);
-			m_colourPickerLayer->Enable(true);
-			m_spinCtrlTransparency->Enable(true);
-			m_checkBoxMetal->Enable(true);
-
-			m_buttonRemove->Enable(true);
-
-			SetLayerDirtyState(false);
-		}
-	}
-	m_selectedLayer = selected;
-	if(selected > 0){
-		m_buttonUp->Enable(true);
-	}else{
-		m_buttonUp->Enable(false);
-	}
-	if(selected < (int)m_checkListBoxLayers->GetCount() - 1){
-		m_buttonDown->Enable(true);
-	}else{
-		m_buttonDown->Enable(false);
-	}
-}
-
-void GPEWindow::OnCheckListBoxLayersToggled( wxCommandEvent& event )
-{
-	int selected = event.GetSelection();
-	if(selected != wxNOT_FOUND){
-		ProcessLayer *layer = m_process->GetLayer(selected);
-		if(layer){
-			layer->Show = m_checkListBoxLayers->IsChecked(selected);
-		}
-	}
-}
-
-void GPEWindow::OnCloseEvent( wxCloseEvent& event )
-{
-	bool veto;
-	
-	veto = TryFileSave();
-
-	if(!event.CanVeto()){
-		/* Must destroy the window */
-		Destroy();
-	}else{
-		if(veto){
-			event.Veto(true);
-		}else{
-			Destroy();
-		}
-	}
-}
-
-bool GPEWindow::TryFileSave(void)
-{
-	bool veto = false;
-
-	if(m_fileIsDirty){
-		wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("File modified. Save changes?"), wxT("Warning"), wxYES_NO | wxCANCEL);
-		switch(msgDialog->ShowModal()){
-			case wxID_YES:
-				if(!DoFileSave(false)){
-					/* User cancelled file selection dialog */
-					veto = true;
-				}
-			case wxID_NO:
-				break;
-			case wxID_CANCEL:
-				veto = true;
-				break;
-		}
-		delete msgDialog;
-	}
-
-	return veto;
-}
-
-void GPEWindow::SetLayerDirtyState(bool state)
-{
-	m_buttonApply->Enable(state);
-	m_layerIsDirty = state;
-
-	m_fileIsDirty = true;
-}
-
-void GPEWindow::OnLayerChange( wxCommandEvent& event )
-{
-	SetLayerDirtyState(true);
-}
-
-void GPEWindow::OnLayerChangeSpin( wxSpinEvent& event )
-{
-	SetLayerDirtyState(true);
-}
-
 void GPEWindow::SaveLayer(int number)
 {
 	ProcessLayer *layer = m_process->GetLayer(number);
@@ -503,5 +471,37 @@ void GPEWindow::SaveLayer(int number)
 
 		layer->Metal = m_checkBoxMetal->IsChecked();
 	}
+}
+
+void GPEWindow::SetLayerDirtyState(bool state)
+{
+	m_buttonApply->Enable(state);
+	m_layerIsDirty = state;
+
+	m_fileIsDirty = true;
+}
+
+bool GPEWindow::TryFileSave(void)
+{
+	bool veto = false;
+
+	if(m_fileIsDirty){
+		wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("File modified. Save changes?"), wxT("Warning"), wxYES_NO | wxCANCEL);
+		switch(msgDialog->ShowModal()){
+			case wxID_YES:
+				if(!DoFileSave(false)){
+					/* User cancelled file selection dialog */
+					veto = true;
+				}
+			case wxID_NO:
+				break;
+			case wxID_CANCEL:
+				veto = true;
+				break;
+		}
+		delete msgDialog;
+	}
+
+	return veto;
 }
 
