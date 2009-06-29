@@ -61,7 +61,7 @@ GDSObject::~GDSObject()
 	}
 }
 
-void GDSObject::AddText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, struct ProcessLayer *layer)
+void GDSObject::AddText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer)
 {
 	m_texts.push_back(new GDSText(x, y, z, flipped, mag, vjust, hjust, layer));
 }
@@ -80,7 +80,7 @@ std::string GDSObject::GetName()
 	return m_name;
 }
 
-void GDSObject::AddPolygon(float height, float thickness, int points, struct ProcessLayer *layer)
+void GDSObject::AddPolygon(float height, float thickness, int points, class ProcessLayer *layer)
 {
 	m_polygons.push_back(new GDSPolygon(height, thickness, points, layer));
 }
@@ -299,7 +299,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 	return &m_boundary;
 }
 
-void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, struct ProcessLayer *layer)
+void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, class ProcessLayer *layer)
 {
 	m_paths.push_back(new GDSPath(PathType, Height, Thickness, Points, Width, BgnExtn, EndExtn, layer));
 }

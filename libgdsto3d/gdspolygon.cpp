@@ -24,7 +24,7 @@
 #include "gdsobject.h"
 #include "gdspolygon.h"
 
-GDSPolygon::GDSPolygon(float height, float thickness, unsigned int points, struct ProcessLayer *layer) :
+GDSPolygon::GDSPolygon(float height, float thickness, unsigned int points, class ProcessLayer *layer) :
 	m_height(height), m_thickness(thickness), m_points(points), m_layer(layer)
 {
 	m_coords = new Point[points+1]; //FIXME - debug +1
@@ -101,7 +101,7 @@ float GDSPolygon::GetThickness(void)
 	return m_thickness;
 }
 
-struct ProcessLayer *GDSPolygon::GetLayer(void)
+class ProcessLayer *GDSPolygon::GetLayer(void)
 {
 	return m_layer;
 }

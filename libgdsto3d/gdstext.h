@@ -36,12 +36,12 @@ private:
 	float m_mag;
 	int m_vjust;
 	int m_hjust;
-	struct ProcessLayer *m_layer;
+	class ProcessLayer *m_layer;
 	std::string m_string;
 	Transform m_rotate;
 
 public:
-	GDSText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, struct ProcessLayer *layer);
+	GDSText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer);
 	~GDSText();
 
 	void SetString(std::string String);
@@ -59,7 +59,7 @@ public:
 
 	bool GetFlipped();
 
-	struct ProcessLayer *GetLayer();
+	class ProcessLayer *GetLayer();
 };
 
 #endif

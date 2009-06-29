@@ -35,10 +35,10 @@ private:
 	float m_endextn;
 	Point *m_coords;
 	Transform m_rotate;
-	struct ProcessLayer	*m_layer;
+	class ProcessLayer	*m_layer;
 
 public:
-	GDSPath(int pathtype, float height, float thickness, unsigned int points, float width, float bgnextn, float endextn, struct ProcessLayer *layer);
+	GDSPath(int pathtype, float height, float thickness, unsigned int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
 	~GDSPath();
 
 	void AddPoint(unsigned int index, float x, float y);
@@ -55,7 +55,7 @@ public:
 	float GetEndExtn();
 
 	int GetType();
-	struct ProcessLayer *GetLayer();
+	class ProcessLayer *GetLayer();
 };
 
 #endif

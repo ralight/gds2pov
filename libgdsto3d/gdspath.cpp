@@ -26,7 +26,7 @@
 GDSPath::GDSPath(int type, float height, float thickness,
 				unsigned int points, float width,
 				float bgnextn, float endextn,
-				struct ProcessLayer *layer) :
+				class ProcessLayer *layer) :
 				m_type(type), m_height(height), m_thickness(thickness), m_points(points),
 				m_width(width), m_bgnextn(bgnextn), m_endextn(endextn), m_layer(layer)
 {
@@ -105,7 +105,7 @@ int GDSPath::GetType()
 	return m_type;
 }
 
-struct ProcessLayer *GDSPath::GetLayer()
+class ProcessLayer *GDSPath::GetLayer()
 {
 	return m_layer;
 }

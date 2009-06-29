@@ -31,10 +31,10 @@ private:
 	unsigned int m_points;
 	Point *m_coords;
 	Transform m_rotate;
-	struct ProcessLayer	*m_layer;
+	class ProcessLayer	*m_layer;
 
 public:
-	GDSPolygon(float height, float thickness, unsigned int points, struct ProcessLayer *layer);
+	GDSPolygon(float height, float thickness, unsigned int points, class ProcessLayer *layer);
 	~GDSPolygon();
 
 	void AddPoint(unsigned int index, float x, float y);
@@ -47,7 +47,7 @@ public:
 	float GetYCoords(unsigned int index);
 	float GetAngleCoords(unsigned int index);
 	void SetAngleCoords(unsigned int index, float value);
-	struct ProcessLayer *GetLayer(void);
+	class ProcessLayer *GetLayer(void);
 };
 
 #endif

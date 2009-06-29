@@ -28,7 +28,7 @@
 GDSText::GDSText(float x, float y, float z,
 				bool flipped, float mag,
 				int vjust, int hjust,
-				struct ProcessLayer *layer) :
+				class ProcessLayer *layer) :
 				m_x(x), m_y(y), m_z(z),
 				m_flipped(flipped), m_mag(mag),
 				m_vjust(vjust), m_hjust(hjust),
@@ -97,7 +97,7 @@ bool GDSText::GetFlipped()
 	return m_flipped;
 }
 
-struct ProcessLayer *GDSText::GetLayer()
+class ProcessLayer *GDSText::GetLayer()
 {
 	return m_layer;
 }
