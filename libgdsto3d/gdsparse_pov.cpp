@@ -227,20 +227,20 @@ void GDSParse_pov::OutputHeader()
 			layer = m_process->GetLayer(i);
 			if(layer->Show){
 				if(!layer->Metal){
-					fprintf(m_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n",
+					fprintf(m_optr, "#declare t%s = pigment{rgbt <%.2f, %.2f, %.2f, %.2f>}\n",
 							layer->Name.c_str(), layer->Red, layer->Green, layer->Blue, layer->Filter);
 				}else{
-					fprintf(m_optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n",
+					fprintf(m_optr, "#declare t%s = texture{pigment{rgbt <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n",
 							layer->Name.c_str(), layer->Red, layer->Green, layer->Blue, layer->Filter);
 				}
 			}
 		}
 		if(layer && layer->Show){
 			if(!layer->Metal){
-				fprintf(m_optr, "#declare t%s = pigment{rgbf <%.2f, %.2f, %.2f, %.2f>}\n",
+				fprintf(m_optr, "#declare t%s = pigment{rgbt <%.2f, %.2f, %.2f, %.2f>}\n",
 						layer->Name.c_str(), layer->Red, layer->Green, layer->Blue, layer->Filter);
 			}else{
-				fprintf(m_optr, "#declare t%s = texture{pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n",
+				fprintf(m_optr, "#declare t%s = texture{pigment{rgbt <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA}}\n",
 						layer->Name.c_str(), layer->Red, layer->Green, layer->Blue, layer->Filter);
 			}
 		}
