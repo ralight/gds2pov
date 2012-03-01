@@ -234,7 +234,6 @@ struct _Boundary *GDSObject::GetBoundary(void)
 		}
 	}
 
-	printf("boo %s %d\n", this->m_name.c_str(), m_arefs.size());
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		ASRefElement *aref = m_arefs[i];
 		printf("\t%s %s %p\n", m_name.c_str(), aref->name.c_str(), aref->object);
