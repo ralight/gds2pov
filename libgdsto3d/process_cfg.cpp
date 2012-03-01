@@ -140,7 +140,7 @@ void GDSProcess::Parse(std::string processfile)
 				NewLayer.Name = (line+strlen("LayerStart: ")); /* FIXME - probably need to trim EOL */
 				int p2 = NewLayer.Name.find_last_not_of(std::string(" \r\n"));
 				int p1 = NewLayer.Name.find_first_not_of(std::string(" \r\n"));
-				if (p1 == std::string::npos) p1 = 0;
+				if (p1 == (int)std::string::npos) p1 = 0;
 				NewLayer.Name =  NewLayer.Name.substr(p1, (p2-p1)+1);
 
 				NewLayer.Layer = 0;
