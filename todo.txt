@@ -16,7 +16,6 @@ To Do
 	(relevant to auto placement of camera)
 	Also for flipped objects.
 - Suitable code for endian decisions. What is there available on BSD?
-- Fix non-orthogonal paths - look at corners
 - Deal with concave polygons. Either implement horrid algo to fill them or
   detect and don't fill.
 - Detect text for boundary calculation
@@ -37,6 +36,7 @@ To Do
 Done
 ====
 
+- Non-orthogonal paths - look at corners
 - Set path parsing and prisms parsing so that the Layer struct item points to
   the appropriate layer rather than the LayerName.
 - Replace GetARefName() and GetSRefName() with a more efficient GetARef() and

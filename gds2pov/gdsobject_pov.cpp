@@ -38,19 +38,16 @@ GDSObject_pov::~GDSObject_pov()
 void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char *Font, float offx, float offy, long *objectid, struct ProcessLayer *firstlayer)
 {
 	if(!PathItems.empty()){
-		float angleX, angleY;
-
 		class GDSPath *path;
 
 		for(unsigned long i=0; i<PathItems.size(); i++){
 			path = PathItems[i];
 
 			if(path->GetWidth()){
-				fprintf(fptr, "mesh2 { vertex_vectors { %d", 8*(path->GetPoints()-1));
+				fprintf(fptr, "mesh2 { vertex_vectors { %d", 4*(path->GetPoints()));
 
 				float BgnExtn;
 				float EndExtn;
-				float extn_x, extn_y;
 
 				switch(path->GetType()){
 					case 1:
@@ -67,97 +64,89 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, class GDSObjects *Objects, char
 						EndExtn = 0.0;
 						break;
 				}
-				for(unsigned int j=0; j<path->GetPoints()-1; j++){
-					float XCoords_j, XCoords_jpone;
-					float YCoords_j, YCoords_jpone;
+				for(unsigned int j=0; j<path->GetPoints(); j++){
+					double XCoords_j1, XCoords_j2, XCoords_j3;
+					double YCoords_j1, YCoords_j2, YCoords_j3;
+					float angle12, angle23;
+					float angleX, angleY;
 					float PathWidth = path->GetWidth();
+					float extn_x, extn_y;
 
-					XCoords_j = path->GetXCoords(j);
-					XCoords_jpone = path->GetXCoords(j+1);
-					YCoords_j = path->GetYCoords(j);
-					YCoords_jpone = path->GetYCoords(j+1);
+					XCoords_j2 = path->GetXCoords(j);
+					YCoords_j2 = path->GetYCoords(j);
+					if(j>0) {
+						XCoords_j1 = path->GetXCoords(j-1);
+						YCoords_j1 = path->GetYCoords(j-1);
+						angle12 = atan2(XCoords_j1 - XCoords_j2, YCoords_j2 - YCoords_j1);
+					}
+					if(j+1<path->GetPoints()) {
+						XCoords_j3 = path->GetXCoords(j+1);
+						YCoords_j3 = path->GetYCoords(j+1);
+						angle23 = atan2(XCoords_j2 - XCoords_j3, YCoords_j3 - YCoords_j2);
+					}
 
-					angleX = cos(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
-					angleY = sin(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
-
-					if(j==0 || j==path->GetPoints()-2){
-						extn_x = EndExtn * angleY;
-						extn_y = EndExtn * angleX;
+					if(j==0) {
+						extn_x = BgnExtn * sin(angle23);
+						extn_y = BgnExtn * cos(angle23);
+						angleX = cos(angle23);
+						angleY = sin(angle23);
+					}
+					else if(j==path->GetPoints()-1) {
+						extn_x = EndExtn * -sin(angle12);
+						extn_y = EndExtn * -cos(angle12);
+						angleX = cos(angle12);
+						angleY = sin(angle12);
 					}else{
 						extn_x = 0.0;
 						extn_y = 0.0;
+						angleX = cos(angle12) - sin(angle12)*tan((angle23-angle12)*.5);
+						angleY = sin(angle12) + cos(angle12)*tan((angle23-angle12)*.5);
 					}
 
 					// 1
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_j + PathWidth * angleX + extn_x,
-						YCoords_j + PathWidth * angleY - extn_y,
+						XCoords_j2 + PathWidth * angleX + extn_x,
+						YCoords_j2 + PathWidth * angleY - extn_y,
 						-path->GetHeight() - path->GetThickness()
 						);
 					// 2
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_j - PathWidth * angleX + extn_x,
-						YCoords_j - PathWidth * angleY - extn_y,
+						XCoords_j2 - PathWidth * angleX + extn_x,
+						YCoords_j2 - PathWidth * angleY - extn_y,
 						-path->GetHeight() - path->GetThickness()
 						);
 					// 3
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_j + PathWidth * angleX + extn_x,
-						YCoords_j + PathWidth * angleY - extn_y,
+						XCoords_j2 + PathWidth * angleX + extn_x,
+						YCoords_j2 + PathWidth * angleY - extn_y,
 						-path->GetHeight()
 						);
 					// 4
 					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_j - PathWidth * angleX + extn_x,
-						YCoords_j - PathWidth * angleY - extn_y,
-						-path->GetHeight()
-						);
-
-					// 5
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_jpone + PathWidth * angleX - extn_x,
-						YCoords_jpone + PathWidth * angleY - extn_y,
-						-path->GetHeight() - path->GetThickness()
-						);
-
-					// 6
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_jpone - PathWidth * angleX - extn_x,
-						YCoords_jpone - PathWidth * angleY - extn_y,
-						-path->GetHeight() - path->GetThickness()
-						);
-
-					// 7
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_jpone + PathWidth * angleX - extn_x,
-						YCoords_jpone + PathWidth * angleY - extn_y,
-						-path->GetHeight()
-						);
-
-					// 8
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
-						XCoords_jpone - PathWidth * angleX - extn_x,
-						YCoords_jpone - PathWidth * angleY - extn_y,
+						XCoords_j2 - PathWidth * angleX + extn_x,
+						YCoords_j2 - PathWidth * angleY - extn_y,
 						-path->GetHeight()
 						);
 				}
 				unsigned int PathPoints = path->GetPoints();
-				fprintf(fptr, "} face_indices { %d", 12*(PathPoints-1));
+				fprintf(fptr, "} face_indices { %d", 4+8*(PathPoints-1));
+				if(PathPoints>0) {
+					fprintf(fptr, ",<%d,%d,%d>", 0, 1, 2);
+					fprintf(fptr, ",<%d,%d,%d>", 1, 2, 3);
+					fprintf(fptr, ",<%d,%d,%d>", 0+4*PathPoints-4, 1+4*PathPoints-4, 2+4*PathPoints-4);
+					fprintf(fptr, ",<%d,%d,%d>", 1+4*PathPoints-4, 2+4*PathPoints-4, 3+4*PathPoints-4);
+				}
 				for(unsigned int j=0; j<PathPoints-1; j++){
 					// print ,faces now
 					//int vertexindex[36] = {0, 1, 2, 1, 2, 3, 4, 5, 6, 5, 6, 7, 0, 1, 5, 0, 4, 5, 2, 3, 6, 3, 6, 7, 1, 3, 7, 1, 5, 7, 0, 2, 4, 2, 4, 6};
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 1+8*j, 2+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 2+8*j, 3+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 4+8*j, 5+8*j, 6+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 5+8*j, 6+8*j, 7+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 1+8*j, 5+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 4+8*j, 5+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 2+8*j, 3+8*j, 6+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 3+8*j, 6+8*j, 7+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 3+8*j, 7+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 1+8*j, 5+8*j, 7+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 0+8*j, 2+8*j, 4+8*j);
-					fprintf(fptr, ",<%d,%d,%d>", 2+8*j, 4+8*j, 6+8*j);
+					fprintf(fptr, ",<%d,%d,%d>", 0+4*j, 1+4*j, 5+4*j);
+					fprintf(fptr, ",<%d,%d,%d>", 0+4*j, 4+4*j, 5+4*j);
+					fprintf(fptr, ",<%d,%d,%d>", 2+4*j, 3+4*j, 6+4*j);
+					fprintf(fptr, ",<%d,%d,%d>", 3+4*j, 6+4*j, 7+4*j);
+					fprintf(fptr, ",<%d,%d,%d>", 1+4*j, 3+4*j, 7+4*j);
+					fprintf(fptr, ",<%d,%d,%d>", 1+4*j, 5+4*j, 7+4*j);
+					fprintf(fptr, ",<%d,%d,%d>", 0+4*j, 2+4*j, 4+4*j);
+					fprintf(fptr, ",<%d,%d,%d>", 2+4*j, 4+4*j, 6+4*j);
 				}
 				fprintf(fptr, "} ");
 				//if(!path->Colour.Metal){
