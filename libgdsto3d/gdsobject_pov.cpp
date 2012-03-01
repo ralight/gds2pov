@@ -392,12 +392,8 @@ void GDSObject_pov::OutputToFile(FILE *fptr, std::string Font, float offx, float
 
 void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 {
-	unsigned long faceindex;
-
 	if(!m_polygons.empty()){
 		GDSPolygon *polygon;
-
-		faceindex = 0;
 
 		for(unsigned long i=0; i<m_polygons.size(); i++){
 			polygon = m_polygons[i];
