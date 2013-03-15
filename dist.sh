@@ -38,14 +38,6 @@ cp	libgdsto3d/config_cfg.h libgdsto3d/config_cfg.cpp \
 	libgdsto3d/CMakeLists.txt \
 	${DISTDIR}/libgdsto3d/
 
-#mkdir -p ${DISTDIR}/gds2info
-#cp	gds2info/gds2info \
-#	gds2info/gdsobject_info.h gds2info/gdsobject_info.cpp \
-#	gds2info/gdsparse_info.h gds2info/gdsparse_info.cpp \
-#	gds2info/gds2info.h gds2info/gds2info.cpp \
-#	gds2info/CMakeLists.txt \
-#	${DISTDIR}/gds2info/
-
 #mkdir -p ${DISTDIR}/gds2ogl
 #cp	gds2ogl/gdsobject_ogl.cpp \
 #	gds2ogl/gdsparse_ogl.cpp \
