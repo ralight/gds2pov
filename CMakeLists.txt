@@ -45,7 +45,6 @@ endif (WIN32)
 add_subdirectory (libgdsto3d)
 add_subdirectory (gds2pov)
 #add_subdirectory (gds2info)
-#add_subdirectory (gds23ds)
 add_subdirectory (gds2svg)
 
 SET(wxWidgets_USE_LIBS base core gl)

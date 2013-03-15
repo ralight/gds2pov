@@ -46,13 +46,6 @@ cp	libgdsto3d/config_cfg.h libgdsto3d/config_cfg.cpp \
 #	gds2info/CMakeLists.txt \
 #	${DISTDIR}/gds2info/
 
-#mkdir -p ${DISTDIR}/gds23ds
-#cp	gds23ds/gdsobject_3ds.cpp \
-#	gds23ds/gdsparse_3ds.cpp \
-#	gds23ds/gds23ds.h gds23ds/gds23ds.cpp \
-#	gds23ds/CMakeLists.txt \
-#	${DISTDIR}/gds23ds/
-
 #mkdir -p ${DISTDIR}/gds2ogl
 #cp	gds2ogl/gdsobject_ogl.cpp \
 #	gds2ogl/gdsparse_ogl.cpp \
