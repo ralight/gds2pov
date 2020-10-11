@@ -386,8 +386,8 @@ void GPEWindow::OnMenuFileOpen( wxCommandEvent& event )
 			m_process_path.Printf(wxT("%s"), (char *)fileDialog->GetPath().char_str());
 
 			std::string filename;
-			
-			filename = (char *)(m_process_path.c_str());
+
+			filename = std::string(m_process_path.mb_str());
 
 			m_process->Parse(filename);
 			if(m_process->IsValid()){
