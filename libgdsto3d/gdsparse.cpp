@@ -85,7 +85,7 @@ bool GDSParse::Parse(FILE *iptr)
 
 		bool result = ParseFile();
 
-		v_printf(1, "\nSumary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tBoxes:\t\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
+		v_printf(1, "\nSummary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tBoxes:\t\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
 			m_pathelements, m_boundaryelements, m_boxelements, m_textelements, m_srefelements, m_arefelements);
 
 		return result;
