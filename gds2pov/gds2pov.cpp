@@ -70,7 +70,10 @@ int main(int argc, char *argv[])
 	verbose_output = 1;
 	bool decompose = false;
 
-	if(argc>21){
+	if(argc == 1){
+		printusage();
+		return 0;
+	}else if(argc > 21){
 		fprintf(stderr, "Error: Invalid number of arguments.\n\n");
 		printusage();
 		return 1;
