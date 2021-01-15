@@ -1,0 +1,37 @@
+name: gds2pov
+base: core18
+version: '20080229'
+summary: Convert integrated circuit gds2 layoutst to POV-Ray 3D images.
+description: |
+  gds2pov is a program to take a gds2 layout file and output a POV-Ray scene
+  description file of the GDS2 data. This allows the creation of attractive 3D
+  pictures of a layout.
+
+grade: stable
+confinement: strict
+
+apps:
+  gds2pov:
+    command: bin/gds2pov
+    plugs: [home]
+
+  gds2svg:
+    command: bin/gds2svg
+    plugs: [home]
+
+parts:
+  gds2pov:
+    plugin: cmake
+    source: .
+    configflags:
+      - "-DMAKE_INSTALL_PREFIX=/usr"
+    stage:
+      - bin/gds2pov
+      - bin/gds2svg
+      - lib/libgdsto3d.so*
+      - share/gdsto3d/changes.txt
+      - share/gdsto3d/example.cmd
+      - share/gdsto3d/example.gds
+      - share/gdsto3d/example_process.txt
+      - share/gdsto3d/example_config.txt
+      - share/gdsto3d/readme.txt
