@@ -1,7 +1,6 @@
 <?xml version="1.0" ?>
 <resource>
   <object class="wxFrame">
-    
     <object class="wxMenuBar" name="ID_MENU">
       <object class="wxMenu" name="ID_Menu_File">
         <object class="wxMenuItem" name="ID_Menu_Example">
