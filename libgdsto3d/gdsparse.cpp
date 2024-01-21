@@ -197,7 +197,7 @@ void GDSParse::RecursiveOutput(GDSObject *object, FILE *m_optr, float offx, floa
 
 bool GDSParse::ParseFile()
 {
-	byte recordtype, datatype;
+	uint8_t recordtype, datatype;
 	char *tempstr;
 	ProcessLayer *layer;
 
@@ -935,7 +935,7 @@ void GDSParse::ParseXY()
 
 short GDSParse::GetBitArray()
 {
-	byte byte1;
+	uint8_t byte1;
 
 	fread(&byte1, 1, 1, m_iptr);
 	fread(&byte1, 1, 1, m_iptr);
@@ -946,8 +946,8 @@ short GDSParse::GetBitArray()
 
 double GDSParse::GetEightByteReal()
 {
-	byte value;
-	byte b8, b2, b3, b4, b5, b6, b7;
+	uint8_t value;
+	uint8_t b8, b2, b3, b4, b5, b6, b7;
 	double sign=1.0;
 	double exponent;
 	double mant;
