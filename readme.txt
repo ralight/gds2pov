@@ -169,7 +169,7 @@ avoid merging multiple polygons/paths.
 License
 -------
 
-The entire GDSTO3D package is released under the GPL v2.
+The entire GDSTO3D package is released under the LGPL v2.1
 
 Contact
 -------

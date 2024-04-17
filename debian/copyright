@@ -13,7 +13,7 @@ Copyright:
 
 License:
 
-    gds2tod is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+    gds2tod is licensed under the LGPL, see `/usr/share/common-licenses/LGPL-2.1'.
 
 The Debian packaging is (C) 2008, Roger Light <roger@atchoo.org> and
 is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
