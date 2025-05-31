@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Dec 29 2008)
+// C++ code generated with wxFormBuilder (version 4.2.1-0-g80c4cb6)
 // http://www.wxformbuilder.org/
 //
-// PLEASE DO "NOT" EDIT THIS FILE!
+// PLEASE DO *NOT* EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
 #include "gpe_window_fb.h"
@@ -16,7 +16,7 @@ GPEAboutDialog_fb::GPEAboutDialog_fb( wxWindow* parent, wxWindowID id, const wxS
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 
-	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL|wxBORDER_SUNKEN );
 	m_panel1->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
 
 	wxBoxSizer* bSizer4;
@@ -24,7 +24,7 @@ GPEAboutDialog_fb::GPEAboutDialog_fb( wxWindow* parent, wxWindowID id, const wxS
 
 	m_staticText19 = new wxStaticText( m_panel1, wxID_ANY, wxT("GPE"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText19->Wrap( -1 );
-	m_staticText19->SetFont( wxFont( 14, 74, 90, 92, false, wxT("Sans") ) );
+	m_staticText19->SetFont( wxFont( 14, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Sans") ) );
 
 	bSizer4->Add( m_staticText19, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxSHAPED, 5 );
 
@@ -37,7 +37,7 @@ GPEAboutDialog_fb::GPEAboutDialog_fb( wxWindow* parent, wxWindowID id, const wxS
 
 	m_staticText10 = new wxStaticText( m_panel1, wxID_ANY, wxT("Developed by:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText10->Wrap( -1 );
-	m_staticText10->SetFont( wxFont( 10, 74, 90, 92, false, wxT("Sans") ) );
+	m_staticText10->SetFont( wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Sans") ) );
 
 	bSizer4->Add( m_staticText10, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
@@ -50,9 +50,10 @@ GPEAboutDialog_fb::GPEAboutDialog_fb( wxWindow* parent, wxWindowID id, const wxS
 
 	m_staticText12 = new wxStaticText( m_panel1, wxID_ANY, wxT("Homepage:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText12->Wrap( -1 );
-	m_staticText12->SetFont( wxFont( 10, 74, 90, 92, false, wxT("Sans") ) );
+	m_staticText12->SetFont( wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Sans") ) );
 
 	bSizer4->Add( m_staticText12, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
 
 	m_panel1->SetSizer( bSizer4 );
 	m_panel1->Layout();
@@ -60,8 +61,10 @@ GPEAboutDialog_fb::GPEAboutDialog_fb( wxWindow* parent, wxWindowID id, const wxS
 	bSizer3->Add( m_panel1, 1, wxEXPAND|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	m_buttonOk = new wxButton( this, wxID_ANY, wxT("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
+
 	m_buttonOk->SetDefault();
 	bSizer3->Add( m_buttonOk, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
 
 	this->SetSizer( bSizer3 );
 	this->Layout();
@@ -74,6 +77,7 @@ GPEAboutDialog_fb::~GPEAboutDialog_fb()
 {
 	// Disconnect Events
 	m_buttonOk->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEAboutDialog_fb::OnButtonOk ), NULL, this );
+
 }
 
 GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
@@ -115,6 +119,11 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_menuHelp = new wxMenu();
 	wxMenuItem* m_menuItemAbout;
 	m_menuItemAbout = new wxMenuItem( m_menuHelp, wxID_ANY, wxString( wxT("&About...") ) + wxT('\t') + wxT("F1"), wxEmptyString, wxITEM_NORMAL );
+	#ifdef __WXMSW__
+	m_menuItemAbout->SetBitmaps( wxNullBitmap );
+	#elif (defined( __WXGTK__ ) || defined( __WXOSX__ ))
+	m_menuItemAbout->SetBitmap( wxNullBitmap );
+	#endif
 	m_menuHelp->Append( m_menuItemAbout );
 
 	m_menubar1->Append( m_menuHelp, wxT("&Help") );
@@ -152,7 +161,9 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 
 	gSizer2->Add( m_buttonRemove, 0, wxALL, 5 );
 
+
 	bSizer3->Add( gSizer2, 0, wxEXPAND, 5 );
+
 
 	bSizer1->Add( bSizer3, 1, wxEXPAND, 5 );
 
@@ -229,7 +240,6 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 	fgSizer1->Add( 0, 0, 1, wxEXPAND, 5 );
 
 	m_checkBoxMetal = new wxCheckBox( this, wxID_ANY, wxT("Metal Layer"), wxDefaultPosition, wxDefaultSize, 0 );
-
 	m_checkBoxMetal->Enable( false );
 
 	fgSizer1->Add( m_checkBoxMetal, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -242,20 +252,22 @@ GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& tit
 
 	fgSizer1->Add( m_buttonApply, 0, wxALL, 5 );
 
+
 	bSizer1->Add( fgSizer1, 2, wxALL|wxEXPAND, 5 );
+
 
 	this->SetSizer( bSizer1 );
 	this->Layout();
 
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( GPEWindow_fb::OnCloseEvent ) );
-	this->Connect( m_menuItemNew->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileNew ) );
-	this->Connect( m_menuItemOpen->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileOpen ) );
-	this->Connect( m_menuItemSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileSave ) );
-	this->Connect( m_menuItemSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileSaveAs ) );
-	this->Connect( m_menuItemImportGDS->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileImportGDS ) );
-	this->Connect( m_menuItemExit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileExit ) );
-	this->Connect( m_menuItemAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuHelpAbout ) );
+	m_menuFile->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileNew ), this, m_menuItemNew->GetId());
+	m_menuFile->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileOpen ), this, m_menuItemOpen->GetId());
+	m_menuFile->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileSave ), this, m_menuItemSave->GetId());
+	m_menuFile->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileSaveAs ), this, m_menuItemSaveAs->GetId());
+	m_menuFile->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileImportGDS ), this, m_menuItemImportGDS->GetId());
+	m_menuFile->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileExit ), this, m_menuItemExit->GetId());
+	m_menuHelp->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuHelpAbout ), this, m_menuItemAbout->GetId());
 	m_checkListBoxLayers->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersClick ), NULL, this );
 	m_checkListBoxLayers->Connect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersToggled ), NULL, this );
 	m_buttonUp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonUp ), NULL, this );
@@ -278,13 +290,6 @@ GPEWindow_fb::~GPEWindow_fb()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( GPEWindow_fb::OnCloseEvent ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileNew ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileOpen ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileSave ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileSaveAs ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileImportGDS ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuFileExit ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnMenuHelpAbout ) );
 	m_checkListBoxLayers->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersClick ), NULL, this );
 	m_checkListBoxLayers->Disconnect( wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler( GPEWindow_fb::OnCheckListBoxLayersToggled ), NULL, this );
 	m_buttonUp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonUp ), NULL, this );
@@ -301,4 +306,5 @@ GPEWindow_fb::~GPEWindow_fb()
 	m_spinCtrlTransparency->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_checkBoxMetal->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnLayerChange ), NULL, this );
 	m_buttonApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GPEWindow_fb::OnButtonApply ), NULL, this );
+
 }
