@@ -2,6 +2,7 @@
 	"name": "gds2x",
 	"version-string": "20080229",
 	"dependencies": [
+		"lib3mf",
 		"wxwidgets"
 	]
 }

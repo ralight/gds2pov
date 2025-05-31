@@ -18,6 +18,7 @@ if(WIN32)
 endif()
 
 add_subdirectory(libgdsto3d)
+add_subdirectory(gds23mf)
 add_subdirectory(gds2openscad)
 add_subdirectory(gds2pov)
 add_subdirectory(gds2svg)
