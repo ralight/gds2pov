@@ -38,13 +38,6 @@ cp	libgdsto3d/config_cfg.h libgdsto3d/config_cfg.cpp \
 	libgdsto3d/CMakeLists.txt \
 	${DISTDIR}/libgdsto3d/
 
-#mkdir -p ${DISTDIR}/gds2ogl
-#cp	gds2ogl/gdsobject_ogl.cpp \
-#	gds2ogl/gdsparse_ogl.cpp \
-#	gds2ogl/gds2ogl.h gds2ogl/gds2ogl.cpp \
-#	gds2ogl/CMakeLists.txt \
-#	${DISTDIR}/gds2ogl/
-
 mkdir -p ${DISTDIR}/gds2pov
 cp	gds2pov/gds2pov.cpp \
 	gds2pov/CMakeLists.txt \
@@ -54,13 +47,6 @@ mkdir -p ${DISTDIR}/gds2svg
 cp	gds2svg/gds2svg.cpp \
 	gds2svg/CMakeLists.txt \
 	${DISTDIR}/gds2svg/
-
-mkdir -p ${DISTDIR}/gdsoglviewer
-cp	gdsoglviewer/gdsobject_ogl.h gdsoglviewer/gdsobject_ogl.cpp \
-	gdsoglviewer/gdsoglviewer.h gdsoglviewer/gdsparse_ogl.cpp \
-	gdsoglviewer/gdsparse_ogl.h gdsoglviewer/gdsoglviewer.cpp \
-	gdsoglviewer/CMakeLists.txt \
-	${DISTDIR}/gdsoglviewer/
 
 mkdir -p ${DISTDIR}/build
 

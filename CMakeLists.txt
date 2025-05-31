@@ -8,7 +8,6 @@ include_directories (${gdsto3d_BINARY_DIR})
 
 include (CheckIncludeFile)
 include (CheckFunctionExists)
-include (FindOpenGL)
 
 find_library (WINSOCK2_LIBRARY "ws2_32")
 check_include_file ("stdint.h" HAVE_STDINT_H)
@@ -53,13 +52,8 @@ IF(wxWidgets_FOUND)
 	add_subdirectory (process_editor)
 ENDIF(wxWidgets_FOUND)
 
-if (OPENGL_FOUND)
-#	add_subdirectory (gds2ogl)
-#	add_subdirectory (gdsoglviewer)
-endif (OPENGL_FOUND)
+install(FILES changes.txt example.cmd example.gds example_process.txt example_config.txt readme.txt todo.txt DESTINATION ${SHAREDEST})
 
-install (FILES changes.txt example.cmd example.gds example_process.txt example_config.txt readme.txt todo.txt DESTINATION ${SHAREDEST})
-
-iF (UNIX)
-	add_custom_target (dist ${PROJECT_SOURCE_DIR}/dist.sh ${PROJECT_SOURCE_DIR} ${gdsto3d_BINARY_DIR} ${VERSION})
-endif (UNIX)
+iF(UNIX)
+	add_custom_target(dist ${PROJECT_SOURCE_DIR}/dist.sh ${PROJECT_SOURCE_DIR} ${gdsto3d_BINARY_DIR} ${VERSION})
+endif(UNIX)
