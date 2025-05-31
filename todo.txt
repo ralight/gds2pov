@@ -12,7 +12,7 @@ To Do
 - Make an example skeleton project.
 
 - libgdsto3d should do more heavy lifting re. calculating path points
-- Need to deal with Text/SRef/ARef rotation issues for boundary calculation 
+- Need to deal with Text/SRef/ARef rotation issues for boundary calculation
 	(relevant to auto placement of camera)
 	Also for flipped objects.
 - Suitable code for endian decisions. What is there available on BSD?

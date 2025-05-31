@@ -117,7 +117,7 @@ Version 0.7 (28th September 2004)
 =================================
 
 - Added option to specify the top cell name as suggested by Markus Dorn.
-- Added option to output a bounding box the same size and shape as the layout 
+- Added option to output a bounding box the same size and shape as the layout
   instead of the layout. This renders almost instantaneously so can be used to
   place the camera more effectively.
 - Empty cells no longer break the boundary detection.
@@ -130,13 +130,13 @@ Version 0.6 (17th August 2004)
 - Added verbose output option for helping debug problems with gds2 files.
 - Default font used is crystal.ttf (supplied with POV-Ray) and font is definable
   in config.txt
-- Invalid characters in structure names are replaced with _. Thanks to Guenter 
+- Invalid characters in structure names are replaced with _. Thanks to Guenter
   Grau for highlighting this problem.
-- Support for offset and variable paths added. Octagonal paths are treated as 
+- Support for offset and variable paths added. Octagonal paths are treated as
   offset paths.
-- XY records for unsupported elements (BOX, NODE) will now be parsed completely 
+- XY records for unsupported elements (BOX, NODE) will now be parsed completely
   so the whole file can be parsed.
-- If Datatype is not specified in a layer definition in the process file, the 
-  layer definition will be used for all datatypes in that layer. Thanks to 
+- If Datatype is not specified in a layer definition in the process file, the
+  layer definition will be used for all datatypes in that layer. Thanks to
   Guenter Grau for this suggestion.
 

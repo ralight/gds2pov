@@ -52,7 +52,7 @@ void Gds2GuiFrame::OnInitDialog(wxInitDialogEvent& WXUNUSED(event))
 	//bitmap = new wxStaticBitmap(this, -1, NULL, wxDefaultPosition, wxSize(COLS*COLPIXELSIZE, ROWS*ROWPIXELSIZE), wxBORDER_SUNKEN, _T("staticBitmap"));
 
 	glcanvas = new wxGLCanvas(this, -1, wxDefaultPosition, wxSize(200,200), 0, _T("GL Canvas"), NULL, wxNullPalette);
-	
+
 	vsizer->Add(glcanvas, 0, wxALL | wxALIGN_CENTRE_HORIZONTAL | wxSTRETCH_NOT, 10);
 
 	wxArrayString astr;
@@ -88,5 +88,3 @@ void Gds2GuiFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
 	Close(TRUE);
 }
-
-

@@ -71,7 +71,7 @@ void GDSParse_svg::OutputFooter()
 {
 	if(m_optr && !m_objects.empty()){
 		struct _Boundary *boundary = GetBoundary();
-		
+
 		fprintf(m_optr, "\t</defs>\n");
 		if(m_topcellname.length() > 0){
 			fprintf(m_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%%\" height=\"100%%\" xlink:href=\"#%s\"/>\n",
@@ -134,4 +134,3 @@ void GDSParse_svg::OutputHeader()
 
 	}
 }
-

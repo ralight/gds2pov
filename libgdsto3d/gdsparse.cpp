@@ -4,7 +4,7 @@
  * Project: gdsto3d
  *
  * This is the GDSParse class which is used to parse a GDS file and create a
- * GDSObjects object containing the contents of the file according to the 
+ * GDSObjects object containing the contents of the file according to the
  * process configuration.
  *
  * This library is free software; you can redistribute it and/or
@@ -342,7 +342,7 @@ bool GDSParse::ParseFile()
 					m_textstring = tempstr;
 					delete [] tempstr;
 				}
-				/* Only set string if the current object is valid, the text string is valid 
+				/* Only set string if the current object is valid, the text string is valid
 				 * and we are using a layer that is defined and being shown.
 				 */
 				if(m_currentobject && m_currentobject->GetCurrentText() && m_textstring.length() > 0){
@@ -628,9 +628,9 @@ Not used in GDS2 spec	case rnUString:
 
 				return -1;
 				break;
-	
+
 		}
-	}	
+	}
 	return 0;
 }
 
@@ -669,7 +669,7 @@ void GDSParse::ParseSName()
 void GDSParse::ParseUnits()
 {
 	double tmp;
-	m_units = (float)GetEightByteReal() * m_config->GetScale(); 
+	m_units = (float)GetEightByteReal() * m_config->GetScale();
 	tmp = GetEightByteReal();
 	v_printf(1, "DB units/user units = %g\nSize of DB units in metres = %g\nSize of user units in m = %g\n\n", 1/m_units, tmp, tmp/m_units);
 }
@@ -687,7 +687,7 @@ void GDSParse::ParseStrName()
 		}
 		v_printf(2, "(\"%s\")", str);
 
-		// This calls our own NewObject function which is pure virtual so the end 
+		// This calls our own NewObject function which is pure virtual so the end
 		// user must define it. This means we can always add a unknown object as
 		// long as it inherits from GDSObject.
 		m_objects.push_back(NewObject(str));
@@ -993,7 +993,7 @@ int32_t GDSParse::GetFourByteSignedInt()
 {
 	int32_t value;
 	fread(&value, 4, 1, m_iptr);
-	
+
 	m_recordlen-=4;
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
@@ -1021,7 +1021,7 @@ int16_t GDSParse::GetTwoByteSignedInt()
 char *GDSParse::GetAsciiString()
 {
 	char *str=NULL;
-	
+
 	if(m_recordlen>0){
 		m_recordlen += m_recordlen%2; /* Make sure length is even */
 		str = new char[m_recordlen+1];
@@ -1076,7 +1076,7 @@ struct _Boundary *GDSParse::GetBoundary()
 
 GDSObject *GDSParse::GetObjectRef(std::string name)
 {
-	if(!m_objects.empty() && name.length() > 0){	
+	if(!m_objects.empty() && name.length() > 0){
 		for(unsigned int i = 0; i < m_objects.size(); i++){
 			if(name == m_objects[i]->GetName()){
 				return m_objects[i];
@@ -1085,5 +1085,3 @@ GDSObject *GDSParse::GetObjectRef(std::string name)
 	}
 	return NULL;
 }
-
-

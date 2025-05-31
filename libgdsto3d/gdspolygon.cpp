@@ -57,7 +57,7 @@ float GDSPolygon::GetXCoords(unsigned int index)
 	if(index < m_points){
 		return m_coords[index].x;
 	}
-	return 0.0; 
+	return 0.0;
 }
 
 float GDSPolygon::GetYCoords(unsigned int index)
@@ -66,7 +66,7 @@ float GDSPolygon::GetYCoords(unsigned int index)
 	if(index < m_points){
 		return m_coords[index].y;
 	}
-	return 0.0; 
+	return 0.0;
 }
 
 float GDSPolygon::GetAngleCoords(unsigned int index)
@@ -75,7 +75,7 @@ float GDSPolygon::GetAngleCoords(unsigned int index)
 	if(index < m_points){
 	return m_coords[index].angle;
 	}
-	return 0.0; 
+	return 0.0;
 }
 
 void GDSPolygon::SetAngleCoords(unsigned int index, float value)
@@ -105,4 +105,3 @@ class ProcessLayer *GDSPolygon::GetLayer(void)
 {
 	return m_layer;
 }
-

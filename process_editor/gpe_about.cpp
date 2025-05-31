@@ -12,4 +12,3 @@ void GPEAboutDialog::OnButtonOk( wxCommandEvent& event )
 {
 	EndModal(0);
 }
-

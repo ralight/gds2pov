@@ -79,7 +79,7 @@ void GDSProcess::Parse(std::string processfile)
 	bool got_blue = false;
 	bool got_filter = false;
 	bool got_metal = false;
-	bool got_show = false; 
+	bool got_show = false;
 	/* End State variables */
 	bool showing;
 
@@ -88,7 +88,7 @@ void GDSProcess::Parse(std::string processfile)
 	FILE *pptr = NULL;
 
 	pptr = fopen(processfile.c_str(), "rt");
-	
+
 	if(!pptr){
 		fprintf(stderr, "Unable to open process file \"%s\".\n", processfile.c_str());
 		m_valid = false;
@@ -97,7 +97,7 @@ void GDSProcess::Parse(std::string processfile)
 
 	while(!feof(pptr) && fgets(line, 1024, pptr)){
 		if(line[0]!='#'){
-			if(strstr(line, "LayerStart")){			
+			if(strstr(line, "LayerStart")){
 				layerstart_cnt++;
 			}else if(strstr(line, "LayerEnd")){
 				layerend_cnt++;
@@ -507,4 +507,3 @@ void GDSProcess::SwapLayers(unsigned int a, unsigned int b)
 		m_layers[b] = tmp;
 	}
 }
-

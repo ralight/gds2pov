@@ -102,7 +102,7 @@ protected:
 	FILE *m_optr;
 	GDSProcess *m_process;
 	GDSConfig	 *m_config;
-	
+
 	struct _Boundary *m_boundary;
 	int16_t m_recordlen;
 
@@ -132,7 +132,7 @@ protected:
 	long m_textelements;
 	long m_srefelements;
 	long m_arefelements;
- 
+
 	vector<GDSObject*> m_objects;
 	GDSObject *m_currentobject;
 
@@ -158,7 +158,7 @@ protected:
 	char *GetAsciiString();
 
 	void ReportUnsupported(std::string name, enum RecordNumbers rn);
-	
+
 	bool ParseFile();
 	void AssignASRefs(void);
 	struct _Boundary *GetBoundary();

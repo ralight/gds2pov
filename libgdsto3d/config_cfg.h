@@ -43,7 +43,7 @@ typedef enum {
 } BoundaryPos;
 
 class Position {
-public: 
+public:
 	PosType postype;
 	BoundaryPos boundarypos;
 	float xmod;

@@ -126,7 +126,7 @@ void GDSParse_pov::OutputHeader()
 					// Half of this is 33.69
 					// tan(33.69) = 0.66666 = 1/1.5
 					// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
-	
+
 					fprintf(m_optr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n",
 							centreX*xmod, centreY*ymod, -distance*zmod);
 					break;
@@ -260,4 +260,3 @@ void GDSParse_pov::Decompose(bool value)
 		static_cast<GDSObject_pov*>(m_objects[i])->Decompose(value);
 	}
 }
-

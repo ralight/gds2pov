@@ -56,7 +56,7 @@ public:
 	bool flipped;
 	class GDSObject *object;
 	Transform rotate;
-	
+
 	ASRefElement() : x1(0.0), y1(0.0), x2(0.0), y2(0.0),
 			x3(0.0), y3(0.0), mag(1.0), columns(0),
 			rows(0), name(""), flipped(false), object(NULL) {};

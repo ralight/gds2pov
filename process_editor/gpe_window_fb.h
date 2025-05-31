@@ -35,38 +35,38 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class GPEAboutDialog_fb
 ///////////////////////////////////////////////////////////////////////////////
-class GPEAboutDialog_fb : public wxDialog 
+class GPEAboutDialog_fb : public wxDialog
 {
 	private:
-	
+
 	protected:
 		wxPanel* m_panel1;
 		wxStaticText* m_staticText19;
 		wxStaticText* m_staticText18;
-		
+
 		wxStaticText* m_staticText10;
 		wxStaticText* m_staticText11;
-		
+
 		wxStaticText* m_staticText12;
 		wxButton* m_buttonOk;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnButtonOk( wxCommandEvent& event ){ event.Skip(); }
-		
-	
+
+
 	public:
 		GPEAboutDialog_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 291,257 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~GPEAboutDialog_fb();
-	
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class GPEWindow_fb
 ///////////////////////////////////////////////////////////////////////////////
-class GPEWindow_fb : public wxFrame 
+class GPEWindow_fb : public wxFrame
 {
 	private:
-	
+
 	protected:
 		wxMenuBar* m_menubar1;
 		wxMenu* m_menuFile;
@@ -90,11 +90,11 @@ class GPEWindow_fb : public wxFrame
 		wxColourPickerCtrl* m_colourPickerLayer;
 		wxStaticText* m_staticText81;
 		wxSpinCtrl* m_spinCtrlTransparency;
-		
+
 		wxCheckBox* m_checkBoxMetal;
-		
+
 		wxButton* m_buttonApply;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCloseEvent( wxCloseEvent& event ){ event.Skip(); }
 		virtual void OnMenuFileNew( wxCommandEvent& event ){ event.Skip(); }
@@ -114,12 +114,12 @@ class GPEWindow_fb : public wxFrame
 		virtual void OnColourChangedLayer( wxColourPickerEvent& event ){ event.Skip(); }
 		virtual void OnLayerChangeSpin( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnButtonApply( wxCommandEvent& event ){ event.Skip(); }
-		
-	
+
+
 	public:
 		GPEWindow_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("GDS2X Process Editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 550,500 ), long style = wxDEFAULT_FRAME_STYLE|wxRESIZE_BORDER|wxTAB_TRAVERSAL );
 		~GPEWindow_fb();
-	
+
 };
 
 #endif //__gpe_window_fb__

@@ -39,7 +39,7 @@ public:
 	float Filter;
 	bool Metal;
 
-	ProcessLayer() : Name(""), Layer(-1), Datatype(-1), 
+	ProcessLayer() : Name(""), Layer(-1), Datatype(-1),
 					Height(0.0), Thickness(0.0), Show(false),
 					Red(0.5), Green(0.5), Blue(0.5), Metal(false) {}
 };

@@ -101,4 +101,3 @@ class ProcessLayer *GDSText::GetLayer()
 {
 	return m_layer;
 }
-

@@ -49,7 +49,7 @@ bool GPEWindow::DoFileSave( bool forceNewFilename )
 void GPEWindow::OnButtonAdd( wxCommandEvent& event )
 {
 	ProcessLayer *layer;
-	
+
 	layer = m_process->AddLayer(0, 0);
 
 	int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
@@ -72,7 +72,7 @@ void GPEWindow::OnButtonDown( wxCommandEvent& event )
 	if(selected != wxNOT_FOUND && selected != (int)m_checkListBoxLayers->GetCount()-1){
 		wxString s0, s1;
 		bool b0, b1;
-		
+
 		s0 = m_checkListBoxLayers->GetString(selected);
 		s1 = m_checkListBoxLayers->GetString(selected+1);
 
@@ -141,7 +141,7 @@ void GPEWindow::OnButtonUp( wxCommandEvent& event )
 	if(selected != wxNOT_FOUND && selected != 0){
 		wxString s0, s1;
 		bool b0, b1;
-		
+
 		s0 = m_checkListBoxLayers->GetString(selected-1);
 		s1 = m_checkListBoxLayers->GetString(selected);
 
@@ -245,7 +245,7 @@ void GPEWindow::OnCheckListBoxLayersToggled( wxCommandEvent& event )
 void GPEWindow::OnCloseEvent( wxCloseEvent& event )
 {
 	bool veto;
-	
+
 	veto = TryFileSave();
 
 	if(!event.CanVeto()){
@@ -377,7 +377,7 @@ void GPEWindow::OnMenuFileOpen( wxCommandEvent& event )
 			m_process = NULL;
 		}
 		m_process = new GDSProcess();
-	
+
 		wxFileDialog *fileDialog = new wxFileDialog(this);
 
 		fileDialog->SetWildcard(wxT("Process files (*.*;*)|*.*;*"));
@@ -504,4 +504,3 @@ bool GPEWindow::TryFileSave(void)
 
 	return veto;
 }
-

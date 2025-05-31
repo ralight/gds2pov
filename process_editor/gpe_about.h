@@ -12,10 +12,10 @@
 class GPEAboutDialog : public GPEAboutDialog_fb
 {
 	private:
-	
+
 	protected:
 		void OnButtonOk( wxCommandEvent& event );
-	
+
 	public:
 		GPEAboutDialog();
 		~GPEAboutDialog();

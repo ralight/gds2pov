@@ -29,7 +29,7 @@ LayerEnd
 LayerStart: POLY
 Layer: 3
 Height: 50
-Thickness: 300 
+Thickness: 300
 Red: 1
 Green: 1
 Blue: 0
@@ -65,7 +65,7 @@ LayerEnd
 LayerStart: CONT
 Layer: 6
 Height: 10
-Thickness: 990 
+Thickness: 990
 Red: 0
 Green: 1
 Blue: 0

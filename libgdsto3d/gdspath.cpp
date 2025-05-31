@@ -109,4 +109,3 @@ class ProcessLayer *GDSPath::GetLayer()
 {
 	return m_layer;
 }
-

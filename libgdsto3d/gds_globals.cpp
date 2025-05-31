@@ -36,4 +36,3 @@ void v_printf(const int level, const char *fmt, ...)
 		va_end(va);
 	}
 }
-

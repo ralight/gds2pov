@@ -34,8 +34,8 @@
 # Filter: 0.0
 # Metal: 0
 # Show: 0            (do *not* show by default)
-# 
-# 
+#
+#
 # If any layer is not listed in this file it will be ignored in the gds2 file.
 
 LayerStart: NTUB
@@ -65,7 +65,7 @@ LayerEnd
 LayerStart: POLY
 Layer: 3
 Height: 50
-Thickness: 300 
+Thickness: 300
 Red: 1
 Green: 1
 Blue: 0
@@ -101,7 +101,7 @@ LayerEnd
 LayerStart: CONT
 Layer: 6
 Height: 10
-Thickness: 990 
+Thickness: 990
 Red: 0
 Green: 1
 Blue: 0

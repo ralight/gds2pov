@@ -1,16 +1,16 @@
-# This file describes the arrangement of the scene - where the camera will be placed and where it will 
+# This file describes the arrangement of the scene - where the camera will be placed and where it will
 # look at, as well as any light sources.
 # Global settings can also be set here.
 # Lines with the first character as a # are comments.
 #
 # Global settings
 # ===============
-# 
+#
 # Only one global block is supported of the following format:
 #
-# Use Ambient to specify the amount of ambient light in the scene. 1.2 is the default if not specified. 
+# Use Ambient to specify the amount of ambient light in the scene. 1.2 is the default if not specified.
 #
-# ProcessFile sets the file from which the process configuration will be read. If it is not specified, 
+# ProcessFile sets the file from which the process configuration will be read. If it is not specified,
 # process.txt is used as the default.
 # Note that if the -p switch is used with gds2pov it will override the ProcessFile setting.
 #
@@ -40,16 +40,16 @@
 # BottomLeft
 # BottomRight
 #
-# These are defined with respect to the way you view your layout. TopLeft is the top left of your layout as 
+# These are defined with respect to the way you view your layout. TopLeft is the top left of your layout as
 # you view it in your editor.
 #
-# The item will by default be placed at the height such that if it were the camera in the centre looking down 
+# The item will by default be placed at the height such that if it were the camera in the centre looking down
 # on the layout it would be able to see the entire layout.
 #
 # Note also that the Centre, TopLeft etc. positions will be added to the start of the POV file as comments to
 # make hand modifying easier.
 #
-# You can also specify a modifier for each dimension in the position. The position will be multiplied by this 
+# You can also specify a modifier for each dimension in the position. The position will be multiplied by this
 # modifier. So, if you want something very close to the surface you could specify:
 #
 # ZMod: 0.1
@@ -92,7 +92,7 @@
 # Light Positions
 # ===============
 #
-# This type of position defines any additional lights. All lights are white. Any number of lights can be 
+# This type of position defines any additional lights. All lights are white. Any number of lights can be
 # specified, including none.
 #
 # PositionStart

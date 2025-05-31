@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 	}
 
 	class GDSProcess *process=NULL;
-	/* 
+	/*
 	** Order of precedence for process.txt:
 	** -p switch (given as an argument to this function)
 	** Specified in config file
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 	}else{
-		
+
 	}
 
 	FILE *iptr;
@@ -230,4 +230,3 @@ int main(int argc, char *argv[])
 	}
 	return 0;
 }
-

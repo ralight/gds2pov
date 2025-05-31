@@ -26,7 +26,7 @@
 # Metal, when set to 1, will make the layer slightly reflective.
 # Show defines whether the layer is shown or not.
 #
-# The only compulsory items are LayerStart, Layer and LayerEnd. If any value is ommitted, the default 
+# The only compulsory items are LayerStart, Layer and LayerEnd. If any value is ommitted, the default
 # will be used. The defaults are:
 #
 # Datatype: -1	     (meaning all datatypes for this layer)
@@ -38,15 +38,15 @@
 # Filter: 0.0
 # Metal: 0
 # Show: 0            (do *not* show by default)
-# 
-# 
+#
+#
 # If any layer is not listed in this file it will be ignored in the gds2 file.
 #
 # NOTE
 # ====
 #
 # The numbers given here for Height and Thickness are specified in DB units. This is defined in your GDS2 file
-# (not the process!), which is why the Height and Thickness must use them. To find the DB units for your GDS2 
+# (not the process!), which is why the Height and Thickness must use them. To find the DB units for your GDS2
 # file, just run the file through GDS2POV and it will provide the information.
 
 LayerStart: NTUB
@@ -76,7 +76,7 @@ LayerEnd
 LayerStart: POLY
 Layer: 3
 Height: 50
-Thickness: 300 
+Thickness: 300
 Red: 1
 Green: 1
 Blue: 0
@@ -112,7 +112,7 @@ LayerEnd
 LayerStart: CONT
 Layer: 6
 Height: 10
-Thickness: 990 
+Thickness: 990
 Red: 0
 Green: 1
 Blue: 0

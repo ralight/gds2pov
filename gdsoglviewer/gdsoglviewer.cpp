@@ -341,7 +341,7 @@ int WINAPI RealWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmd
                 }
 
                 TranslateMessage( &msg );
-                DispatchMessage( &msg ); 
+                DispatchMessage( &msg );
             }
         }
 
@@ -416,7 +416,7 @@ LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
                 PostQuitMessage( 0 );
                 break;
             }
-            
+
             if( ! wglMakeCurrent( parser->_hDC, parser->_hRC ) )
             {
                 //WinPerror( "wglMakeCurrent" );
@@ -513,7 +513,7 @@ LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
                     parser->_modeswitch = 1;
 
                 case VK_ESCAPE:
-                    
+
                     PostQuitMessage( 1 );
                     break;
 
@@ -567,4 +567,3 @@ LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
 }
 
 #endif // WIN32
-

@@ -35,9 +35,9 @@ class GPEWindow : public GPEWindow_fb
 		bool m_layerIsDirty;
 		bool m_fileIsDirty;
 		int m_selectedLayer;
-	
+
 	protected:
-		
+
 		bool DoFileSave( bool forceNewFilename );
 		void OnButtonAdd( wxCommandEvent& event );
 		void OnButtonApply( wxCommandEvent& event );

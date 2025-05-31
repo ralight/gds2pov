@@ -218,7 +218,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 					ymin = NewBound->xmin;
 					break;
 			}
-			
+
 			if(sref->x1 + xmax > m_boundary.xmax){
 				m_boundary.xmax = sref->x1 + xmax;
 			}
@@ -267,7 +267,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 					ymin = NewBound->xmin;
 					break;
 			}
-			
+
 			if(aref->x2 + xmax > m_boundary.xmax){
 				m_boundary.xmax = aref->x2 + xmax;
 			}
@@ -287,7 +287,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 		m_boundary.xmax = m_boundary.xmin = m_boundary.ymax = m_boundary.ymin = 0;
 	}
 
-	v_printf(2, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n", 
+	v_printf(2, "%s\tXMax=%.2f\tXMin=%.2f\tYMax: %.2f\tYMin: %.2f\n",
 			m_name.c_str(),
 			m_boundary.xmax, m_boundary.xmin, m_boundary.ymax, m_boundary.ymin);
 	m_gotboundary = true;
@@ -353,4 +353,3 @@ float GDSObject::GetHeight()
 {
 	return m_height;
 }
-

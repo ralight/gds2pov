@@ -121,25 +121,25 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, std::string Font, float offx, f
 					}
 
 					// 1
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>",
 						XCoords_j2 + PathWidth * angleX + extn_x,
 						YCoords_j2 + PathWidth * angleY - extn_y,
 						-path->GetHeight() - path->GetThickness()
 						);
 					// 2
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>",
 						XCoords_j2 - PathWidth * angleX + extn_x,
 						YCoords_j2 - PathWidth * angleY - extn_y,
 						-path->GetHeight() - path->GetThickness()
 						);
 					// 3
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>",
 						XCoords_j2 + PathWidth * angleX + extn_x,
 						YCoords_j2 + PathWidth * angleY - extn_y,
 						-path->GetHeight()
 						);
 					// 4
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+					fprintf(fptr, ",<%.2f,%.2f,%.2f>",
 						XCoords_j2 - PathWidth * angleX + extn_x,
 						YCoords_j2 - PathWidth * angleY - extn_y,
 						-path->GetHeight()
@@ -401,7 +401,7 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 			/* Output vertices */
 			fprintf(fptr, "mesh2 { vertex_vectors { %d", 2*(polygon->GetPoints()-1));
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+				fprintf(fptr, ",<%.2f,%.2f,%.2f>",
 					polygon->GetXCoords(j),
 					polygon->GetYCoords(j),
 					polygon->GetHeight() + polygon->GetThickness()
@@ -409,7 +409,7 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 			}
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 
-				fprintf(fptr, ",<%.2f,%.2f,%.2f>", 
+				fprintf(fptr, ",<%.2f,%.2f,%.2f>",
 					polygon->GetXCoords(j),
 					polygon->GetYCoords(j),
 					polygon->GetHeight()
@@ -421,7 +421,7 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 			 * We do this to tell what "type" of polygon we are dealing with.
 			 * Specifically, where any change of convex/concave takes place.
 			 * Because the first and last points are identical we do not need
-			 * to worry about the final vertex angle (it is already calculated 
+			 * to worry about the final vertex angle (it is already calculated
 			 * in the 0th vertex).
 			 */
 
@@ -553,4 +553,3 @@ void GDSObject_pov::Decompose(bool value)
 {
 	m_decompose = value;
 }
-

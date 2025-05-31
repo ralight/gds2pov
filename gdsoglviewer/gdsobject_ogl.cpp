@@ -97,7 +97,7 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 					dx = path->GetXCoords(j) - path->GetXCoords(j+1);
 					dy = path->GetYCoords(j+1) - path->GetYCoords(j);
 
-/* 
+/*
 					if(dx < 0.001){
 						angleX = (dy < 0.0)? -1.0:1.0;
 						angleY = 0.0;
@@ -127,7 +127,7 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 						printf("f dx %f, dy %f\n", dx, dy);
 						}
 					}else{
- 
+
 						angleX = cos(atan2(dx, dy));
 						angleY = sin(atan2(dx, dy));
 						printf("g dx %f, dy %f\n", dx, dy);
@@ -164,7 +164,7 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 					points[5].X = points[1].X;
 					points[5].Y = points[1].Y;
 					points[5].Z = path->GetHeight();
-					// 3 
+					// 3
 					points[2].X = path->GetXCoords(j+1) - path->GetWidth() * angleX - extn_x;// + offx;
 					points[2].Y = path->GetYCoords(j+1) - path->GetWidth() * angleY - extn_y;// + offy;
 					points[2].Z = path->GetHeight() + path->GetThickness();
@@ -213,7 +213,6 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 			}
 
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				
 				tempf = polygon->GetXCoords(j);// + offx;
 				tempf = polygon->GetYCoords(j);// + offy;
 				tempf = polygon->GetHeight();
@@ -224,7 +223,7 @@ void GDSObject_ogl::OutputOGLVertices(float offx, float offy)
 			float x1, y1;
 			float x2, y2;
 
-			// FIXME - is this correct? 
+			// FIXME - is this correct?
 			// Surely it should be GetPoints()-2
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 				x1 = polygon->GetXCoords(j);// + offx;
@@ -414,7 +413,7 @@ void GDSObject_ogl::DecomposePolygons(class GDSPolygon *polygon)
 			negatives++;
 		}
 	}
-	
+
 	if(!positives || !negatives){
 		float z1 = polygon->GetHeight();
 		float z2 = polygon->GetHeight() + polygon->GetThickness();
@@ -439,4 +438,3 @@ void GDSObject_ogl::DecomposePolygons(class GDSPolygon *polygon)
 		}
 	}
 }
-

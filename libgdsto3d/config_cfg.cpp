@@ -3,7 +3,7 @@
  * Author: Roger Light
  * Project: gdsto3d
  * $Id: config_cfg.cpp 302 2008-02-26 10:47:01Z roger $
- * 
+ *
  * This parses the configuration file which contains camera and light
  * information.
  *
@@ -33,7 +33,7 @@
 
 #include "config_cfg.h"
 
-GDSConfig::GDSConfig(std::string filename) : 
+GDSConfig::GDSConfig(std::string filename) :
 	m_processfile(""), m_font(""),
 	m_ambient(1.2), m_scale(1.0), m_valid(true)
 {
@@ -135,7 +135,7 @@ void GDSConfig::ReadFile(std::string configfile)
 	int i;
 
 	cptr = fopen(configfile.c_str(), "rt");
-	
+
 	if(!cptr){
 		fprintf(stderr, "Error: Unable to open config file \"%s\"\n", configfile.c_str());
 		m_valid = false;
@@ -144,7 +144,7 @@ void GDSConfig::ReadFile(std::string configfile)
 
 	while(!feof(cptr) && fgets(line, 1024, cptr)){
 		if(line[0]!='#'){
-			if(strstr(line, "PositionStart")){			
+			if(strstr(line, "PositionStart")){
 				posstart_cnt++;
 			}else if(strstr(line, "PositionEnd")){
 				posend_cnt++;

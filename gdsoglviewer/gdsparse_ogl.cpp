@@ -201,7 +201,7 @@ int GDSParse_ogl::gl_init()
 				m_z = distance * ZMod;
 				break;
 			case bpTopRight:
-				m_x = boundary->xmax*XMod; 
+				m_x = boundary->xmax*XMod;
 				m_y = boundary->ymax*YMod;
 				m_z = distance*ZMod;
 				break;
@@ -232,7 +232,7 @@ void GDSParse_ogl::gl_draw()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
+
 	if(m_fps){
 	/*change angle according to velocity */
 		m_ry += m_vy / m_fps;
@@ -276,15 +276,15 @@ void GDSParse_ogl::gl_draw()
 	 it doesn't make a difference */
 	{
 	/* add an estimate for zFar, so that the whole obeject is always in view */
-		glMatrixMode(GL_PROJECTION); 
-		glLoadIdentity(); 
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 		{
 			GLfloat tmpz;
 			GLfloat x, y, z;
 
 			/* distance to the bounding box, use larger value...
 			if we would know the direction were are looking in, we could use the correct distance, but this works */
-			x = (m_x-m_xmin); 
+			x = (m_x-m_xmin);
 			if ((m_xmax-m_x) > x) x = m_xmax-m_x;
 
 			y = (m_y-m_ymin);
@@ -292,7 +292,7 @@ void GDSParse_ogl::gl_draw()
 
 			/* FIXME: should use zmax and zmin instead of a default value of 50 */
 			z = (m_z+50);
-			if ((50-m_z) > z) z = 50-m_z; 
+			if ((50-m_z) > z) z = 50-m_z;
 
 			tmpz = x+y+z; /* correct would be \sqrt(x*x+y*y+z*z)+\epsilon, but this should be faster and as good */
 			if(tmpz<10.0) tmpz = 10.0; /* not sure if neccessary */
@@ -301,7 +301,7 @@ void GDSParse_ogl::gl_draw()
 		}
 		glMatrixMode(GL_MODELVIEW); /* back to the model view*/
 	}
-	
+
 
 	if(m_vz < -40.0f*m_speed_factor) m_vz = -40.0f*m_speed_factor;
 	if(m_vz >40.0f*m_speed_factor) m_vz =40.0f*m_speed_factor;
@@ -337,7 +337,7 @@ void GDSParse_ogl::gl_draw()
  		gl_printf(0.1f, 1.0f, 0.1f, 0.4f, m_width - 420, m_height - 60,
  				 m_font, "look_at:" );
  		gl_printf(0.1f, 1.0f, 0.1f, 0.4f, m_width - 320, m_height - 60,
- 				 m_font, " %5.1f %5.1f %5.1f", -G[8]+G[12], -G[9]+G[13], +G[10]-G[14] ); 
+ 				 m_font, " %5.1f %5.1f %5.1f", -G[8]+G[12], -G[9]+G[13], +G[10]-G[14] );
 
 		if(m_fps < 20.0f){
 			glDisable(GL_LINE_SMOOTH);
@@ -579,7 +579,7 @@ int GDSParse_ogl::gl_main()
 						break;
 					}
 
-					case ClientMessage:	
+					case ClientMessage:
 					{
 						if(event.xclient.data.l[0] == (int) wmDelete)
 						{
@@ -618,9 +618,9 @@ int GDSParse_ogl::glx_init(int fullscreen)
 		{
 			GLX_RGBA,
 			GLX_DOUBLEBUFFER,
-			GLX_RED_SIZE, 	 4, 
-			GLX_GREEN_SIZE, 	 4, 
-			GLX_BLUE_SIZE, 	4, 
+			GLX_RED_SIZE, 	 4,
+			GLX_GREEN_SIZE, 	 4,
+			GLX_BLUE_SIZE, 	4,
 			GLX_DEPTH_SIZE, 	16,
 			None
 		};
@@ -666,7 +666,7 @@ int GDSParse_ogl::glx_init(int fullscreen)
 
 	set_attr.override_redirect = (( fullscreen) ? True : False);
 
-	win = 
+	win =
 		XCreateWindow(
 				dpy, root_win, 0, 0, m_width, m_height, 0, vi->depth,
 				InputOutput, vi->visual, CWBorderPixel | CWColormap |
@@ -742,7 +742,7 @@ float GDSParse_ogl::timer(struct htime *t, int reset)
 
 #ifdef HAVE_QUERYPERFORMANCECOUNTER
 	LARGE_INTEGER offset;
-	
+
 	QueryPerformanceCounter(&offset);
 
 	if(t->hfreq.QuadPart){
@@ -785,5 +785,3 @@ void GDSParse_ogl::move_mouse(int x, int y)
 	SetCursorPos(p.x, p.y);
 #endif
 }
-
-

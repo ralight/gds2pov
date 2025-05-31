@@ -111,22 +111,22 @@ void GDSObject_svg::OutputPathToFile(FILE *fptr, std::string Font, float offx, f
 					}
 
 					// 1
-					fprintf(fptr, "%.2f,%.2f ", 
+					fprintf(fptr, "%.2f,%.2f ",
 						m_scale*(XCoords_j + PathWidth * angleX + extn_x),
 						m_scale*(this->GetHeight() - (YCoords_j + PathWidth * angleY - extn_y))
 						);
 					// 5
-					fprintf(fptr, "%.2f,%.2f ", 
+					fprintf(fptr, "%.2f,%.2f ",
 						m_scale*(XCoords_jpone + PathWidth * angleX - extn_x),
 						m_scale*(this->GetHeight() - (YCoords_jpone + PathWidth * angleY - extn_y))
 						);
 					// 6
-					fprintf(fptr, "%.2f,%.2f ", 
+					fprintf(fptr, "%.2f,%.2f ",
 						m_scale*(XCoords_jpone - PathWidth * angleX - extn_x),
 						m_scale*(this->GetHeight() - (YCoords_jpone - PathWidth * angleY - extn_y))
 						);
 					// 2
-					fprintf(fptr, "%.2f,%.2f ", 
+					fprintf(fptr, "%.2f,%.2f ",
 						m_scale*(XCoords_j - PathWidth * angleX + extn_x),
 						m_scale*(this->GetHeight() - (YCoords_j - PathWidth * angleY - extn_y))
 						);
@@ -212,7 +212,7 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, std::string Font, float offx, f
 					}
 					fprintf(fptr, "\"");
 				}
-				/* Remove forbidden characters 
+				/* Remove forbidden characters
 				 * They should be escaped really, but that is for later
 				 * FIXME!
 				 */
@@ -221,7 +221,7 @@ void GDSObject_svg::OutputTextToFile(FILE *fptr, std::string Font, float offx, f
 						str[j] = '_';
 					}
 				}
-				
+
 				fprintf(fptr, ">%s</text>\n", str.c_str());
 			}
 		}
@@ -346,4 +346,3 @@ void GDSObject_svg::OutputToFile(FILE *fptr, std::string Font, float offx, float
 	}
 	m_isoutput = true;
 }
-
