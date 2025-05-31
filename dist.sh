@@ -6,7 +6,6 @@ DISTDIR=$2/gdsto3d-$3
 mkdir -p ${DISTDIR}
 
 cp	dist.sh \
-	config.h.cmake \
 	example_config.txt \
 	CMakeLists.txt \
 	example.cmd \

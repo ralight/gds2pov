@@ -21,14 +21,7 @@
 #ifndef _GDSPARSE_H_
 #define _GDSPARSE_H_
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
-
-#ifdef HAVE_STDINT_H
-#  include <stdint.h>
-typedef uint16_t u_int16_t;
-#endif
+#include <stdint.h>
 
 #include <vector>
 using namespace std;
