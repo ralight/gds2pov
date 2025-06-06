@@ -36,7 +36,7 @@
 	** Datatype: Number
 	** Height: Number
 	** Thickness: Number
-	** Colour: <0, 0.5, 1>
+	** Colour: #rrggbb
 	** Metal: 1/0
 	** Transparent: 1/0
 	** Show: 1/0
@@ -74,6 +74,7 @@ void GDSProcess::Parse(std::string processfile)
 	bool got_datatype = false;
 	bool got_height = false;
 	bool got_thickness = false;
+	bool got_colour = false;
 	bool got_red = false;
 	bool got_green = false;
 	bool got_blue = false;
@@ -129,6 +130,7 @@ void GDSProcess::Parse(std::string processfile)
 				got_datatype = false;
 				got_height = false;
 				got_thickness = false;
+				got_colour = false;
 				got_red = false;
 				got_green = false;
 				got_blue = false;
@@ -204,6 +206,32 @@ void GDSProcess::Parse(std::string processfile)
 				}else{
 					sscanf(line, "Thickness: %f", &NewLayer.Thickness);
 					got_thickness = true;
+				}
+			}else if(strstr(line, "Colour:")){
+				if(!in_layer){
+					fprintf(stderr, "Error: Colour definition outside of LayerStart and LayerEnd on line %d of process file.\n", current_line);
+					m_valid = false;
+					fclose(pptr);
+					return;
+				}
+				if(got_colour){
+					fprintf(stderr, "Warning: Duplicate Colour definition on line %d of process file. Ignoring new definition.\n", current_line);
+				}else{
+					unsigned int filter, red, green, blue;
+					if(sscanf(line, "Colour: #%02x%02x%02x%02x", &filter, &red, &green, &blue) == 4){
+						NewLayer.Filter = (float)filter/255.0;
+					}else if(sscanf(line, "Colour: #%02x%02x%02x", &red, &green, &blue) == 3){
+						/* Ok */
+					}else{
+						fprintf(stderr, "Error: Invalid Colour format. Expected #ffrrggbb or #rrggbb.\n");
+						m_valid = false;
+						fclose(pptr);
+						return;
+					}
+					NewLayer.Red = (float)red/255.0;
+					NewLayer.Green = (float)green/255.0;
+					NewLayer.Blue = (float)blue/255.0;
+					got_colour = true;
 				}
 			}else if(strstr(line, "Red:")){
 				if(!in_layer){

@@ -5,6 +5,8 @@ Version xxxxxxxx
   breaking library compatibility.
 - gds2pov output optimisations - only include loops for AREFs where necessary.
 - Fix non-orthogonal paths. Thanks to Norihiro KAMAE.
+- Add hex colour support to the process file.
+
 
 Version 20080229
 ================

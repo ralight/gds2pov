@@ -11,10 +11,16 @@
 # Datatype: (integer)
 # Height: (float) - See NOTE below
 # Thickness: (float) - See NOTE below
+#
+# Colour: #rrggbb - hex colour
+# - Or:
+# Colour: #ffrrggbbff - hex colour and filter
+# - Or:
 # Red: (float, between 0,1 with 1 being full)
 # Green: (float, between 0,1 with 1 being full)
 # Blue: (float, between 0,1 with 1 being full)
 # Filter: (float, between 0,1 with 1 being full)
+
 # Metal: (boolean, 0 or 1)
 # Show: (boolean, 0 or 1)
 # LayerEnd
@@ -32,10 +38,7 @@
 # Datatype: -1	     (meaning all datatypes for this layer)
 # Height: 0
 # Thickness: 0       (thickness of 0 means the layer will not be shown)
-# Red: 0.0
-# Green: 0.0
-# Blue: 0.0
-# Filter: 0.0
+# Colour: #00000000
 # Metal: 0
 # Show: 0            (do *not* show by default)
 #
@@ -53,10 +56,7 @@ LayerStart: NTUB
 Layer: 1
 Height: -2000
 Thickness: 2000
-Red: 0
-Green: 0
-Blue: 1
-Filter: 0.2
+Colour: #00FF33
 Metal: 0
 Show: 1
 LayerEnd
@@ -65,10 +65,10 @@ LayerStart: DIFF
 Layer: 2
 Height: 10
 Thickness: 10
+Colour: #00FFFF00
 Red: 0
 Green: 1
 Blue: 1
-Filter: 0
 Metal: 0
 Show: 1
 LayerEnd
@@ -77,10 +77,7 @@ LayerStart: POLY
 Layer: 3
 Height: 50
 Thickness: 300
-Red: 1
-Green: 1
-Blue: 0
-Filter: 0
+Colour: #FFFF0000
 Metal: 0
 Show: 1
 LayerEnd
@@ -89,10 +86,7 @@ LayerStart: NPLUS
 Layer: 4
 Height: -200
 Thickness: 210
-Red: 0.5
-Green: 0.25
-Blue: 0
-Filter: 0
+Colour: #7F3F0000
 Metal: 0
 Show: 1
 LayerEnd
@@ -101,10 +95,7 @@ LayerStart: PPLUS
 Layer: 5
 Height: -205
 Thickness: 210
-Red: 1
-Green: 0
-Blue: 1
-Filter: 0
+Colour: #FF00FF00
 Metal: 0
 Show: 1
 LayerEnd
@@ -125,10 +116,7 @@ LayerStart: MET1
 Layer: 7
 Height: 990
 Thickness: 1010
-Red: 1
-Green: 0
-Blue: 0
-Filter: 0
+Colour: #FF000000
 Metal: 1
 Show: 1
 LayerEnd
@@ -137,10 +125,7 @@ LayerStart: VIA1
 Layer: 8
 Height: 1990
 Thickness: 1010
-Red: 1
-Green: 0.75
-Blue: 1
-Filter: 0
+Colour: #FFBDFF00
 Metal: 0
 Show: 1
 LayerEnd
@@ -149,10 +134,7 @@ LayerStart: MET2
 Layer: 9
 Height: 2990
 Thickness: 1010
-Red: 1
-Green: 0.75
-Blue: 0
-Filter: 0
+Colour: #FFBD0000
 Metal: 1
 Show: 1
 LayerEnd
@@ -161,10 +143,7 @@ LayerStart: VIA2
 Layer: 10
 Height: 3990
 Thickness: 1010
-Red: 1
-Green: 0.5
-Blue: 0.5
-Filter: 0
+Colour: #FF7F7F00
 Metal: 0
 Show: 1
 LayerEnd
@@ -173,10 +152,7 @@ LayerStart: MET3
 Layer: 11
 Height: 4990
 Thickness: 1010
-Red: 0
-Green: 0.5
-Blue: 0.5
-Filter: 0
+Colour: #007F7F00
 Metal: 1
 Show: 1
 LayerEnd
@@ -197,10 +173,7 @@ LayerStart: MET4
 Layer: 13
 Height: 6990
 Thickness: 1010
-Red: 0.75
-Green: 0
-Blue: 1
-Filter: 0
+Colour: #BD00FF00
 Metal: 1
 Show: 1
 LayerEnd
@@ -209,10 +182,7 @@ LayerStart: TEXT
 Layer: 14
 Height: 8000
 Thickness: 10
-Red: 1
-Green: 1
-Blue: 1
-Filter: 0
+Colour: #FFFFFF00
 Metal: 0
 Show: 1
 LayerEnd
