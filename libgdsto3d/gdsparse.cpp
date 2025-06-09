@@ -832,92 +832,110 @@ void GDSParse::ParseXYBoundary()
 	m_currentendextn = 0.0;
 }
 
-void GDSParse::ParseXY()
-{
-	float X, Y;
-	float firstX=0.0, firstY=0.0, secondX=0.0, secondY=0.0;
-	ProcessLayer *thislayer = NULL;
-	bool Flipped;
 
+void GDSParse::ParseXYSRef(bool Flipped)
+{
+	m_srefelements++;
+	float X = m_units * (float)GetFourByteSignedInt();
+	float Y = m_units * (float)GetFourByteSignedInt();
+	v_printf(2, "(%.3f,%.3f)\n", X, Y);
+
+	if(m_currentobject){
+		m_currentobject->AddSRef(m_sname, X, Y, Flipped, m_currentmag);
+		if(m_currentangle){
+			m_currentobject->SetSRefRotation(0, -m_currentangle, 0);
+		}
+	}
+}
+
+
+void GDSParse::ParseXYARef(bool Flipped)
+{
+	m_arefelements++;
+	float firstX = m_units * (float)GetFourByteSignedInt();
+	float firstY = m_units * (float)GetFourByteSignedInt();
+	float secondX = m_units * (float)GetFourByteSignedInt();
+	float secondY = m_units * (float)GetFourByteSignedInt();
+	float X = m_units * (float)GetFourByteSignedInt();
+	float Y = m_units * (float)GetFourByteSignedInt();
+
+	v_printf(2, "(%.3f,%.3f) ", firstX, firstY);
+	v_printf(2, "(%.3f,%.3f) ", secondX, secondY);
+	v_printf(2, "(%.3f,%.3f)\n", X, Y);
+
+	if(m_currentobject){
+		m_currentobject->AddARef(m_sname, firstX, firstY, secondX, secondY, X, Y, m_arraycols, m_arrayrows, Flipped, m_currentmag);
+		if(m_currentangle){
+			m_currentobject->SetARefRotation(0, -m_currentangle, 0);
+		}
+	}
+}
+
+
+void GDSParse::ParseXYText(bool Flipped)
+{
+	m_textelements++;
+	ProcessLayer *thislayer = NULL;
 	if(m_process != NULL){
 		thislayer = m_process->GetLayer(m_currentlayer, m_currentdatatype);
 	}
+
+	if(thislayer==NULL){
+		if(!m_generate_process){
+			v_printf(2, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", m_currentlayer, m_currentdatatype);
+			v_printf(2, "\tIgnoring this string.\n");
+		}else{
+			if(!m_layer_warning[m_currentlayer][m_currentdatatype]){
+				m_process->AddLayer(m_currentlayer, m_currentdatatype);
+				m_layer_warning[m_currentlayer][m_currentdatatype] = true;
+			}
+		}
+		while(m_recordlen){
+			GetFourByteSignedInt();
+		}
+		m_currentwidth = 0.0; // Always reset to default for paths in case width not specified
+		m_currentpathtype = 0;
+		m_currentangle = 0.0;
+		m_currentdatatype = 0;
+		m_currentmag = 1.0;
+		return;
+	}
+
+	float X = m_units * (float)GetFourByteSignedInt();
+	float Y = m_units * (float)GetFourByteSignedInt();
+	v_printf(2, "(%.3f,%.3f)\n", X, Y);
+
+	if(m_currentobject && m_currentobject->GetCurrentText()){
+		int vert_just, horiz_just;
+
+		vert_just = (((((unsigned long)m_currentpresentation & 0x8 ) == (unsigned long)0x8 ) ? 2 : 0) + (((((unsigned long)m_currentpresentation & 0x4 ) == (unsigned long)0x4 ) ? 1 : 0)));
+		horiz_just = (((((unsigned long)m_currentpresentation & 0x2 ) == (unsigned long)0x2 ) ? 2 : 0) + (((((unsigned long)m_currentpresentation & 0x1 ) == (unsigned long)0x1 ) ? 1 : 0)));
+
+		m_currentobject->AddText(X, Y, m_units*thislayer->Height, Flipped, m_currentmag, vert_just, horiz_just, thislayer);
+		if(m_currentangle){
+			m_currentobject->GetCurrentText()->SetRotation(0.0, -m_currentangle, 0.0);
+		}
+	}
+}
+
+
+void GDSParse::ParseXY()
+{
+	bool Flipped;
+
 	Flipped = ((u_int16_t)(m_currentstrans & 0x8000) == (u_int16_t)0x8000) ? true : false;
 
 	switch(m_currentelement){
 		case elSRef:
-			m_srefelements++;
-			X = m_units * (float)GetFourByteSignedInt();
-			Y = m_units * (float)GetFourByteSignedInt();
-			v_printf(2, "(%.3f,%.3f)\n", X, Y);
-
-			if(m_currentobject){
-				m_currentobject->AddSRef(m_sname, X, Y, Flipped, m_currentmag);
-				if(m_currentangle){
-					m_currentobject->SetSRefRotation(0, -m_currentangle, 0);
-				}
-			}
+			ParseXYSRef(Flipped);
 			break;
 
 		case elARef:
-			m_arefelements++;
-			firstX = m_units * (float)GetFourByteSignedInt();
-			firstY = m_units * (float)GetFourByteSignedInt();
-			secondX = m_units * (float)GetFourByteSignedInt();
-			secondY = m_units * (float)GetFourByteSignedInt();
-			X = m_units * (float)GetFourByteSignedInt();
-			Y = m_units * (float)GetFourByteSignedInt();
-			v_printf(2, "(%.3f,%.3f) ", firstX, firstY);
-			v_printf(2, "(%.3f,%.3f) ", secondX, secondY);
-			v_printf(2, "(%.3f,%.3f)\n", X, Y);
-
-			if(m_currentobject){
-				m_currentobject->AddARef(m_sname, firstX, firstY, secondX, secondY, X, Y, m_arraycols, m_arrayrows, Flipped, m_currentmag);
-				if(m_currentangle){
-					m_currentobject->SetARefRotation(0, -m_currentangle, 0);
-				}
-			}
+			ParseXYARef(Flipped);
 			break;
 
 		case elText:
-			m_textelements++;
-
-			if(thislayer==NULL){
-				if(!m_generate_process){
-					v_printf(2, "Notice: Layer found in gds2 file that is not defined in the process configuration. Layer is %d, datatype %d.\n", m_currentlayer, m_currentdatatype);
-					v_printf(2, "\tIgnoring this string.\n");
-				}else{
-					if(!m_layer_warning[m_currentlayer][m_currentdatatype]){
-						m_process->AddLayer(m_currentlayer, m_currentdatatype);
-						m_layer_warning[m_currentlayer][m_currentdatatype] = true;
-					}
-				}
-				while(m_recordlen){
-					GetFourByteSignedInt();
-				}
-				m_currentwidth = 0.0; // Always reset to default for paths in case width not specified
-				m_currentpathtype = 0;
-				m_currentangle = 0.0;
-				m_currentdatatype = 0;
-				m_currentmag = 1.0;
-				return;
-			}
-
-			X = m_units * (float)GetFourByteSignedInt();
-			Y = m_units * (float)GetFourByteSignedInt();
-			v_printf(2, "(%.3f,%.3f)\n", X, Y);
-
-			if(m_currentobject && m_currentobject->GetCurrentText()){
-				int vert_just, horiz_just;
-
-				vert_just = (((((unsigned long)m_currentpresentation & 0x8 ) == (unsigned long)0x8 ) ? 2 : 0) + (((((unsigned long)m_currentpresentation & 0x4 ) == (unsigned long)0x4 ) ? 1 : 0)));
-				horiz_just = (((((unsigned long)m_currentpresentation & 0x2 ) == (unsigned long)0x2 ) ? 2 : 0) + (((((unsigned long)m_currentpresentation & 0x1 ) == (unsigned long)0x1 ) ? 1 : 0)));
-
-				m_currentobject->AddText(X, Y, m_units*thislayer->Height, Flipped, m_currentmag, vert_just, horiz_just, thislayer);
-				if(m_currentangle){
-					m_currentobject->GetCurrentText()->SetRotation(0.0, -m_currentangle, 0.0);
-				}
-			}
+			ParseXYText(Flipped);
 			break;
 		default:
 			while(m_recordlen){

@@ -69,6 +69,10 @@ class GDSParse_svg;
 
 class GDSParse
 {
+private:
+	void ParseXYARef(bool Flipped);
+	void ParseXYSRef(bool Flipped);
+	void ParseXYText(bool Flipped);
 protected:
 	std::string m_libname;
 	std::string m_topcellname;
