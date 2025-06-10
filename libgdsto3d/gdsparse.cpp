@@ -968,8 +968,8 @@ struct _Boundary *GDSParse::GetBoundary()
 		m_boundary = new struct _Boundary;
 	}
 
-	m_boundary->xmax = m_boundary->ymax = -10000000.0;
-	m_boundary->xmin = m_boundary->ymin =  10000000.0;
+	m_boundary->xmax = m_boundary->ymax = std::numeric_limits<float>::lowest();
+	m_boundary->xmin = m_boundary->ymin =  std::numeric_limits<float>::max();
 
 	for(unsigned int i = 0; i < m_objects.size(); i++){
 		struct _Boundary *object_bound = m_objects[i]->GetBoundary();
