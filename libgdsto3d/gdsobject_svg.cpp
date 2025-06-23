@@ -65,78 +65,35 @@ void GDSObject_svg::SetScale(float scale)
 void GDSObject_svg::OutputPathToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!m_paths.empty()){
-		float angleX, angleY;
-
 		GDSPath *path;
 
 		for(unsigned long i=0; i<m_paths.size(); i++){
 			path = m_paths[i];
 
 			if(path && path->GetWidth()){
-
-				float BgnExtn;
-				float EndExtn;
-				float extn_x, extn_y;
-
+				fprintf(fptr, "\t\t\t<path class=\"s%s\" style=\"stroke-width:%f;", path->GetLayer()->Name.c_str(), path->GetWidth()*m_scale*2);
 				switch(path->GetType()){
+					case 0:
+						break;
 					case 1:
+						fprintf(fptr, "stroke-linecap:round;");
+						break;
 					case 2:
-						BgnExtn = path->GetWidth(); /* Width has already been scaled to half */
-						EndExtn = path->GetWidth();
-							break;
+						fprintf(fptr, "stroke-linecap:square;");
+						break;
 					case 4:
-						BgnExtn = path->GetBgnExtn();
-						EndExtn = path->GetEndExtn();
-						break;
-					default:
-						BgnExtn = 0.0;
-						EndExtn = 0.0;
+						printf("WARNING: Unsupported path type 4.\n");
 						break;
 				}
-				for(unsigned int j=0; j<path->GetPoints()-1; j++){
-					fprintf(fptr, "\t\t\t<polygon class=\"%s\" points=\"", path->GetLayer()->Name.c_str());
-					float XCoords_j, XCoords_jpone;
-					float YCoords_j, YCoords_jpone;
-					float PathWidth = path->GetWidth();
+				fprintf(fptr, "\" d=\"");
 
-					XCoords_j = path->GetXCoords(j);
-					XCoords_jpone = path->GetXCoords(j+1);
-					YCoords_j = path->GetYCoords(j);
-					YCoords_jpone = path->GetYCoords(j+1);
-
-					angleX = cos(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
-					angleY = sin(atan2(XCoords_j - XCoords_jpone, YCoords_jpone - YCoords_j));
-
-					if(j==0 || j==path->GetPoints()-2){
-						extn_x = EndExtn * angleY;
-						extn_y = EndExtn * angleX;
-					}else{
-						extn_x = 0.0;
-						extn_y = 0.0;
-					}
-
-					// 1
-					fprintf(fptr, "%.2f,%.2f ",
-						m_scale*(XCoords_j + PathWidth * angleX + extn_x),
-						m_scale*(this->GetHeight() - (YCoords_j + PathWidth * angleY - extn_y))
-						);
-					// 5
-					fprintf(fptr, "%.2f,%.2f ",
-						m_scale*(XCoords_jpone + PathWidth * angleX - extn_x),
-						m_scale*(this->GetHeight() - (YCoords_jpone + PathWidth * angleY - extn_y))
-						);
-					// 6
-					fprintf(fptr, "%.2f,%.2f ",
-						m_scale*(XCoords_jpone - PathWidth * angleX - extn_x),
-						m_scale*(this->GetHeight() - (YCoords_jpone - PathWidth * angleY - extn_y))
-						);
-					// 2
-					fprintf(fptr, "%.2f,%.2f ",
-						m_scale*(XCoords_j - PathWidth * angleX + extn_x),
-						m_scale*(this->GetHeight() - (YCoords_j - PathWidth * angleY - extn_y))
-						);
-					fprintf(fptr, "\"/>\n");
+				float x, y;
+				char cmd = 'M';
+				for(unsigned int idx=0; path->GetPointCentre(idx, x, y); idx++){
+					fprintf(fptr, "%c %f %f ", cmd, m_scale*x, m_scale*(this->GetHeight()-y));
+					cmd = 'L';
 				}
+				fprintf(fptr, "\"/>\n");
 			}
 		}
 	}

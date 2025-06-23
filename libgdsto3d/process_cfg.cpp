@@ -20,6 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <sstream>
@@ -144,6 +145,7 @@ void GDSProcess::Parse(std::string processfile)
 				int p1 = NewLayer.Name.find_first_not_of(std::string(" \r\n"));
 				if (p1 == (int)std::string::npos) p1 = 0;
 				NewLayer.Name =  NewLayer.Name.substr(p1, (p2-p1)+1);
+				std::replace(NewLayer.Name.begin(), NewLayer.Name.end(), '-', '_');
 
 				NewLayer.Layer = 0;
 				NewLayer.Datatype = -1;
