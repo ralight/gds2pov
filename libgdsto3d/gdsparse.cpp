@@ -739,7 +739,7 @@ void GDSParse::ParseXYPath()
 	if(m_currentwidth){
 		/* FIXME - need to check for -ve value and then not scale */
 		if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
-			m_currentobject->AddPath(m_currentpathtype, m_units*thislayer->Height, m_units*thislayer->Thickness, points, m_currentwidth, m_currentbgnextn, m_currentendextn, thislayer);
+			m_currentobject->AddPath(m_currentpathtype, thislayer->Height, thislayer->Thickness, points, m_currentwidth, m_currentbgnextn, m_currentendextn, thislayer);
 		}
 		for(i=0; i<points; i++){
 			X = m_units * (float)GetFourByteSignedInt();
@@ -804,7 +804,7 @@ void GDSParse::ParseXYBoundary()
 
 	if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
 		//FIXME - why was this points+1 ? m_currentobject->AddPolygon(m_units*thislayer->Height, m_units*thislayer->Thickness, points+1, thislayer->Name);
-		m_currentobject->AddPolygon(m_units*thislayer->Height, m_units*thislayer->Thickness, points, thislayer);
+		m_currentobject->AddPolygon(thislayer->Height, thislayer->Thickness, points, thislayer);
 	}
 
 	for(i=0; i<points; i++){
@@ -912,7 +912,7 @@ void GDSParse::ParseXYText(bool Flipped)
 		vert_just = (((((unsigned long)m_currentpresentation & 0x8 ) == (unsigned long)0x8 ) ? 2 : 0) + (((((unsigned long)m_currentpresentation & 0x4 ) == (unsigned long)0x4 ) ? 1 : 0)));
 		horiz_just = (((((unsigned long)m_currentpresentation & 0x2 ) == (unsigned long)0x2 ) ? 2 : 0) + (((((unsigned long)m_currentpresentation & 0x1 ) == (unsigned long)0x1 ) ? 1 : 0)));
 
-		m_currentobject->AddText(X, Y, m_units*thislayer->Height, Flipped, m_currentmag, vert_just, horiz_just, thislayer);
+		m_currentobject->AddText(X, Y, thislayer->Height, Flipped, m_currentmag, vert_just, horiz_just, thislayer);
 		if(m_currentangle){
 			m_currentobject->GetCurrentText()->SetRotation(0.0, -m_currentangle, 0.0);
 		}
