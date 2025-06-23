@@ -56,6 +56,11 @@ public:
 
 	int GetType();
 	class ProcessLayer *GetLayer();
+
+	int GetPointCentre(unsigned int idx, float &x, float &y);
+	int GetPoint2D(unsigned int idx, float &x, float &y);
+	int GetPoint3D(unsigned int idx, float &x, float &y, float &z);
+	int GetFace3D(unsigned int idx, int &v1, int &v2, int &v3);
 };
 
 #endif
