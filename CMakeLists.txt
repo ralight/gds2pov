@@ -4,6 +4,10 @@ project(gdsto3d)
 set(VERSION 20080229)
 
 add_definitions(-DVERSION=\"${VERSION}\" -ggdb -Wall)
+if(WIN32)
+	add_definitions(-DNOMINMAX)
+endif()
+
 include_directories(${gdsto3d_BINARY_DIR})
 
 # Install destinations
