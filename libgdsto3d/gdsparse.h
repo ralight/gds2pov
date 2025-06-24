@@ -50,11 +50,9 @@ using namespace std;
 //#	define __BYTE_ORDER __LITTLE_ENDIAN
 //	long endian_swap_long(long value);
 //	short endian_swap_short(short value);
-#ifdef HAVE_WINSOCK2_H
 #	include <winsock2.h>
 #	define endian_swap_long(A) htonl((A))
 #	define endian_swap_short(A) htons((A))
-#endif
 #else
 	/* Generic includes for Unix-alike systems */
 	/* Includes at least Solaris, FreeBSD, HP-UX */
