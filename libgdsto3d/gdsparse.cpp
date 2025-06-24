@@ -24,6 +24,7 @@
 
 #include <cmath>
 #include <cstring>
+#include <cstdint>
 
 #include "gdsparse.h"
 
@@ -923,7 +924,7 @@ void GDSParse::ParseXY()
 {
 	bool Flipped;
 
-	Flipped = ((u_int16_t)(m_currentstrans & 0x8000) == (u_int16_t)0x8000) ? true : false;
+	Flipped = ((uint16_t)(m_currentstrans & 0x8000) == (uint16_t)0x8000) ? true : false;
 
 	switch(m_currentelement){
 		case elSRef:
