@@ -27,6 +27,11 @@
 
 #include "gdsobject_svg.h"
 
+#ifndef M_PI
+#  define M_PI 3.141592653589793
+#endif
+
+
 GDSObject_svg::GDSObject_svg(std::string name) : GDSObject(name){
 }
 
