@@ -194,8 +194,8 @@ struct _Boundary *GDSObject::GetBoundary(void)
 			struct _Boundary *NewBound;
 			NewBound = object->GetBoundary();
 
-			float xmax, xmin;
-			float ymax, ymin;
+			float xmax = 0.0, xmin = 0.0;
+			float ymax = 0.0, ymin = 0.0;
 
 			switch((int)round(sref->rotate.y)){
 				case 0:
@@ -242,8 +242,8 @@ struct _Boundary *GDSObject::GetBoundary(void)
 			struct _Boundary *NewBound;
 			NewBound = object->GetBoundary();
 
-			float xmax, xmin;
-			float ymax, ymin;
+			float xmax = 0.0, xmin = 0.0;
+			float ymax = 0.0, ymin = 0.0;
 
 			printf("%s\n", aref->name.c_str());
 			switch((int)round(aref->rotate.y)){

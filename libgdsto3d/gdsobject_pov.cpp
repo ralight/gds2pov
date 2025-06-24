@@ -289,7 +289,7 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 		ASRefElement *aref = m_arefs[i];
 
 		float dx = 0.0, dy = 0.0;
-		int columns, rows;
+		int columns = 0, rows = 0;
 
 		switch((int)round(aref->rotate.y)){
 			case 0:
