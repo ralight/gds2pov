@@ -7,7 +7,6 @@
 
 GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 {
-	m_config = new GDSConfig();
 	m_process = new GDSProcess();
 	m_process_path = wxT("");
 	m_defaultSaveDir = wxT("");
@@ -19,7 +18,6 @@ GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 
 GPEWindow::~GPEWindow()
 {
-	delete m_config;
 	delete m_process;
 }
 
@@ -309,7 +307,7 @@ void GPEWindow::OnMenuFileImportGDS( wxCommandEvent& event )
 			m_defaultSaveFile = wxT("");
 			m_selectedLayer = -1;
 
-			class GDSParse *Parser = new class GDSParse(m_config, m_process, true);
+			class GDSParse *Parser = new class GDSParse(m_process, true);
 			if(!Parser->Parse(iptr)){
 				ProcessLayer *layer;
 

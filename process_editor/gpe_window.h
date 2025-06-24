@@ -17,7 +17,6 @@
 #include <wx/sizer.h>
 #include <wx/frame.h>
 
-#include "config_cfg.h"
 #include "process_cfg.h"
 #include "gpe_window_fb.h"
 
@@ -27,7 +26,6 @@
 class GPEWindow : public GPEWindow_fb
 {
 	private:
-		GDSConfig *m_config;
 		GDSProcess *m_process;
 		wxString m_process_path;
 		wxString m_defaultSaveDir;

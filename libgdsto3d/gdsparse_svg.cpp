@@ -21,7 +21,6 @@
  */
 
 
-#include "config_cfg.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
 #include "gdsparse_svg.h"
@@ -29,8 +28,8 @@
 
 extern int verbose_output;
 
-GDSParse_svg::GDSParse_svg(GDSConfig *config, GDSProcess *process, bool generate_process) :
-		GDSParse(config, process, generate_process),
+GDSParse_svg::GDSParse_svg(GDSProcess *process, bool generate_process) :
+		GDSParse(process, generate_process),
 		m_scale(100.0)
 {
 	// FIXME - check multiple output and output children first
@@ -50,7 +49,6 @@ GDSParse_svg::GDSParse_svg(GDSParse *parse)
 
 	m_units = parse->m_units;
 	m_process = parse->m_process;
-	m_config = parse->m_config;
 
 	for(unsigned int i = 0; i < parse->m_objects.size(); i++){
 		m_objects.push_back(new GDSObject_svg(parse->m_objects[i]));

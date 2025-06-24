@@ -52,7 +52,7 @@ GDSObject_pov::~GDSObject_pov()
 {
 }
 
-void GDSObject_pov::OutputPathToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputPathToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!m_paths.empty()){
 		GDSPath *path;
@@ -89,7 +89,7 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, std::string Font, float offx, f
 	}
 }
 
-void GDSObject_pov::OutputPolygonToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputPolygonToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!m_polygons.empty()){
 		if(m_decompose){
@@ -113,7 +113,7 @@ void GDSObject_pov::OutputPolygonToFile(FILE *fptr, std::string Font, float offx
 	}
 }
 
-void GDSObject_pov::OutputTextToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputTextToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!m_texts.empty()){
 		GDSText *text;
@@ -121,11 +121,7 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, std::string Font, float offx, f
 		for (unsigned int i=0; i<m_texts.size(); i++){
 			text = m_texts[i];
 			if(text->GetString().length() > 0){
-				if(Font.length() > 0){
-					fprintf(fptr, "text{ttf \"%s\" \"%s\" 0.2, 0 ", Font.c_str(), text->GetString().c_str());
-				}else{
-					fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString().c_str());
-				}
+				fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString().c_str());
 				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
 				fprintf(fptr, "texture{t%s}",text->GetLayer()->Name.c_str());
 				if(text->GetMag()!=1.0){
@@ -174,7 +170,7 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, std::string Font, float offx, f
 	}
 }
 
-void GDSObject_pov::OutputSRefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputSRefToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
 		ASRefElement *sref = m_srefs[i];
@@ -194,7 +190,7 @@ void GDSObject_pov::OutputSRefToFile(FILE *fptr, std::string Font, float offx, f
 	}
 }
 
-void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputARefToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		ASRefElement *aref = m_arefs[i];
@@ -285,16 +281,16 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, std::string Font, float offx, f
 }
 
 
-void GDSObject_pov::OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(fptr && !m_isoutput){
 		fprintf(fptr, "#declare str_%s = union {\n", m_name.c_str());
 
-		OutputPolygonToFile(fptr, Font, offx, offy, objectid, firstlayer);
-		OutputPathToFile(fptr, Font, offx, offy, objectid, firstlayer);
-		OutputSRefToFile(fptr, Font, offx, offy, objectid, firstlayer);
-		OutputTextToFile(fptr, Font, offx, offy, objectid, firstlayer);
-		OutputARefToFile(fptr, Font, offx, offy, objectid, firstlayer);
+		OutputPolygonToFile(fptr, offx, offy, objectid, firstlayer);
+		OutputPathToFile(fptr, offx, offy, objectid, firstlayer);
+		OutputSRefToFile(fptr, offx, offy, objectid, firstlayer);
+		OutputTextToFile(fptr, offx, offy, objectid, firstlayer);
+		OutputARefToFile(fptr, offx, offy, objectid, firstlayer);
 
 		fprintf(fptr, "}\n");
 	}

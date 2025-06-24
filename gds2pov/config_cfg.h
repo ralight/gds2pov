@@ -25,6 +25,9 @@
 
 #include <string>
 #include <vector>
+#include <gdsto3d.h>
+#include <gdsparse.h>
+
 using namespace std;
 
 typedef enum {
@@ -62,6 +65,7 @@ private:
 	float m_ambient;
 	float m_scale;
 	bool m_valid;
+	std::string m_camfile;
 
 	Position m_camerapos;
 	Position m_lookatpos;
@@ -69,7 +73,7 @@ private:
 	Position *m_currentlight;
 
 public:
-	GDSConfig(std::string filename="");
+	GDSConfig(std::string filename="", std::string camfile="");
 	~GDSConfig();
 
 	std::string GetProcessFile();
@@ -84,6 +88,7 @@ public:
 	Position *GetLightPos(unsigned int index);
 	int GetLightCount();
 	void ReadFile(std::string configfile);
+	void OutputToFile(FILE *fptr, struct _Boundary *boundary);
 };
 
 #endif
