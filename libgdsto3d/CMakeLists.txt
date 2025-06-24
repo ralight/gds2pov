@@ -1,5 +1,4 @@
 set(GDSTO3D_SRCS
-	config_cfg.cpp config_cfg.h
 	gds_globals.cpp gds_globals.h
 	gdsobject.cpp gdsobject.h
 	gdsobject_pov.cpp gdsobject_pov.h
@@ -22,7 +21,7 @@ set_target_properties(gdsto3d PROPERTIES
 	VERSION 1.0.0
 	SOVERSION 1
 )
-target_include_directories(gdsto3d INTERFACE
+target_include_directories(gdsto3d PUBLIC
 	${gdsto3d_SOURCE_DIR}/libgdsto3d
 )
 

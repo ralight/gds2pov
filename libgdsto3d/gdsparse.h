@@ -28,7 +28,6 @@ using namespace std;
 
 #include <sys/types.h>
 
-#include "config_cfg.h"
 #include "process_cfg.h"
 #include "gds_globals.h"
 #include "gdsobject.h"
@@ -96,7 +95,6 @@ protected:
 	FILE *m_iptr;
 	FILE *m_optr;
 	GDSProcess *m_process;
-	GDSConfig	 *m_config;
 
 	struct _Boundary *m_boundary;
 	int16_t m_recordlen;
@@ -156,7 +154,6 @@ protected:
 
 	bool ParseFile();
 	void AssignASRefs(void);
-	struct _Boundary *GetBoundary();
 
 	virtual void OutputHeader() { };
 	virtual void OutputFooter() { };
@@ -165,9 +162,10 @@ protected:
 	GDSObject *GetObjectRef(std::string name);
 public:
 	GDSParse() { };
-	GDSParse(GDSConfig *config, GDSProcess *process, bool generate_process);
+	GDSParse(GDSProcess *process, bool generate_process);
 	virtual ~GDSParse ();
 
+	struct _Boundary *GetBoundary();
 	bool Parse(FILE *iptr);
 	void Output(FILE *optr, std::string topcell);
 	virtual GDSObject *NewObject(std::string name) { return new GDSObject(name); };

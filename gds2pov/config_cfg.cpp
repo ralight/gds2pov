@@ -29,10 +29,11 @@
 
 #include "config_cfg.h"
 
-GDSConfig::GDSConfig(std::string filename) :
+GDSConfig::GDSConfig(std::string filename, std::string camfile) :
 	m_processfile(""), m_font(""),
 	m_ambient(1.2), m_scale(1.0), m_valid(true)
 {
+	m_camfile = camfile;
 	m_camerapos.postype = ptCamera;
 	m_lookatpos.postype = ptLookAt;
 
@@ -500,4 +501,137 @@ void GDSConfig::ReadFile(std::string configfile)
 		}
 	}
 	fclose(cptr);
+}
+
+
+void GDSConfig::OutputToFile(FILE *fptr, struct _Boundary *boundary)
+{
+	float half_widthX = (boundary->xmax - boundary->xmin)/2;
+	float half_widthY = (boundary->ymax - boundary->ymin)/2;
+	float centreX = half_widthX + boundary->xmin;
+	float centreY = half_widthY + boundary->ymin;
+
+	float distance;
+	if(half_widthX > half_widthY){
+		distance = half_widthX * 1.8;
+	}else{
+		distance = half_widthY * 1.8;
+	}
+
+	fprintf(fptr, "#declare sizeX = %.2f;\n", boundary->xmax - boundary->xmin);
+	fprintf(fptr, "#declare sizeY = %.2f;\n", boundary->ymax - boundary->ymin);
+
+	fprintf(fptr, "// TopLeft: %.2f, %.2f\n", boundary->xmin, boundary->ymax);
+	fprintf(fptr, "// TopRight: %.2f, %.2f\n", boundary->xmax, boundary->ymax);
+	fprintf(fptr, "// BottomLeft: %.2f, %.2f\n", boundary->xmin, boundary->ymin);
+	fprintf(fptr, "// BottomRight: %.2f, %.2f\n", boundary->xmax, boundary->ymin);
+	fprintf(fptr, "// Centre: %.2f, %.2f\n", centreX, centreY);
+
+	float xmod = this->GetCameraPos()->xmod;
+	float ymod = this->GetCameraPos()->ymod;
+	float zmod = this->GetCameraPos()->zmod;
+
+	/* m_camfile is a possible camera include file. Depends on the -e option
+	 * If it is null, use the normal camera else use the include */
+	if(m_camfile == ""){
+		switch(this->GetCameraPos()->boundarypos){
+			case bpCentre:
+				// Default camera angle = 67.38
+				// Half of this is 33.69
+				// tan(33.69) = 0.66666 = 1/1.5
+				// Make it slightly larger so that we have a little bit of a border: 1.5+20% = 1.8
+
+				fprintf(fptr, "camera {\n\tlocation <%.2f,%.2f,%.2f>\n",
+						centreX*xmod, centreY*ymod, -distance*zmod);
+				break;
+			case bpTopLeft:
+				fprintf(fptr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n",
+						boundary->xmin*xmod, boundary->ymax*ymod, -distance*zmod);
+				break;
+			case bpTopRight:
+				fprintf(fptr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n",
+						boundary->xmax*xmod, boundary->ymax*ymod, -distance*zmod);
+				break;
+			case bpBottomLeft:
+				fprintf(fptr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n",
+						boundary->xmin*xmod, boundary->ymin*ymod, -distance*zmod);
+				break;
+			case bpBottomRight:
+				fprintf(fptr, "camera {\n\tlocation <%.2f, %.2f, %.2f>\n",
+						boundary->xmax*xmod, boundary->ymin*ymod, -distance*zmod);
+				break;
+		}
+
+		fprintf(fptr, "\tsky <0,0,-1>\n"); //This fixes the look at rotation (hopefully)
+
+		xmod = this->GetLookAtPos()->xmod;
+		ymod = this->GetLookAtPos()->ymod;
+		zmod = this->GetLookAtPos()->zmod;
+
+		switch(this->GetLookAtPos()->boundarypos){
+			case bpCentre:
+				fprintf(fptr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n",
+						centreX*xmod, centreY*ymod, -distance*zmod);
+				break;
+			case bpTopLeft:
+				fprintf(fptr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n",
+						boundary->xmin*xmod, boundary->ymax*ymod, -distance*zmod);
+				break;
+			case bpTopRight:
+				fprintf(fptr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n",
+						boundary->xmax*xmod, boundary->ymax*ymod, -distance*zmod);
+				break;
+			case bpBottomLeft:
+				fprintf(fptr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n",
+						boundary->xmin*xmod, boundary->ymin*ymod, -distance*zmod);
+				break;
+			case bpBottomRight:
+				fprintf(fptr, "\tlook_at <%.2f,%.2f,%.2f>\n}\n",
+						boundary->xmax*xmod, boundary->ymin*ymod, -distance*zmod);
+			break;
+		}
+	}else{
+		fprintf(fptr, "#include \"%s\"\n", m_camfile.c_str());
+	}
+
+	if(this->GetLightPos()!=NULL){
+		int count = this->GetLightCount();
+
+		for(int i = 0; i < count; i++){
+			Position *LightPos = this->GetLightPos(i);
+			xmod = LightPos->xmod;
+			ymod = LightPos->ymod;
+			zmod = LightPos->zmod;
+
+			switch(LightPos->boundarypos){
+				case bpCentre:
+					fprintf(fptr, "light_source {<%.2f,%.2f,%.2f> rgb 1 }\n",
+							centreX*xmod, centreY*ymod, -distance*zmod);
+					break;
+				case bpTopLeft:
+					fprintf(fptr, "light_source {<%.2f,%.2f,%.2f> rgb 1 }\n",
+							boundary->xmin*xmod, boundary->ymax*ymod, -distance*zmod);
+					break;
+				case bpTopRight:
+					fprintf(fptr, "light_source {<%.2f,%.2f,%.2f> rgb 1 }\n",
+							boundary->xmax*xmod, boundary->ymax*ymod, -distance*zmod);
+					break;
+				case bpBottomLeft:
+					fprintf(fptr, "light_source {<%.2f,%.2f,%.2f> rgb 1 }\n",
+							boundary->xmin*xmod, boundary->ymin*ymod, -distance*zmod);
+					break;
+				case bpBottomRight:
+					fprintf(fptr, "light_source {<%.2f,%.2f,%.2f> rgb 1 }\n",
+							boundary->xmax*xmod, boundary->ymin*ymod, -distance*zmod);
+					break;
+			}
+		}
+	}else{
+		fprintf(fptr, "light_source {<%.2f,%.2f,%.2f> rgb 1 }\n",
+				centreX, centreY, -distance);
+	}
+
+	fprintf(fptr, "background { color rgb 0 }\n");
+	fprintf(fptr, "global_settings { ambient_light rgb <%.2f,%.2f,%.2f> }\n",
+			this->GetAmbient(), this->GetAmbient(), this->GetAmbient());
 }

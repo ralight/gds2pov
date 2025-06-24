@@ -24,7 +24,6 @@
 #include <cstring>
 #include <string>
 
-#include "config_cfg.h"
 #include "process_cfg.h"
 #include "gds_globals.h"
 #include "gdsparse_svg.h"
@@ -37,9 +36,8 @@ void printusage()
 	printf("Copyright (C) 2005-2008 by Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 	printf("gds2svg comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2svg freely\nas described in the readme.txt distributed with this file.\n\n");
 	printf("gds2svg is a program for converting a GDS2 file to an SVG file.\n\n");
-	printf("Usage: gds2svg [-b] [-c config.txt] [-d] [-g] [-h] [-i input.gds] [-o output.svg] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
+	printf("Usage: gds2svg [-b] [-d] [-g] [-h] [-i input.gds] [-o output.svg] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
 	printf("Options\n");
-	printf(" -c\t\tSpecify config file\n");
 	//printf(" -d\t\tDecompose polygons into triangles (use mesh2 object instead of prism)\n");
 	printf(" -g\t\tGenerate a process file based on the input gds2 file (suppresses SVG file generation).\n");
 	printf(" -h\t\tDisplay this help\n");
@@ -56,7 +54,6 @@ int main(int argc, char *argv[])
 {
 	std::string gdsfile="";
 	std::string svgfile="";
-	std::string configfile="";
 	std::string processfile="";
 	std::string topcell="";
 
@@ -72,16 +69,7 @@ int main(int argc, char *argv[])
 
 	for(int i=1; i<argc; i++){
 		if(argv[i][0] == '-'){
-			if(strncmp(argv[i], "-c", strlen("-c"))==0){
-
-				if(i==argc-1){
-					printf("Error: -c switch given but no config file specified.\n\n");
-					printusage();
-					return 1;
-				}else{
-					configfile = argv[i+1];
-				}
-			}else if(strncmp(argv[i], "-g", strlen("-g"))==0){
+			if(strncmp(argv[i], "-g", strlen("-g"))==0){
 				generate_process = true;
 			}else if(strncmp(argv[i], "-h", strlen("-h"))==0){
 				printusage();
@@ -131,40 +119,19 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	class GDSConfig *config=NULL;
-
-	if(configfile != ""){
-		config = new GDSConfig(configfile);
-	}else{
-		config = new GDSConfig(); // Start with default positions
-	}
-	if(!config){
-		fprintf(stderr, "Error: Out of memory.\n");
-	}else if(!config->IsValid()){
-		fprintf(stderr, "Error: %s is not a valid config file.\n", configfile.c_str());
-		delete config;
-		return -1;
-	}
-
 	class GDSProcess *process=NULL;
 	/*
 	** Order of precedence for process.txt:
 	** -p switch (given as an argument to this function)
-	** Specified in config file
 	** Use process.txt if none others specified.
 	*/
 	if(processfile == ""){
-		if(config->GetProcessFile()!=""){
-			processfile = config->GetProcessFile();
-		}else{
-			processfile = "process.txt";
-		}
+		processfile = "process.txt";
 	}
 	process = new GDSProcess();
 
 	if(!process){
 		fprintf(stderr, "Error: Out of memory.\n");
-		delete config;
 		return -1;
 	}
 
@@ -172,12 +139,10 @@ int main(int argc, char *argv[])
 		process->Parse(processfile);
 		if(!process->IsValid()){
 			fprintf(stderr, "Error: %s is not a valid process file\n", processfile.c_str());
-			delete config;
 			delete process;
 			return -1;
 		}else if(process->LayerCount()==0){
 			fprintf(stderr, "Error: No layers found in \"%s\".\n", processfile.c_str());
-			delete config;
 			delete process;
 			return -1;
 		}
@@ -192,7 +157,7 @@ int main(int argc, char *argv[])
 		iptr = stdin;
 	}
 	if(iptr){
-		class GDSParse_svg *Parser = new class GDSParse_svg(config, process, generate_process);
+		class GDSParse_svg *Parser = new class GDSParse_svg(process, generate_process);
 		if(!Parser->Parse(iptr)){
 			if(!generate_process){
 				FILE *optr;
@@ -220,11 +185,9 @@ int main(int argc, char *argv[])
 		}
 
 		delete Parser;
-		delete config;
 		delete process;
 	}else{
 		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile.c_str());
-		delete config;
 		delete process;
 		return -1;
 	}

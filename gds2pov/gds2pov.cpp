@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 	class GDSConfig *config=NULL;
 
 	if(configfile.length() > 0){
-		config = new GDSConfig(configfile);
+		config = new GDSConfig(configfile, camfile);
 	}else{
 		config = new GDSConfig(); // Start with default positions
 	}
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 		iptr = stdin;
 	}
 	if(iptr){
-		class GDSParse_pov *Parser = new class GDSParse_pov(config, process, bounding_output, camfile, generate_process);
+		class GDSParse_pov *Parser = new class GDSParse_pov(process, bounding_output, generate_process);
 		if(!Parser->Parse(iptr)){
 			if(!generate_process){
 				if(decompose){
@@ -230,6 +230,7 @@ int main(int argc, char *argv[])
 				}
 
 				if(optr){
+					config->OutputToFile(optr, Parser->GetBoundary());
 					Parser->Output(optr, topcell);
 					if(optr != stdout){
 						fclose(optr);

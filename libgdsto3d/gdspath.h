@@ -21,6 +21,7 @@
 #ifndef _GDSPATH_H_
 #define _GDSPATH_H_
 
+#include <gdsto3d.h>
 #include "process_cfg.h"
 
 class GDSPath

@@ -30,7 +30,7 @@
 
 extern int verbose_output;
 
-GDSParse::GDSParse (GDSConfig *config, GDSProcess *process, bool generate_process) :
+GDSParse::GDSParse (GDSProcess *process, bool generate_process) :
 	m_libname(""), m_topcellname(""),
 	m_currentlayer(-1), m_currentdatatype(-1),  m_currentwidth(0.0),
 	m_currentpathtype(0),
@@ -42,7 +42,7 @@ GDSParse::GDSParse (GDSConfig *config, GDSProcess *process, bool generate_proces
 	m_units(0.0), m_angle(0.0),
 	m_iptr(NULL), m_optr(NULL),
 
-	m_process(process), m_config(config),
+	m_process(process),
 	m_boundary(NULL),
 	m_recordlen(0),
 
@@ -193,7 +193,7 @@ void GDSParse::RecursiveOutput(GDSObject *object, FILE *m_optr, float offx, floa
 		layer = m_process->GetLayer();
 	}
 
-	object->OutputToFile(m_optr, m_config->GetFont(), offx, offy, objectid, layer);
+	object->OutputToFile(m_optr, offx, offy, objectid, layer);
 }
 
 bool GDSParse::ParseFile()
@@ -670,7 +670,7 @@ void GDSParse::ParseSName()
 void GDSParse::ParseUnits()
 {
 	double tmp;
-	m_units = (float)GetEightByteReal() * m_config->GetScale();
+	m_units = (float)GetEightByteReal();
 	tmp = GetEightByteReal();
 	v_printf(1, "DB units/user units = %g\nSize of DB units in metres = %g\nSize of user units in m = %g\n\n", 1/m_units, tmp, tmp/m_units);
 }

@@ -37,12 +37,12 @@ public:
 	~GDSObject_pov();
 
 	void Decompose(bool value);
-	virtual void OutputToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputPathToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputPolygonToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputTextToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputSRefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputARefToFile(FILE *fptr, std::string Font, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	virtual void OutputToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputPathToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputPolygonToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputTextToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputSRefToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputARefToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
 
 };
 

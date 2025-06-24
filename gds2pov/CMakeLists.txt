@@ -1,4 +1,5 @@
 add_executable(gds2pov
+	config_cfg.cpp config_cfg.h
 	gds2pov.cpp
 )
 

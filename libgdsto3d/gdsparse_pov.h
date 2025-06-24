@@ -23,7 +23,6 @@
 
 #include <string>
 
-#include "config_cfg.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
 
@@ -32,7 +31,7 @@ class GDSParse_pov : public GDSParse
 private:
 	std::string m_camfile;
 public:
-	GDSParse_pov (GDSConfig *config, GDSProcess *process, bool bounding_output, std::string camfile, bool generate_process);
+	GDSParse_pov (GDSProcess *process, bool bounding_output, bool generate_process);
 	GDSParse_pov(const GDSParse *parse);
 	~GDSParse_pov ();
 

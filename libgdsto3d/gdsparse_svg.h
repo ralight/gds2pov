@@ -23,7 +23,6 @@
 
 #include <string>
 
-#include "config_cfg.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
 
@@ -33,7 +32,7 @@ private:
 	float m_scale;
 
 public:
-	GDSParse_svg (GDSConfig *config, GDSProcess *process, bool generate_process);
+	GDSParse_svg (GDSProcess *process, bool generate_process);
 	GDSParse_svg(GDSParse *parse);
 	~GDSParse_svg ();
 
