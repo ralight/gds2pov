@@ -8,4 +8,4 @@ target_link_libraries(gds2svg PRIVATE
 	gdsto3d
 )
 
-install(TARGETS gds2svg RUNTIME DESTINATION ${BINDEST})
+install(TARGETS gds2svg RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

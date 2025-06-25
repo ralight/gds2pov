@@ -9,4 +9,4 @@ target_link_libraries(gds2pov PRIVATE
 	gdsto3d
 )
 
-install(TARGETS gds2pov RUNTIME DESTINATION ${BINDEST})
+install(TARGETS gds2pov RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -11,4 +11,4 @@ target_link_libraries(gds2x_process_editor PRIVATE
 	${wxWidgets_LIBRARIES}
 )
 
-install(TARGETS gds2x_process_editor RUNTIME DESTINATION ${BINDEST})
+install(TARGETS gds2x_process_editor RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
