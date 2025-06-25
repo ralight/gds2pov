@@ -28,7 +28,7 @@
 #include "gds_globals.h"
 #include "gdsparse_svg.h"
 
-extern int verbose_output;
+int verbose_output;
 
 void printusage()
 {

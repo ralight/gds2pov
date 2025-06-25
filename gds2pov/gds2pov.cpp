@@ -29,7 +29,7 @@
 #include "gds_globals.h"
 #include "gdsparse_pov.h"
 
-extern int verbose_output;
+int verbose_output;
 
 void printusage()
 {

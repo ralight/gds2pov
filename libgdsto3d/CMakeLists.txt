@@ -1,3 +1,5 @@
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 set(GDSTO3D_SRCS
 	gds_globals.cpp gds_globals.h
 	gdsobject.cpp gdsobject.h
