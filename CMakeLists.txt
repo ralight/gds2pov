@@ -24,7 +24,6 @@ add_subdirectory(gds2svg)
 SET(wxWidgets_USE_LIBS base core)
 FIND_PACKAGE(wxWidgets)
 IF(wxWidgets_FOUND)
-#	add_subdirectory(gds2gui)
 	add_subdirectory(process_editor)
 ENDIF(wxWidgets_FOUND)
 
