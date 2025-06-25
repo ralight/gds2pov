@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <cmath>
 #include <sstream>
 #include <string>
 
@@ -536,4 +537,9 @@ void GDSProcess::SwapLayers(unsigned int a, unsigned int b)
 		m_layers[a] = m_layers[b];
 		m_layers[b] = tmp;
 	}
+}
+
+void ProcessLayer::HexColour(char *buf, size_t buflen)
+{
+	snprintf(buf, buflen, "%02x%02x%02x", (int )floor(255.0*Red), (int )floor(255.0*Green), (int )floor(255.0*Blue));
 }

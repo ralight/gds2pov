@@ -42,6 +42,8 @@ public:
 	ProcessLayer() : Name(""), Layer(-1), Datatype(-1),
 					Height(0.0), Thickness(0.0), Show(false),
 					Red(0.5), Green(0.5), Blue(0.5), Metal(false) {}
+
+	void HexColour(char *buf, size_t buflen);
 };
 
 class GDSProcess
