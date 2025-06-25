@@ -41,10 +41,10 @@ Section "Files" SecInstall
 	SectionIn RO
 
 	SetOutPath "$INSTDIR"
-	File "..\build\gds2pov\gds2pov.exe"
-	File "..\build\gds2svg\gds2svg.exe"
-	File "..\build\libgdsto3d\libgdsto3d.dll"
-	File "..\build\process_editor\gds2x_process_editor.exe"
+	File "..\build\gds2pov\Release\gds2pov.exe"
+	File "..\build\gds2svg\Release\gds2svg.exe"
+	File "..\build\libgdsto3d\Release\gdsto3d.dll"
+	File "..\build\process_editor\Release\gds2x_process_editor.exe"
 
 	File "..\AUTHORS"
 	File "..\changes.txt"
