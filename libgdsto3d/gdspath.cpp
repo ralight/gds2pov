@@ -154,7 +154,7 @@ int GDSPath::GetPoint2D(unsigned int idx, float &x, float &y)
 		{
 			double XCoords_j2;
 			double YCoords_j2;
-			float angle12, angle23;
+			float angle12 = 0.0, angle23 = 0.0;
 			float angleX, angleY;
 			float PathWidth = this->GetWidth();
 			float extn_x, extn_y;
@@ -248,7 +248,7 @@ int GDSPath::GetPoint3D(unsigned int idx, float &x, float &y, float &z)
 		{
 			double XCoords_j2;
 			double YCoords_j2;
-			float angle12, angle23;
+			float angle12 = 0.0, angle23 = 0.0;
 			float angleX, angleY;
 			float PathWidth = this->GetWidth();
 			float extn_x, extn_y;

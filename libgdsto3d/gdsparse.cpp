@@ -209,8 +209,11 @@ bool GDSParse::ParseFile()
 	fseek(m_iptr, 0, SEEK_SET);
 	while(!feof(m_iptr)){
 		m_recordlen = GetTwoByteSignedInt();
-		fread(&recordtype, 1, 1, m_iptr);
-		fread(&datatype, 1, 1, m_iptr);
+		if(fread(&recordtype, 1, 1, m_iptr) != 1
+				|| fread(&datatype, 1, 1, m_iptr) != 1){
+
+			return -1;
+		}
 		m_recordlen -= 4;
 		switch(recordtype){
 			case rnHeader:

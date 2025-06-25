@@ -63,8 +63,10 @@ short GDSParse::GetBitArray()
 {
 	uint8_t byte1;
 
-	fread(&byte1, 1, 1, m_iptr);
-	fread(&byte1, 1, 1, m_iptr);
+	if(fread(&byte1, 1, 1, m_iptr) != 1
+			|| fread(&byte1, 1, 1, m_iptr) != 1){
+		return 0;
+	}
 
 	m_recordlen-=2;
 	return 0;
@@ -78,7 +80,9 @@ double GDSParse::GetEightByteReal()
 	double exponent;
 	double mant;
 
-	fread(&value, 1, 1, m_iptr);
+	if(fread(&value, 1, 1, m_iptr) != 1){
+		return 0.0;
+	}
 	if(value & 128){
 		value -= 128;
 		sign = -1.0;
@@ -87,13 +91,16 @@ double GDSParse::GetEightByteReal()
 	exponent -= 64.0;
 	mant=0.0;
 
-	fread(&b2, 1, 1, m_iptr);
-	fread(&b3, 1, 1, m_iptr);
-	fread(&b4, 1, 1, m_iptr);
-	fread(&b5, 1, 1, m_iptr);
-	fread(&b6, 1, 1, m_iptr);
-	fread(&b7, 1, 1, m_iptr);
-	fread(&b8, 1, 1, m_iptr);
+	if(fread(&b2, 1, 1, m_iptr) != 1
+			|| fread(&b3, 1, 1, m_iptr) != 1
+			|| fread(&b4, 1, 1, m_iptr) != 1
+			|| fread(&b5, 1, 1, m_iptr) != 1
+			|| fread(&b6, 1, 1, m_iptr) != 1
+			|| fread(&b7, 1, 1, m_iptr) != 1
+			|| fread(&b8, 1, 1, m_iptr) != 1
+			){
+		return 0.0;
+	}
 
 	mant += b8;
 	mant /= 256.0;
@@ -118,7 +125,9 @@ double GDSParse::GetEightByteReal()
 int32_t GDSParse::GetFourByteSignedInt()
 {
 	int32_t value;
-	fread(&value, 4, 1, m_iptr);
+	if(fread(&value, 4, 1, m_iptr) != 1){
+		return 0;
+	}
 
 	m_recordlen-=4;
 
@@ -133,7 +142,9 @@ int16_t GDSParse::GetTwoByteSignedInt()
 {
 	int16_t value;
 
-	fread(&value, 2, 1, m_iptr);
+	if(fread(&value, 2, 1, m_iptr) != 1){
+		return 0;
+	}
 
 	m_recordlen-=2;
 
@@ -153,9 +164,11 @@ char *GDSParse::GetAsciiString()
 		str = new char[m_recordlen+1];
 		if(!str){
 			fprintf(stderr, "Unable to allocate memory for ascii string (%d)\n", m_recordlen);
-			return NULL;
+			return nullptr;
 		}
-		fread(str, 1, m_recordlen, m_iptr);
+		if(fread(str, 1, m_recordlen, m_iptr) != (size_t)m_recordlen){
+			return nullptr;
+		}
 		str[m_recordlen] = 0;
 		m_recordlen = 0;
 	}
