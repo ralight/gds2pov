@@ -1,12 +1,8 @@
 set(GDSTO3D_SRCS
 	gds_globals.cpp gds_globals.h
 	gdsobject.cpp gdsobject.h
-	gdsobject_pov.cpp gdsobject_pov.h
-	gdsobject_svg.cpp gdsobject_svg.h
 	gdsparse.cpp gdsparse.h
 	gdsparse_basic_types.cpp
-	gdsparse_pov.cpp gdsparse_pov.h
-	gdsparse_svg.cpp gdsparse_svg.h
 	gdspath.cpp gdspath.h
 	gdspolygon.cpp gdspolygon.h
 	gdstext.cpp gdstext.h

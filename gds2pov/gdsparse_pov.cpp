@@ -41,7 +41,7 @@ GDSParse_pov::GDSParse_pov(GDSProcess *process,
 }
 
 
-GDSParse_pov::GDSParse_pov(const GDSParse *parse)
+GDSParse_pov::GDSParse_pov(GDSParse *parse)
 {
 	m_bounding_output = false; // FIXME
 	m_use_outfile = true;
@@ -49,11 +49,12 @@ GDSParse_pov::GDSParse_pov(const GDSParse *parse)
 	m_output_children_first = true;
 	m_camfile = "";
 
-	m_units = parse->m_units;
-	m_process = parse->m_process;
+	m_units = parse->GetUnits();
+	m_process = parse->GetProcess();
 
-	for(unsigned int i = 0; i < parse->m_objects.size(); i++){
-		m_objects.push_back(new GDSObject_pov(parse->m_objects[i]));
+	vector<GDSObject*> objects = parse->GetObjects();
+	for(unsigned int i = 0; i < objects.size(); i++){
+		m_objects.push_back(new GDSObject_pov(objects[i]));
 	}
 }
 

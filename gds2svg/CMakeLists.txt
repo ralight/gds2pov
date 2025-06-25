@@ -1,5 +1,7 @@
 add_executable(gds2svg
 	gds2svg.cpp
+	gdsobject_svg.cpp gdsobject_svg.h
+	gdsparse_svg.cpp gdsparse_svg.h
 )
 
 target_link_libraries(gds2svg PRIVATE

@@ -1002,3 +1002,18 @@ GDSObject *GDSParse::GetObjectRef(std::string name)
 	}
 	return NULL;
 }
+
+float GDSParse::GetUnits()
+{
+	return m_units;
+}
+
+GDSProcess *GDSParse::GetProcess()
+{
+	return m_process;
+}
+
+vector<GDSObject*> GDSParse::GetObjects()
+{
+	return m_objects;
+}
