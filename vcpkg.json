@@ -1,7 +1,4 @@
 {
   "name": "gds2x",
-  "version-string": "20080229",
-  "dependencies": [
-	"wxwidgets"
-  ]
+  "version-string": "20080229"
 }
