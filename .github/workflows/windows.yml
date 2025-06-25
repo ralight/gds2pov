@@ -44,10 +44,10 @@ jobs:
       - name: Installer
         uses: joncloud/makensis-action@v4
         with:
-          script-file: ${{github.workspace}}/installer/gds2pov.nsi
+          script-file: ${{github.workspace}}/installer/gds2x.nsi
 
       - name: Upload installer to artifacts
         uses: actions/upload-artifact@v4
         with:
           name: installer
-          path: ${{ github.workspace }}/installer/gds2pov*.exe
+          path: ${{ github.workspace }}/installer/gds2x*.exe
