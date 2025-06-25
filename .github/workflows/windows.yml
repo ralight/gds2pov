@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: vcpkg build
-        uses: johnwason/vcpkg-action@v6
+        uses: johnwason/vcpkg-action@v7
         id: vcpkg
         with:
           manifest-dir: ${{ github.workspace }}
@@ -42,7 +42,7 @@ jobs:
           target: ${{github.workspace}}/installer/
 
       - name: Installer
-        uses: joncloud/makensis-action@v4
+        uses: joncloud/makensis-action@v4.1
         with:
           script-file: ${{github.workspace}}/installer/gds2x.nsi
 
