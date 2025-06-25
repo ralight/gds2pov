@@ -49,9 +49,6 @@ protected:
 	struct _Boundary m_boundary;
 
 public:
-	friend class GDSObject_pov;
-	friend class GDSObject_svg;
-
 	GDSObject() { };
 	GDSObject(std::string name);
 	virtual ~GDSObject();
@@ -87,6 +84,14 @@ public:
 	float GetHeight();
 
 	bool GetIsOutput();
+
+	vector<GDSPath*> GetPaths();
+	vector<GDSText*> GetTexts();
+	vector<GDSPolygon*> GetPolygons();
+
+	vector<ASRefElement*> GetSRefs();
+	vector<ASRefElement*> GetARefs();
+
 };
 
 #endif

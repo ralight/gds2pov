@@ -353,3 +353,30 @@ float GDSObject::GetHeight()
 {
 	return m_height;
 }
+
+
+vector<GDSPath*> GDSObject::GetPaths()
+{
+	return m_paths;
+}
+
+vector<GDSText*> GDSObject::GetTexts()
+{
+	return m_texts;
+}
+
+vector<GDSPolygon*> GDSObject::GetPolygons()
+{
+	return m_polygons;
+}
+
+
+vector<ASRefElement*> GDSObject::GetSRefs()
+{
+	return m_srefs;
+}
+
+vector<ASRefElement*> GDSObject::GetARefs()
+{
+	return m_arefs;
+}

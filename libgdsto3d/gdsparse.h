@@ -62,7 +62,6 @@ using namespace std;
 #endif
 
 class GDSParse_pov;
-class GDSParse_svg;
 
 class GDSParse
 {
@@ -170,8 +169,9 @@ public:
 	void Output(FILE *optr, std::string topcell);
 	virtual GDSObject *NewObject(std::string name) { return new GDSObject(name); };
 
-	friend class GDSParse_pov;
-	friend class GDSParse_svg;
+	float GetUnits();
+	GDSProcess *GetProcess();
+	vector<GDSObject*> GetObjects();
 };
 
 #endif

@@ -47,11 +47,12 @@ GDSParse_svg::GDSParse_svg(GDSParse *parse)
 	m_allow_multiple_output = false;
 	m_output_children_first = true;
 
-	m_units = parse->m_units;
-	m_process = parse->m_process;
+	m_units = parse->GetUnits();
+	m_process = parse->GetProcess();
 
-	for(unsigned int i = 0; i < parse->m_objects.size(); i++){
-		m_objects.push_back(new GDSObject_svg(parse->m_objects[i]));
+	vector<GDSObject*> objects = parse->GetObjects();
+	for(unsigned int i = 0; i < objects.size(); i++){
+		m_objects.push_back(new GDSObject_svg(objects[i]));
 	}
 }
 

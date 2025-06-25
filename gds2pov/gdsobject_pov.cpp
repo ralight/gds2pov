@@ -30,21 +30,21 @@ GDSObject_pov::GDSObject_pov(std::string name) : GDSObject(name), m_decompose(fa
 }
 
 
-GDSObject_pov::GDSObject_pov(const GDSObject *object) : m_decompose(false)
+GDSObject_pov::GDSObject_pov(GDSObject *object) : m_decompose(false)
 {
-	m_name = object->m_name;
-	m_width = object->m_width;
-	m_height = object->m_height;
+	m_name = object->GetName();
+	m_width = object->GetWidth();
+	m_height = object->GetHeight();
 
 	m_gotboundary = false;
 	m_isoutput = false;
 
-	m_paths = object->m_paths;
-	m_texts = object->m_texts;
-	m_polygons = object->m_polygons;
+	m_paths = object->GetPaths();
+	m_texts = object->GetTexts();
+	m_polygons = object->GetPolygons();
 
-	m_srefs = object->m_srefs;
-	m_arefs = object->m_arefs;
+	m_srefs = object->GetSRefs();
+	m_arefs = object->GetARefs();
 }
 
 
