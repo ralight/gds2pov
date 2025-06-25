@@ -40,7 +40,7 @@ GDSParse::GDSParse (GDSProcess *process, bool generate_process) :
 	m_currentbgnextn(0.0), m_currentendextn(0.0),
 	m_sname(""), m_arrayrows(0), m_arraycols(0),
 	m_units(0.0), m_angle(0.0),
-	m_iptr(NULL), m_optr(NULL),
+	m_iptr(NULL),
 
 	m_process(process),
 	m_boundary(NULL),
@@ -134,32 +134,27 @@ void GDSParse::AssignASRefs(void)
 	}
 }
 
-void GDSParse::Output(FILE *optr, std::string topcell)
+void GDSParse::Output(std::string topcell)
 {
 	m_topcellname = topcell;
 
 	AssignASRefs();
 
-	if(m_use_outfile){
-		m_optr = optr;
-	}
-	if(m_optr || !m_use_outfile){
-		OutputHeader();
+	OutputHeader();
 
-		if(!m_bounding_output){
-			long objectid = 0;
-			if(topcell.length() > 0){
-				RecursiveOutput(GetObjectRef(topcell), m_optr, 0.0, 0.0, &objectid);
-			}else{
-				RecursiveOutput(m_objects[0], m_optr, 0.0, 0.0, &objectid);
-			}
+	if(!m_bounding_output){
+		long objectid = 0;
+		if(topcell.length() > 0){
+			RecursiveOutput(GetObjectRef(topcell), 0.0, 0.0, &objectid);
+		}else{
+			RecursiveOutput(m_objects[0], 0.0, 0.0, &objectid);
 		}
-
-		OutputFooter();
 	}
+
+	OutputFooter();
 }
 
-void GDSParse::RecursiveOutput(GDSObject *object, FILE *m_optr, float offx, float offy, long *objectid)
+void GDSParse::RecursiveOutput(GDSObject *object, float offx, float offy, long *objectid)
 {
 	if(!object){
 		return;
@@ -175,14 +170,14 @@ void GDSParse::RecursiveOutput(GDSObject *object, FILE *m_optr, float offx, floa
 		for(unsigned int i = 0; i < object->GetSRefCount(); i++){
 			child = object->GetSRef(i)->object;
 			if(child && (child != object)){
-				RecursiveOutput(child, m_optr, offx, offy, objectid);
+				RecursiveOutput(child, offx, offy, objectid);
 			}
 		}
 
 		for(unsigned int i = 0; i < object->GetARefCount(); i++){
 			child = object->GetARef(i)->object;
 			if(child && (child != object)){
-				RecursiveOutput(child, m_optr, offx, offy, objectid);
+				RecursiveOutput(child, offx, offy, objectid);
 			}
 		}
 
@@ -193,7 +188,7 @@ void GDSParse::RecursiveOutput(GDSObject *object, FILE *m_optr, float offx, floa
 		layer = m_process->GetLayer();
 	}
 
-	object->OutputToFile(m_optr, offx, offy, objectid, layer);
+	object->Output(offx, offy, objectid, layer);
 }
 
 bool GDSParse::ParseFile()

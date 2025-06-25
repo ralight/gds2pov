@@ -63,7 +63,6 @@ protected:
 	float m_units;
 	float m_angle;
 	FILE *m_iptr;
-	FILE *m_optr;
 	GDSProcess *m_process;
 
 	struct _Boundary *m_boundary;
@@ -128,7 +127,7 @@ protected:
 	virtual void OutputHeader() { };
 	virtual void OutputFooter() { };
 
-	void RecursiveOutput(GDSObject *object, FILE *optr, float offx, float offy, long *objectid);
+	void RecursiveOutput(GDSObject *object, float offx, float offy, long *objectid);
 	GDSObject *GetObjectRef(std::string name);
 public:
 	GDSParse() { };
@@ -137,7 +136,7 @@ public:
 
 	struct _Boundary *GetBoundary();
 	bool Parse(FILE *iptr);
-	void Output(FILE *optr, std::string topcell);
+	void Output(std::string topcell);
 	virtual GDSObject *NewObject(std::string name) { return new GDSObject(name); };
 
 	float GetUnits();

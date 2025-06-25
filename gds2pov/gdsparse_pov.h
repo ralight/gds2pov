@@ -30,9 +30,10 @@ class GDSParse_pov : public GDSParse
 {
 private:
 	std::string m_camfile;
+	FILE *m_optr;
 public:
-	GDSParse_pov (GDSProcess *process, bool bounding_output, bool generate_process);
-	GDSParse_pov(GDSParse *parse);
+	GDSParse_pov (GDSProcess *process, FILE *optr, bool bounding_output, bool generate_process);
+	GDSParse_pov(GDSParse *parse, FILE *optr);
 	~GDSParse_pov ();
 
 	GDSObject *NewObject(std::string name);

@@ -28,11 +28,12 @@
 
 extern int verbose_output;
 
-GDSParse_svg::GDSParse_svg(GDSProcess *process, bool generate_process) :
+GDSParse_svg::GDSParse_svg(GDSProcess *process, FILE *optr, bool generate_process) :
 		GDSParse(process, generate_process),
 		m_scale(100.0)
 {
 	// FIXME - check multiple output and output children first
+	m_optr = optr;
 	m_bounding_output = false;
 	m_use_outfile = true;
 	m_allow_multiple_output = false;
@@ -40,8 +41,9 @@ GDSParse_svg::GDSParse_svg(GDSProcess *process, bool generate_process) :
 }
 
 
-GDSParse_svg::GDSParse_svg(GDSParse *parse)
+GDSParse_svg::GDSParse_svg(GDSParse *parse, FILE *optr)
 {
+	m_optr = optr;
 	m_bounding_output = false;
 	m_use_outfile = true;
 	m_allow_multiple_output = false;
@@ -52,7 +54,7 @@ GDSParse_svg::GDSParse_svg(GDSParse *parse)
 
 	vector<GDSObject*> objects = parse->GetObjects();
 	for(unsigned int i = 0; i < objects.size(); i++){
-		m_objects.push_back(new GDSObject_svg(objects[i]));
+		m_objects.push_back(new GDSObject_svg(objects[i], m_optr));
 	}
 }
 
@@ -63,7 +65,7 @@ GDSParse_svg::~GDSParse_svg ()
 
 GDSObject *GDSParse_svg::NewObject(std::string name)
 {
-	return new GDSObject_svg(name);
+	return new GDSObject_svg(name, m_optr);
 }
 
 void GDSParse_svg::OutputFooter()

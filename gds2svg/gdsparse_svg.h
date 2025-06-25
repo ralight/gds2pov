@@ -29,11 +29,12 @@
 class GDSParse_svg : public GDSParse
 {
 private:
+	FILE *m_optr;
 	float m_scale;
 
 public:
-	GDSParse_svg (GDSProcess *process, bool generate_process);
-	GDSParse_svg(GDSParse *parse);
+	GDSParse_svg (GDSProcess *process, FILE *optr, bool generate_process);
+	GDSParse_svg(GDSParse *parse, FILE *optr);
 	~GDSParse_svg ();
 
 	GDSObject *NewObject(std::string name);

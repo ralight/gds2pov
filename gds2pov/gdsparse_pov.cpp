@@ -30,10 +30,11 @@
 
 extern int verbose_output;
 
-GDSParse_pov::GDSParse_pov(GDSProcess *process,
+GDSParse_pov::GDSParse_pov(GDSProcess *process, FILE *optr,
 		bool bounding_output, bool generate_process) :
 		GDSParse(process, generate_process)
 {
+	m_optr = optr;
 	m_bounding_output = bounding_output;
 	m_use_outfile = true;
 	m_allow_multiple_output = false;
@@ -41,8 +42,9 @@ GDSParse_pov::GDSParse_pov(GDSProcess *process,
 }
 
 
-GDSParse_pov::GDSParse_pov(GDSParse *parse)
+GDSParse_pov::GDSParse_pov(GDSParse *parse, FILE *optr)
 {
+	m_optr = optr;
 	m_bounding_output = false; // FIXME
 	m_use_outfile = true;
 	m_allow_multiple_output = false;
@@ -54,7 +56,7 @@ GDSParse_pov::GDSParse_pov(GDSParse *parse)
 
 	vector<GDSObject*> objects = parse->GetObjects();
 	for(unsigned int i = 0; i < objects.size(); i++){
-		m_objects.push_back(new GDSObject_pov(objects[i]));
+		m_objects.push_back(new GDSObject_pov(objects[i], m_optr));
 	}
 }
 
@@ -66,7 +68,7 @@ GDSParse_pov::~GDSParse_pov ()
 
 GDSObject *GDSParse_pov::NewObject(std::string name)
 {
-	return new GDSObject_pov(name);
+	return new GDSObject_pov(name, m_optr);
 }
 
 void GDSParse_pov::OutputFooter()

@@ -156,25 +156,26 @@ int main(int argc, char *argv[])
 	}else{
 		iptr = stdin;
 	}
+	FILE *optr;
+	if(svgfile != ""){
+		optr = fopen(svgfile.c_str(), "wt");
+	}else{
+		optr = stdout;
+	}
+	if(!optr){
+		fprintf(stderr, "Error: Unable to open %s.\n", svgfile.c_str());
+		if(iptr != stdin){
+			fclose(iptr);
+		}
+		delete process;
+		return -1;
+	}
+
 	if(iptr){
-		class GDSParse_svg *Parser = new class GDSParse_svg(process, generate_process);
+		class GDSParse_svg *Parser = new class GDSParse_svg(process, optr, generate_process);
 		if(!Parser->Parse(iptr)){
 			if(!generate_process){
-				FILE *optr;
-				if(svgfile != ""){
-					optr = fopen(svgfile.c_str(), "wt");
-				}else{
-					optr = stdout;
-				}
-
-				if(optr){
-					Parser->Output(optr, topcell);
-					if(optr != stdout){
-						fclose(optr);
-					}
-				}else{
-					fprintf(stderr, "Error: Unable to open %s.\n", svgfile.c_str());
-				}
+				Parser->Output(topcell);
 			}else{
 				process->Save(processfile);
 			}
@@ -183,11 +184,17 @@ int main(int argc, char *argv[])
 		if(iptr != stdin){
 			fclose(iptr);
 		}
+		if(optr != stdout){
+			fclose(optr);
+		}
 
 		delete Parser;
 		delete process;
 	}else{
 		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile.c_str());
+		if(optr != stdout){
+			fclose(optr);
+		}
 		delete process;
 		return -1;
 	}

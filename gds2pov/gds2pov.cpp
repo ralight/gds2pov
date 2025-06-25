@@ -215,28 +215,36 @@ int main(int argc, char *argv[])
 	}else{
 		iptr = stdin;
 	}
+	FILE *optr;
+	if(povfile != ""){
+		optr = fopen(povfile.c_str(), "wt");
+	}else{
+		optr = stdout;
+	}
+	if(!optr){
+		fprintf(stderr, "Error: Unable to open %s.\n", povfile.c_str());
+		if(iptr != stdin){
+			fclose(iptr);
+		}
+
+		delete config;
+		delete process;
+		return -1;
+	}
+
+
 	if(iptr){
-		class GDSParse_pov *Parser = new class GDSParse_pov(process, bounding_output, generate_process);
+		class GDSParse_pov *Parser = new class GDSParse_pov(process, optr, bounding_output, generate_process);
 		if(!Parser->Parse(iptr)){
 			if(!generate_process){
 				if(decompose){
 					Parser->Decompose(decompose);
 				}
-				FILE *optr;
-				if(povfile != ""){
-					optr = fopen(povfile.c_str(), "wt");
-				}else{
-					optr = stdout;
-				}
 
-				if(optr){
-					config->OutputToFile(optr, Parser->GetBoundary());
-					Parser->Output(optr, topcell);
-					if(optr != stdout){
-						fclose(optr);
-					}
-				}else{
-					fprintf(stderr, "Error: Unable to open %s.\n", povfile.c_str());
+				config->OutputToFile(optr, Parser->GetBoundary());
+				Parser->Output(topcell);
+				if(optr != stdout){
+					fclose(optr);
 				}
 			}else{
 				process->Save(processfile);

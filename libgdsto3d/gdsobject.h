@@ -70,7 +70,7 @@ public:
 
 	std::string GetName();
 
-	virtual void OutputToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer) { printf("["); };
+	virtual void Output(float offx, float offy, long *objectid, class ProcessLayer *firstlayer) { };
 
 	bool HasASRef();
 	ASRefElement *GetSRef(unsigned int index);

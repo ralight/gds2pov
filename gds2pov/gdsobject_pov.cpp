@@ -26,12 +26,15 @@
 
 #include "gdsobject_pov.h"
 
-GDSObject_pov::GDSObject_pov(std::string name) : GDSObject(name), m_decompose(false){
+GDSObject_pov::GDSObject_pov(std::string name, FILE *optr) : GDSObject(name), m_decompose(false)
+{
+	m_optr = optr;
 }
 
 
-GDSObject_pov::GDSObject_pov(GDSObject *object) : m_decompose(false)
+GDSObject_pov::GDSObject_pov(GDSObject *object, FILE *optr) : m_decompose(false)
 {
+	m_optr = optr;
 	m_name = object->GetName();
 	m_width = object->GetWidth();
 	m_height = object->GetHeight();
@@ -52,7 +55,7 @@ GDSObject_pov::~GDSObject_pov()
 {
 }
 
-void GDSObject_pov::OutputPathToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputPathToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!m_paths.empty()){
 		GDSPath *path;
@@ -61,59 +64,59 @@ void GDSObject_pov::OutputPathToFile(FILE *fptr, float offx, float offy, long *o
 			path = m_paths[i];
 
 			if(path->GetWidth()){
-				fprintf(fptr, "mesh2 { vertex_vectors { %d", 4*(path->GetPoints()));
+				fprintf(m_optr, "mesh2 { vertex_vectors { %d", 4*(path->GetPoints()));
 
 				float x, y, z;
 				for(unsigned int idx=0; path->GetPoint3D(idx, x, y, z); idx++){
-					fprintf(fptr, ",<%.2f,%.2f,%.2f>", x, y, -z);
+					fprintf(m_optr, ",<%.2f,%.2f,%.2f>", x, y, -z);
 				}
 				unsigned int PathPoints = path->GetPoints();
 				unsigned int face_count = 4+8*(PathPoints-1);
-				fprintf(fptr, "} face_indices { %d", face_count);
+				fprintf(m_optr, "} face_indices { %d", face_count);
 
 				int v1, v2, v3;
 				for(unsigned int idx=0; idx<face_count; idx++){
 					path->GetFace3D(idx, v1, v2, v3);
-					fprintf(fptr, ",<%d,%d,%d>", v1, v2, v3);
+					fprintf(m_optr, ",<%d,%d,%d>", v1, v2, v3);
 				}
-				fprintf(fptr, "} ");
+				fprintf(m_optr, "} ");
 				//if(!path->Colour.Metal){
-				//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+				//	fprintf(m_optr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 				//}else{
-				//	fprintf(fptr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
+				//	fprintf(m_optr, "pigment{rgbf <%.2f, %.2f, %.2f, %.2f>} finish{F_MetalA} ", path->Colour.R, path->Colour.G, path->Colour.B, path->Colour.F);
 				//}
-				fprintf(fptr, "texture{t%s}",path->GetLayer()->Name.c_str());
-				fprintf(fptr, "}\n");
+				fprintf(m_optr, "texture{t%s}",path->GetLayer()->Name.c_str());
+				fprintf(m_optr, "}\n");
 			}
 		}
 	}
 }
 
-void GDSObject_pov::OutputPolygonToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputPolygonToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!m_polygons.empty()){
 		if(m_decompose){
-			DecomposePOVPolygons(fptr);
+			DecomposePOVPolygons();
 		}else{
 			GDSPolygon *polygon;
 
 			for(unsigned long i=0; i<m_polygons.size(); i++){
 				polygon = m_polygons[i];
 
-				fprintf(fptr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
+				fprintf(m_optr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
 				for(unsigned int j=0; j<polygon->GetPoints(); j++){
-					fprintf(fptr, ",<%.2f,%.2f>", polygon->GetXCoords(j), polygon->GetYCoords(j));
+					fprintf(m_optr, ",<%.2f,%.2f>", polygon->GetXCoords(j), polygon->GetYCoords(j));
 				}
-				fprintf(fptr, " rotate<-90,0,0> ");
+				fprintf(m_optr, " rotate<-90,0,0> ");
 
-				fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name.c_str());
-				fprintf(fptr, "}\n");
+				fprintf(m_optr, "texture{t%s}", polygon->GetLayer()->Name.c_str());
+				fprintf(m_optr, "}\n");
 			}
 		}
 	}
 }
 
-void GDSObject_pov::OutputTextToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputTextToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	if(!m_texts.empty()){
 		GDSText *text;
@@ -121,18 +124,18 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, float offx, float offy, long *o
 		for (unsigned int i=0; i<m_texts.size(); i++){
 			text = m_texts[i];
 			if(text->GetString().length() > 0){
-				fprintf(fptr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString().c_str());
-				//fprintf(fptr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-				fprintf(fptr, "texture{t%s}",text->GetLayer()->Name.c_str());
+				fprintf(m_optr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString().c_str());
+				//fprintf(m_optr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
+				fprintf(m_optr, "texture{t%s}",text->GetLayer()->Name.c_str());
 				if(text->GetMag()!=1.0){
-					fprintf(fptr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
+					fprintf(m_optr, "scale <%.2f,%.2f,1> ", text->GetMag(), text->GetMag());
 				}
 				if(text->GetFlipped()){
-					fprintf(fptr, "scale <1,-1,1> ");
+					fprintf(m_optr, "scale <1,-1,1> ");
 				}
-				fprintf(fptr, "translate <%.2f,%.2f,%.2f> ", text->GetX(), text->GetY(), -text->GetZ());
+				fprintf(m_optr, "translate <%.2f,%.2f,%.2f> ", text->GetX(), text->GetY(), -text->GetZ());
 				if(text->GetRY()){
-					fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,%.2f>)", -text->GetRY(), text->GetX(), text->GetY(), -text->GetZ());
+					fprintf(m_optr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,%.2f>)", -text->GetRY(), text->GetX(), text->GetY(), -text->GetZ());
 				}
 				float htrans = 0.0, vtrans = 0.0;
 				switch(text->GetHJust()){
@@ -159,38 +162,38 @@ void GDSObject_pov::OutputTextToFile(FILE *fptr, float offx, float offy, long *o
 				}
 				if(htrans || vtrans){
 					if(text->GetRY()){
-						fprintf(fptr, "translate <%.2f,%.2f,0> ", vtrans, htrans);
+						fprintf(m_optr, "translate <%.2f,%.2f,0> ", vtrans, htrans);
 					}else{
-						fprintf(fptr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
+						fprintf(m_optr, "translate <%.2f,%.2f,0> ", htrans, vtrans);
 					}
 				}
-				fprintf(fptr, "}\n");
+				fprintf(m_optr, "}\n");
 			}
 		}
 	}
 }
 
-void GDSObject_pov::OutputSRefToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputSRefToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
 		ASRefElement *sref = m_srefs[i];
 
-		fprintf(fptr, "object{str_%s ", sref->name.c_str());
+		fprintf(m_optr, "object{str_%s ", sref->name.c_str());
 		if(sref->mag!=1.0){
-			fprintf(fptr, "scale <%.2f,%.2f,1> ", sref->mag, sref->mag);
+			fprintf(m_optr, "scale <%.2f,%.2f,1> ", sref->mag, sref->mag);
 		}
 		if(sref->flipped){
-			fprintf(fptr, "scale <1,-1,1> ");
+			fprintf(m_optr, "scale <1,-1,1> ");
 		}
-		fprintf(fptr, "translate <%.2f,%.2f,0> ", sref->x1, sref->y1);
+		fprintf(m_optr, "translate <%.2f,%.2f,0> ", sref->x1, sref->y1);
 		if(sref->rotate.y){
-			fprintf(fptr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->rotate.y, sref->x1, sref->y1);
+			fprintf(m_optr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->rotate.y, sref->x1, sref->y1);
 		}
-		fprintf(fptr, "}\n");
+		fprintf(m_optr, "}\n");
 	}
 }
 
-void GDSObject_pov::OutputARefToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputARefToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		ASRefElement *aref = m_arefs[i];
@@ -221,83 +224,83 @@ void GDSObject_pov::OutputARefToFile(FILE *fptr, float offx, float offy, long *o
 		}
 
 		if(columns > 1){
-			fprintf(fptr, "#local dx = %.2f;\n", dx);
-			fprintf(fptr, "#local colcount = 0;\n");
-			fprintf(fptr, "#local cols = %d;\n", columns);
+			fprintf(m_optr, "#local dx = %.2f;\n", dx);
+			fprintf(m_optr, "#local colcount = 0;\n");
+			fprintf(m_optr, "#local cols = %d;\n", columns);
 		}
 		if(rows > 1){
-			fprintf(fptr, "#local dy = %.2f;\n", dy);
-					fprintf(fptr, "#local rows = %d;\n", rows);
+			fprintf(m_optr, "#local dy = %.2f;\n", dy);
+					fprintf(m_optr, "#local rows = %d;\n", rows);
 		}
 
 		if(columns > 1){
-			fprintf(fptr, "#while (colcount < cols)\n");
+			fprintf(m_optr, "#while (colcount < cols)\n");
 		}
 		if(rows > 1){
-			fprintf(fptr, "\t#local rowcount = 0;\n");
-			fprintf(fptr, "\t#while (rowcount < rows)\n");
+			fprintf(m_optr, "\t#local rowcount = 0;\n");
+			fprintf(m_optr, "\t#while (rowcount < rows)\n");
 		}
 
-		fprintf(fptr, "\t\tobject{str_%s ", aref->name.c_str());
+		fprintf(m_optr, "\t\tobject{str_%s ", aref->name.c_str());
 		if(aref->mag!=1.0){
-			fprintf(fptr, "scale <%.2f,%.2f,1> ", aref->mag, aref->mag);
+			fprintf(m_optr, "scale <%.2f,%.2f,1> ", aref->mag, aref->mag);
 		}
 		if(aref->flipped){
-			fprintf(fptr, "scale <1,-1,1> ");
+			fprintf(m_optr, "scale <1,-1,1> ");
 		}
 
 		if(columns > 1 && rows > 1){
-			fprintf(fptr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
+			fprintf(m_optr, "translate <%.2f+dx*colcount,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
 			if(aref->rotate.y){
-				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
+				fprintf(m_optr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
 			}
 		}else if(columns > 1){
-			fprintf(fptr, "translate <%.2f+dx*colcount,%.2f,0>", aref->x1, aref->y1);
+			fprintf(m_optr, "translate <%.2f+dx*colcount,%.2f,0>", aref->x1, aref->y1);
 			if(aref->rotate.y){
-				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
+				fprintf(m_optr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f+dx*colcount,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
 			}
 		}else if(rows > 1){
-			fprintf(fptr, "translate <%.2f,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
+			fprintf(m_optr, "translate <%.2f,%.2f+dy*rowcount,0>", aref->x1, aref->y1);
 			if(aref->rotate.y){
-				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
+				fprintf(m_optr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f+dy*rowcount,0>)", -aref->rotate.y, aref->x1, aref->y1);
 			}
 		}else{
-			fprintf(fptr, "translate <%.2f,%.2f,0>", aref->x1, aref->y1);
+			fprintf(m_optr, "translate <%.2f,%.2f,0>", aref->x1, aref->y1);
 			if(aref->rotate.y){
-				fprintf(fptr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
+				fprintf(m_optr, " Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -aref->rotate.y, aref->x1, aref->y1);
 			}
 		}
-		fprintf(fptr, "}\n");
+		fprintf(m_optr, "}\n");
 
 		if(rows > 1){
-			fprintf(fptr, "\t\t#local rowcount = rowcount + 1;\n");
-			fprintf(fptr, "\t#end\n");
+			fprintf(m_optr, "\t\t#local rowcount = rowcount + 1;\n");
+			fprintf(m_optr, "\t#end\n");
 		}
 		if(columns > 1){
-					fprintf(fptr, "\t#local colcount = colcount + 1;\n");
-			fprintf(fptr, "#end\n");
+					fprintf(m_optr, "\t#local colcount = colcount + 1;\n");
+			fprintf(m_optr, "#end\n");
 		}
 	}
 }
 
 
-void GDSObject_pov::OutputToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::Output(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
 {
-	if(fptr && !m_isoutput){
-		fprintf(fptr, "#declare str_%s = union {\n", m_name.c_str());
+	if(m_optr && !m_isoutput){
+		fprintf(m_optr, "#declare str_%s = union {\n", m_name.c_str());
 
-		OutputPolygonToFile(fptr, offx, offy, objectid, firstlayer);
-		OutputPathToFile(fptr, offx, offy, objectid, firstlayer);
-		OutputSRefToFile(fptr, offx, offy, objectid, firstlayer);
-		OutputTextToFile(fptr, offx, offy, objectid, firstlayer);
-		OutputARefToFile(fptr, offx, offy, objectid, firstlayer);
+		OutputPolygonToFile(offx, offy, objectid, firstlayer);
+		OutputPathToFile(offx, offy, objectid, firstlayer);
+		OutputSRefToFile(offx, offy, objectid, firstlayer);
+		OutputTextToFile(offx, offy, objectid, firstlayer);
+		OutputARefToFile(offx, offy, objectid, firstlayer);
 
-		fprintf(fptr, "}\n");
+		fprintf(m_optr, "}\n");
 	}
 	m_isoutput = true;
 }
 
-void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
+void GDSObject_pov::DecomposePOVPolygons()
 {
 	if(!m_polygons.empty()){
 		GDSPolygon *polygon;
@@ -306,9 +309,9 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 			polygon = m_polygons[i];
 
 			/* Output vertices */
-			fprintf(fptr, "mesh2 { vertex_vectors { %d", 2*(polygon->GetPoints()-1));
+			fprintf(m_optr, "mesh2 { vertex_vectors { %d", 2*(polygon->GetPoints()-1));
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				fprintf(fptr, ",<%.2f,%.2f,%.2f>",
+				fprintf(m_optr, ",<%.2f,%.2f,%.2f>",
 					polygon->GetXCoords(j),
 					polygon->GetYCoords(j),
 					polygon->GetHeight() + polygon->GetThickness()
@@ -316,7 +319,7 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 			}
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 
-				fprintf(fptr, ",<%.2f,%.2f,%.2f>",
+				fprintf(m_optr, ",<%.2f,%.2f,%.2f>",
 					polygon->GetXCoords(j),
 					polygon->GetYCoords(j),
 					polygon->GetHeight()
@@ -372,14 +375,14 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 			int bendindex1;
 
 			if(!positives || !negatives){
-				fprintf(fptr, "} face_indices { %d", 2*(polygon->GetPoints()-3) + 2*(polygon->GetPoints()-1));
+				fprintf(m_optr, "} face_indices { %d", 2*(polygon->GetPoints()-3) + 2*(polygon->GetPoints()-1));
 				for(unsigned int j=1; j<polygon->GetPoints()-2; j++){
-					fprintf(fptr, ",<%d,%d,%d>",0,j,j+1);
-					fprintf(fptr, ",<%d,%d,%d>",polygon->GetPoints()-1,j+polygon->GetPoints()-1,j+polygon->GetPoints()-1+1);
+					fprintf(m_optr, ",<%d,%d,%d>",0,j,j+1);
+					fprintf(m_optr, ",<%d,%d,%d>",polygon->GetPoints()-1,j+polygon->GetPoints()-1,j+polygon->GetPoints()-1+1);
 				}
 			}else if(positives==1 && negatives>1){
 				bendindex1 = -1;
-				fprintf(fptr, "} face_indices { %d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
+				fprintf(m_optr, "} face_indices { %d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
 				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 					if(polygon->GetAngleCoords(j)>=0){
 						bendindex1 = (int)j;
@@ -388,13 +391,13 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 				}
 				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 					if((int)j!=bendindex1){
-						fprintf(fptr, ",<%d,%d,%d>", bendindex1, j, j+1);
-						fprintf(fptr, ",<%d,%d,%d>", bendindex1+polygon->GetPoints()-1, j+polygon->GetPoints()-1, (j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j+1:j+polygon->GetPoints());
+						fprintf(m_optr, ",<%d,%d,%d>", bendindex1, j, j+1);
+						fprintf(m_optr, ",<%d,%d,%d>", bendindex1+polygon->GetPoints()-1, j+polygon->GetPoints()-1, (j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j+1:j+polygon->GetPoints());
 					}
 				}
 			}else if(negatives==1 && positives>1){
 				bendindex1 = -1;
-				fprintf(fptr, "} face_indices { %d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
+				fprintf(m_optr, "} face_indices { %d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
 				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 					if(polygon->GetAngleCoords(j)<0){
 						bendindex1 = j;
@@ -403,15 +406,15 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 				}
 				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 					if((int)j!=bendindex1){
-						fprintf(fptr, ",<%d,%d,%d>", bendindex1, j, j+1);
-						fprintf(fptr, ",<%d,%d,%d>", bendindex1+polygon->GetPoints()-1, j+polygon->GetPoints()-1, (j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j+1:j+polygon->GetPoints());
+						fprintf(m_optr, ",<%d,%d,%d>", bendindex1, j, j+1);
+						fprintf(m_optr, ",<%d,%d,%d>", bendindex1+polygon->GetPoints()-1, j+polygon->GetPoints()-1, (j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j+1:j+polygon->GetPoints());
 					}
 				}
 			/*}else if(negatives==2 && positives>2){
 				bendindex1 = -1;
 				bendindex2 = -1;
 
-				fprintf(fptr, "} face_indices{%d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
+				fprintf(m_optr, "} face_indices{%d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
 				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 					if(polygon->GetAngleCoords(j)<0 && bendindex1 == -1){
 						bendindex1 = j;
@@ -421,33 +424,33 @@ void GDSObject_pov::DecomposePOVPolygons(FILE *fptr)
 					}
 				}
 				for(unsigned int j=bendindex1; j<=bendindex2; j++){
-					fprintf(fptr, "<%d,%d,%d>",);
+					fprintf(m_optr, "<%d,%d,%d>",);
 				}
 				for(unsigned int j=0; j<bendindex1; j++){
-					fprintf(fptr, ",<%d,%d,%d>",);
+					fprintf(m_optr, ",<%d,%d,%d>",);
 				}
 				*/
 			}else{
-				fprintf(fptr, "} face_indices { %d", 2*(polygon->GetPoints()-1));
+				fprintf(m_optr, "} face_indices { %d", 2*(polygon->GetPoints()-1));
 			}
 
 			/* Always output the vertical faces regardless of whether we fill in the horizontal faces or not */
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				fprintf(fptr, ",<%d,%d,%d>",j,j+polygon->GetPoints()-1,(j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j:j+polygon->GetPoints());
-				fprintf(fptr, ",<%d,%d,%d>",j,j+1,(j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j:j+polygon->GetPoints());
+				fprintf(m_optr, ",<%d,%d,%d>",j,j+polygon->GetPoints()-1,(j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j:j+polygon->GetPoints());
+				fprintf(m_optr, ",<%d,%d,%d>",j,j+1,(j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j:j+polygon->GetPoints());
 			}
-			fprintf(fptr,"}");
-			fprintf(fptr, "texture{t%s}", polygon->GetLayer()->Name.c_str());
-			fprintf(fptr, "}\n");
+			fprintf(m_optr,"}");
+			fprintf(m_optr, "texture{t%s}", polygon->GetLayer()->Name.c_str());
+			fprintf(m_optr, "}\n");
 
 			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
 				if(polygon->GetAngleCoords(j)>=0){
-					fprintf(fptr,"text{ttf \"crystal.ttf\" \"%d+\" 0.2, 0 ", j);
+					fprintf(m_optr,"text{ttf \"crystal.ttf\" \"%d+\" 0.2, 0 ", j);
 				}else{
-					fprintf(fptr,"text{ttf \"crystal.ttf\" \"%d-\" 0.2, 0 ", j);
+					fprintf(m_optr,"text{ttf \"crystal.ttf\" \"%d-\" 0.2, 0 ", j);
 				}
-				fprintf(fptr, " scale <1.5,1.5,1.5>");
-				fprintf(fptr, " translate <%.2f,%.2f,%.2f> texture{pigment{rgb <1,1,1>}}}\n", \
+				fprintf(m_optr, " scale <1.5,1.5,1.5>");
+				fprintf(m_optr, " translate <%.2f,%.2f,%.2f> texture{pigment{rgb <1,1,1>}}}\n", \
 						polygon->GetXCoords(j), \
 						polygon->GetYCoords(j), polygon->GetHeight() - 1);
 			}

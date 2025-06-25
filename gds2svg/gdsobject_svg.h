@@ -29,19 +29,20 @@ class GDSObject_svg : public GDSObject
 {
 private:
 	float m_scale;
+	FILE *m_optr;
 public:
-	GDSObject_svg(std::string name);
-	GDSObject_svg(GDSObject *object);
+	GDSObject_svg(std::string name, FILE *optr);
+	GDSObject_svg(GDSObject *object, FILE *optr);
 	~GDSObject_svg();
 
 	void SetScale(float scale);
 
-	virtual void OutputToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputPathToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputPolygonToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputTextToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputSRefToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputARefToFile(FILE *fptr, float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	virtual void Output(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputPathToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputPolygonToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputTextToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputSRefToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
+	void OutputARefToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
 };
 
 #endif
