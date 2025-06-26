@@ -23,7 +23,6 @@
 
 #include <string>
 #include <vector>
-using namespace std;
 
 class ProcessLayer {
 public:
@@ -49,7 +48,7 @@ public:
 class GDSProcess
 {
 private:
-	vector<ProcessLayer*> m_layers;
+	std::vector<ProcessLayer*> m_layers;
 	bool m_valid;		/* Is the process file valid? */
 public:
 	GDSProcess ();
