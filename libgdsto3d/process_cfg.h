@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _PROCESS_CFG_H_
-#define _PROCESS_CFG_H_
+#ifndef PROCESS_CFG_H
+#define PROCESS_CFG_H
 
 #include <string>
 #include <vector>

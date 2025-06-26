@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _GDSPARSE_H_
-#define _GDSPARSE_H_
+#ifndef GDSPARSE_H
+#define GDSPARSE_H
 
 #include <stdint.h>
 
@@ -127,7 +127,7 @@ protected:
 	virtual void OutputHeader() { };
 	virtual void OutputFooter() { };
 
-	void RecursiveOutput(GDSObject *object, float offx, float offy, long *objectid);
+	void RecursiveOutput(GDSObject *object);
 	GDSObject *GetObjectRef(std::string name);
 public:
 	GDSParse() { };

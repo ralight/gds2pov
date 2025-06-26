@@ -236,7 +236,6 @@ struct _Boundary *GDSObject::GetBoundary(void)
 
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		ASRefElement *aref = m_arefs[i];
-		printf("\t%s %s %p\n", m_name.c_str(), aref->name.c_str(), aref->object);
 		if(m_name != aref->name && aref->object){
 			GDSObject *object = aref->object;
 			struct _Boundary *NewBound;
@@ -245,7 +244,6 @@ struct _Boundary *GDSObject::GetBoundary(void)
 			float xmax = 0.0, xmin = 0.0;
 			float ymax = 0.0, ymin = 0.0;
 
-			printf("%s\n", aref->name.c_str());
 			switch((int)round(aref->rotate.y)){
 				case 0:
 				case 360:

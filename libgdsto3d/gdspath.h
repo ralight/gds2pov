@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _GDSPATH_H_
-#define _GDSPATH_H_
+#ifndef GDSPATH_H
+#define GDSPATH_H
 
 #include <gdsto3d.h>
 #include "process_cfg.h"

@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _GDS_GLOBALS_H_
-#define _GDS_GLOBALS_H_
+#ifndef GDS_GLOBALS_H
+#define GDS_GLOBALS_H
 
 #include <cstdint>
 

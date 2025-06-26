@@ -55,7 +55,7 @@ GDSObject_pov::~GDSObject_pov()
 {
 }
 
-void GDSObject_pov::OutputPathToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputPaths()
 {
 	if(!m_paths.empty()){
 		GDSPath *path;
@@ -92,7 +92,7 @@ void GDSObject_pov::OutputPathToFile(float offx, float offy, long *objectid, cla
 	}
 }
 
-void GDSObject_pov::OutputPolygonToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputPolygons()
 {
 	if(!m_polygons.empty()){
 		if(m_decompose){
@@ -116,7 +116,7 @@ void GDSObject_pov::OutputPolygonToFile(float offx, float offy, long *objectid, 
 	}
 }
 
-void GDSObject_pov::OutputTextToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputTexts()
 {
 	if(!m_texts.empty()){
 		GDSText *text;
@@ -173,7 +173,7 @@ void GDSObject_pov::OutputTextToFile(float offx, float offy, long *objectid, cla
 	}
 }
 
-void GDSObject_pov::OutputSRefToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputSRefs()
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
 		ASRefElement *sref = m_srefs[i];
@@ -193,7 +193,7 @@ void GDSObject_pov::OutputSRefToFile(float offx, float offy, long *objectid, cla
 	}
 }
 
-void GDSObject_pov::OutputARefToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::OutputARefs()
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		ASRefElement *aref = m_arefs[i];
@@ -284,16 +284,16 @@ void GDSObject_pov::OutputARefToFile(float offx, float offy, long *objectid, cla
 }
 
 
-void GDSObject_pov::Output(float offx, float offy, long *objectid, class ProcessLayer *firstlayer)
+void GDSObject_pov::Output()
 {
 	if(m_optr && !m_isoutput){
 		fprintf(m_optr, "#declare str_%s = union {\n", m_name.c_str());
 
-		OutputPolygonToFile(offx, offy, objectid, firstlayer);
-		OutputPathToFile(offx, offy, objectid, firstlayer);
-		OutputSRefToFile(offx, offy, objectid, firstlayer);
-		OutputTextToFile(offx, offy, objectid, firstlayer);
-		OutputARefToFile(offx, offy, objectid, firstlayer);
+		OutputPolygons();
+		OutputPaths();
+		OutputSRefs();
+		OutputTexts();
+		OutputARefs();
 
 		fprintf(m_optr, "}\n");
 	}

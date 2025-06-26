@@ -143,18 +143,17 @@ void GDSParse::Output(std::string topcell)
 	OutputHeader();
 
 	if(!m_bounding_output){
-		long objectid = 0;
 		if(topcell.length() > 0){
-			RecursiveOutput(GetObjectRef(topcell), 0.0, 0.0, &objectid);
+			RecursiveOutput(GetObjectRef(topcell));
 		}else{
-			RecursiveOutput(m_objects[0], 0.0, 0.0, &objectid);
+			RecursiveOutput(m_objects[0]);
 		}
 	}
 
 	OutputFooter();
 }
 
-void GDSParse::RecursiveOutput(GDSObject *object, float offx, float offy, long *objectid)
+void GDSParse::RecursiveOutput(GDSObject *object)
 {
 	if(!object){
 		return;
@@ -170,17 +169,16 @@ void GDSParse::RecursiveOutput(GDSObject *object, float offx, float offy, long *
 		for(unsigned int i = 0; i < object->GetSRefCount(); i++){
 			child = object->GetSRef(i)->object;
 			if(child && (child != object)){
-				RecursiveOutput(child, offx, offy, objectid);
+				RecursiveOutput(child);
 			}
 		}
 
 		for(unsigned int i = 0; i < object->GetARefCount(); i++){
 			child = object->GetARef(i)->object;
 			if(child && (child != object)){
-				RecursiveOutput(child, offx, offy, objectid);
+				RecursiveOutput(child);
 			}
 		}
-
 	}
 
 	ProcessLayer *layer = NULL;
@@ -188,7 +186,7 @@ void GDSParse::RecursiveOutput(GDSObject *object, float offx, float offy, long *
 		layer = m_process->GetLayer();
 	}
 
-	object->Output(offx, offy, objectid, layer);
+	object->Output();
 }
 
 bool GDSParse::ParseFile()
