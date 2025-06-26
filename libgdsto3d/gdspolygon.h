@@ -48,6 +48,8 @@ public:
 	float GetAngleCoords(unsigned int index);
 	void SetAngleCoords(unsigned int index, float value);
 	class ProcessLayer *GetLayer(void);
+	std::vector<GDSVertex> GetVertices();
+	std::vector<GDSTriangle> GetTriangles();
 };
 
 #endif

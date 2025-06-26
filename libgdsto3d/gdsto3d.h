@@ -23,6 +23,14 @@
 
 #include <string>
 
+struct GDSVertex{
+	float x, y, z;
+};
+
+struct GDSTriangle{
+	int v[3];
+};
+
 class Point {
 public:
 	float x;
