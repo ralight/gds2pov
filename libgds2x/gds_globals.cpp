@@ -1,7 +1,7 @@
 /*
  * File: gds_globals.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This file contains non-class functions.
  *

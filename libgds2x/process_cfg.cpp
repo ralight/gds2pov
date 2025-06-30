@@ -1,7 +1,7 @@
 /*
  * File: process_cfg.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is used to parse the process configuration file.
  *

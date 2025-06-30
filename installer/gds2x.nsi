@@ -43,7 +43,7 @@ Section "Files" SecInstall
 	SetOutPath "$INSTDIR"
 	File "..\build\gds2pov\Release\gds2pov.exe"
 	File "..\build\gds2svg\Release\gds2svg.exe"
-	File "..\build\libgdsto3d\Release\gdsto3d.dll"
+	File "..\build\libgds2x\Release\gds2x.dll"
 	File "..\build\process_editor\Release\gds2x_process_editor.exe"
 
 	File "..\AUTHORS"
@@ -82,7 +82,7 @@ SectionEnd
 Section "Uninstall"
 	Delete "$INSTDIR\gds2pov.exe"
 	Delete "$INSTDIR\gds2svg.exe"
-	Delete "$INSTDIR\libgdsto3d.dll"
+	Delete "$INSTDIR\libgds2x.dll"
 	Delete "$INSTDIR\gds2x_process_editor.exe"
 
 	Delete "$INSTDIR\AUTHORS"

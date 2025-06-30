@@ -1,7 +1,7 @@
 /*
- * File: gdspath.h
+ * File: gdspolygon.h
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,52 +18,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GDSPATH_H
-#define GDSPATH_H
+#ifndef GDSPOLYGON_H
+#define GDSPOLYGON_H
 
-#include <gdsto3d.h>
 #include "process_cfg.h"
 
 namespace GDS2X {
 
-class Path
+class Polygon
 {
 private:
-	int m_type;
 	float m_height;
 	float m_thickness;
 	unsigned int m_points;
-	float m_width;
-	float m_bgnextn;
-	float m_endextn;
 	Point *m_coords;
 	Transform m_rotate;
 	class ProcessLayer	*m_layer;
 
 public:
-	Path(int pathtype, float height, float thickness, unsigned int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
-	~Path();
+	Polygon(float height, float thickness, unsigned int points, class ProcessLayer *layer);
+	~Polygon();
 
 	void AddPoint(unsigned int index, float x, float y);
 	void SetRotation(float x, float y, float z);
 
+	float GetHeight(void);
+	float GetThickness(void);
+	unsigned int GetPoints(void);
 	float GetXCoords(unsigned int index);
 	float GetYCoords(unsigned int index);
-	unsigned int GetPoints();
-
-	float GetHeight();
-	float GetThickness();
-	float GetWidth();
-	float GetBgnExtn();
-	float GetEndExtn();
-
-	int GetType();
-	class ProcessLayer *GetLayer();
-
-	int GetPointCentre(unsigned int idx, float &x, float &y);
-	int GetPoint2D(unsigned int idx, float &x, float &y);
-	int GetPoint3D(unsigned int idx, float &x, float &y, float &z);
-	int GetFace3D(unsigned int idx, int &v1, int &v2, int &v3);
+	float GetAngleCoords(unsigned int index);
+	void SetAngleCoords(unsigned int index, float value);
+	class ProcessLayer *GetLayer(void);
+	std::vector<Vertex> GetVertices();
+	std::vector<Triangle> GetTriangles();
 };
 
 }

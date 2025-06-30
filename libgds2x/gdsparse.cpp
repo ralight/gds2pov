@@ -1,7 +1,7 @@
 /*
  * File: gdsparse.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the GDSParse class which is used to parse a GDS file and create a
  * GDSObjects object containing the contents of the file according to the

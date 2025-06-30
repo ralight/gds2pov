@@ -1,7 +1,7 @@
 /*
  * File: gds2openscad
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the main body of the gds2openscad program.
  *

@@ -1,7 +1,7 @@
 /*
  * File: config_cfg.h
  * Author: Roger Light
- * Project gdsto3d
+ * Project gds2x
  *
  * Copyright (C) Roger Light.
  *
@@ -25,7 +25,7 @@
 
 #include <string>
 #include <vector>
-#include <gdsto3d.h>
+#include <gds2x.h>
 #include <gdsparse.h>
 
 using namespace std;

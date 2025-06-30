@@ -1,7 +1,7 @@
 /*
  * File: gdsobject.h
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@
 #include <cstdio>
 #include <vector>
 
-#include "gdsto3d.h"
+#include "gds2x.h"
 #include "process_cfg.h"
 #include "gdspath.h"
 #include "gdstext.h"

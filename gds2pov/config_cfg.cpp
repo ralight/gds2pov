@@ -1,7 +1,7 @@
 /*
  * File: config_cfg.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  * $Id: config_cfg.cpp 302 2008-02-26 10:47:01Z roger $
  *
  * This parses the configuration file which contains camera and light

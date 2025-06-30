@@ -1,7 +1,7 @@
 /*
  * File: gdsobject_openscad.h
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

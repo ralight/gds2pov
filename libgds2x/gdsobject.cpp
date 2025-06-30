@@ -1,7 +1,7 @@
 /*
  * File: gdsobject.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the GDSObject class which corresponds to a GDS SRef.
  *

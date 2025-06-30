@@ -1,6 +1,6 @@
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-set(GDSTO3D_SRCS
+set(GDS2X_SRCS
 	gds_globals.cpp gds_globals.h
 	gdsobject.cpp gdsobject.h
 	gdsparse.cpp gdsparse.h
@@ -8,30 +8,30 @@ set(GDSTO3D_SRCS
 	gdspath.cpp gdspath.h
 	gdspolygon.cpp gdspolygon.h
 	gdstext.cpp gdstext.h
-	gdsto3d.h
+	gds2x.h
 	process_cfg.cpp process_cfg.h
 
 	PolygonTriangulator.cxx PolygonTriangulator.h
 )
 
-add_library(gdsto3d SHARED
-	${GDSTO3D_SRCS}
+add_library(gds2x SHARED
+	${GDS2X_SRCS}
 )
-set_target_properties(gdsto3d PROPERTIES
+set_target_properties(gds2x PROPERTIES
 	VERSION 1.0.0
 	SOVERSION 1
 )
-target_include_directories(gdsto3d PUBLIC
-	${gdsto3d_SOURCE_DIR}/libgdsto3d
+target_include_directories(gds2x PUBLIC
+	${gds2x_SOURCE_DIR}/libgds2x
 )
 
 if(WIN32)
-	target_link_libraries(gdsto3d PRIVATE
+	target_link_libraries(gds2x PRIVATE
 		ws2_32
 	)
 endif()
 
-install(TARGETS gdsto3d
+install(TARGETS gds2x
 	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"

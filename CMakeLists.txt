@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(gdsto3d
+project(gds2x
 	LANGUAGES CXX
 )
 
@@ -17,7 +17,7 @@ if(WIN32)
 	add_definitions("-D_CRT_NONSTDC_NO_DEPRECATE")
 endif()
 
-add_subdirectory(libgdsto3d)
+add_subdirectory(libgds2x)
 add_subdirectory(gds23mf)
 add_subdirectory(gds2openscad)
 add_subdirectory(gds2pov)
@@ -29,8 +29,8 @@ IF(wxWidgets_FOUND)
 	add_subdirectory(process_editor)
 ENDIF(wxWidgets_FOUND)
 
-install(FILES changes.txt example.cmd example.gds example_process.txt example_config.txt readme.txt todo.txt DESTINATION share/gdsto3d)
+install(FILES changes.txt example.cmd example.gds example_process.txt example_config.txt readme.txt todo.txt DESTINATION share/gds2x)
 
 iF(UNIX)
-	add_custom_target(dist ${PROJECT_SOURCE_DIR}/dist.sh ${PROJECT_SOURCE_DIR} ${gdsto3d_BINARY_DIR} ${VERSION})
+	add_custom_target(dist ${PROJECT_SOURCE_DIR}/dist.sh ${PROJECT_SOURCE_DIR} ${gds2x_BINARY_DIR} ${VERSION})
 endif(UNIX)

@@ -1,7 +1,7 @@
 /*
  * File: gdspolygon.h
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the Polyon class which is used to represent the GDS boundary
  * object.

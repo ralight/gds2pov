@@ -1,7 +1,7 @@
 /*
  * File: gdsobject_3mf.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the 3mf output specific implementation of the GDSObject class.
  *

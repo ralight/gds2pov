@@ -1,7 +1,7 @@
 /*
  * File: gdsparse_openscad.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the openscad output specific implementation of the GDSParse class.
  *

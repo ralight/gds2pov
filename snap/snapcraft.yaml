@@ -28,10 +28,10 @@ parts:
     stage:
       - bin/gds2pov
       - bin/gds2svg
-      - lib/libgdsto3d.so*
-      - share/gdsto3d/changes.txt
-      - share/gdsto3d/example.cmd
-      - share/gdsto3d/example.gds
-      - share/gdsto3d/example_process.txt
-      - share/gdsto3d/example_config.txt
-      - share/gdsto3d/readme.txt
+      - lib/libgds2x.so*
+      - share/gds2x/changes.txt
+      - share/gds2x/example.cmd
+      - share/gds2x/example.gds
+      - share/gds2x/example_process.txt
+      - share/gds2x/example_config.txt
+      - share/gds2x/readme.txt

@@ -1,7 +1,7 @@
 /*
  * File: gdspath.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the GDSPath class which is used to represent the GDS path type.
  *

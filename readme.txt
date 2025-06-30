@@ -1,22 +1,19 @@
-GDSTO3D
-=======
+GDS2X
+=====
 
 Introduction
 ------------
 
-GDSTO3D is a collection of programs to process GDS2 layout files.
+GDS2X is a collection of programs to process GDS2 layout files.
 
 GDS2 files are used for storing the geometrical and layer information for
-creating an IC or MEMS device. If you do not what this is, GDSTO3D is
+creating an IC or MEMS device. If you do not what this is, GDS2X is
 probably of no interest to you!
 
 GDS2POV is a program to take a GDS2 layout file and output a POV-Ray scene
 description file of the GDS2 data. This allows the creation of attractive 3D
 pictures of a layout. POV-Ray is a completely free, cross platform ray tracer.
 It can be obtained from http://www.povray.org/
-
-GDSOGLVIEWER is an OpenGL viewer that can show GDS2 files. It's not very good
-yet!
 
 GDS2SVG converts GDS2 files to Scalable Vector Graphic (SVG) files. This is
 still experimental as well, but give it a try. "It works for me". Mostly,
@@ -30,10 +27,10 @@ section at the bottom of this document.
 Compiling
 ---------
 
-gdsto3d uses 'cmake' to configure its build environment. This means it is
+gds2x uses 'cmake' to configure its build environment. This means it is
 possible to support lots of different systems and build tools.
 
-To build gdsto3d, change to the 'build' directory and type 'cmake ..'. This
+To build gds2x, change to the 'build' directory and type 'cmake ..'. This
 should generate the required files. The build directory contains only
 generated files so it can be completely removed if required. Typically on Unix
 systems you would type 'make' followed by 'make install' to compile and
@@ -169,7 +166,7 @@ avoid merging multiple polygons/paths.
 License
 -------
 
-The entire GDSTO3D package is released under the LGPL v2.1
+The entire GDS2X package is released under the LGPL v2.1
 
 Contact
 -------
@@ -180,5 +177,4 @@ support for the GDS2 format) are very welcome.
 
 Contact me on roger@atchoo.org
 
-Updates to GDSTO3D should be at http://atchoo.org/gds2pov/
-
+Updates to GDS2X should be at https://github.com/ralight/gds2pov or http://atchoo.org/gds2pov/

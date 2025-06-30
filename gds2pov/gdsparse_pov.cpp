@@ -1,7 +1,7 @@
 /*
  * File: gdsparse_pov.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the POV-RAY output specific implementation of the GDSParse class.
  *

@@ -5,7 +5,7 @@ add_executable(gds2openscad
 )
 
 target_link_libraries(gds2openscad PRIVATE
-	gdsto3d
+	gds2x
 )
 
 install(TARGETS gds2openscad RUNTIME DESTINATION ${BINDEST})

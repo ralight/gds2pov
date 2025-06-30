@@ -1,7 +1,7 @@
 /*
  * File: gds23mf
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the main body of the gds23mf program.
  *

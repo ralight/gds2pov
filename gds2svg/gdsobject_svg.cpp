@@ -1,7 +1,7 @@
 /*
  * File: gdsobject_svg.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the SVG output specific implementation of the GDSObject class.
  *

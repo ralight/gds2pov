@@ -6,7 +6,7 @@ add_executable(gds23mf
 
 find_package(lib3mf CONFIG REQUIRED)
 target_link_libraries(gds23mf PUBLIC
-	gdsto3d
+	gds2x
 	lib3mf::lib3mf
 )
 

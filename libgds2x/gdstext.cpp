@@ -1,7 +1,7 @@
 /*
  * File: gdstext.cpp
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This is the Text class which is used to represent the GDS text object.
  *

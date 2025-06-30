@@ -1,7 +1,7 @@
 /*
- * File: gdsto3d.h
+ * File: gds2x.h
  * Author: Roger Light
- * Project: gdsto3d
+ * Project: gds2x
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GDSTO3D_H
-#define GDSTO3D_H
+#ifndef GDS2X_H
+#define GDS2X_H
 
 #include <string>
 
