@@ -28,8 +28,6 @@
 #include <gds2x.h>
 #include <gdsparse.h>
 
-using namespace std;
-
 typedef enum {
 	ptNone,
 	ptCamera,
@@ -69,7 +67,7 @@ private:
 
 	Position m_camerapos;
 	Position m_lookatpos;
-	vector<Position *> m_lights;
+	std::vector<Position *> m_lights;
 	Position *m_currentlight;
 
 public:
