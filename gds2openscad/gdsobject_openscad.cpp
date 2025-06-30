@@ -23,7 +23,6 @@
 #include <cstdio>
 #include <cstring>
 #include <cmath>
-#include <sys/random.h>
 
 #include "gdsobject_openscad.h"
 #include "PolygonTriangulator.h"
