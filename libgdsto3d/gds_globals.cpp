@@ -25,6 +25,8 @@
 
 #include "gds_globals.h"
 
+namespace GDS2X {
+
 int verbose_output;
 
 void v_printf(const int level, const char *fmt, ...)
@@ -36,3 +38,10 @@ void v_printf(const int level, const char *fmt, ...)
 		va_end(va);
 	}
 }
+
+void SetVerbosity(int level)
+{
+	verbose_output = level;
+}
+
+};

@@ -32,12 +32,12 @@
 #endif
 
 
-GDSObject_svg::GDSObject_svg(std::string name, FILE *optr) : GDSObject(name)
+GDSObject_svg::GDSObject_svg(std::string name, FILE *optr) : GDS2X::Object(name)
 {
 	m_optr = optr;
 }
 
-GDSObject_svg::GDSObject_svg(GDSObject *object, FILE *optr)
+GDSObject_svg::GDSObject_svg(GDS2X::Object *object, FILE *optr)
 {
 	m_optr = optr;
 	m_name = object->GetName();
@@ -68,7 +68,7 @@ void GDSObject_svg::SetScale(float scale)
 void GDSObject_svg::OutputPaths()
 {
 	if(!m_paths.empty()){
-		GDSPath *path;
+		GDS2X::Path *path;
 
 		for(unsigned long i=0; i<m_paths.size(); i++){
 			path = m_paths[i];
@@ -105,7 +105,7 @@ void GDSObject_svg::OutputPaths()
 void GDSObject_svg::OutputPolygons()
 {
 	if(!m_polygons.empty()){
-		GDSPolygon *polygon;
+		GDS2X::Polygon *polygon;
 
 		for(unsigned long i=0; i<m_polygons.size(); i++){
 			polygon = m_polygons[i];
@@ -123,7 +123,7 @@ void GDSObject_svg::OutputTexts()
 {
 	if(!m_texts.empty()){
 		std::string str;
-		GDSText *text;
+		GDS2X::Text *text;
 		float angle;
 		//for (vector<GDSText>::const_iterator text=m_texts.begin(); text!=m_texts.end(); ++text){
 		for (unsigned int i=0; i<m_texts.size(); i++){
@@ -198,9 +198,9 @@ void GDSObject_svg::OutputSRefs()
 	float height, x, angle;
 
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
-		ASRefElement *sref = m_srefs[i];
+		GDS2X::ASRefElement *sref = m_srefs[i];
 
-		GDSObject *obj = sref->object;
+		GDS2X::Object *obj = sref->object;
 		if(obj){
 			height = obj->GetHeight();
 		}else{
@@ -236,12 +236,12 @@ void GDSObject_svg::OutputSRefs()
 void GDSObject_svg::OutputARefs()
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
-		ASRefElement *aref = m_arefs[i];
+		GDS2X::ASRefElement *aref = m_arefs[i];
 		float x, y, angle;
 		float height;
 		float dx, dy;
 
-		GDSObject *obj = aref->object;
+		GDS2X::Object *obj = aref->object;
 		if(obj){
 			height = obj->GetHeight();
 		}else{

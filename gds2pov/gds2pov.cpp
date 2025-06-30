@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
 
 	/************ Load process ****************/
 
-	class GDSProcess *process=NULL;
+	class GDS2X::Process *process=NULL;
 	/*
 	** Order of precedence for process.txt:
 	** -p switch (given as an argument to this function)
@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
 			processfile = "process.txt";
 		}
 	}
-	process = new GDSProcess();
+	process = new GDS2X::Process();
 	if(!process){
 		fprintf(stderr, "Error: Out of memory.\n");
 		delete config;
@@ -234,15 +234,15 @@ int main(int argc, char *argv[])
 
 
 	if(iptr){
-		class GDSParse_pov *Parser = new class GDSParse_pov(process, optr, bounding_output, generate_process);
-		if(!Parser->Parse(iptr)){
+		class GDSParse_pov *parser = new class GDSParse_pov(process, optr, bounding_output, generate_process);
+		if(!parser->ParseFile(iptr)){
 			if(!generate_process){
 				if(decompose){
-					Parser->Decompose(decompose);
+					parser->Decompose(decompose);
 				}
 
-				config->OutputToFile(optr, Parser->GetBoundary());
-				Parser->Output(topcell);
+				config->OutputToFile(optr, parser->GetBoundary());
+				parser->Output(topcell);
 				if(optr != stdout){
 					fclose(optr);
 				}
@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
 		}
 
 
-		delete Parser;
+		delete parser;
 		delete config;
 		delete process;
 	}else{

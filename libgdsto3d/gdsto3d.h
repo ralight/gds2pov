@@ -23,11 +23,13 @@
 
 #include <string>
 
-struct GDSVertex{
+namespace GDS2X {
+
+struct Vertex{
 	float x, y, z;
 };
 
-struct GDSTriangle{
+struct Triangle{
 	int v[3];
 };
 
@@ -60,7 +62,7 @@ public:
 	int rows;
 	std::string name;
 	bool flipped;
-	class GDSObject *object;
+	class Object *object;
 	Transform rotate;
 
 	ASRefElement() : x1(0.0), y1(0.0), x2(0.0), y2(0.0),
@@ -68,11 +70,12 @@ public:
 			rows(0), name(""), flipped(false), object(NULL) {};
 };
 
-struct _Boundary {
+struct Boundary {
 	float xmin;
 	float xmax;
 	float ymin;
 	float ymax;
 };
 
+}
 #endif

@@ -3,7 +3,7 @@
  * Author: Roger Light
  * Project: gdsto3d
  *
- * This is the GDSText class which is used to represent the GDS text object.
+ * This is the Text class which is used to represent the GDS text object.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,9 @@
 #include "gdsobject.h"
 #include "gdstext.h"
 
-GDSText::GDSText(float x, float y, float z,
+namespace GDS2X {
+
+Text::Text(float x, float y, float z,
 				bool flipped, float mag,
 				int vjust, int hjust,
 				class ProcessLayer *layer) :
@@ -36,68 +38,70 @@ GDSText::GDSText(float x, float y, float z,
 {
 }
 
-GDSText::~GDSText()
+Text::~Text()
 {
 }
 
-void GDSText::SetString(std::string String)
+void Text::SetString(std::string String)
 {
 	m_string = String;
 }
 
-void GDSText::SetRotation(float x, float y, float z)
+void Text::SetRotation(float x, float y, float z)
 {
 	m_rotate.x = x;
 	m_rotate.y = y;
 	m_rotate.z = z;
 }
 
-std::string GDSText::GetString()
+std::string Text::GetString()
 {
 	return m_string;
 }
 
-float GDSText::GetX()
+float Text::GetX()
 {
 	return m_x;
 }
 
-float GDSText::GetY()
+float Text::GetY()
 {
 	return m_y;
 }
 
-float GDSText::GetZ()
+float Text::GetZ()
 {
 	return m_z;
 }
 
-float GDSText::GetRY()
+float Text::GetRY()
 {
 	return m_rotate.y;
 }
 
-float GDSText::GetMag()
+float Text::GetMag()
 {
 	return m_mag;
 }
 
-int GDSText::GetVJust()
+int Text::GetVJust()
 {
 	return m_vjust;
 }
 
-int GDSText::GetHJust()
+int Text::GetHJust()
 {
 	return m_hjust;
 }
 
-bool GDSText::GetFlipped()
+bool Text::GetFlipped()
 {
 	return m_flipped;
 }
 
-class ProcessLayer *GDSText::GetLayer()
+class ProcessLayer *Text::GetLayer()
 {
 	return m_layer;
+}
+
 }

@@ -59,7 +59,9 @@
 #endif
 
 
-short GDSParse::GetBitArray()
+namespace GDS2X {
+
+short Parse::GetBitArray()
 {
 	uint8_t byte1;
 
@@ -72,7 +74,7 @@ short GDSParse::GetBitArray()
 	return 0;
 }
 
-double GDSParse::GetEightByteReal()
+double Parse::GetEightByteReal()
 {
 	uint8_t value;
 	uint8_t b8, b2, b3, b4, b5, b6, b7;
@@ -122,7 +124,7 @@ double GDSParse::GetEightByteReal()
 	return sign*(mant*pow(16.0,exponent));
 }
 
-int32_t GDSParse::GetFourByteSignedInt()
+int32_t Parse::GetFourByteSignedInt()
 {
 	int32_t value;
 	if(fread(&value, 4, 1, m_iptr) != 1){
@@ -138,7 +140,7 @@ int32_t GDSParse::GetFourByteSignedInt()
 #endif
 }
 
-int16_t GDSParse::GetTwoByteSignedInt()
+int16_t Parse::GetTwoByteSignedInt()
 {
 	int16_t value;
 
@@ -155,7 +157,7 @@ int16_t GDSParse::GetTwoByteSignedInt()
 #endif
 }
 
-char *GDSParse::GetAsciiString()
+char *Parse::GetAsciiString()
 {
 	char *str=NULL;
 
@@ -173,4 +175,6 @@ char *GDSParse::GetAsciiString()
 		m_recordlen = 0;
 	}
 	return str;
+}
+
 }

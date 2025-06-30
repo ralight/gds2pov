@@ -25,7 +25,9 @@
 #include "gdsobject.h"
 #include "gdspath.h"
 
-GDSPath::GDSPath(int type, float height, float thickness,
+namespace GDS2X {
+
+Path::Path(int type, float height, float thickness,
 				unsigned int points, float width,
 				float bgnextn, float endextn,
 				class ProcessLayer *layer) :
@@ -35,12 +37,12 @@ GDSPath::GDSPath(int type, float height, float thickness,
 	m_coords = new Point[points];
 }
 
-GDSPath::~GDSPath()
+Path::~Path()
 {
 	if(m_coords) delete [] m_coords;
 }
 
-void GDSPath::AddPoint(unsigned int index, float x, float y)
+void Path::AddPoint(unsigned int index, float x, float y)
 {
 	if(index < m_points){
 		m_coords[index].x = x;
@@ -49,14 +51,14 @@ void GDSPath::AddPoint(unsigned int index, float x, float y)
 }
 
 
-void GDSPath::SetRotation(float x, float y, float z)
+void Path::SetRotation(float x, float y, float z)
 {
 	m_rotate.x = x;
 	m_rotate.y = y;
 	m_rotate.z = z;
 }
 
-float GDSPath::GetXCoords(unsigned int index)
+float Path::GetXCoords(unsigned int index)
 {
 	if(index < m_points){
 		return m_coords[index].x;
@@ -64,7 +66,7 @@ float GDSPath::GetXCoords(unsigned int index)
 	return 0.0;
 }
 
-float GDSPath::GetYCoords(unsigned int index)
+float Path::GetYCoords(unsigned int index)
 {
 	if(index < m_points){
 		return m_coords[index].y;
@@ -72,48 +74,48 @@ float GDSPath::GetYCoords(unsigned int index)
 	return 0.0;
 }
 
-unsigned int GDSPath::GetPoints()
+unsigned int Path::GetPoints()
 {
 	return m_points;
 }
 
-float GDSPath::GetHeight()
+float Path::GetHeight()
 {
 	return m_height;
 }
 
-float GDSPath::GetThickness()
+float Path::GetThickness()
 {
 	return m_thickness;
 }
 
-float GDSPath::GetWidth()
+float Path::GetWidth()
 {
 	return m_width;
 }
 
-float GDSPath::GetBgnExtn()
+float Path::GetBgnExtn()
 {
 	return m_bgnextn;
 }
 
-float GDSPath::GetEndExtn()
+float Path::GetEndExtn()
 {
 	return m_endextn;
 }
 
-int GDSPath::GetType()
+int Path::GetType()
 {
 	return m_type;
 }
 
-class ProcessLayer *GDSPath::GetLayer()
+class ProcessLayer *Path::GetLayer()
 {
 	return m_layer;
 }
 
 
-int GDSPath::GetPointCentre(unsigned int idx, float &x, float &y)
+int Path::GetPointCentre(unsigned int idx, float &x, float &y)
 {
 	if(idx < m_points){
 		x = m_coords[idx].x;
@@ -124,7 +126,7 @@ int GDSPath::GetPointCentre(unsigned int idx, float &x, float &y)
 	}
 }
 
-int GDSPath::GetPoint2D(unsigned int idx, float &x, float &y)
+int Path::GetPoint2D(unsigned int idx, float &x, float &y)
 {
 	if(this->GetWidth()){
 		float BgnExtn;
@@ -218,7 +220,7 @@ int GDSPath::GetPoint2D(unsigned int idx, float &x, float &y)
 /* FIXME - use GetPoint2D here, instead of duplicating code.
  * This will result in point ordering changing, and hence also face vertices
  */
-int GDSPath::GetPoint3D(unsigned int idx, float &x, float &y, float &z)
+int Path::GetPoint3D(unsigned int idx, float &x, float &y, float &z)
 {
 	if(this->GetWidth()){
 		float BgnExtn;
@@ -323,7 +325,7 @@ int GDSPath::GetPoint3D(unsigned int idx, float &x, float &y, float &z)
 }
 
 
-int GDSPath::GetFace3D(unsigned int idx, int &v1, int &v2, int &v3)
+int Path::GetFace3D(unsigned int idx, int &v1, int &v2, int &v3)
 {
 	unsigned int PathPoints = this->GetPoints();
 	if(PathPoints == 0 || idx >= (PathPoints-1)*8+4){
@@ -402,4 +404,6 @@ int GDSPath::GetFace3D(unsigned int idx, int &v1, int &v2, int &v3)
 		default:
 			return 0;
 	}
+}
+
 }

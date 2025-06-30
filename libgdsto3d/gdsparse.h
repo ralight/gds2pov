@@ -24,7 +24,6 @@
 #include <stdint.h>
 
 #include <unordered_map>
-#include <vector>
 
 #include <sys/types.h>
 
@@ -32,9 +31,9 @@
 #include "gds_globals.h"
 #include "gdsobject.h"
 
-class GDSParse_pov;
+namespace GDS2X {
 
-class GDSParse
+class Parse
 {
 private:
 	void ParseXYARef(bool Flipped);
@@ -63,9 +62,9 @@ protected:
 	float m_units;
 	float m_angle;
 	FILE *m_iptr;
-	GDSProcess *m_process;
+	Process *m_process;
 
-	struct _Boundary *m_boundary;
+	struct Boundary *m_boundary;
 	int16_t m_recordlen;
 
 	/* Output options */
@@ -95,8 +94,8 @@ protected:
 	long m_srefelements;
 	long m_arefelements;
 
-	std::unordered_map<std::string, GDSObject*> m_objects;
-	GDSObject *m_currentobject;
+	std::unordered_map<std::string, Object*> m_objects;
+	Object *m_currentobject;
 
 	void ParseHeader();
 	void ParseLibName();
@@ -121,27 +120,28 @@ protected:
 
 	void ReportUnsupported(std::string name, enum RecordNumbers rn);
 
-	bool ParseFile();
+	bool ParseFileInternal();
 	void AssignASRefs(void);
 
 	virtual void OutputHeader() { };
 	virtual void OutputFooter() { };
 
-	void RecursiveOutput(GDSObject *object);
-	GDSObject *GetObjectRef(std::string name);
+	void RecursiveOutput(Object *object);
+	Object *GetObjectRef(std::string name);
 public:
-	GDSParse() { };
-	GDSParse(GDSProcess *process, bool generate_process);
-	virtual ~GDSParse ();
+	Parse() { };
+	Parse(Process *process, bool generate_process);
+	virtual ~Parse ();
 
-	struct _Boundary *GetBoundary();
-	bool Parse(FILE *iptr);
+	struct Boundary *GetBoundary();
+	bool ParseFile(FILE *iptr);
 	void Output(std::string topcell);
-	virtual GDSObject *NewObject(std::string name) { return new GDSObject(name); };
+	virtual Object *NewObject(std::string name) { return new Object(name); };
 
 	float GetUnits();
-	GDSProcess *GetProcess();
-	std::unordered_map<std::string, GDSObject*> GetObjects();
+	Process *GetProcess();
+	std::unordered_map<std::string, Object*> GetObjects();
 };
 
+}
 #endif

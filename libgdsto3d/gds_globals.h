@@ -23,9 +23,12 @@
 
 #include <cstdint>
 
+namespace GDS2X {
+
 extern int verbose_output;
 
 void v_printf(const int level, const char *fmt, ...);
+void SetVerbosity(int level);
 
 typedef enum{
 	elBoundary,
@@ -161,4 +164,5 @@ enum RecordNumbers{
 	rnContact		/* 69 */
 };
 
+}
 #endif

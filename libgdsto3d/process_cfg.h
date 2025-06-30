@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 
+namespace GDS2X {
+
 class ProcessLayer {
 public:
 	std::string Name;
@@ -45,17 +47,16 @@ public:
 	void HexColour(char *buf, size_t buflen);
 };
 
-class GDSProcess
+class Process
 {
 private:
 	std::vector<ProcessLayer*> m_layers;
 	bool m_valid;		/* Is the process file valid? */
 public:
-	GDSProcess ();
-	~GDSProcess ();
+	Process ();
+	~Process ();
 
 	void Parse(std::string processfile);
-	//bool Parse(std::string processfile);
 
 	ProcessLayer *AddLayer(ProcessLayer *NewLayer);
 	ProcessLayer *AddLayer(int Layer, int Datatype);
@@ -72,4 +73,5 @@ public:
 	void SwapLayers(unsigned int a, unsigned int b);
 };
 
+}
 #endif

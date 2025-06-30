@@ -24,7 +24,9 @@
 #include <gdsto3d.h>
 #include "process_cfg.h"
 
-class GDSPath
+namespace GDS2X {
+
+class Path
 {
 private:
 	int m_type;
@@ -39,8 +41,8 @@ private:
 	class ProcessLayer	*m_layer;
 
 public:
-	GDSPath(int pathtype, float height, float thickness, unsigned int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
-	~GDSPath();
+	Path(int pathtype, float height, float thickness, unsigned int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
+	~Path();
 
 	void AddPoint(unsigned int index, float x, float y);
 	void SetRotation(float x, float y, float z);
@@ -64,4 +66,5 @@ public:
 	int GetFace3D(unsigned int idx, int &v1, int &v2, int &v3);
 };
 
+}
 #endif

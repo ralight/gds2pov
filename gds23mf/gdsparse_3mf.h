@@ -31,22 +31,22 @@
 
 class GDSObject_3mf;
 
-class GDSParse_3mf : public GDSParse
+class GDSParse_3mf : public GDS2X::Parse
 {
 private:
 	Lib3MF::PWrapper m_wrapper;
 	Lib3MF::PModel m_model;
 	Lib3MF::PComponentsObject m_root_component;
 	std::unordered_map<std::string, Lib3MF::sTriangleProperties> m_colours;
-	void CreateColours(GDSProcess *process);
+	void CreateColours(GDS2X::Process *process);
 
 public:
-	GDSParse_3mf(GDSProcess *process, bool bounding_output, bool generate_process);
-	GDSParse_3mf(GDSParse *parse);
+	GDSParse_3mf(GDS2X::Process *process, bool bounding_output, bool generate_process);
+	GDSParse_3mf(GDS2X::Parse *parse);
 	~GDSParse_3mf ();
 
 	void Output(std::string topcell, std::string outfile, std::string format);
-	GDSObject *NewObject(std::string name);
+	GDS2X::Object *NewObject(std::string name);
 	GDSObject_3mf *GetObjectRef(std::string name);
 	void OutputHeader();
 	void OutputFooter();

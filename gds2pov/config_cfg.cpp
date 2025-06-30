@@ -504,7 +504,7 @@ void GDSConfig::ReadFile(std::string configfile)
 }
 
 
-void GDSConfig::OutputToFile(FILE *fptr, struct _Boundary *boundary)
+void GDSConfig::OutputToFile(FILE *fptr, struct GDS2X::Boundary *boundary)
 {
 	float half_widthX = (boundary->xmax - boundary->xmin)/2;
 	float half_widthY = (boundary->ymax - boundary->ymin)/2;

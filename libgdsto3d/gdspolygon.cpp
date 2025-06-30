@@ -3,7 +3,7 @@
  * Author: Roger Light
  * Project: gdsto3d
  *
- * This is the GDSPolyon class which is used to represent the GDS boundary
+ * This is the Polyon class which is used to represent the GDS boundary
  * object.
  *
  * This library is free software; you can redistribute it and/or
@@ -25,18 +25,20 @@
 #include "gdspolygon.h"
 #include "PolygonTriangulator.h"
 
-GDSPolygon::GDSPolygon(float height, float thickness, unsigned int points, class ProcessLayer *layer) :
+namespace GDS2X {
+
+Polygon::Polygon(float height, float thickness, unsigned int points, class ProcessLayer *layer) :
 	m_height(height), m_thickness(thickness), m_points(points), m_layer(layer)
 {
 	m_coords = new Point[points+1]; //FIXME - debug +1
 }
 
-GDSPolygon::~GDSPolygon()
+Polygon::~Polygon()
 {
 	if(m_coords) delete [] m_coords;
 }
 
-void GDSPolygon::AddPoint(unsigned int index, float x, float y)
+void Polygon::AddPoint(unsigned int index, float x, float y)
 {
 	if(index < m_points){
 		m_coords[index].x = x;
@@ -45,72 +47,68 @@ void GDSPolygon::AddPoint(unsigned int index, float x, float y)
 }
 
 
-void GDSPolygon::SetRotation(float x, float y, float z)
+void Polygon::SetRotation(float x, float y, float z)
 {
 	m_rotate.x = x;
 	m_rotate.y = y;
 	m_rotate.z = z;
 }
 
-float GDSPolygon::GetXCoords(unsigned int index)
+float Polygon::GetXCoords(unsigned int index)
 {
-	// FIXME - should probably use exceptions here
 	if(index < m_points){
 		return m_coords[index].x;
 	}
 	return 0.0;
 }
 
-float GDSPolygon::GetYCoords(unsigned int index)
+float Polygon::GetYCoords(unsigned int index)
 {
-	// FIXME - should probably use exceptions here
 	if(index < m_points){
 		return m_coords[index].y;
 	}
 	return 0.0;
 }
 
-float GDSPolygon::GetAngleCoords(unsigned int index)
+float Polygon::GetAngleCoords(unsigned int index)
 {
-	// FIXME - should probably use exceptions here
 	if(index < m_points){
 	return m_coords[index].angle;
 	}
 	return 0.0;
 }
 
-void GDSPolygon::SetAngleCoords(unsigned int index, float value)
+void Polygon::SetAngleCoords(unsigned int index, float value)
 {
-	// FIXME - should probably use exceptions here
 	if(index < m_points){
 		m_coords[index].angle = value;
 	}
 }
 
-unsigned int GDSPolygon::GetPoints(void)
+unsigned int Polygon::GetPoints(void)
 {
 	return m_points;
 }
 
-float GDSPolygon::GetHeight(void)
+float Polygon::GetHeight(void)
 {
 	return m_height;
 }
 
-float GDSPolygon::GetThickness(void)
+float Polygon::GetThickness(void)
 {
 	return m_thickness;
 }
 
-class ProcessLayer *GDSPolygon::GetLayer(void)
+class ProcessLayer *Polygon::GetLayer(void)
 {
 	return m_layer;
 }
 
 
-static GDSVertex CreateVertex(float x, float y, float z)
+static Vertex CreateVertex(float x, float y, float z)
 {
-	GDSVertex result;
+	Vertex result;
 	result.x = x;
 	result.y = y;
 	result.z = z;
@@ -118,9 +116,9 @@ static GDSVertex CreateVertex(float x, float y, float z)
 }
 
 
-static GDSTriangle CreateTriangle(int v1, int v2, int v3)
+static Triangle CreateTriangle(int v1, int v2, int v3)
 {
-	GDSTriangle result;
+	Triangle result;
 	result.v[0] = v1;
 	result.v[1] = v2;
 	result.v[2] = v3;
@@ -128,9 +126,9 @@ static GDSTriangle CreateTriangle(int v1, int v2, int v3)
 }
 
 
-std::vector<GDSVertex> GDSPolygon::GetVertices()
+std::vector<Vertex> Polygon::GetVertices()
 {
-	std::vector<GDSVertex> vertices;
+	std::vector<Vertex> vertices;
 
 	for(unsigned int j=0; j<this->GetPoints()-1; j++){
 		vertices.push_back(CreateVertex(
@@ -150,13 +148,13 @@ std::vector<GDSVertex> GDSPolygon::GetVertices()
 	return vertices;
 }
 
-std::vector<GDSTriangle> GDSPolygon::GetTriangles()
+std::vector<Triangle> Polygon::GetTriangles()
 {
 	/* Vertical faces */
 	unsigned int j=0;
 	unsigned int count = this->GetPoints()-1;
 
-	std::vector<GDSTriangle> triangles;
+	std::vector<Triangle> triangles;
 
 	for(j=0; j<count; j++){
 		triangles.push_back(CreateTriangle(j, j+count-1, j+count));
@@ -181,4 +179,6 @@ std::vector<GDSTriangle> GDSPolygon::GetTriangles()
 	}
 
 	return triangles;
+}
+
 }

@@ -30,9 +30,9 @@
 
 extern int verbose_output;
 
-GDSParse_pov::GDSParse_pov(GDSProcess *process, FILE *optr,
+GDSParse_pov::GDSParse_pov(GDS2X::Process *process, FILE *optr,
 		bool bounding_output, bool generate_process) :
-		GDSParse(process, generate_process)
+		GDS2X::Parse(process, generate_process)
 {
 	m_optr = optr;
 	m_bounding_output = bounding_output;
@@ -42,7 +42,7 @@ GDSParse_pov::GDSParse_pov(GDSProcess *process, FILE *optr,
 }
 
 
-GDSParse_pov::GDSParse_pov(GDSParse *parse, FILE *optr)
+GDSParse_pov::GDSParse_pov(GDS2X::Parse *parse, FILE *optr)
 {
 	m_optr = optr;
 	m_bounding_output = false; // FIXME
@@ -54,12 +54,12 @@ GDSParse_pov::GDSParse_pov(GDSParse *parse, FILE *optr)
 	m_units = parse->GetUnits();
 	m_process = parse->GetProcess();
 
-	unordered_map<std::string, GDSObject*> objects = parse->GetObjects();
+	std::unordered_map<std::string, GDS2X::Object*> objects = parse->GetObjects();
 	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
 		auto object = it->second;
 		auto object_pov = new GDSObject_pov(object, m_optr);
 
-		m_objects[it->first] = static_cast<GDSObject *>(object_pov);
+		m_objects[it->first] = static_cast<GDS2X::Object *>(object_pov);
 	}
 }
 
@@ -69,7 +69,7 @@ GDSParse_pov::~GDSParse_pov ()
 }
 
 
-GDSObject *GDSParse_pov::NewObject(std::string name)
+GDS2X::Object *GDSParse_pov::NewObject(std::string name)
 {
 	return new GDSObject_pov(name, m_optr);
 }
@@ -96,7 +96,7 @@ void GDSParse_pov::OutputHeader()
 
 
 		/* Output layer texture information */
-		ProcessLayer *layer = NULL;
+		GDS2X::ProcessLayer *layer = NULL;
 		for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 			layer = m_process->GetLayer(i);
 			if(layer->Show){
@@ -120,7 +120,7 @@ void GDSParse_pov::OutputHeader()
 		}
 
 		if(m_bounding_output){
-			struct _Boundary *boundary = GetBoundary();
+			struct GDS2X::Boundary *boundary = GetBoundary();
 			fprintf(m_optr, "box {<%.2f,%.2f,%.2f> <%.2f,%.2f,%.2f> texture { pigment { rgb <0.75, 0.75, 0.75> } } }",
 					boundary->xmin, boundary->ymin, m_units*m_process->GetLowest(),
 					boundary->xmax, boundary->ymax, m_units*m_process->GetHighest());

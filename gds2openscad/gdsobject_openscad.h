@@ -25,16 +25,16 @@
 
 #include "gdsobject.h"
 
-class GDSObject_openscad : public GDSObject
+class GDSObject_openscad : public GDS2X::Object
 {
 private:
 	FILE *m_optr;
 
-	void WritePolygonPoints(GDSPolygon *polygon);
-	void WritePolygonFaces(GDSPolygon *polygon);
+	void WritePolygonPoints(GDS2X::Polygon *polygon);
+	void WritePolygonFaces(GDS2X::Polygon *polygon);
 public:
 	GDSObject_openscad(std::string name, FILE *optr);
-	GDSObject_openscad(GDSObject *object, FILE *optr);
+	GDSObject_openscad(GDS2X::Object *object, FILE *optr);
 	~GDSObject_openscad();
 
 	virtual void Output();

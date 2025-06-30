@@ -28,8 +28,8 @@
 
 extern int verbose_output;
 
-GDSParse_svg::GDSParse_svg(GDSProcess *process, FILE *optr, bool generate_process) :
-		GDSParse(process, generate_process),
+GDSParse_svg::GDSParse_svg(GDS2X::Process *process, FILE *optr, bool generate_process) :
+		GDS2X::Parse(process, generate_process),
 		m_scale(100.0)
 {
 	// FIXME - check multiple output and output children first
@@ -41,7 +41,7 @@ GDSParse_svg::GDSParse_svg(GDSProcess *process, FILE *optr, bool generate_proces
 }
 
 
-GDSParse_svg::GDSParse_svg(GDSParse *parse, FILE *optr)
+GDSParse_svg::GDSParse_svg(GDS2X::Parse *parse, FILE *optr)
 {
 	m_optr = optr;
 	m_bounding_output = false;
@@ -52,12 +52,12 @@ GDSParse_svg::GDSParse_svg(GDSParse *parse, FILE *optr)
 	m_units = parse->GetUnits();
 	m_process = parse->GetProcess();
 
-	unordered_map<std::string, GDSObject*> objects = parse->GetObjects();
+	std::unordered_map<std::string, GDS2X::Object*> objects = parse->GetObjects();
 	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
 		auto object = it->second;
 		auto object_svg = new GDSObject_svg(object, m_optr);
 
-		m_objects[it->first] = static_cast<GDSObject *>(object_svg);
+		m_objects[it->first] = static_cast<GDS2X::Object *>(object_svg);
 	}
 }
 
@@ -66,7 +66,7 @@ GDSParse_svg::~GDSParse_svg ()
 {
 }
 
-GDSObject *GDSParse_svg::NewObject(std::string name)
+GDS2X::Object *GDSParse_svg::NewObject(std::string name)
 {
 	return new GDSObject_svg(name, m_optr);
 }
@@ -74,7 +74,7 @@ GDSObject *GDSParse_svg::NewObject(std::string name)
 void GDSParse_svg::OutputFooter()
 {
 	if(m_optr && !m_objects.empty()){
-		struct _Boundary *boundary = GetBoundary();
+		struct GDS2X::Boundary *boundary = GetBoundary();
 
 		fprintf(m_optr, "\t</defs>\n");
 		if(m_topcellname.length() > 0){
@@ -94,7 +94,7 @@ void GDSParse_svg::OutputFooter()
 void GDSParse_svg::OutputHeader()
 {
 	if(m_optr && !m_objects.empty()){
-		struct _Boundary *boundary = GetBoundary();
+		struct GDS2X::Boundary *boundary = GetBoundary();
 		float width = (boundary->xmax - boundary->xmin);
 		float height = (boundary->ymax - boundary->ymin);
 
@@ -111,7 +111,7 @@ void GDSParse_svg::OutputHeader()
 
 		/* Output layer texture information */
 
-		ProcessLayer *layer;
+		GDS2X::ProcessLayer *layer;
 		fprintf(m_optr, "\t<style>\n");
 		for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 			layer = m_process->GetLayer(i);

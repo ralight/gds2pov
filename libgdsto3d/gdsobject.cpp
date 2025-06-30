@@ -26,14 +26,16 @@
 #include "gdsobject.h"
 #include "gds_globals.h"
 
-GDSObject::GDSObject(std::string name) :
+using namespace GDS2X;
+
+Object::Object(std::string name) :
 	m_name(name), m_width(0.0), m_height(0.0), m_gotboundary(false), m_isoutput(false)
 {
 	m_boundary.xmax = m_boundary.ymax = -1000000.0;
 	m_boundary.xmin = m_boundary.ymin =  1000000.0;
 }
 
-GDSObject::~GDSObject()
+Object::~Object()
 {
 	while(!m_polygons.empty()){
 		delete m_polygons[m_polygons.size()-1];
@@ -61,12 +63,12 @@ GDSObject::~GDSObject()
 	}
 }
 
-void GDSObject::AddText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer)
+void Object::AddText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer)
 {
-	m_texts.push_back(new GDSText(x, y, z, flipped, mag, vjust, hjust, layer));
+	m_texts.push_back(new Text(x, y, z, flipped, mag, vjust, hjust, layer));
 }
 
-GDSText *GDSObject::GetCurrentText()
+Text *Object::GetCurrentText()
 {
 	if(m_texts.size()){
 		return m_texts[m_texts.size()-1];
@@ -75,22 +77,22 @@ GDSText *GDSObject::GetCurrentText()
 	}
 }
 
-std::string GDSObject::GetName()
+std::string Object::GetName()
 {
 	return m_name;
 }
 
-void GDSObject::AddPolygon(float height, float thickness, int points, class ProcessLayer *layer)
+void Object::AddPolygon(float height, float thickness, int points, class ProcessLayer *layer)
 {
-	m_polygons.push_back(new GDSPolygon(height, thickness, points, layer));
+	m_polygons.push_back(new Polygon(height, thickness, points, layer));
 }
 
-GDSPolygon *GDSObject::GetCurrentPolygon()
+Polygon *Object::GetCurrentPolygon()
 {
 	return m_polygons[m_polygons.size()-1];
 }
 
-void GDSObject::AddSRef(std::string name, float x, float y, bool flipped, float mag)
+void Object::AddSRef(std::string name, float x, float y, bool flipped, float mag)
 {
 	ASRefElement *sref = new ASRefElement;
 
@@ -103,7 +105,7 @@ void GDSObject::AddSRef(std::string name, float x, float y, bool flipped, float 
 	m_srefs.push_back(sref);
 }
 
-void GDSObject::SetSRefRotation(float x, float y, float z)
+void Object::SetSRefRotation(float x, float y, float z)
 {
 	if(!m_srefs.empty()){
 		m_srefs[m_srefs.size()-1]->rotate.x = x;
@@ -112,7 +114,7 @@ void GDSObject::SetSRefRotation(float x, float y, float z)
 	}
 }
 
-void GDSObject::AddARef(std::string name, float x1, float y1, float x2, float y2, float x3, float y3, int columns, int rows, bool flipped, float mag)
+void Object::AddARef(std::string name, float x1, float y1, float x2, float y2, float x3, float y3, int columns, int rows, bool flipped, float mag)
 {
 	ASRefElement *aref = new ASRefElement;
 
@@ -131,7 +133,7 @@ void GDSObject::AddARef(std::string name, float x1, float y1, float x2, float y2
 	m_arefs.push_back(aref);
 }
 
-void GDSObject::SetARefRotation(float x, float y, float z)
+void Object::SetARefRotation(float x, float y, float z)
 {
 	if(!m_arefs.empty()){
 		m_arefs[m_arefs.size()-1]->rotate.x = x;
@@ -140,7 +142,7 @@ void GDSObject::SetARefRotation(float x, float y, float z)
 	}
 }
 
-struct _Boundary *GDSObject::GetBoundary(void)
+struct Boundary *Object::GetBoundary(void)
 {
 	if(m_gotboundary){
 		return &m_boundary;
@@ -148,7 +150,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 
 	if(!m_polygons.empty()){
 		for(unsigned long i=0; i<m_polygons.size(); i++){
-			GDSPolygon *polygon = m_polygons[i];
+			Polygon *polygon = m_polygons[i];
 			for(unsigned int j=0; j<polygon->GetPoints(); j++){
 				if(polygon->GetXCoords(j) > m_boundary.xmax){
 					m_boundary.xmax = polygon->GetXCoords(j);
@@ -169,7 +171,7 @@ struct _Boundary *GDSObject::GetBoundary(void)
 	/* FIXME - need to take width into account? */
 	if(!m_paths.empty()){
 		for(unsigned long i=0; i<m_paths.size(); i++){
-			GDSPath *path = m_paths[i];
+			Path *path = m_paths[i];
 			for(unsigned int j=0; j<path->GetPoints(); j++){
 				if(path->GetXCoords(j) > m_boundary.xmax){
 					m_boundary.xmax = path->GetXCoords(j);
@@ -190,8 +192,8 @@ struct _Boundary *GDSObject::GetBoundary(void)
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
 		ASRefElement *sref = m_srefs[i];
 		if(m_name == sref->name && sref->object){
-			GDSObject *object = sref->object;
-			struct _Boundary *NewBound;
+			Object *object = sref->object;
+			struct Boundary *NewBound;
 			NewBound = object->GetBoundary();
 
 			float xmax = 0.0, xmin = 0.0;
@@ -237,8 +239,8 @@ struct _Boundary *GDSObject::GetBoundary(void)
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		ASRefElement *aref = m_arefs[i];
 		if(m_name != aref->name && aref->object){
-			GDSObject *object = aref->object;
-			struct _Boundary *NewBound;
+			Object *object = aref->object;
+			struct Boundary *NewBound;
 			NewBound = object->GetBoundary();
 
 			float xmax = 0.0, xmin = 0.0;
@@ -296,22 +298,22 @@ struct _Boundary *GDSObject::GetBoundary(void)
 	return &m_boundary;
 }
 
-void GDSObject::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, class ProcessLayer *layer)
+void Object::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, class ProcessLayer *layer)
 {
-	m_paths.push_back(new GDSPath(PathType, Height, Thickness, Points, Width, BgnExtn, EndExtn, layer));
+	m_paths.push_back(new Path(PathType, Height, Thickness, Points, Width, BgnExtn, EndExtn, layer));
 }
 
-GDSPath *GDSObject::GetCurrentPath()
+Path *Object::GetCurrentPath()
 {
 	return m_paths[m_paths.size()-1];
 }
 
-bool GDSObject::HasASRef()
+bool Object::HasASRef()
 {
 	return (!m_arefs.empty() || !m_srefs.empty());
 }
 
-ASRefElement *GDSObject::GetSRef(unsigned int index)
+ASRefElement *Object::GetSRef(unsigned int index)
 {
 	if(m_srefs.size() > 0 && index < m_srefs.size()){
 		return m_srefs[index];
@@ -319,7 +321,7 @@ ASRefElement *GDSObject::GetSRef(unsigned int index)
 	return NULL;
 }
 
-ASRefElement *GDSObject::GetARef(unsigned int index)
+ASRefElement *Object::GetARef(unsigned int index)
 {
 	if(m_arefs.size() > 0 && index < m_arefs.size()){
 		return m_arefs[index];
@@ -327,54 +329,54 @@ ASRefElement *GDSObject::GetARef(unsigned int index)
 	return NULL;
 }
 
-unsigned int GDSObject::GetSRefCount(void)
+unsigned int Object::GetSRefCount(void)
 {
 	return m_srefs.size();
 }
 
-unsigned int GDSObject::GetARefCount(void)
+unsigned int Object::GetARefCount(void)
 {
 	return m_arefs.size();
 }
 
-bool GDSObject::GetIsOutput()
+bool Object::GetIsOutput()
 {
 	return m_isoutput;
 }
 
-float GDSObject::GetWidth()
+float Object::GetWidth()
 {
 	return m_width;
 }
 
-float GDSObject::GetHeight()
+float Object::GetHeight()
 {
 	return m_height;
 }
 
 
-vector<GDSPath*> GDSObject::GetPaths()
+std::vector<Path*> Object::GetPaths()
 {
 	return m_paths;
 }
 
-vector<GDSText*> GDSObject::GetTexts()
+std::vector<Text*> Object::GetTexts()
 {
 	return m_texts;
 }
 
-vector<GDSPolygon*> GDSObject::GetPolygons()
+std::vector<Polygon*> Object::GetPolygons()
 {
 	return m_polygons;
 }
 
 
-vector<ASRefElement*> GDSObject::GetSRefs()
+std::vector<ASRefElement*> Object::GetSRefs()
 {
 	return m_srefs;
 }
 
-vector<ASRefElement*> GDSObject::GetARefs()
+std::vector<ASRefElement*> Object::GetARefs()
 {
 	return m_arefs;
 }

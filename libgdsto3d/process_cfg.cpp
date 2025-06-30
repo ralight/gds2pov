@@ -48,11 +48,13 @@
 #include "process_cfg.h"
 #include "gds_globals.h"
 
-GDSProcess::GDSProcess() : m_valid(true)
+using namespace GDS2X;
+
+Process::Process() : m_valid(true)
 {
 }
 
-GDSProcess::~GDSProcess ()
+Process::~Process ()
 {
 	while(!m_layers.empty()){
 		delete m_layers[m_layers.size()-1];
@@ -60,8 +62,7 @@ GDSProcess::~GDSProcess ()
 	}
 }
 
-//bool GDSProcess::Parse(std::string processfile)
-void GDSProcess::Parse(std::string processfile)
+void Process::Parse(std::string processfile)
 {
 	int layerstart_cnt = 0;
 	int layerend_cnt = 0;
@@ -363,7 +364,7 @@ void GDSProcess::Parse(std::string processfile)
 	v_printf(1, "\n");
 }
 
-ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
+ProcessLayer *Process::GetLayer(int Number, int Datatype)
 {
 	if(Number == -1) return NULL;
 
@@ -377,7 +378,7 @@ ProcessLayer *GDSProcess::GetLayer(int Number, int Datatype)
 	return NULL;
 }
 
-ProcessLayer *GDSProcess::GetLayer(std::string Name)
+ProcessLayer *Process::GetLayer(std::string Name)
 {
 	for(unsigned int i = 0; i < m_layers.size(); i++){
 		if(m_layers[i]->Name == Name){
@@ -387,7 +388,7 @@ ProcessLayer *GDSProcess::GetLayer(std::string Name)
 	return NULL;
 }
 
-ProcessLayer *GDSProcess::GetLayer()
+ProcessLayer *Process::GetLayer()
 {
 	if(!m_layers.empty()){
 		return m_layers[0];
@@ -395,7 +396,7 @@ ProcessLayer *GDSProcess::GetLayer()
 	return NULL;
 }
 
-ProcessLayer *GDSProcess::GetLayer(unsigned int index)
+ProcessLayer *Process::GetLayer(unsigned int index)
 {
 	if(index < m_layers.size()){
 		return m_layers[index];
@@ -404,13 +405,13 @@ ProcessLayer *GDSProcess::GetLayer(unsigned int index)
 	}
 }
 
-unsigned int GDSProcess::LayerCount()
+unsigned int Process::LayerCount()
 {
 	return m_layers.size();
 }
 
 
-ProcessLayer *GDSProcess::AddLayer(int Layer, int Datatype)
+ProcessLayer *Process::AddLayer(int Layer, int Datatype)
 {
 	ProcessLayer NewLayer;
 	std::stringstream sName;
@@ -432,7 +433,7 @@ ProcessLayer *GDSProcess::AddLayer(int Layer, int Datatype)
 }
 
 
-ProcessLayer *GDSProcess::AddLayer(ProcessLayer *NewLayer)
+ProcessLayer *Process::AddLayer(ProcessLayer *NewLayer)
 {
 	ProcessLayer *layer = new ProcessLayer;
 
@@ -453,12 +454,12 @@ ProcessLayer *GDSProcess::AddLayer(ProcessLayer *NewLayer)
 	return layer;
 }
 
-bool GDSProcess::IsValid()
+bool Process::IsValid()
 {
 	return m_valid;
 }
 
-float GDSProcess::GetHighest()
+float Process::GetHighest()
 {
 	float Highest = -10000.0;
 
@@ -470,7 +471,7 @@ float GDSProcess::GetHighest()
 	return Highest;
 }
 
-float GDSProcess::GetLowest()
+float Process::GetLowest()
 {
 	float Lowest = 10000.0;
 
@@ -483,7 +484,7 @@ float GDSProcess::GetLowest()
 }
 
 
-bool GDSProcess::RemoveLayer(unsigned int index)
+bool Process::RemoveLayer(unsigned int index)
 {
 	if(index < m_layers.size()){
 		m_layers.erase(m_layers.begin()+index);
@@ -493,7 +494,7 @@ bool GDSProcess::RemoveLayer(unsigned int index)
 	}
 }
 
-bool GDSProcess::Save(std::string filename)
+bool Process::Save(std::string filename)
 {
 	FILE *fptr = NULL;
 
@@ -528,7 +529,7 @@ bool GDSProcess::Save(std::string filename)
 	return true;
 }
 
-void GDSProcess::SwapLayers(unsigned int a, unsigned int b)
+void Process::SwapLayers(unsigned int a, unsigned int b)
 {
 	if(a < m_layers.size() && b < m_layers.size() && a != b){
 		ProcessLayer *tmp;

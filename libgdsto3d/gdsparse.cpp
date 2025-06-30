@@ -26,11 +26,12 @@
 #include <cstring>
 #include <cstdint>
 
+#include "gds_globals.h"
 #include "gdsparse.h"
 
-extern int verbose_output;
+namespace GDS2X {
 
-GDSParse::GDSParse (GDSProcess *process, bool generate_process) :
+Parse::Parse (Process *process, bool generate_process) :
 	m_libname(""), m_topcellname(""),
 	m_currentlayer(-1), m_currentdatatype(-1),  m_currentwidth(0.0),
 	m_currentpathtype(0),
@@ -65,7 +66,7 @@ GDSParse::GDSParse (GDSProcess *process, bool generate_process) :
 
 }
 
-GDSParse::~GDSParse ()
+Parse::~Parse ()
 {
 	for(auto it=m_objects.begin(); it!=m_objects.end();) {
 		delete it->second;
@@ -77,14 +78,14 @@ GDSParse::~GDSParse ()
 	}
 }
 
-bool GDSParse::Parse(FILE *iptr)
+bool Parse::ParseFile(FILE *iptr)
 {
 	m_iptr = iptr;
 	if(m_iptr){
 		//DEBUG
-		//printf("GDSParse::Parse(%p)\n",iptr);
+		//printf("Parse::Parse(%p)\n",iptr);
 
-		bool result = ParseFile();
+		bool result = ParseFileInternal();
 
 		v_printf(1, "\nSummary:\n\tPaths:\t\t%ld\n\tBoundaries:\t%ld\n\tBoxes:\t\t%ld\n\tStrings:\t%ld\n\tStuctures:\t%ld\n\tArrays:\t\t%ld\n",
 			m_pathelements, m_boundaryelements, m_boxelements, m_textelements, m_srefelements, m_arefelements);
@@ -95,7 +96,7 @@ bool GDSParse::Parse(FILE *iptr)
 	}
 }
 
-void GDSParse::AssignASRefs(void)
+void Parse::AssignASRefs(void)
 {
 	/* Assign objects to srefs and arefs */
 	/* FIXME - surely there is a better way than 3n^3 loop */
@@ -124,7 +125,7 @@ void GDSParse::AssignASRefs(void)
 	}
 }
 
-void GDSParse::Output(std::string topcell)
+void Parse::Output(std::string topcell)
 {
 	m_topcellname = topcell;
 
@@ -143,7 +144,7 @@ void GDSParse::Output(std::string topcell)
 	OutputFooter();
 }
 
-void GDSParse::RecursiveOutput(GDSObject *object)
+void Parse::RecursiveOutput(Object *object)
 {
 	if(!object){
 		return;
@@ -154,7 +155,7 @@ void GDSParse::RecursiveOutput(GDSObject *object)
 	}
 
 	if(m_output_children_first && object->HasASRef()){
-		GDSObject *child;
+		Object *child;
 
 		for(unsigned int i = 0; i < object->GetSRefCount(); i++){
 			child = object->GetSRef(i)->object;
@@ -179,7 +180,7 @@ void GDSParse::RecursiveOutput(GDSObject *object)
 	object->Output();
 }
 
-bool GDSParse::ParseFile()
+bool Parse::ParseFileInternal()
 {
 	uint8_t recordtype, datatype;
 	char *tempstr;
@@ -621,14 +622,14 @@ Not used in GDS2 spec	case rnUString:
 	return 0;
 }
 
-void GDSParse::ParseHeader()
+void Parse::ParseHeader()
 {
 	short version;
 	version = GetTwoByteSignedInt();
 	v_printf(2, "\tVersion = %d\n", version);
 }
 
-void GDSParse::ParseLibName()
+void Parse::ParseLibName()
 {
 	char *str;
 	str = GetAsciiString();
@@ -637,7 +638,7 @@ void GDSParse::ParseLibName()
 	delete [] str;
 }
 
-void GDSParse::ParseSName()
+void Parse::ParseSName()
 {
 	v_printf(2, "SNAME ");
 
@@ -653,7 +654,7 @@ void GDSParse::ParseSName()
 	delete [] str;
 }
 
-void GDSParse::ParseUnits()
+void Parse::ParseUnits()
 {
 	double tmp;
 	m_units = (float)GetEightByteReal();
@@ -661,7 +662,7 @@ void GDSParse::ParseUnits()
 	v_printf(1, "DB units/user units = %g\nSize of DB units in metres = %g\nSize of user units in m = %g\n\n", 1/m_units, tmp, tmp/m_units);
 }
 
-void GDSParse::ParseStrName()
+void Parse::ParseStrName()
 {
 	char *str = GetAsciiString();
 
@@ -676,7 +677,7 @@ void GDSParse::ParseStrName()
 
 		// This calls our own NewObject function which is pure virtual so the end
 		// user must define it. This means we can always add a unknown object as
-		// long as it inherits from GDSObject.
+		// long as it inherits from Object.
 		auto obj = NewObject(str);
 		m_objects[str] = obj;
 		m_currentobject = obj;
@@ -685,7 +686,7 @@ void GDSParse::ParseStrName()
 	v_printf(2, "\n");
 }
 
-void GDSParse::ParseXYPath()
+void Parse::ParseXYPath()
 {
 	float X, Y;
 	int points = m_recordlen/8;
@@ -753,7 +754,7 @@ void GDSParse::ParseXYPath()
 }
 
 
-void GDSParse::ParseXYBoundary()
+void Parse::ParseXYBoundary()
 {
 	float X, Y;
 	float firstX=0.0, firstY=0.0;
@@ -821,7 +822,7 @@ void GDSParse::ParseXYBoundary()
 }
 
 
-void GDSParse::ParseXYSRef(bool Flipped)
+void Parse::ParseXYSRef(bool Flipped)
 {
 	m_srefelements++;
 	float X = m_units * (float)GetFourByteSignedInt();
@@ -837,7 +838,7 @@ void GDSParse::ParseXYSRef(bool Flipped)
 }
 
 
-void GDSParse::ParseXYARef(bool Flipped)
+void Parse::ParseXYARef(bool Flipped)
 {
 	m_arefelements++;
 	float firstX = m_units * (float)GetFourByteSignedInt();
@@ -860,7 +861,7 @@ void GDSParse::ParseXYARef(bool Flipped)
 }
 
 
-void GDSParse::ParseXYText(bool Flipped)
+void Parse::ParseXYText(bool Flipped)
 {
 	m_textelements++;
 	ProcessLayer *thislayer = NULL;
@@ -907,7 +908,7 @@ void GDSParse::ParseXYText(bool Flipped)
 }
 
 
-void GDSParse::ParseXY()
+void Parse::ParseXY()
 {
 	bool Flipped;
 
@@ -940,7 +941,7 @@ void GDSParse::ParseXY()
 }
 
 
-void GDSParse::ReportUnsupported(std::string name, enum RecordNumbers rn)
+void Parse::ReportUnsupported(std::string name, enum RecordNumbers rn)
 {
 	if(!m_unsupported[rn]){
 		v_printf(1, "Unsupported GDS2 record type: %s\n", name.c_str());
@@ -950,17 +951,17 @@ void GDSParse::ReportUnsupported(std::string name, enum RecordNumbers rn)
 }
 
 
-struct _Boundary *GDSParse::GetBoundary()
+struct Boundary *Parse::GetBoundary()
 {
 	if(!m_boundary){
-		m_boundary = new struct _Boundary;
+		m_boundary = new struct Boundary;
 	}
 
 	m_boundary->xmax = m_boundary->ymax = std::numeric_limits<float>::lowest();
 	m_boundary->xmin = m_boundary->ymin =  std::numeric_limits<float>::max();
 
 	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
-		struct _Boundary *object_bound = it->second->GetBoundary();
+		struct Boundary *object_bound = it->second->GetBoundary();
 
 		if(object_bound->xmax > m_boundary->xmax){
 			m_boundary->xmax = object_bound->xmax;
@@ -978,22 +979,24 @@ struct _Boundary *GDSParse::GetBoundary()
 	return m_boundary;
 }
 
-GDSObject *GDSParse::GetObjectRef(std::string name)
+Object *Parse::GetObjectRef(std::string name)
 {
 	return m_objects[name];
 }
 
-float GDSParse::GetUnits()
+float Parse::GetUnits()
 {
 	return m_units;
 }
 
-GDSProcess *GDSParse::GetProcess()
+Process *Parse::GetProcess()
 {
 	return m_process;
 }
 
-std::unordered_map<std::string, GDSObject*> GDSParse::GetObjects()
+std::unordered_map<std::string, Object*> Parse::GetObjects()
 {
 	return m_objects;
+}
+
 }

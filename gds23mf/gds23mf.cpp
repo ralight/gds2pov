@@ -28,8 +28,6 @@
 #include "gds_globals.h"
 #include "gdsparse_3mf.h"
 
-extern int verbose_output;
-
 void printusage()
 {
 	printf("gds23mf  version %s\n", VERSION);
@@ -62,7 +60,7 @@ int main(int argc, char *argv[])
 	std::string topcell="";
 	std::string format="3mf";
 
-	verbose_output = 1;
+	int verbose_output = 1;
 
 	if(argc == 1){
 		printusage();
@@ -137,9 +135,11 @@ int main(int argc, char *argv[])
 	}
 
 
+	GDS2X::SetVerbosity(verbose_output);
+
 	/************ Load process ****************/
 
-	class GDSProcess *process=NULL;
+	class GDS2X::Process *process=NULL;
 	/*
 	** Order of precedence for process.txt:
 	** -p switch (given as an argument to this function)
@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
 	if(processfile == ""){
 		processfile = "process.txt";
 	}
-	process = new GDSProcess();
+	process = new GDS2X::Process();
 	if(!process){
 		fprintf(stderr, "Error: Out of memory.\n");
 		return -1;
@@ -175,10 +175,10 @@ int main(int argc, char *argv[])
 		iptr = stdin;
 	}
 	if(iptr){
-		class GDSParse_3mf *Parser = new class GDSParse_3mf(process, bounding_output, generate_process);
-		if(!Parser->Parse(iptr)){
+		class GDSParse_3mf *parser = new class GDSParse_3mf(process, bounding_output, generate_process);
+		if(!parser->ParseFile(iptr)){
 			if(!generate_process){
-				Parser->Output(topcell, outfile, format);
+				parser->Output(topcell, outfile, format);
 			}else{
 				process->Save(processfile);
 			}
@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
 			fclose(iptr);
 		}
 
-		delete Parser;
+		delete parser;
 		delete process;
 	}else{
 		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile.c_str());

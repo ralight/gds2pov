@@ -7,7 +7,7 @@
 
 GPEWindow::GPEWindow() : GPEWindow_fb(NULL)
 {
-	m_process = new GDSProcess();
+	m_process = new GDS2X::Process();
 	m_process_path = wxT("");
 	m_defaultSaveDir = wxT("");
 	m_defaultSaveFile = wxT("");
@@ -46,7 +46,7 @@ bool GPEWindow::DoFileSave( bool forceNewFilename )
 
 void GPEWindow::OnButtonAdd( wxCommandEvent& event )
 {
-	ProcessLayer *layer;
+	GDS2X::ProcessLayer *layer;
 
 	layer = m_process->AddLayer(0, 0);
 
@@ -190,7 +190,7 @@ void GPEWindow::OnCheckListBoxLayersClick( wxCommandEvent& event )
 	}
 	int selected = m_checkListBoxLayers->GetSelection();
 	if(selected != wxNOT_FOUND){
-		ProcessLayer *layer = m_process->GetLayer(selected);
+		GDS2X::ProcessLayer *layer = m_process->GetLayer(selected);
 		if(layer){
 			m_textCtrlName->SetValue(wxString::FromAscii(layer->Name.c_str()));
 			m_textCtrlLayer->SetValue(wxString::Format(wxT("%d"), layer->Layer));
@@ -233,7 +233,7 @@ void GPEWindow::OnCheckListBoxLayersToggled( wxCommandEvent& event )
 {
 	int selected = event.GetSelection();
 	if(selected != wxNOT_FOUND){
-		ProcessLayer *layer = m_process->GetLayer(selected);
+		GDS2X::ProcessLayer *layer = m_process->GetLayer(selected);
 		if(layer){
 			layer->Show = m_checkListBoxLayers->IsChecked(selected);
 		}
@@ -264,7 +264,7 @@ void GPEWindow::OnColourChangedLayer( wxColourPickerEvent& event )
 	if(selected != wxNOT_FOUND){
 		SetLayerDirtyState(true);
 		/*
-		ProcessLayer *layer = m_process->GetLayer(selected);
+		GDS2X::ProcessLayer *layer = m_process->GetLayer(selected);
 
 		wxColour colour = m_colourPickerLayer->GetColour();
 
@@ -307,9 +307,9 @@ void GPEWindow::OnMenuFileImportGDS( wxCommandEvent& event )
 			m_defaultSaveFile = wxT("");
 			m_selectedLayer = -1;
 
-			class GDSParse *Parser = new class GDSParse(m_process, true);
-			if(!Parser->Parse(iptr)){
-				ProcessLayer *layer;
+			class GDS2X::Parse *parser = new class GDS2X::Parse(m_process, true);
+			if(!parser->ParseFile(iptr)){
+				GDS2X::ProcessLayer *layer;
 
 				m_checkListBoxLayers->Clear();
 				for(unsigned int i = 0; i < m_process->LayerCount(); i++){
@@ -324,7 +324,7 @@ void GPEWindow::OnMenuFileImportGDS( wxCommandEvent& event )
 				msgDialog->ShowModal();
 				delete msgDialog;
 			}
-			delete Parser;
+			delete parser;
 		}else{
 			wxMessageDialog *msgDialog = new wxMessageDialog(this, wxT("Unable to open GDS file."), wxT("Error"), wxOK | wxICON_ERROR);
 			msgDialog->ShowModal();
@@ -345,7 +345,7 @@ void GPEWindow::OnMenuFileNew( wxCommandEvent& event )
 			delete m_process;
 			m_process = NULL;
 		}
-		m_process = new GDSProcess();
+		m_process = new GDS2X::Process();
 		m_checkListBoxLayers->Clear();
 		m_process_path = wxT("");
 		m_defaultSaveDir = wxT("");
@@ -374,7 +374,7 @@ void GPEWindow::OnMenuFileOpen( wxCommandEvent& event )
 			delete m_process;
 			m_process = NULL;
 		}
-		m_process = new GDSProcess();
+		m_process = new GDS2X::Process();
 
 		wxFileDialog *fileDialog = new wxFileDialog(this);
 
@@ -392,7 +392,7 @@ void GPEWindow::OnMenuFileOpen( wxCommandEvent& event )
 
 				m_checkListBoxLayers->Clear();
 
-				ProcessLayer *layer;
+				GDS2X::ProcessLayer *layer;
 				for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 					layer = m_process->GetLayer(i);
 					int item = m_checkListBoxLayers->Append(wxString::FromAscii(layer->Name.c_str()));
@@ -427,7 +427,7 @@ void GPEWindow::OnMenuHelpAbout( wxCommandEvent& event )
 
 void GPEWindow::SaveLayer(int number)
 {
-	ProcessLayer *layer = m_process->GetLayer(number);
+	GDS2X::ProcessLayer *layer = m_process->GetLayer(number);
 
 	if(layer){
 		layer->Name = m_textCtrlName->GetValue().ToUTF8();

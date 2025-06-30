@@ -26,17 +26,17 @@
 #include "process_cfg.h"
 #include "gdsparse.h"
 
-class GDSParse_pov : public GDSParse
+class GDSParse_pov : public GDS2X::Parse
 {
 private:
 	std::string m_camfile;
 	FILE *m_optr;
 public:
-	GDSParse_pov (GDSProcess *process, FILE *optr, bool bounding_output, bool generate_process);
-	GDSParse_pov(GDSParse *parse, FILE *optr);
+	GDSParse_pov (GDS2X::Process *process, FILE *optr, bool bounding_output, bool generate_process);
+	GDSParse_pov(GDS2X::Parse *parse, FILE *optr);
 	~GDSParse_pov ();
 
-	GDSObject *NewObject(std::string name);
+	GDS2X::Object *NewObject(std::string name);
 	void OutputHeader();
 	void OutputFooter();
 

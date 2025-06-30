@@ -88,7 +88,7 @@ public:
 	Position *GetLightPos(unsigned int index);
 	int GetLightCount();
 	void ReadFile(std::string configfile);
-	void OutputToFile(FILE *fptr, struct _Boundary *boundary);
+	void OutputToFile(FILE *fptr, struct GDS2X::Boundary *boundary);
 };
 
 #endif

@@ -26,17 +26,17 @@
 #include "process_cfg.h"
 #include "gdsparse.h"
 
-class GDSParse_openscad : public GDSParse
+class GDSParse_openscad : public GDS2X::Parse
 {
 private:
 	FILE *m_optr;
 
 public:
-	GDSParse_openscad(GDSProcess *process, FILE *optr, bool bounding_output, bool generate_process);
-	GDSParse_openscad(GDSParse *parse, FILE *optr);
+	GDSParse_openscad(GDS2X::Process *process, FILE *optr, bool bounding_output, bool generate_process);
+	GDSParse_openscad(GDS2X::Parse *parse, FILE *optr);
 	~GDSParse_openscad ();
 
-	GDSObject *NewObject(std::string name);
+	GDS2X::Object *NewObject(std::string name);
 	void OutputHeader();
 	void OutputFooter();
 };

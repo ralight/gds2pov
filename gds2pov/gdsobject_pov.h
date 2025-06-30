@@ -25,7 +25,7 @@
 
 #include "gdsobject.h"
 
-class GDSObject_pov : public GDSObject
+class GDSObject_pov : public GDS2X::Object
 {
 private:
 	bool m_decompose;
@@ -34,7 +34,7 @@ private:
 	void DecomposePOVPolygons();
 public:
 	GDSObject_pov(std::string name, FILE *optr);
-	GDSObject_pov(GDSObject *object, FILE *optr);
+	GDSObject_pov(GDS2X::Object *object, FILE *optr);
 	~GDSObject_pov();
 
 	void Decompose(bool value);

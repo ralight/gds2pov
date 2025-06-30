@@ -49,7 +49,7 @@ sLib3MFTriangle CreateTriangle3(int v1, int v2, int v3)
 }
 
 
-sLib3MFPosition CreateVertex(GDSVertex &v)
+sLib3MFPosition CreateVertex(GDS2X::Vertex &v)
 {
 	sLib3MFPosition result;
 	result.m_Coordinates[0] = v.x;
@@ -58,7 +58,7 @@ sLib3MFPosition CreateVertex(GDSVertex &v)
 	return result;
 }
 
-sLib3MFTriangle CreateTriangle(GDSTriangle &t)
+sLib3MFTriangle CreateTriangle(GDS2X::Triangle &t)
 {
 	sLib3MFTriangle result;
 	result.m_Indices[0] = t.v[0];
@@ -96,7 +96,7 @@ sLib3MFTransform CreateTransformMatrix(float x, float y, float rotate, bool mirr
 	return mMatrix;
 }
 
-GDSObject_3mf::GDSObject_3mf(std::string name, GDSParse_3mf *parse, Lib3MF::PWrapper wrapper, Lib3MF::PModel model, Lib3MF::PComponentsObject root_component) : GDSObject(name)
+GDSObject_3mf::GDSObject_3mf(std::string name, GDSParse_3mf *parse, Lib3MF::PWrapper wrapper, Lib3MF::PModel model, Lib3MF::PComponentsObject root_component) : Object(name)
 {
 	m_parse = parse;
 	m_wrapper = wrapper;
@@ -106,7 +106,7 @@ GDSObject_3mf::GDSObject_3mf(std::string name, GDSParse_3mf *parse, Lib3MF::PWra
 }
 
 
-GDSObject_3mf::GDSObject_3mf(GDSObject *object, GDSParse_3mf *parse, Lib3MF::PWrapper wrapper, Lib3MF::PModel model, Lib3MF::PComponentsObject root_component)
+GDSObject_3mf::GDSObject_3mf(GDS2X::Object *object, GDSParse_3mf *parse, Lib3MF::PWrapper wrapper, Lib3MF::PModel model, Lib3MF::PComponentsObject root_component)
 {
 	m_parse = parse;
 	m_wrapper = wrapper;
@@ -137,7 +137,7 @@ GDSObject_3mf::~GDSObject_3mf()
 void GDSObject_3mf::OutputPaths()
 {
 	if(!m_paths.empty()){
-		GDSPath *path;
+		GDS2X::Path *path;
 
 		for(unsigned long i=0; i<m_paths.size(); i++){
 			path = m_paths[i];
@@ -179,7 +179,7 @@ void GDSObject_3mf::OutputPaths()
 void GDSObject_3mf::OutputPolygons()
 {
 	if(!m_polygons.empty()){
-		GDSPolygon *polygon;
+		GDS2X::Polygon *polygon;
 
 		for(unsigned long i=0; i<m_polygons.size(); i++){
 			polygon = m_polygons[i];
@@ -187,8 +187,8 @@ void GDSObject_3mf::OutputPolygons()
 			std::vector<sLib3MFPosition> vertices_3mf;
 			std::vector<sLib3MFTriangle> triangles_3mf;
 
-			std::vector<GDSVertex> vertices = polygon->GetVertices();
-			std::vector<GDSTriangle> triangles = polygon->GetTriangles();
+			std::vector<GDS2X::Vertex> vertices = polygon->GetVertices();
+			std::vector<GDS2X::Triangle> triangles = polygon->GetTriangles();
 
 			for(int j=0; j<vertices.size(); j++){
 				vertices_3mf.push_back(CreateVertex(vertices[j]));
@@ -221,7 +221,7 @@ void GDSObject_3mf::OutputTexts()
 void GDSObject_3mf::OutputSRefs()
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
-		ASRefElement *sref = m_srefs[i];
+		GDS2X::ASRefElement *sref = m_srefs[i];
 
 		GDSObject_3mf *oref = static_cast<GDSObject_3mf *>(m_parse->GetObjectRef(sref->name));
 
@@ -232,7 +232,7 @@ void GDSObject_3mf::OutputSRefs()
 void GDSObject_3mf::OutputARefs()
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
-		ASRefElement *aref = m_arefs[i];
+		GDS2X::ASRefElement *aref = m_arefs[i];
 
 		float dx = 0.0, dy = 0.0;
 		int columns, rows;

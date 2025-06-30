@@ -23,7 +23,9 @@
 
 #include "process_cfg.h"
 
-class GDSPolygon
+namespace GDS2X {
+
+class Polygon
 {
 private:
 	float m_height;
@@ -34,8 +36,8 @@ private:
 	class ProcessLayer	*m_layer;
 
 public:
-	GDSPolygon(float height, float thickness, unsigned int points, class ProcessLayer *layer);
-	~GDSPolygon();
+	Polygon(float height, float thickness, unsigned int points, class ProcessLayer *layer);
+	~Polygon();
 
 	void AddPoint(unsigned int index, float x, float y);
 	void SetRotation(float x, float y, float z);
@@ -48,8 +50,9 @@ public:
 	float GetAngleCoords(unsigned int index);
 	void SetAngleCoords(unsigned int index, float value);
 	class ProcessLayer *GetLayer(void);
-	std::vector<GDSVertex> GetVertices();
-	std::vector<GDSTriangle> GetTriangles();
+	std::vector<Vertex> GetVertices();
+	std::vector<Triangle> GetTriangles();
 };
 
+}
 #endif

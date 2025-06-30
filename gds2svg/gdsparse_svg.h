@@ -26,18 +26,18 @@
 #include "process_cfg.h"
 #include "gdsparse.h"
 
-class GDSParse_svg : public GDSParse
+class GDSParse_svg : public GDS2X::Parse
 {
 private:
 	FILE *m_optr;
 	float m_scale;
 
 public:
-	GDSParse_svg (GDSProcess *process, FILE *optr, bool generate_process);
-	GDSParse_svg(GDSParse *parse, FILE *optr);
+	GDSParse_svg (GDS2X::Process *process, FILE *optr, bool generate_process);
+	GDSParse_svg(GDS2X::Parse *parse, FILE *optr);
 	~GDSParse_svg ();
 
-	GDSObject *NewObject(std::string name);
+	GDS2X::Object *NewObject(std::string name);
 	void OutputHeader();
 	void OutputFooter();
 };

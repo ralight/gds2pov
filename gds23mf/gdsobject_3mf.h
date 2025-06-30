@@ -29,7 +29,7 @@
 
 class GDSParse_3mf;
 
-class GDSObject_3mf : public GDSObject
+class GDSObject_3mf : public GDS2X::Object
 {
 private:
 	Lib3MF::PWrapper m_wrapper;
@@ -38,11 +38,11 @@ private:
 	Lib3MF::PComponentsObject m_component;
 	GDSParse_3mf *m_parse;
 
-	std::vector<sLib3MFPosition> GetPolygonPoints(GDSPolygon *polygon);
-	std::vector<sLib3MFTriangle> GetPolygonFaces(GDSPolygon *polygon);
+	std::vector<sLib3MFPosition> GetPolygonPoints(GDS2X::Polygon *polygon);
+	std::vector<sLib3MFTriangle> GetPolygonFaces(GDS2X::Polygon *polygon);
 public:
 	GDSObject_3mf(std::string name, GDSParse_3mf *parse, Lib3MF::PWrapper wrapper, Lib3MF::PModel model, Lib3MF::PComponentsObject root_component);
-	GDSObject_3mf(GDSObject *object, GDSParse_3mf *parse, Lib3MF::PWrapper wrapper, Lib3MF::PModel model, Lib3MF::PComponentsObject root_component);
+	GDSObject_3mf(GDS2X::Object *object, GDSParse_3mf *parse, Lib3MF::PWrapper wrapper, Lib3MF::PModel model, Lib3MF::PComponentsObject root_component);
 	~GDSObject_3mf();
 
 	virtual void Output();

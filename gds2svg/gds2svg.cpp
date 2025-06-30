@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	class GDSProcess *process=NULL;
+	class GDS2X::Process *process=NULL;
 	/*
 	** Order of precedence for process.txt:
 	** -p switch (given as an argument to this function)
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 	if(processfile == ""){
 		processfile = "process.txt";
 	}
-	process = new GDSProcess();
+	process = new GDS2X::Process();
 
 	if(!process){
 		fprintf(stderr, "Error: Out of memory.\n");
@@ -172,10 +172,10 @@ int main(int argc, char *argv[])
 	}
 
 	if(iptr){
-		class GDSParse_svg *Parser = new class GDSParse_svg(process, optr, generate_process);
-		if(!Parser->Parse(iptr)){
+		class GDSParse_svg *parser = new class GDSParse_svg(process, optr, generate_process);
+		if(!parser->ParseFile(iptr)){
 			if(!generate_process){
-				Parser->Output(topcell);
+				parser->Output(topcell);
 			}else{
 				process->Save(processfile);
 			}
@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
 			fclose(optr);
 		}
 
-		delete Parser;
+		delete parser;
 		delete process;
 	}else{
 		fprintf(stderr, "Error: Unable to open %s.\n", gdsfile.c_str());

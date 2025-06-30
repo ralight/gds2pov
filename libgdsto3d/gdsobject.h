@@ -23,7 +23,6 @@
 
 #include <cstdio>
 #include <vector>
-using namespace std;
 
 #include "gdsto3d.h"
 #include "process_cfg.h"
@@ -31,7 +30,9 @@ using namespace std;
 #include "gdstext.h"
 #include "gdspolygon.h"
 
-class GDSObject
+namespace GDS2X {
+
+class Object
 {
 protected:
 	std::string m_name;
@@ -40,24 +41,24 @@ protected:
 	bool m_gotboundary;
 	bool m_isoutput;
 
-	vector<GDSPath*> m_paths;
-	vector<GDSText*> m_texts;
-	vector<GDSPolygon*> m_polygons;
+	std::vector<Path*> m_paths;
+	std::vector<Text*> m_texts;
+	std::vector<Polygon*> m_polygons;
 
-	vector<ASRefElement*> m_srefs;
-	vector<ASRefElement*> m_arefs;
-	struct _Boundary m_boundary;
+	std::vector<ASRefElement*> m_srefs;
+	std::vector<ASRefElement*> m_arefs;
+	struct Boundary m_boundary;
 
 public:
-	GDSObject() { };
-	GDSObject(std::string name);
-	virtual ~GDSObject();
+	Object() { };
+	Object(std::string name);
+	virtual ~Object();
 
 	void AddText(float x, float Y, float Z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer);
-	GDSText *GetCurrentText();
+	Text *GetCurrentText();
 
 	void AddPolygon(float height, float thickness, int points, class ProcessLayer *layer);
-	GDSPolygon *GetCurrentPolygon();
+	Polygon *GetCurrentPolygon();
 
 	void AddSRef(std::string name, float x, float y, bool flipped, float mag);
 	void SetSRefRotation(float x, float y, float z);
@@ -66,7 +67,7 @@ public:
 	void SetARefRotation(float x, float y, float z);
 
 	void AddPath(int pathtype, float height, float thickness, int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
-	GDSPath *GetCurrentPath();
+	Path *GetCurrentPath();
 
 	std::string GetName();
 
@@ -78,20 +79,19 @@ public:
 	unsigned int GetSRefCount(void);
 	unsigned int GetARefCount(void);
 
-	//struct _Boundary *GetBoundary(struct ObjectList *objectlist);
-	struct _Boundary *GetBoundary(void);
+	struct Boundary *GetBoundary(void);
 	float GetWidth();
 	float GetHeight();
 
 	bool GetIsOutput();
 
-	vector<GDSPath*> GetPaths();
-	vector<GDSText*> GetTexts();
-	vector<GDSPolygon*> GetPolygons();
+	std::vector<Path*> GetPaths();
+	std::vector<Text*> GetTexts();
+	std::vector<Polygon*> GetPolygons();
 
-	vector<ASRefElement*> GetSRefs();
-	vector<ASRefElement*> GetARefs();
-
+	std::vector<ASRefElement*> GetSRefs();
+	std::vector<ASRefElement*> GetARefs();
 };
 
+}
 #endif

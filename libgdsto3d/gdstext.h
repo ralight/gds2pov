@@ -26,7 +26,9 @@
 #include "gdsto3d.h"
 #include "process_cfg.h"
 
-class GDSText
+namespace GDS2X {
+
+class Text
 {
 private:
 	float m_x;
@@ -41,8 +43,8 @@ private:
 	Transform m_rotate;
 
 public:
-	GDSText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer);
-	~GDSText();
+	Text(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer);
+	~Text();
 
 	void SetString(std::string String);
 	void SetRotation(float x, float y, float z);
@@ -62,4 +64,5 @@ public:
 	class ProcessLayer *GetLayer();
 };
 
+}
 #endif

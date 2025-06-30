@@ -28,13 +28,13 @@
 #include "gdsobject_openscad.h"
 #include "PolygonTriangulator.h"
 
-GDSObject_openscad::GDSObject_openscad(std::string name, FILE *optr) : GDSObject(name)
+GDSObject_openscad::GDSObject_openscad(std::string name, FILE *optr) : GDS2X::Object(name)
 {
 	m_optr = optr;
 }
 
 
-GDSObject_openscad::GDSObject_openscad(GDSObject *object, FILE *optr)
+GDSObject_openscad::GDSObject_openscad(GDS2X::Object *object, FILE *optr)
 {
 	m_optr = optr;
 	m_name = object->GetName();
@@ -60,7 +60,7 @@ GDSObject_openscad::~GDSObject_openscad()
 void GDSObject_openscad::OutputPaths()
 {
 	if(!m_paths.empty()){
-		GDSPath *path;
+		GDS2X::Path *path;
 
 		for(unsigned long i=0; i<m_paths.size(); i++){
 			path = m_paths[i];
@@ -106,7 +106,7 @@ void GDSObject_openscad::OutputPaths()
 	}
 }
 
-void GDSObject_openscad::WritePolygonPoints(GDSPolygon *polygon)
+void GDSObject_openscad::WritePolygonPoints(GDS2X::Polygon *polygon)
 {
 	fprintf(m_optr, "\tpoints=[");
 	fprintf(m_optr, "[%.4f,%.4f,%.4f]",
@@ -132,9 +132,9 @@ void GDSObject_openscad::WritePolygonPoints(GDSPolygon *polygon)
 	fprintf(m_optr, "],\n");
 }
 
-void GDSObject_openscad::WritePolygonFaces(GDSPolygon *polygon)
+void GDSObject_openscad::WritePolygonFaces(GDS2X::Polygon *polygon)
 {
-	std::vector<GDSTriangle> triangles = polygon->GetTriangles();
+	std::vector<GDS2X::Triangle> triangles = polygon->GetTriangles();
 	fprintf(m_optr, "\tfaces=[");
 	fprintf(m_optr, "[%d,%d,%d]", triangles[0].v[0], triangles[0].v[1], triangles[0].v[2]);
 	for(unsigned int j=1; j<triangles.size(); j++){
@@ -147,7 +147,7 @@ void GDSObject_openscad::WritePolygonFaces(GDSPolygon *polygon)
 void GDSObject_openscad::OutputPolygons()
 {
 	if(!m_polygons.empty()){
-		GDSPolygon *polygon;
+		GDS2X::Polygon *polygon;
 
 		for(unsigned long i=0; i<m_polygons.size(); i++){
 			polygon = m_polygons[i];
@@ -173,7 +173,7 @@ void GDSObject_openscad::OutputTexts()
 void GDSObject_openscad::OutputSRefs()
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
-		ASRefElement *sref = m_srefs[i];
+		GDS2X::ASRefElement *sref = m_srefs[i];
 
 		fprintf(m_optr, "translate([%.4f,%.4f,0]){", sref->x1, sref->y1);
 
@@ -203,7 +203,7 @@ void GDSObject_openscad::OutputSRefs()
 void GDSObject_openscad::OutputARefs()
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
-		ASRefElement *aref = m_arefs[i];
+		GDS2X::ASRefElement *aref = m_arefs[i];
 
 		float dx = 0.0, dy = 0.0;
 		int columns = 0, rows = 0;

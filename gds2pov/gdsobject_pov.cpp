@@ -26,13 +26,13 @@
 
 #include "gdsobject_pov.h"
 
-GDSObject_pov::GDSObject_pov(std::string name, FILE *optr) : GDSObject(name), m_decompose(false)
+GDSObject_pov::GDSObject_pov(std::string name, FILE *optr) : GDS2X::Object(name), m_decompose(false)
 {
 	m_optr = optr;
 }
 
 
-GDSObject_pov::GDSObject_pov(GDSObject *object, FILE *optr) : m_decompose(false)
+GDSObject_pov::GDSObject_pov(GDS2X::Object *object, FILE *optr) : m_decompose(false)
 {
 	m_optr = optr;
 	m_name = object->GetName();
@@ -58,7 +58,7 @@ GDSObject_pov::~GDSObject_pov()
 void GDSObject_pov::OutputPaths()
 {
 	if(!m_paths.empty()){
-		GDSPath *path;
+		GDS2X::Path *path;
 
 		for(unsigned long i=0; i<m_paths.size(); i++){
 			path = m_paths[i];
@@ -98,7 +98,7 @@ void GDSObject_pov::OutputPolygons()
 		if(m_decompose){
 			DecomposePOVPolygons();
 		}else{
-			GDSPolygon *polygon;
+			GDS2X::Polygon *polygon;
 
 			for(unsigned long i=0; i<m_polygons.size(); i++){
 				polygon = m_polygons[i];
@@ -119,7 +119,7 @@ void GDSObject_pov::OutputPolygons()
 void GDSObject_pov::OutputTexts()
 {
 	if(!m_texts.empty()){
-		GDSText *text;
+		GDS2X::Text *text;
 		//for (vector<GDSText>::const_iterator text=m_texts.begin(); text!=m_texts.end(); ++text){
 		for (unsigned int i=0; i<m_texts.size(); i++){
 			text = m_texts[i];
@@ -176,7 +176,7 @@ void GDSObject_pov::OutputTexts()
 void GDSObject_pov::OutputSRefs()
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
-		ASRefElement *sref = m_srefs[i];
+		GDS2X::ASRefElement *sref = m_srefs[i];
 
 		fprintf(m_optr, "object{str_%s ", sref->name.c_str());
 		if(sref->mag!=1.0){
@@ -196,7 +196,7 @@ void GDSObject_pov::OutputSRefs()
 void GDSObject_pov::OutputARefs()
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
-		ASRefElement *aref = m_arefs[i];
+		GDS2X::ASRefElement *aref = m_arefs[i];
 
 		float dx = 0.0, dy = 0.0;
 		int columns = 0, rows = 0;
@@ -303,7 +303,7 @@ void GDSObject_pov::Output()
 void GDSObject_pov::DecomposePOVPolygons()
 {
 	if(!m_polygons.empty()){
-		GDSPolygon *polygon;
+		GDS2X::Polygon *polygon;
 
 		for(unsigned long i=0; i<m_polygons.size(); i++){
 			polygon = m_polygons[i];
@@ -335,7 +335,7 @@ void GDSObject_pov::DecomposePOVPolygons()
 			 * in the 0th vertex).
 			 */
 
-			Point pA, pB;
+			GDS2X::Point pA, pB;
 
 			pA.x = polygon->GetXCoords(0)-polygon->GetXCoords(polygon->GetPoints()-2);
 			pA.y = polygon->GetYCoords(0)-polygon->GetYCoords(polygon->GetPoints()-2);
