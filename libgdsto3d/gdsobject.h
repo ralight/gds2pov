@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _GDSOBJECT_H_
-#define _GDSOBJECT_H_
+#ifndef GDSOBJECT_H
+#define GDSOBJECT_H
 
 #include <cstdio>
 #include <vector>
@@ -70,7 +70,7 @@ public:
 
 	std::string GetName();
 
-	virtual void Output(float offx, float offy, long *objectid, class ProcessLayer *firstlayer) { };
+	virtual void Output() { };
 
 	bool HasASRef();
 	ASRefElement *GetSRef(unsigned int index);

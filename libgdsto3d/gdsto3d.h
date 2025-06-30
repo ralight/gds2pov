@@ -18,10 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _GDSTO3D_H_
-#define _GDSTO3D_H_
+#ifndef GDSTO3D_H
+#define GDSTO3D_H
 
 #include <string>
+
+struct GDSVertex{
+	float x, y, z;
+};
+
+struct GDSTriangle{
+	int v[3];
+};
 
 class Point {
 public:

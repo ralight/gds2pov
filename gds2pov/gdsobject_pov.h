@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _GDSOBJECT_POV_H_
-#define _GDSOBJECT_POV_H_
+#ifndef GDSOBJECT_POV_H
+#define GDSOBJECT_POV_H
 
 #include <string>
 
@@ -38,13 +38,12 @@ public:
 	~GDSObject_pov();
 
 	void Decompose(bool value);
-	virtual void Output(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputPathToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputPolygonToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputTextToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputSRefToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-	void OutputARefToFile(float offx, float offy, long *objectid, class ProcessLayer *firstlayer);
-
+	virtual void Output();
+	void OutputPaths();
+	void OutputPolygons();
+	void OutputTexts();
+	void OutputSRefs();
+	void OutputARefs();
 };
 
 #endif

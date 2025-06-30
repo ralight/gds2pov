@@ -52,9 +52,12 @@ GDSParse_svg::GDSParse_svg(GDSParse *parse, FILE *optr)
 	m_units = parse->GetUnits();
 	m_process = parse->GetProcess();
 
-	vector<GDSObject*> objects = parse->GetObjects();
-	for(unsigned int i = 0; i < objects.size(); i++){
-		m_objects.push_back(new GDSObject_svg(objects[i], m_optr));
+	unordered_map<std::string, GDSObject*> objects = parse->GetObjects();
+	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
+		auto object = it->second;
+		auto object_svg = new GDSObject_svg(object, m_optr);
+
+		m_objects[it->first] = static_cast<GDSObject *>(object_svg);
 	}
 }
 
@@ -95,8 +98,8 @@ void GDSParse_svg::OutputHeader()
 		float width = (boundary->xmax - boundary->xmin);
 		float height = (boundary->ymax - boundary->ymin);
 
-		for(unsigned int i = 0; i < m_objects.size(); i++){
-			GDSObject_svg *obj = static_cast<GDSObject_svg*>(m_objects[i]);
+		for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
+			GDSObject_svg *obj = static_cast<GDSObject_svg*>(it->second);
 			obj->SetScale(m_scale);
 		}
 

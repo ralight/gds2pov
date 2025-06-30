@@ -10,6 +10,8 @@ set(GDSTO3D_SRCS
 	gdstext.cpp gdstext.h
 	gdsto3d.h
 	process_cfg.cpp process_cfg.h
+
+	PolygonTriangulator.cxx PolygonTriangulator.h
 )
 
 add_library(gdsto3d SHARED

@@ -23,6 +23,7 @@
 
 #include "gdsobject.h"
 #include "gdspolygon.h"
+#include "PolygonTriangulator.h"
 
 GDSPolygon::GDSPolygon(float height, float thickness, unsigned int points, class ProcessLayer *layer) :
 	m_height(height), m_thickness(thickness), m_points(points), m_layer(layer)
@@ -104,4 +105,80 @@ float GDSPolygon::GetThickness(void)
 class ProcessLayer *GDSPolygon::GetLayer(void)
 {
 	return m_layer;
+}
+
+
+static GDSVertex CreateVertex(float x, float y, float z)
+{
+	GDSVertex result;
+	result.x = x;
+	result.y = y;
+	result.z = z;
+	return result;
+}
+
+
+static GDSTriangle CreateTriangle(int v1, int v2, int v3)
+{
+	GDSTriangle result;
+	result.v[0] = v1;
+	result.v[1] = v2;
+	result.v[2] = v3;
+	return result;
+}
+
+
+std::vector<GDSVertex> GDSPolygon::GetVertices()
+{
+	std::vector<GDSVertex> vertices;
+
+	for(unsigned int j=0; j<this->GetPoints()-1; j++){
+		vertices.push_back(CreateVertex(
+			this->GetXCoords(j),
+			this->GetYCoords(j),
+			this->GetHeight() + this->GetThickness()
+		));
+	}
+	for(unsigned int j=0; j<this->GetPoints()-1; j++){
+		vertices.push_back(CreateVertex(
+			this->GetXCoords(j),
+			this->GetYCoords(j),
+			this->GetHeight()
+		));
+	}
+
+	return vertices;
+}
+
+std::vector<GDSTriangle> GDSPolygon::GetTriangles()
+{
+	/* Vertical faces */
+	unsigned int j=0;
+	unsigned int count = this->GetPoints()-1;
+
+	std::vector<GDSTriangle> triangles;
+
+	for(j=0; j<count; j++){
+		triangles.push_back(CreateTriangle(j, j+count-1, j+count));
+		triangles.push_back(CreateTriangle(j+count, j+1, j));
+	}
+
+	/* Horizontal faces */
+	std::vector<double> x_coords;
+	std::vector<double> y_coords;
+
+	for(unsigned int i=0; i<this->GetPoints()-1; i++){
+		x_coords.insert(x_coords.begin(), this->GetXCoords(i));
+		y_coords.insert(y_coords.begin(), this->GetYCoords(i));
+	}
+
+	auto triangulation = PolygonTriangulator(x_coords, y_coords);
+	auto pg_triangles = triangulation.triangles();
+
+	for(auto vec = pg_triangles->begin(); vec != pg_triangles->end(); vec++){
+		triangles.push_back(CreateTriangle(1*count-vec->at(2), 1*count-vec->at(1), 1*count-vec->at(0)));
+		triangles.push_back(CreateTriangle(2*count-vec->at(0), 2*count-vec->at(1), 2*count-vec->at(2)));
+	}
+
+	return triangles;
 }

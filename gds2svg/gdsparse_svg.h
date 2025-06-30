@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _GDSPARSE_SVG_H_
-#define _GDSPARSE_SVG_H_
+#ifndef GDSPARSE_SVG_H
+#define GDSPARSE_SVG_H
 
 #include <string>
 

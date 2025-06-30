@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _CONFIG_CFG_H_
-#define _CONFIG_CFG_H_
+#ifndef CONFIG_CFG_H
+#define CONFIG_CFG_H
 
 #include <string>
 #include <vector>

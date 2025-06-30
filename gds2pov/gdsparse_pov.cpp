@@ -54,9 +54,12 @@ GDSParse_pov::GDSParse_pov(GDSParse *parse, FILE *optr)
 	m_units = parse->GetUnits();
 	m_process = parse->GetProcess();
 
-	vector<GDSObject*> objects = parse->GetObjects();
-	for(unsigned int i = 0; i < objects.size(); i++){
-		m_objects.push_back(new GDSObject_pov(objects[i], m_optr));
+	unordered_map<std::string, GDSObject*> objects = parse->GetObjects();
+	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
+		auto object = it->second;
+		auto object_pov = new GDSObject_pov(object, m_optr);
+
+		m_objects[it->first] = static_cast<GDSObject *>(object_pov);
 	}
 }
 
@@ -128,7 +131,7 @@ void GDSParse_pov::OutputHeader()
 
 void GDSParse_pov::Decompose(bool value)
 {
-	for(unsigned int i = 0; i < m_objects.size(); i++){
-		static_cast<GDSObject_pov*>(m_objects[i])->Decompose(value);
+	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
+		static_cast<GDSObject_pov*>(it->second)->Decompose(value);
 	}
 }

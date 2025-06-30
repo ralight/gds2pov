@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _GDSPOLYGON_H_
-#define _GDSPOLYGON_H_
+#ifndef GDSPOLYGON_H
+#define GDSPOLYGON_H
 
 #include "process_cfg.h"
 
@@ -48,6 +48,8 @@ public:
 	float GetAngleCoords(unsigned int index);
 	void SetAngleCoords(unsigned int index, float value);
 	class ProcessLayer *GetLayer(void);
+	std::vector<GDSVertex> GetVertices();
+	std::vector<GDSTriangle> GetTriangles();
 };
 
 #endif
