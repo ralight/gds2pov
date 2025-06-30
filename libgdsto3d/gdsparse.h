@@ -23,8 +23,8 @@
 
 #include <stdint.h>
 
+#include <unordered_map>
 #include <vector>
-using namespace std;
 
 #include <sys/types.h>
 
@@ -95,7 +95,7 @@ protected:
 	long m_srefelements;
 	long m_arefelements;
 
-	vector<GDSObject*> m_objects;
+	std::unordered_map<std::string, GDSObject*> m_objects;
 	GDSObject *m_currentobject;
 
 	void ParseHeader();
@@ -141,7 +141,7 @@ public:
 
 	float GetUnits();
 	GDSProcess *GetProcess();
-	vector<GDSObject*> GetObjects();
+	std::unordered_map<std::string, GDSObject*> GetObjects();
 };
 
 #endif

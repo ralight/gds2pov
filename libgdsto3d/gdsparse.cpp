@@ -67,9 +67,9 @@ GDSParse::GDSParse (GDSProcess *process, bool generate_process) :
 
 GDSParse::~GDSParse ()
 {
-	while(!m_objects.empty()){
-		delete m_objects[m_objects.size()-1];
-		m_objects.pop_back();
+	for(auto it=m_objects.begin(); it!=m_objects.end();) {
+		delete it->second;
+		it = m_objects.erase(it);
 	}
 
 	if(m_boundary){
@@ -99,34 +99,24 @@ void GDSParse::AssignASRefs(void)
 {
 	/* Assign objects to srefs and arefs */
 	/* FIXME - surely there is a better way than 3n^3 loop */
-	for(unsigned int i = 0; i < m_objects.size(); i++){
-		GDSObject *object = m_objects[i];
+	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
+		auto obj = it->second;
 
-		for(unsigned int j = 0; j < object->GetSRefCount(); j++){
-			ASRefElement *sref = object->GetSRef(j);
+		for(unsigned int j = 0; j < obj->GetSRefCount(); j++){
+			ASRefElement *sref = obj->GetSRef(j);
 
 			if(sref){
-				for(unsigned int k = 0; k < m_objects.size(); k++){
-					if(sref->name == m_objects[k]->GetName()){
-						sref->object = m_objects[k];
-						break;
-					}
-				}
+				sref->object = m_objects[sref->name];
 			}else{
 				break;
 			}
 		}
 
-		for(unsigned int j = 0; j < object->GetARefCount(); j++){
-			ASRefElement *aref = object->GetARef(j);
+		for(unsigned int j = 0; j < obj->GetARefCount(); j++){
+			ASRefElement *aref = obj->GetARef(j);
 
 			if(aref){
-				for(unsigned int k = 0; k < m_objects.size(); k++){
-					if(aref->name == m_objects[k]->GetName()){
-						aref->object = m_objects[k];
-						break;
-					}
-				}
+				aref->object = m_objects[aref->name];
 			}else{
 				break;
 			}
@@ -687,8 +677,9 @@ void GDSParse::ParseStrName()
 		// This calls our own NewObject function which is pure virtual so the end
 		// user must define it. This means we can always add a unknown object as
 		// long as it inherits from GDSObject.
-		m_objects.push_back(NewObject(str));
-		m_currentobject = m_objects[m_objects.size()-1];
+		auto obj = NewObject(str);
+		m_objects[str] = obj;
+		m_currentobject = obj;
 		delete [] str;
 	}
 	v_printf(2, "\n");
@@ -968,8 +959,8 @@ struct _Boundary *GDSParse::GetBoundary()
 	m_boundary->xmax = m_boundary->ymax = std::numeric_limits<float>::lowest();
 	m_boundary->xmin = m_boundary->ymin =  std::numeric_limits<float>::max();
 
-	for(unsigned int i = 0; i < m_objects.size(); i++){
-		struct _Boundary *object_bound = m_objects[i]->GetBoundary();
+	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
+		struct _Boundary *object_bound = it->second->GetBoundary();
 
 		if(object_bound->xmax > m_boundary->xmax){
 			m_boundary->xmax = object_bound->xmax;
@@ -989,14 +980,7 @@ struct _Boundary *GDSParse::GetBoundary()
 
 GDSObject *GDSParse::GetObjectRef(std::string name)
 {
-	if(!m_objects.empty() && name.length() > 0){
-		for(unsigned int i = 0; i < m_objects.size(); i++){
-			if(name == m_objects[i]->GetName()){
-				return m_objects[i];
-			}
-		}
-	}
-	return NULL;
+	return m_objects[name];
 }
 
 float GDSParse::GetUnits()
@@ -1009,7 +993,7 @@ GDSProcess *GDSParse::GetProcess()
 	return m_process;
 }
 
-vector<GDSObject*> GDSParse::GetObjects()
+std::unordered_map<std::string, GDSObject*> GDSParse::GetObjects()
 {
 	return m_objects;
 }

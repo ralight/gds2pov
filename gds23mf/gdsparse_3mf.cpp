@@ -78,9 +78,12 @@ GDSParse_3mf::GDSParse_3mf(GDSParse *parse)
 
 	CreateColours(m_process);
 
-	vector<GDSObject*> objects = parse->GetObjects();
-	for(unsigned int i = 0; i < objects.size(); i++){
-		m_objects.push_back(new GDSObject_3mf(objects[i], this, m_wrapper, m_model, m_root_component));
+	unordered_map<std::string, GDSObject*> objects = parse->GetObjects();
+	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
+		auto object = it->second;
+		auto object_3mf = new GDSObject_3mf(object, this, m_wrapper, m_model, m_root_component);
+
+		m_objects[it->first] = static_cast<GDSObject *>(object_3mf);
 	}
 }
 
@@ -119,14 +122,7 @@ void GDSParse_3mf::OutputHeader()
 
 GDSObject_3mf *GDSParse_3mf::GetObjectRef(std::string name)
 {
-	if(!m_objects.empty() && name.length() > 0){
-		for(unsigned int i = 0; i < m_objects.size(); i++){
-			if(name == m_objects[i]->GetName()){
-				return static_cast<GDSObject_3mf *>(m_objects[i]);
-			}
-		}
-	}
-	return nullptr;
+	return static_cast<GDSObject_3mf *>(m_objects[name]);
 }
 
 void GDSParse_3mf::Output(std::string topcell, std::string outfile, std::string format)
