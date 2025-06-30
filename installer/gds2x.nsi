@@ -41,6 +41,8 @@ Section "Files" SecInstall
 	SectionIn RO
 
 	SetOutPath "$INSTDIR"
+	File "..\build\gds23mf\Release\gds23mf.exe"
+	File "..\build\gds2openscad\Release\gds2openscad.exe"
 	File "..\build\gds2pov\Release\gds2pov.exe"
 	File "..\build\gds2svg\Release\gds2svg.exe"
 	File "..\build\libgds2x\Release\gds2x.dll"
