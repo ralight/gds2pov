@@ -102,7 +102,7 @@ void GDSParse_3mf::Output()
 	if(m_topcellname.length() > 0){
 		oref = GetObjectRef(m_topcellname);
 	}else{
-		oref = static_cast<GDSObject_3mf *>(m_objects[0]);
+		oref = static_cast<GDSObject_3mf *>(m_firstobject);
 	}
 	m_root_component->AddComponent(oref->GetComponent().get(), m_wrapper->GetIdentityTransform());
 

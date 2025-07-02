@@ -72,9 +72,9 @@ void GDSParse_svg::OutputFooter()
 			fprintf(m_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%%\" height=\"100%%\" xlink:href=\"#%s\"/>\n",
 					-m_scale*boundary->xmin/2, -m_scale*boundary->ymin/2, m_topcellname.c_str());
 		}else{
-			if(m_objects[0]){
+			if(m_firstobject){
 				fprintf(m_optr, "\t<use x=\"%.2f\" y=\"%.2f\" width=\"100%%\" height=\"100%%\" xlink:href=\"#%s\"/>\n",
-						-m_scale*boundary->xmin/2, -m_scale*boundary->ymin/2, m_objects[0]->GetName().c_str());
+						-m_scale*boundary->xmin/2, -m_scale*boundary->ymin/2, m_firstobject->GetName().c_str());
 		}else{
 			}
 		}

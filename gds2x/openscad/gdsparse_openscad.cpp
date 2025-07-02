@@ -70,8 +70,8 @@ void GDSParse_openscad::OutputFooter()
 		if(m_topcellname.length() > 0){
 			fprintf(m_optr, "mod_%s();", m_topcellname.c_str());
 		}else{
-			if(m_objects[0]){
-				fprintf(m_optr, "mod_%s();", m_objects[0]->GetName().c_str());
+			if(m_firstobject){
+				fprintf(m_optr, "mod_%s();", m_firstobject->GetName().c_str());
 			}
 		}
 	}

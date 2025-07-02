@@ -97,6 +97,7 @@ protected:
 
 	object_map_t m_objects;
 	Object *m_currentobject;
+	Object *m_firstobject;
 
 	void ParseHeader();
 	void ParseLibName();

@@ -86,7 +86,7 @@ void GDSParse_pov::OutputFooter()
 			fprintf(m_optr, "object { str_%s }\n", m_topcellname.c_str());
 		}else{
 			if(!m_objects.empty()){
-				fprintf(m_optr, "object { str_%s }\n", m_objects[0]->GetName().c_str());
+				fprintf(m_optr, "object { str_%s }\n", m_firstobject->GetName().c_str());
 			}
 		}
 	}

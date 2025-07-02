@@ -139,7 +139,7 @@ void Parse::Output()
 		if(m_topcellname.length() > 0){
 			RecursiveOutput(GetObjectRef(m_topcellname));
 		}else{
-			RecursiveOutput(m_objects[0]);
+			RecursiveOutput(m_firstobject);
 		}
 	}
 
@@ -685,6 +685,9 @@ void Parse::ParseStrName()
 			m_currentobject = nullptr;
 		}else{
 			auto obj = NewObject(str);
+			if(!m_firstobject){
+				m_firstobject = obj;
+			}
 			m_objects[str] = obj;
 			m_currentobject = obj;
 		}
