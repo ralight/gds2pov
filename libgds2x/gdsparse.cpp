@@ -802,10 +802,10 @@ void Parse::ParseXYBoundary()
 
 	if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
 		//FIXME - why was this points+1 ? m_currentobject->AddPolygon(m_units*thislayer->Height, m_units*thislayer->Thickness, points+1, thislayer->Name);
-		m_currentobject->AddPolygon(thislayer->Height, thislayer->Thickness, points, thislayer);
+		m_currentobject->AddPolygon(thislayer->Height, thislayer->Thickness, points-1, thislayer);
 	}
 
-	for(i=0; i<points; i++){
+	for(i=0; i<points-1; i++){
 		X = m_units * (float)GetFourByteSignedInt();
 		Y = m_units * (float)GetFourByteSignedInt();
 		v_printf(2, "(%.3f,%.3f) ", X, Y);
@@ -817,11 +817,12 @@ void Parse::ParseXYBoundary()
 			m_currentobject->GetCurrentPolygon()->AddPoint(i, X, Y);
 		}
 	}
+	/* Clear duplicate point */
+	X = m_units * (float)GetFourByteSignedInt();
+	Y = m_units * (float)GetFourByteSignedInt();
+
 	v_printf(2, "\n");
-	if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
-		m_currentobject->GetCurrentPolygon()->AddPoint(i, firstX, firstY);
-		//m_currentobject->GetCurrentPolygon()->SetColour(thislayer->Red, thislayer->Green, thislayer->Blue, thislayer->Filter, thislayer->Metal);
-	}
+
 	m_currentwidth = 0.0; // Always reset to default for paths in case width not specified
 	m_currentpathtype = 0;
 	m_currentangle = 0.0;

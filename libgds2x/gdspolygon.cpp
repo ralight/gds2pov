@@ -128,14 +128,14 @@ std::vector<Vertex> Polygon::GetVertices()
 		return m_vertices;
 	}
 
-	for(unsigned int j=0; j<this->GetPoints()-1; j++){
+	for(unsigned int j=0; j<this->GetPoints(); j++){
 		vertices.push_back(CreateVertex(
 			this->GetXCoords(j),
 			this->GetYCoords(j),
 			this->GetHeight() + this->GetThickness()
 		));
 	}
-	for(unsigned int j=0; j<this->GetPoints()-1; j++){
+	for(unsigned int j=0; j<this->GetPoints(); j++){
 		vertices.push_back(CreateVertex(
 			this->GetXCoords(j),
 			this->GetYCoords(j),
@@ -150,7 +150,7 @@ std::vector<Triangle> Polygon::GetTriangles()
 {
 	/* Vertical faces */
 	unsigned int j=0;
-	unsigned int count = this->GetPoints()-1;
+	unsigned int count = this->GetPoints();
 
 	if(m_triangles.size() > 0){
 		return m_triangles;
@@ -167,7 +167,7 @@ std::vector<Triangle> Polygon::GetTriangles()
 	std::vector<double> x_coords;
 	std::vector<double> y_coords;
 
-	for(unsigned int i=0; i<this->GetPoints()-1; i++){
+	for(unsigned int i=0; i<this->GetPoints(); i++){
 		x_coords.insert(x_coords.begin(), this->GetXCoords(i));
 		y_coords.insert(y_coords.begin(), this->GetYCoords(i));
 	}
