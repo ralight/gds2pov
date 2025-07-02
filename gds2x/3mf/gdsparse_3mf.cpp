@@ -94,10 +94,8 @@ GDSObject_3mf *GDSParse_3mf::GetObjectRef(std::string name)
 }
 
 
-void GDSParse_3mf::Output()
+void GDSParse_3mf::OutputFooter()
 {
-	GDS2X::Parse::Output();
-
 	GDSObject_3mf *oref;
 	if(m_topcellname.length() > 0){
 		oref = GetObjectRef(m_topcellname);

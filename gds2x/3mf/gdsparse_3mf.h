@@ -45,7 +45,7 @@ public:
 	GDSParse_3mf(GDS2X::Process *process, GDS2X::option_map_t &options);
 	~GDSParse_3mf ();
 
-	void Output();
+	void OutputFooter();
 	GDS2X::Object *NewObject(std::string name);
 	GDSObject_3mf *GetObjectRef(std::string name);
 	Lib3MF::sTriangleProperties GetColour(std::string name);
