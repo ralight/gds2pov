@@ -26,6 +26,8 @@
 
 namespace GDS2X {
 
+class Object;
+
 struct Vertex{
 	float x, y, z;
 };
@@ -63,7 +65,7 @@ public:
 	int rows;
 	std::string name;
 	bool flipped;
-	class Object *object;
+	Object *object;
 	Transform rotate;
 
 	ASRefElement() : x1(0.0), y1(0.0), x2(0.0), y2(0.0),
@@ -79,6 +81,7 @@ struct Boundary {
 };
 
 typedef std::unordered_map<std::string, std::string> option_map_t;
+typedef std::unordered_map<std::string, Object *> object_map_t;
 
 }
 #endif

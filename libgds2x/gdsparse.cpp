@@ -987,32 +987,31 @@ struct Boundary *Parse::GetBoundary()
 	return m_boundary;
 }
 
+
 Object *Parse::GetObjectRef(std::string name)
 {
 	return m_objects[name];
 }
+
 
 float Parse::GetUnits()
 {
 	return m_units;
 }
 
+
 Process *Parse::GetProcess()
 {
 	return m_process;
 }
 
-std::unordered_map<std::string, Object*> Parse::GetObjects()
-{
-	return m_objects;
-}
 
-std::unordered_map<std::string, Object *> Parse::LoadMacroFile(std::string filename)
+GDS2X::object_map_t Parse::LoadMacroFile(std::string filename)
 {
 	std::ifstream f(filename);
 	json data = json::parse(f);
 	json srefs = data["srefs"];
-	std::unordered_map<std::string, Object *> macros;
+	GDS2X::object_map_t macros;
 
 	for(json::iterator it = srefs.begin(); it != srefs.end(); ++it){
 		json sref = *it;

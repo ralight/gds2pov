@@ -23,10 +23,9 @@
 
 #include <stdint.h>
 
-#include <unordered_map>
-
 #include <sys/types.h>
 
+#include "gds2x.h"
 #include "process_cfg.h"
 #include "gds_globals.h"
 #include "gdsobject.h"
@@ -96,7 +95,7 @@ protected:
 	long m_srefelements;
 	long m_arefelements;
 
-	std::unordered_map<std::string, Object*> m_objects;
+	object_map_t m_objects;
 	Object *m_currentobject;
 
 	void ParseHeader();
@@ -135,7 +134,7 @@ public:
 	Parse(Process *process, bool generate_process);
 	virtual ~Parse ();
 
-	std::unordered_map<std::string, Object *> LoadMacroFile(std::string filename);
+	object_map_t LoadMacroFile(std::string filename);
 	struct Boundary *GetBoundary();
 	bool ParseFile(FILE *iptr);
 	void Output();
@@ -143,7 +142,6 @@ public:
 
 	float GetUnits();
 	Process *GetProcess();
-	std::unordered_map<std::string, Object*> GetObjects();
 };
 
 }
