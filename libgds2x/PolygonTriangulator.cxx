@@ -1555,7 +1555,6 @@ PolygonTriangulator::Polygon::Polygon(const std::vector<double>& x,const std::ve
   _xmin = _ymin = std::numeric_limits<double>::infinity();
   _xmax = _ymax = - std::numeric_limits<double>::infinity();
 
-
   set_contour(x,y);
   init_vertices_and_lines();
   initializate();
@@ -1809,8 +1808,7 @@ void PolygonTriangulator::Polygon::partition2Monotone()
 
   if(_qpoints.top().type!=internal_poltrig::START)
     {
-      std::cout<<"Please check your input polygon:\n1)orientations?\n2)duplicated points?\n";
-      //exit(1);
+	  throw(0);
 	  return;
     }
 

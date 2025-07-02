@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
 				}
 			}else if(strncmp(argv[i], "-p", strlen("-p"))==0){
 				if(i==argc-1){
-					printf("Error: -p switch given but no process file specified.\n\n");
+					fprintf(stderr, "Error: -p switch given but no process file specified.\n\n");
 					printusage(exe);
 					return 1;
 				}else{
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 				verbose_output--;
 			}else if(strncmp(argv[i], "-t", strlen("-t"))==0){
 				if(i==argc-1){
-					printf("Error: -t switch given but no top cell specified.\n\n");
+					fprintf(stderr, "Error: -t switch given but no top cell specified.\n\n");
 					printusage(exe);
 					return 1;
 				}else{

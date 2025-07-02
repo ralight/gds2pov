@@ -164,21 +164,41 @@ std::vector<Triangle> Polygon::GetTriangles()
 	}
 
 	/* Horizontal faces */
-	std::vector<double> x_coords;
-	std::vector<double> y_coords;
+	PolygonTriangulator *triangulation = nullptr;
+	const PolygonTriangulator::Triangles *pg_triangles;
+	try{
+		std::vector<double> x_coords;
+		std::vector<double> y_coords;
 
-	for(unsigned int i=0; i<this->GetPoints(); i++){
-		x_coords.insert(x_coords.begin(), this->GetXCoords(i));
-		y_coords.insert(y_coords.begin(), this->GetYCoords(i));
+		for(unsigned int i=0; i<this->GetPoints(); i++){
+			x_coords.insert(x_coords.begin(), this->GetXCoords(i));
+			y_coords.insert(y_coords.begin(), this->GetYCoords(i));
+		}
+
+		triangulation = new PolygonTriangulator(x_coords, y_coords);
+		pg_triangles = triangulation->triangles();
+	}catch(int n){
+		delete triangulation;
+
+		/* Try reversing the points order */
+		std::vector<double> x_coords;
+		std::vector<double> y_coords;
+
+		for(unsigned int i=0; i<this->GetPoints(); i++){
+			x_coords.insert(x_coords.begin(), this->GetXCoords(this->GetPoints()-1-i));
+			y_coords.insert(y_coords.begin(), this->GetYCoords(this->GetPoints()-1-i));
+		}
+
+		triangulation = new PolygonTriangulator(x_coords, y_coords);
+		pg_triangles = triangulation->triangles();
 	}
 
-	auto triangulation = PolygonTriangulator(x_coords, y_coords);
-	auto pg_triangles = triangulation.triangles();
 
 	for(auto vec = pg_triangles->begin(); vec != pg_triangles->end(); vec++){
 		triangles.push_back(CreateTriangle(1*count-vec->at(2), 1*count-vec->at(1), 1*count-vec->at(0)));
 		triangles.push_back(CreateTriangle(2*count-vec->at(0), 2*count-vec->at(1), 2*count-vec->at(2)));
 	}
+	delete triangulation;
 
 	return triangles;
 }

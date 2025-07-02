@@ -57,7 +57,7 @@ Parse::Parse (Process *process, bool generate_process) :
 
 	m_pathelements(0), m_boundaryelements(0), m_boxelements(0),
 	m_textelements(0), m_srefelements(0), m_arefelements(0),
-	m_currentobject(NULL)
+	m_currentobject(nullptr), m_firstobject(nullptr)
 {
 
 	for(int i=0; i<70; i++){
