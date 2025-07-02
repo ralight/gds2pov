@@ -10,10 +10,6 @@
 #
 # Use Ambient to specify the amount of ambient light in the scene. 1.2 is the default if not specified.
 #
-# ProcessFile sets the file from which the process configuration will be read. If it is not specified,
-# process.txt is used as the default.
-# Note that if the -p switch is used with gds2pov it will override the ProcessFile setting.
-#
 # The Font option allows the font to be used to be specified. The default is crystal.ttf (supplied with
 # POV-Ray).
 #
@@ -22,7 +18,6 @@
 #
 # GlobalStart
 # Ambient: 1.2
-# ProcessFile: process.txt
 # Font: crystal.ttf
 # Scale: 1.0
 # GlobalEnd
@@ -105,7 +100,6 @@
 
 GlobalStart
 Ambient: 1.2
-ProcessFile: example_process.txt
 Font: crystal.ttf
 GlobalEnd
 

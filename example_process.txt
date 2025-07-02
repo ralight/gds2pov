@@ -14,7 +14,7 @@
 #
 # Colour: #rrggbb - hex colour
 # - Or:
-# Colour: #ffrrggbbff - hex colour and filter
+# Colour: #rrggbbff - hex colour and filter
 # - Or:
 # Red: (float, between 0,1 with 1 being full)
 # Green: (float, between 0,1 with 1 being full)
@@ -54,18 +54,18 @@
 
 LayerStart: NTUB
 Layer: 1
-Height: -2000
-Thickness: 2000
-Colour: #00FF33
+Height: -2.000
+Thickness: 2.000
+Colour: #0000FF
 Metal: 0
 Show: 1
 LayerEnd
 
 LayerStart: DIFF
 Layer: 2
-Height: 10
-Thickness: 10
-Colour: #00FFFF00
+Height: 0.010
+Thickness: 0.010
+Colour: #00FFFF
 Red: 0
 Green: 1
 Blue: 1
@@ -75,113 +75,107 @@ LayerEnd
 
 LayerStart: POLY
 Layer: 3
-Height: 50
-Thickness: 300
-Colour: #FFFF0000
+Height: 0.050
+Thickness: 0.300
+Colour: #FFFF00
 Metal: 0
 Show: 1
 LayerEnd
 
 LayerStart: NPLUS
 Layer: 4
-Height: -200
-Thickness: 210
-Colour: #7F3F0000
+Height: -0.200
+Thickness: 0.210
+Colour: #7F3F00
 Metal: 0
 Show: 1
 LayerEnd
 
 LayerStart: PPLUS
 Layer: 5
-Height: -205
-Thickness: 210
-Colour: #FF00FF00
+Height: -0.205
+Thickness: 0.210
+Colour: #FF00FF
 Metal: 0
 Show: 1
 LayerEnd
 
 LayerStart: CONT
 Layer: 6
-Height: 10
-Thickness: 990
-Red: 0
-Green: 1
-Blue: 0
-Filter: 0
+Height: 0.010
+Thickness: 0.990
+Colour: #00FF00
 Metal: 0
 Show: 1
 LayerEnd
 
 LayerStart: MET1
 Layer: 7
-Height: 990
-Thickness: 1010
-Colour: #FF000000
+Height: 0.990
+Thickness: 1.010
+Colour: #FF0000
 Metal: 1
 Show: 1
 LayerEnd
 
 LayerStart: VIA1
 Layer: 8
-Height: 1990
-Thickness: 1010
-Colour: #FFBDFF00
+Height: 1.990
+Thickness: 1.010
+Colour: #FFBDFF
 Metal: 0
 Show: 1
 LayerEnd
 
 LayerStart: MET2
 Layer: 9
-Height: 2990
-Thickness: 1010
-Colour: #FFBD0000
+Height: 2.990
+Thickness: 1.010
+Colour: #FFBD00
 Metal: 1
 Show: 1
 LayerEnd
 
 LayerStart: VIA2
 Layer: 10
-Height: 3990
-Thickness: 1010
-Colour: #FF7F7F00
+Height: 3.990
+Thickness: 1.010
+Colour: #FF7F7F
 Metal: 0
 Show: 1
 LayerEnd
 
 LayerStart: MET3
 Layer: 11
-Height: 4990
-Thickness: 1010
-Colour: #007F7F00
+Height: 4.990
+Thickness: 1.010
+Colour: #007F7F
 Metal: 1
 Show: 1
 LayerEnd
 
 LayerStart: VIA3
 Layer: 12
-Height: 5990
-Thickness: 1010
-Red: 1
-Green: 0.75
-Blue: 0.75
-Filter: 0
+Height: 5.990
+Thickness: 1.010
+Colour: #FFBFBF
 Metal: 0
 Show: 1
 LayerEnd
 
 LayerStart: MET4
 Layer: 13
-Height: 6990
-Thickness: 1010
-Colour: #BD00FF00
+Height: 6.990
+Thickness: 1.010
+Colour: #BD00FF
 Metal: 1
 Show: 1
 LayerEnd
 
 LayerStart: TEXT
 Layer: 14
-Height: 8000
-Thickness: 10
+Height: 8.000
+Thickness: 0.010
 Colour: #FFFFFF00
 Metal: 0
 Show: 1

@@ -48,8 +48,8 @@ LayerEnd
 
 LayerStart: NTUB
 Layer: 5
-Height: -2000
-Thickness: 2000
+Height: -2.0
+Thickness: 2.0
 Red: 0
 Green: 0
 Blue: 1
@@ -64,8 +64,8 @@ LayerEnd
 
 LayerStart: DIFF
 Layer: 10
-Height: 10
-Thickness: 10
+Height: 0.010
+Thickness: 0.010
 Red: 0
 Green: 1
 Blue: 1
@@ -76,8 +76,8 @@ LayerEnd
 
 LayerStart: POLY1
 Layer: 20
-Height: 28
-Thickness: 280
+Height: 0.028
+Thickness: 0.280
 Red: 1
 Green: 1
 Blue: 0
@@ -88,8 +88,8 @@ LayerEnd
 
 LayerStart: NPLUS
 Layer: 23
-Height: -195
-Thickness: 200
+Height: -0.195
+Thickness: 0.200
 Red: 0.5
 Green: 0.25
 Blue: 0
@@ -100,8 +100,8 @@ LayerEnd
 
 LayerStart: PPLUS
 Layer: 24
-Height: -195
-Thickness: 200
+Height: -0.195
+Thickness: 0.200
 Red: 1
 Green: 0
 Blue: 1
@@ -124,8 +124,8 @@ LayerEnd
 
 LayerStart: POLY2
 Layer: 30
-Height: 400
-Thickness: 280
+Height: 0.400
+Thickness: 0.280
 Red: 0.9
 Green: 0.35
 Blue: 0.04
@@ -136,8 +136,8 @@ LayerEnd
 
 LayerStart: CONT
 Layer: 34
-Height: 10
-Thickness: 1600
+Height: 0.010
+Thickness: 1.600
 Red: 0
 Green: 1
 Blue: 0
@@ -148,8 +148,8 @@ LayerEnd
 
 LayerStart: MET1
 Layer: 35
-Height: 1600
-Thickness: 660
+Height: 1.600
+Thickness: 0.660
 Red: 1
 Green: 0
 Blue: 0
@@ -160,8 +160,8 @@ LayerEnd
 
 LayerStart: VIA1
 Layer: 36
-Height: 2250
-Thickness: 1000
+Height: 2.250
+Thickness: 1.000
 Red: 1
 Green: 0.75
 Blue: 1
@@ -172,8 +172,8 @@ LayerEnd
 
 LayerStart: MET2
 Layer: 37
-Height: 3240
-Thickness: 640
+Height: 3.240
+Thickness: 0.640
 Red: 1
 Green: 0.75
 Blue: 0
@@ -184,8 +184,8 @@ LayerEnd
 
 LayerStart: VIA2
 Layer: 38
-Height: 3870
-Thickness: 1000
+Height: 3.870
+Thickness: 1.000
 Red: 1
 Green: 0.5
 Blue: 0.5
@@ -196,8 +196,8 @@ LayerEnd
 
 LayerStart: MET3
 Layer: 39
-Height: 4860
-Thickness: 1000
+Height: 4.860
+Thickness: 1.000
 Red: 0
 Green: 0.5
 Blue: 0.5
@@ -208,8 +208,8 @@ LayerEnd
 
 LayerStart: VIA3
 Layer: 41
-Height: 5850
-Thickness: 1000
+Height: 5.850
+Thickness: 1.000
 Red: 1
 Green: 0.75
 Blue: 0.75
@@ -220,8 +220,8 @@ LayerEnd
 
 LayerStart: MET4
 Layer: 42
-Height: 6840
-Thickness: 1000
+Height: 6.840
+Thickness: 1.000
 Red: 0.75
 Green: 0
 Blue: 1
@@ -232,8 +232,8 @@ LayerEnd
 
 LayerStart: TEXT
 Layer: 61
-Height: 7000
-Thickness: 1000
+Height: 7.000
+Thickness: 1.000
 Red: 1
 Green: 1
 Blue: 1
@@ -245,8 +245,8 @@ LayerEnd
 LayerStart: DIODE
 Layer: 62
 Datatype: 11
-Height: 28
-Thickness: 28
+Height: 0.028
+Thickness: 0.028
 Red: 0.4
 Green: 0.4
 Blue: 0.08
@@ -258,8 +258,8 @@ LayerEnd
 LayerStart: RESDEF
 Layer: 62
 Datatype: 13
-Height: 800
-Thickness: 50
+Height: 0.800
+Thickness: 0.050
 Red: 1.0
 Green: 1.0
 Blue: 1.0
