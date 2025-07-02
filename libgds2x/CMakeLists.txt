@@ -1,4 +1,6 @@
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON) # FIXME
+
+find_package(nlohmann_json CONFIG REQUIRED)
 
 set(GDS2X_SRCS
 	gds_globals.cpp gds_globals.h
@@ -23,6 +25,10 @@ set_target_properties(gds2x PROPERTIES
 )
 target_include_directories(gds2x PUBLIC
 	${gds2x_SOURCE_DIR}/libgds2x
+)
+
+target_link_libraries(gds2x PRIVATE
+	nlohmann_json::nlohmann_json
 )
 
 if(WIN32)
