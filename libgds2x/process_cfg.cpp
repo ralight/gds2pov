@@ -222,7 +222,7 @@ void Process::Parse(std::string processfile)
 					fprintf(stderr, "Warning: Duplicate Colour definition on line %d of process file. Ignoring new definition.\n", current_line);
 				}else{
 					unsigned int filter, red, green, blue;
-					if(sscanf(line, "Colour: #%02x%02x%02x%02x", &filter, &red, &green, &blue) == 4){
+					if(sscanf(line, "Colour: #%02x%02x%02x%02x", &red, &green, &blue, &filter) == 4){
 						NewLayer.Filter = (float)filter/255.0;
 					}else if(sscanf(line, "Colour: #%02x%02x%02x", &red, &green, &blue) == 3){
 						/* Ok */
