@@ -52,6 +52,7 @@ protected:
 public:
 	Object() { };
 	Object(std::string name);
+	Object(std::string name, std::vector<Vertex> vertices, std::vector<Triangle> triangles, class ProcessLayer *layer);
 	virtual ~Object();
 
 	void AddText(float x, float Y, float Z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer);

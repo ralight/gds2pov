@@ -107,26 +107,12 @@ void GDSObject_openscad::OutputPaths()
 
 void GDSObject_openscad::WritePolygonPoints(GDS2X::Polygon *polygon)
 {
+	std::vector<GDS2X::Vertex> vertices = polygon->GetVertices();
+
 	fprintf(m_optr, "\tpoints=[");
-	fprintf(m_optr, "[%.4f,%.4f,%.4f]",
-		polygon->GetXCoords(0),
-		polygon->GetYCoords(0),
-		polygon->GetHeight() + polygon->GetThickness()
-	);
-	for(unsigned int j=1; j<polygon->GetPoints()-1; j++){
-		fprintf(m_optr, ",[%.4f,%.4f,%.4f]",
-			polygon->GetXCoords(j),
-			polygon->GetYCoords(j),
-			polygon->GetHeight() + polygon->GetThickness()
-		);
-	}
-	//for(int j=polygon->GetPoints()-1; j>=0; j--){
-	for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-		fprintf(m_optr, ",[%.4f,%.4f,%.4f]",
-			polygon->GetXCoords(j),
-			polygon->GetYCoords(j),
-			polygon->GetHeight()
-		);
+	fprintf(m_optr, "[%.4f,%.4f,%.4f]", vertices[0].x, vertices[0].y, vertices[0].z);
+	for(unsigned int j=1; j<vertices.size(); j++){
+		fprintf(m_optr, ",[%.4f,%.4f,%.4f]", vertices[j].x, vertices[j].y, vertices[j].z);
 	}
 	fprintf(m_optr, "],\n");
 }
@@ -152,15 +138,20 @@ void GDSObject_openscad::OutputPolygons()
 			polygon = m_polygons[i];
 
 			char hex[20];
-			polygon->GetLayer()->HexColour(hex, sizeof(hex));
-			fprintf(m_optr, "color(\"#%s\"){\n", hex);
+			GDS2X::ProcessLayer *layer = polygon->GetLayer();
+			if(layer){
+				layer->HexColour(hex, sizeof(hex));
+				fprintf(m_optr, "color(\"#%s\"){\n", hex);
 
-			fprintf(m_optr, "polyhedron(\n");
+				fprintf(m_optr, "polyhedron(\n");
 
-			WritePolygonPoints(polygon);
-			WritePolygonFaces(polygon);
+				WritePolygonPoints(polygon);
+				WritePolygonFaces(polygon);
 
-			fprintf(m_optr, ");}\n");
+				fprintf(m_optr, ");}\n");
+			}else{
+				printf("Warning: Polygon with unknown layer\n");
+			}
 		}
 	}
 }

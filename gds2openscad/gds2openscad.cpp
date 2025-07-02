@@ -34,11 +34,12 @@ void printusage()
 	printf("Copyright (C) 2004-2008 Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 	printf("gds2openscad comes with ABSOLUTELY NO WARRANTY.  You may distribute gds2openscad freely\nas described in the readme.txt distributed with this file.\n\n");
 	printf("gds2openscad is a program for converting a GDS2 file to a openscad file.\n\n");
-	printf("Usage: gds2openscad [-d] [-h] [-i input.gds] [-o output.scad] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
+	printf("Usage: gds2openscad [-d] [-h] [-i input.gds] [-m macros.json] [-o output.scad] [-p process.txt] [-q] [-t topcell] [-v]\n\n");
 	printf("Options\n");
 	printf(" -g\t\tGenerate a process file based on the input gds2 file (suppresses output file generation).\n");
 	printf(" -h\t\tDisplay this help\n");
 	printf(" -i\t\tInput GDS2 file (stdin if not specified)\n");
+	printf(" -m\t\tInput macro file\n");
 	printf(" -o\t\tOutput 3MF file (stdout if not specified)\n");
 	printf(" -p\t\tSpecify process file\n");
 	printf(" -q\t\tQuiet output\n");
@@ -54,6 +55,7 @@ int main(int argc, char *argv[])
 
 	std::string gdsfile="";
 	std::string outfile="";
+	std::string macrofile="";
 
 	std::string processfile="";
 	std::string topcell="";
@@ -85,6 +87,14 @@ int main(int argc, char *argv[])
 					return 1;
 				}else{
 					gdsfile = argv[i+1];
+				}
+			}else if(strncmp(argv[i], "-m", strlen("-m"))==0){
+				if(i==argc-1){
+					fprintf(stderr, "Error: -m switch given but no macro file specified.\n\n");
+					printusage();
+					return 1;
+				}else{
+					macrofile = argv[i+1];
 				}
 			}else if(strncmp(argv[i], "-o", strlen("-o"))==0){
 				if(i==argc-1){
@@ -179,6 +189,7 @@ int main(int argc, char *argv[])
 	}
 	if(iptr){
 		class GDSParse_openscad *parser = new class GDSParse_openscad(process, optr, bounding_output, generate_process);
+		parser->LoadMacroFile(macrofile);
 		if(!parser->ParseFile(iptr)){
 			if(!generate_process){
 				parser->Output(topcell);

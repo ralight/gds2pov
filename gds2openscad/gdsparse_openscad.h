@@ -37,8 +37,8 @@ public:
 	~GDSParse_openscad ();
 
 	GDS2X::Object *NewObject(std::string name);
-	void OutputHeader();
 	void OutputFooter();
+	void LoadMacroFile(std::string name);
 };
 
 #endif

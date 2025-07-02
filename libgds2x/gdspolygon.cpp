@@ -21,6 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include "gds_globals.h"
 #include "gdsobject.h"
 #include "gdspolygon.h"
 #include "PolygonTriangulator.h"
@@ -32,6 +33,19 @@ Polygon::Polygon(float height, float thickness, unsigned int points, class Proce
 {
 	m_coords = new Point[points+1]; //FIXME - debug +1
 }
+
+
+Polygon::Polygon(std::vector<Vertex> vertices, std::vector<Triangle> triangles, ProcessLayer *layer) :
+	m_layer(layer)
+{
+	for(int i=0; i<vertices.size(); i++){
+		m_vertices.push_back(CreateVertex(vertices[i].x, vertices[i].y, vertices[i].z));
+	}
+	for(int i=0; i<triangles.size(); i++){
+		m_triangles.push_back(CreateTriangle(triangles[i].v[0], triangles[i].v[1], triangles[i].v[2]));
+	}
+}
+
 
 Polygon::~Polygon()
 {
@@ -106,29 +120,13 @@ class ProcessLayer *Polygon::GetLayer(void)
 }
 
 
-static Vertex CreateVertex(float x, float y, float z)
-{
-	Vertex result;
-	result.x = x;
-	result.y = y;
-	result.z = z;
-	return result;
-}
-
-
-static Triangle CreateTriangle(int v1, int v2, int v3)
-{
-	Triangle result;
-	result.v[0] = v1;
-	result.v[1] = v2;
-	result.v[2] = v3;
-	return result;
-}
-
-
 std::vector<Vertex> Polygon::GetVertices()
 {
 	std::vector<Vertex> vertices;
+
+	if(m_vertices.size() > 0){
+		return m_vertices;
+	}
 
 	for(unsigned int j=0; j<this->GetPoints()-1; j++){
 		vertices.push_back(CreateVertex(
@@ -153,6 +151,10 @@ std::vector<Triangle> Polygon::GetTriangles()
 	/* Vertical faces */
 	unsigned int j=0;
 	unsigned int count = this->GetPoints()-1;
+
+	if(m_triangles.size() > 0){
+		return m_triangles;
+	}
 
 	std::vector<Triangle> triangles;
 

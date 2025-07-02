@@ -51,6 +51,7 @@ public:
 	void OutputHeader();
 	void OutputFooter();
 	Lib3MF::sTriangleProperties GetColour(std::string name);
+	void LoadMacroFile(std::string name);
 };
 
 #endif

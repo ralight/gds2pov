@@ -35,6 +35,14 @@ Object::Object(std::string name) :
 	m_boundary.xmin = m_boundary.ymin =  1000000.0;
 }
 
+
+Object::Object(std::string name, std::vector<Vertex> vertices, std::vector<Triangle> triangles, class ProcessLayer *layer) :
+	m_name(name), m_gotboundary(false), m_isoutput(false)
+{
+	m_polygons.push_back(new Polygon(vertices, triangles, layer));
+}
+
+
 Object::~Object()
 {
 	while(!m_polygons.empty()){

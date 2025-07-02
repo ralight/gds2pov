@@ -44,4 +44,23 @@ void SetVerbosity(int level)
 	verbose_output = level;
 }
 
+Vertex CreateVertex(float x, float y, float z)
+{
+	Vertex result;
+	result.x = x;
+	result.y = y;
+	result.z = z;
+	return result;
+}
+
+
+Triangle CreateTriangle(int v1, int v2, int v3)
+{
+	Triangle result;
+	result.v[0] = v1;
+	result.v[1] = v2;
+	result.v[2] = v3;
+	return result;
+}
+
 };

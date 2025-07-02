@@ -34,9 +34,13 @@ private:
 	Point *m_coords;
 	Transform m_rotate;
 	class ProcessLayer	*m_layer;
+	std::string m_layer_name;
+	std::vector<Vertex> m_vertices;
+	std::vector<Triangle> m_triangles;
 
 public:
-	Polygon(float height, float thickness, unsigned int points, class ProcessLayer *layer);
+	Polygon(float height, float thickness, unsigned int points, ProcessLayer *layer);
+	Polygon(std::vector<Vertex> vertices, std::vector<Triangle> triangles, ProcessLayer *layer);
 	~Polygon();
 
 	void AddPoint(unsigned int index, float x, float y);

@@ -133,6 +133,7 @@ public:
 	Parse(Process *process, bool generate_process);
 	virtual ~Parse ();
 
+	std::unordered_map<std::string, Object *> LoadMacroFile(std::string filename);
 	struct Boundary *GetBoundary();
 	bool ParseFile(FILE *iptr);
 	void Output(std::string topcell);

@@ -22,6 +22,7 @@
 #define GDS_GLOBALS_H
 
 #include <cstdint>
+#include "gds2x.h"
 
 namespace GDS2X {
 
@@ -163,6 +164,9 @@ enum RecordNumbers{
 	rnSpacerError,
 	rnContact		/* 69 */
 };
+
+Vertex CreateVertex(float x, float y, float z);
+Triangle CreateTriangle(int v1, int v2, int v3);
 
 }
 #endif

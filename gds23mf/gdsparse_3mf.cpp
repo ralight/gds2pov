@@ -147,3 +147,21 @@ Lib3MF::sTriangleProperties GDSParse_3mf::GetColour(std::string name)
 {
 	return m_colours[name];
 }
+
+
+void GDSParse_3mf::LoadMacroFile(std::string name)
+{
+	std::unordered_map<std::string, GDS2X::Object *> macros;
+
+	if(name == ""){
+		return;
+	}
+
+	macros = Parse::LoadMacroFile(name);
+	for(auto it=macros.begin(); it!=macros.end(); it++) {
+		auto macro = it->second;
+		auto object_3mf = new GDSObject_3mf(macro, this, m_wrapper, m_model, m_root_component);
+
+		m_objects[it->first] = static_cast<GDS2X::Object *>(object_3mf);
+	}
+}

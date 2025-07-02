@@ -23,8 +23,13 @@
  */
 
 #include <cmath>
-#include <cstring>
 #include <cstdint>
+#include <cstring>
+#include <fstream>
+#include <iostream>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 #include "gds_globals.h"
 #include "gdsparse.h"
@@ -99,7 +104,6 @@ bool Parse::ParseFile(FILE *iptr)
 void Parse::AssignASRefs(void)
 {
 	/* Assign objects to srefs and arefs */
-	/* FIXME - surely there is a better way than 3n^3 loop */
 	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
 		auto obj = it->second;
 
@@ -678,9 +682,14 @@ void Parse::ParseStrName()
 		// This calls our own NewObject function which is pure virtual so the end
 		// user must define it. This means we can always add a unknown object as
 		// long as it inherits from Object.
-		auto obj = NewObject(str);
-		m_objects[str] = obj;
-		m_currentobject = obj;
+		if(m_objects[str]){
+			/* Already defined */
+			m_currentobject = nullptr;
+		}else{
+			auto obj = NewObject(str);
+			m_objects[str] = obj;
+			m_currentobject = obj;
+		}
 		delete [] str;
 	}
 	v_printf(2, "\n");
@@ -997,6 +1006,36 @@ Process *Parse::GetProcess()
 std::unordered_map<std::string, Object*> Parse::GetObjects()
 {
 	return m_objects;
+}
+
+std::unordered_map<std::string, Object *> Parse::LoadMacroFile(std::string filename)
+{
+	std::ifstream f(filename);
+	json data = json::parse(f);
+	json srefs = data["srefs"];
+	std::unordered_map<std::string, Object *> macros;
+
+	for(json::iterator it = srefs.begin(); it != srefs.end(); ++it){
+		json sref = *it;
+
+		std::vector<Vertex> vertices;
+		std::vector<Triangle> triangles;
+
+		for(json::iterator vertex = sref["vertices"].begin(); vertex != sref["vertices"].end(); ++vertex){
+			vertices.push_back(CreateVertex((*vertex)[0], (*vertex)[1], (*vertex)[2]));
+		}
+
+		for(json::iterator triangle = sref["triangles"].begin(); triangle != sref["triangles"].end(); ++triangle){
+			triangles.push_back(CreateTriangle((*triangle)[0], (*triangle)[1], (*triangle)[2]));
+		}
+
+		std::string layername = sref["layer"];
+		std::replace(layername.begin(), layername.end(), '-', '_');
+		auto obj = new Object(sref["name"], vertices, triangles, m_process->GetLayer(layername));
+		macros[sref["name"]] = obj;
+	}
+
+	return macros;
 }
 
 }
