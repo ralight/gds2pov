@@ -120,7 +120,7 @@ protected:
 
 	void ReportUnsupported(std::string name, enum RecordNumbers rn);
 
-	bool ParseFileInternal();
+	int ParseFileInternal();
 	void AssignASRefs(void);
 
 	virtual void OutputHeader() { };

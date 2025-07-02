@@ -184,7 +184,7 @@ void Parse::RecursiveOutput(Object *object)
 	object->Output();
 }
 
-bool Parse::ParseFileInternal()
+int Parse::ParseFileInternal()
 {
 	uint8_t recordtype, datatype;
 	char *tempstr;
