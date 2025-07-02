@@ -3,6 +3,7 @@
 	"version-string": "20080229",
 	"dependencies": [
 		"lib3mf",
+		"nlohmann-json",
 		"wxwidgets"
 	]
 }

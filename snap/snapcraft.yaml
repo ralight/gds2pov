@@ -65,6 +65,8 @@ parts:
       - -Dlib3mf_DIR=$SNAPCRAFT_STAGE/usr/lib/cmake/lib3mf
       - -DCMAKE_INSTALL_PREFIX=/
     source: .
+    stage-packages:
+      - nlohmann-json3-dev
     stage:
       - bin/gds23mf
       - bin/gds2openscad
