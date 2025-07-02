@@ -947,6 +947,7 @@ void Parse::ParseXY()
 	m_currentdatatype = -1;
 	m_currentmag = 1.0;
 	m_currentpresentation = 0;
+	m_currentstrans = 0;
 }
 
 
