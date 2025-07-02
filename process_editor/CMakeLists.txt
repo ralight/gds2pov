@@ -7,7 +7,7 @@ add_executable(gds2x_process_editor
 	gpe_about.cpp
 )
 target_link_libraries(gds2x_process_editor PRIVATE
-	gds2x
+	libgds2x
 	${wxWidgets_LIBRARIES}
 )
 

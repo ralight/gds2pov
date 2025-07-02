@@ -129,17 +129,15 @@ void Parse::AssignASRefs(void)
 	}
 }
 
-void Parse::Output(std::string topcell)
+void Parse::Output()
 {
-	m_topcellname = topcell;
-
 	AssignASRefs();
 
 	OutputHeader();
 
 	if(!m_bounding_output){
-		if(topcell.length() > 0){
-			RecursiveOutput(GetObjectRef(topcell));
+		if(m_topcellname.length() > 0){
+			RecursiveOutput(GetObjectRef(m_topcellname));
 		}else{
 			RecursiveOutput(m_objects[0]);
 		}

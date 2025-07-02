@@ -11,16 +11,10 @@
 # Use Ambient to specify the amount of ambient light in the scene. 1.0 is the default if not specified.
 # 1.2 gives reasonable results if no other lights are specified.
 #
-# ProcessFile sets the file from which the process configuration will be read. If it is not specified,
-# process.txt is used as the default.
-# Note that if the -p switch is used with gds2pov it will override the ProcessFile setting.
-#
-# Scale is used to scale the design. Scaling the design down can be useul for
-# gdsoglviewer.
+# Scale is used to scale the design.
 #
 # GlobalStart
 # Ambient: 1.0
-# ProcessFile: process.txt
 # Scale: 1.0
 # GlobalEnd
 #

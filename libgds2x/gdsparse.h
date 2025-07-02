@@ -73,6 +73,8 @@ protected:
 	bool m_allow_multiple_output;
 	bool m_output_children_first;
 	bool m_generate_process;
+	std::string m_outfile;
+	std::string m_format;
 
 	/*
 	** Both of these variables have fixed bounds because
@@ -136,7 +138,7 @@ public:
 	std::unordered_map<std::string, Object *> LoadMacroFile(std::string filename);
 	struct Boundary *GetBoundary();
 	bool ParseFile(FILE *iptr);
-	void Output(std::string topcell);
+	void Output();
 	virtual Object *NewObject(std::string name) { return new Object(name); };
 
 	float GetUnits();

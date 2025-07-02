@@ -28,42 +28,33 @@
 
 extern int verbose_output;
 
-GDSParse_svg::GDSParse_svg(GDS2X::Process *process, FILE *optr, bool generate_process) :
-		GDS2X::Parse(process, generate_process),
+GDSParse_svg::GDSParse_svg(GDS2X::Process *process, GDS2X::option_map_t &options) :
+		GDS2X::Parse(process, false),
 		m_scale(100.0)
 {
-	// FIXME - check multiple output and output children first
-	m_optr = optr;
-	m_bounding_output = false;
 	m_use_outfile = true;
 	m_allow_multiple_output = false;
 	m_output_children_first = true;
-}
+	m_format = options["format"];
+	m_outfile = options["outfile"];
+	m_topcellname = options["topcell"];
 
-
-GDSParse_svg::GDSParse_svg(GDS2X::Parse *parse, FILE *optr)
-{
-	m_optr = optr;
-	m_bounding_output = false;
-	m_use_outfile = true;
-	m_allow_multiple_output = false;
-	m_output_children_first = true;
-
-	m_units = parse->GetUnits();
-	m_process = parse->GetProcess();
-
-	std::unordered_map<std::string, GDS2X::Object*> objects = parse->GetObjects();
-	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
-		auto object = it->second;
-		auto object_svg = new GDSObject_svg(object, m_optr);
-
-		m_objects[it->first] = static_cast<GDS2X::Object *>(object_svg);
+	if(options["outfile"] != ""){
+		m_optr = fopen(options["outfile"].c_str(), "wt");
+		if(!m_optr){
+			fprintf(stderr, "Error: Unable to open %s.\n", options["outfile"].c_str());
+		}
+	}else{
+		m_optr = stdout;
 	}
 }
 
 
 GDSParse_svg::~GDSParse_svg ()
 {
+	if(m_optr != stdout){
+		fclose(m_optr);
+	}
 }
 
 GDS2X::Object *GDSParse_svg::NewObject(std::string name)

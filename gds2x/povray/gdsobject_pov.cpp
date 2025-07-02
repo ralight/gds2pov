@@ -26,13 +26,13 @@
 
 #include "gdsobject_pov.h"
 
-GDSObject_pov::GDSObject_pov(std::string name, FILE *optr) : GDS2X::Object(name), m_decompose(false)
+GDSObject_pov::GDSObject_pov(std::string name, FILE *optr) : GDS2X::Object(name)
 {
 	m_optr = optr;
 }
 
 
-GDSObject_pov::GDSObject_pov(GDS2X::Object *object, FILE *optr) : m_decompose(false)
+GDSObject_pov::GDSObject_pov(GDS2X::Object *object, FILE *optr)
 {
 	m_optr = optr;
 	m_name = object->GetName();
@@ -95,23 +95,19 @@ void GDSObject_pov::OutputPaths()
 void GDSObject_pov::OutputPolygons()
 {
 	if(!m_polygons.empty()){
-		if(m_decompose){
-			DecomposePOVPolygons();
-		}else{
-			GDS2X::Polygon *polygon;
+		GDS2X::Polygon *polygon;
 
-			for(unsigned long i=0; i<m_polygons.size(); i++){
-				polygon = m_polygons[i];
+		for(unsigned long i=0; i<m_polygons.size(); i++){
+			polygon = m_polygons[i];
 
-				fprintf(m_optr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
-				for(unsigned int j=0; j<polygon->GetPoints(); j++){
-					fprintf(m_optr, ",<%.2f,%.2f>", polygon->GetXCoords(j), polygon->GetYCoords(j));
-				}
-				fprintf(m_optr, " rotate<-90,0,0> ");
-
-				fprintf(m_optr, "texture{t%s}", polygon->GetLayer()->Name.c_str());
-				fprintf(m_optr, "}\n");
+			fprintf(m_optr, "prism{%.2f,%.2f,%d",polygon->GetHeight(), polygon->GetHeight()+polygon->GetThickness(), polygon->GetPoints());
+			for(unsigned int j=0; j<polygon->GetPoints(); j++){
+				fprintf(m_optr, ",<%.2f,%.2f>", polygon->GetXCoords(j), polygon->GetYCoords(j));
 			}
+			fprintf(m_optr, " rotate<-90,0,0> ");
+
+			fprintf(m_optr, "texture{t%s}", polygon->GetLayer()->Name.c_str());
+			fprintf(m_optr, "}\n");
 		}
 	}
 }
@@ -298,168 +294,4 @@ void GDSObject_pov::Output()
 		fprintf(m_optr, "}\n");
 	}
 	m_isoutput = true;
-}
-
-void GDSObject_pov::DecomposePOVPolygons()
-{
-	if(!m_polygons.empty()){
-		GDS2X::Polygon *polygon;
-
-		for(unsigned long i=0; i<m_polygons.size(); i++){
-			polygon = m_polygons[i];
-
-			/* Output vertices */
-			fprintf(m_optr, "mesh2 { vertex_vectors { %d", 2*(polygon->GetPoints()-1));
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				fprintf(m_optr, ",<%.2f,%.2f,%.2f>",
-					polygon->GetXCoords(j),
-					polygon->GetYCoords(j),
-					polygon->GetHeight() + polygon->GetThickness()
-					);
-			}
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-
-				fprintf(m_optr, ",<%.2f,%.2f,%.2f>",
-					polygon->GetXCoords(j),
-					polygon->GetYCoords(j),
-					polygon->GetHeight()
-					);
-			}
-
-			/*
-			 * Calculate angles between adjacent vertices.
-			 * We do this to tell what "type" of polygon we are dealing with.
-			 * Specifically, where any change of convex/concave takes place.
-			 * Because the first and last points are identical we do not need
-			 * to worry about the final vertex angle (it is already calculated
-			 * in the 0th vertex).
-			 */
-
-			GDS2X::Point pA, pB;
-
-			pA.x = polygon->GetXCoords(0)-polygon->GetXCoords(polygon->GetPoints()-2);
-			pA.y = polygon->GetYCoords(0)-polygon->GetYCoords(polygon->GetPoints()-2);
-			pB.x = polygon->GetXCoords(1)-polygon->GetXCoords(0);
-			pB.y = polygon->GetYCoords(1)-polygon->GetYCoords(0);
-
-			float theta1;
-			float theta2;
-
-			theta1 = atan2(pA.x, pA.y);
-			theta2 = atan2(pB.x, pB.y);
-			polygon->SetAngleCoords(0, theta1 - theta2);
-
-			for(unsigned int j=1; j<polygon->GetPoints()-1; j++){
-				pA.x = polygon->GetXCoords(j)-polygon->GetXCoords(j-1);
-				pA.y = polygon->GetYCoords(j)-polygon->GetYCoords(j-1);
-
-				pB.x = polygon->GetXCoords(j+1)-polygon->GetXCoords(j);
-				pB.y = polygon->GetYCoords(j+1)-polygon->GetYCoords(j);
-
-				theta1 = atan2(pA.x, pA.y);
-				theta2 = atan2(pB.x, pB.y);
-
-				polygon->SetAngleCoords(j, theta1 - theta2);
-			}
-			int positives = 0;
-			int negatives = 0;
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				polygon->SetAngleCoords(j, (float)asin(sin((double)polygon->GetAngleCoords(j))));
-				if(polygon->GetAngleCoords(j)>=0){
-					positives++;
-				}else{
-					negatives++;
-				}
-			}
-
-			int bendindex1;
-
-			if(!positives || !negatives){
-				fprintf(m_optr, "} face_indices { %d", 2*(polygon->GetPoints()-3) + 2*(polygon->GetPoints()-1));
-				for(unsigned int j=1; j<polygon->GetPoints()-2; j++){
-					fprintf(m_optr, ",<%d,%d,%d>",0,j,j+1);
-					fprintf(m_optr, ",<%d,%d,%d>",polygon->GetPoints()-1,j+polygon->GetPoints()-1,j+polygon->GetPoints()-1+1);
-				}
-			}else if(positives==1 && negatives>1){
-				bendindex1 = -1;
-				fprintf(m_optr, "} face_indices { %d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if(polygon->GetAngleCoords(j)>=0){
-						bendindex1 = (int)j;
-						break;
-					}
-				}
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if((int)j!=bendindex1){
-						fprintf(m_optr, ",<%d,%d,%d>", bendindex1, j, j+1);
-						fprintf(m_optr, ",<%d,%d,%d>", bendindex1+polygon->GetPoints()-1, j+polygon->GetPoints()-1, (j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j+1:j+polygon->GetPoints());
-					}
-				}
-			}else if(negatives==1 && positives>1){
-				bendindex1 = -1;
-				fprintf(m_optr, "} face_indices { %d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if(polygon->GetAngleCoords(j)<0){
-						bendindex1 = j;
-						break;
-					}
-				}
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if((int)j!=bendindex1){
-						fprintf(m_optr, ",<%d,%d,%d>", bendindex1, j, j+1);
-						fprintf(m_optr, ",<%d,%d,%d>", bendindex1+polygon->GetPoints()-1, j+polygon->GetPoints()-1, (j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j+1:j+polygon->GetPoints());
-					}
-				}
-			/*}else if(negatives==2 && positives>2){
-				bendindex1 = -1;
-				bendindex2 = -1;
-
-				fprintf(m_optr, "} face_indices{%d", 2*(polygon->GetPoints()-2) + 2*(polygon->GetPoints()-1));
-				for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-					if(polygon->GetAngleCoords(j)<0 && bendindex1 == -1){
-						bendindex1 = j;
-					}else if(polygon->GetAngleCoords(j)<0){
-						bendindex2 = j;
-						break;
-					}
-				}
-				for(unsigned int j=bendindex1; j<=bendindex2; j++){
-					fprintf(m_optr, "<%d,%d,%d>",);
-				}
-				for(unsigned int j=0; j<bendindex1; j++){
-					fprintf(m_optr, ",<%d,%d,%d>",);
-				}
-				*/
-			}else{
-				fprintf(m_optr, "} face_indices { %d", 2*(polygon->GetPoints()-1));
-			}
-
-			/* Always output the vertical faces regardless of whether we fill in the horizontal faces or not */
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				fprintf(m_optr, ",<%d,%d,%d>",j,j+polygon->GetPoints()-1,(j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j:j+polygon->GetPoints());
-				fprintf(m_optr, ",<%d,%d,%d>",j,j+1,(j+polygon->GetPoints()>=2*(polygon->GetPoints()-1))?j:j+polygon->GetPoints());
-			}
-			fprintf(m_optr,"}");
-			fprintf(m_optr, "texture{t%s}", polygon->GetLayer()->Name.c_str());
-			fprintf(m_optr, "}\n");
-
-			for(unsigned int j=0; j<polygon->GetPoints()-1; j++){
-				if(polygon->GetAngleCoords(j)>=0){
-					fprintf(m_optr,"text{ttf \"crystal.ttf\" \"%d+\" 0.2, 0 ", j);
-				}else{
-					fprintf(m_optr,"text{ttf \"crystal.ttf\" \"%d-\" 0.2, 0 ", j);
-				}
-				fprintf(m_optr, " scale <1.5,1.5,1.5>");
-				fprintf(m_optr, " translate <%.2f,%.2f,%.2f> texture{pigment{rgb <1,1,1>}}}\n", \
-						polygon->GetXCoords(j), \
-						polygon->GetYCoords(j), polygon->GetHeight() - 1);
-			}
-		}
-	}
-}
-
-
-void GDSObject_pov::Decompose(bool value)
-{
-	m_decompose = value;
 }

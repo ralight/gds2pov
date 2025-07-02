@@ -1,5 +1,5 @@
 /*
- * File: gdsparse_svg.h
+ * File: gdsobject_pov.h
  * Author: Roger Light
  * Project: gds2x
  *
@@ -18,28 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GDSPARSE_SVG_H
-#define GDSPARSE_SVG_H
+#ifndef GDSOBJECT_POV_H
+#define GDSOBJECT_POV_H
 
 #include <string>
 
-#include "process_cfg.h"
-#include "gdsparse.h"
+#include "gdsobject.h"
 
-class GDSParse_svg : public GDS2X::Parse
+class GDSObject_pov : public GDS2X::Object
 {
 private:
 	FILE *m_optr;
-	float m_scale;
-
 public:
-	GDSParse_svg (GDS2X::Process *process, FILE *optr, bool generate_process);
-	GDSParse_svg(GDS2X::Parse *parse, FILE *optr);
-	~GDSParse_svg ();
+	GDSObject_pov(std::string name, FILE *optr);
+	GDSObject_pov(GDS2X::Object *object, FILE *optr);
+	~GDSObject_pov();
 
-	GDS2X::Object *NewObject(std::string name);
-	void OutputHeader();
-	void OutputFooter();
+	virtual void Output();
+	void OutputPaths();
+	void OutputPolygons();
+	void OutputTexts();
+	void OutputSRefs();
+	void OutputARefs();
 };
 
 #endif

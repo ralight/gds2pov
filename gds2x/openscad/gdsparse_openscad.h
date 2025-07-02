@@ -1,5 +1,5 @@
 /*
- * File: gdsparse_3mf.h
+ * File: gdsparse_openscad.h
  * Author: Roger Light
  * Project: gds2x
  *
@@ -18,39 +18,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#ifndef GDSPARSE_3MF_H
-#define GDSPARSE_3MF_H
+#ifndef GDSPARSE_OPENSCAD_H
+#define GDSPARSE_OPENSCAD_H
 
 #include <string>
-#include <unordered_map>
 
+#include "gds2x.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
-#include "gdsobject_3mf.h"
-#include <lib3mf_implicit.hpp>
 
-class GDSObject_3mf;
-
-class GDSParse_3mf : public GDS2X::Parse
+class GDSParse_openscad : public GDS2X::Parse
 {
 private:
-	Lib3MF::PWrapper m_wrapper;
-	Lib3MF::PModel m_model;
-	Lib3MF::PComponentsObject m_root_component;
-	std::unordered_map<std::string, Lib3MF::sTriangleProperties> m_colours;
-	void CreateColours(GDS2X::Process *process);
+	FILE *m_optr;
 
 public:
-	GDSParse_3mf(GDS2X::Process *process, bool bounding_output, bool generate_process);
-	GDSParse_3mf(GDS2X::Parse *parse);
-	~GDSParse_3mf ();
+	GDSParse_openscad(GDS2X::Process *process, GDS2X::option_map_t &options);
+	~GDSParse_openscad ();
 
-	void Output(std::string topcell, std::string outfile, std::string format);
 	GDS2X::Object *NewObject(std::string name);
-	GDSObject_3mf *GetObjectRef(std::string name);
-	void OutputHeader();
 	void OutputFooter();
-	Lib3MF::sTriangleProperties GetColour(std::string name);
 	void LoadMacroFile(std::string name);
 };
 

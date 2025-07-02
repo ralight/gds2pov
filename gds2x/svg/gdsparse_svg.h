@@ -1,5 +1,5 @@
 /*
- * File: gdsparse_pov.h
+ * File: gdsparse_svg.h
  * Author: Roger Light
  * Project: gds2x
  *
@@ -18,29 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GDSPARSE_POV_H
-#define GDSPARSE_POV_H
+#ifndef GDSPARSE_SVG_H
+#define GDSPARSE_SVG_H
 
 #include <string>
 
+#include "gds2x.h"
 #include "process_cfg.h"
 #include "gdsparse.h"
 
-class GDSParse_pov : public GDS2X::Parse
+class GDSParse_svg : public GDS2X::Parse
 {
 private:
-	std::string m_camfile;
 	FILE *m_optr;
+	float m_scale;
+
 public:
-	GDSParse_pov (GDS2X::Process *process, FILE *optr, bool bounding_output, bool generate_process);
-	GDSParse_pov(GDS2X::Parse *parse, FILE *optr);
-	~GDSParse_pov ();
+	GDSParse_svg(GDS2X::Process *process, GDS2X::option_map_t &options);
+	~GDSParse_svg ();
 
 	GDS2X::Object *NewObject(std::string name);
 	void OutputHeader();
 	void OutputFooter();
-
-	void Decompose(bool value);
 };
 
 #endif

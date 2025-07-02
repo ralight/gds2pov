@@ -1,4 +1,4 @@
-# Process configuration file for gds2pov
+# Process configuration file for gds2x
 #
 # Lines starting with a # are comments.
 #

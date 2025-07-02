@@ -22,6 +22,7 @@
 #define GDS2X_H
 
 #include <string>
+#include <unordered_map>
 
 namespace GDS2X {
 
@@ -76,6 +77,8 @@ struct Boundary {
 	float ymin;
 	float ymax;
 };
+
+typedef std::unordered_map<std::string, std::string> option_map_t;
 
 }
 #endif

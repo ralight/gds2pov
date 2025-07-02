@@ -24,48 +24,53 @@
 #include <cstdio>
 
 #include "process_cfg.h"
+#include "config_cfg.h"
 #include "gdsparse.h"
 #include "gdsparse_pov.h"
 #include "gdsobject_pov.h"
 
-extern int verbose_output;
 
-GDSParse_pov::GDSParse_pov(GDS2X::Process *process, FILE *optr,
-		bool bounding_output, bool generate_process) :
-		GDS2X::Parse(process, generate_process)
+GDSParse_pov::GDSParse_pov(GDS2X::Process *process, GDS2X::option_map_t &options) :
+		GDS2X::Parse(process, options["generate_process"] == "true")
 {
-	m_optr = optr;
-	m_bounding_output = bounding_output;
-	m_use_outfile = true;
 	m_allow_multiple_output = false;
+	m_bounding_output = (options["bounding_output"] == "true");
+	m_camfile = options["camerafile"];
+	m_format = options["format"];
+	m_outfile = options["outfile"];
 	m_output_children_first = true;
-}
-
-
-GDSParse_pov::GDSParse_pov(GDS2X::Parse *parse, FILE *optr)
-{
-	m_optr = optr;
-	m_bounding_output = false; // FIXME
+	m_topcellname = options["topcell"];
 	m_use_outfile = true;
-	m_allow_multiple_output = false;
-	m_output_children_first = true;
-	m_camfile = "";
 
-	m_units = parse->GetUnits();
-	m_process = parse->GetProcess();
 
-	std::unordered_map<std::string, GDS2X::Object*> objects = parse->GetObjects();
-	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
-		auto object = it->second;
-		auto object_pov = new GDSObject_pov(object, m_optr);
+	if(options["outfile"] != ""){
+		m_optr = fopen(options["outfile"].c_str(), "wt");
+		if(!m_optr){
+			fprintf(stderr, "Error: Unable to open %s.\n", options["outfile"].c_str());
+		}
+	}else{
+		m_optr = stdout;
+	}
 
-		m_objects[it->first] = static_cast<GDS2X::Object *>(object_pov);
+	std::string configfile = options["configfile"];
+	if(configfile.length() > 0){
+		m_config = new GDSConfig(configfile, m_camfile);
+	}else{
+		m_config = new GDSConfig();
+	}
+	if(!m_config->IsValid()){
+		fprintf(stderr, "Error: %s is not a valid config file.\n", configfile.c_str());
 	}
 }
 
 
 GDSParse_pov::~GDSParse_pov ()
 {
+	delete m_config;
+
+	if(m_optr != stdout){
+		fclose(m_optr);
+	}
 }
 
 
@@ -90,6 +95,8 @@ void GDSParse_pov::OutputFooter()
 void GDSParse_pov::OutputHeader()
 {
 	if(m_optr && !m_objects.empty()){
+		m_config->OutputToFile(m_optr, GetBoundary());
+
 		fprintf(m_optr, "#include \"colors.inc\"\n");
 		fprintf(m_optr, "#include \"metals.inc\"\n");
 		fprintf(m_optr, "#include \"transforms.inc\"\n");
@@ -125,13 +132,5 @@ void GDSParse_pov::OutputHeader()
 					boundary->xmin, boundary->ymin, m_units*m_process->GetLowest(),
 					boundary->xmax, boundary->ymax, m_units*m_process->GetHighest());
 		}
-	}
-}
-
-
-void GDSParse_pov::Decompose(bool value)
-{
-	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
-		static_cast<GDSObject_pov*>(it->second)->Decompose(value);
 	}
 }

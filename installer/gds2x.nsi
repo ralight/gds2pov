@@ -41,10 +41,7 @@ Section "Files" SecInstall
 	SectionIn RO
 
 	SetOutPath "$INSTDIR"
-	File "..\build\gds23mf\Release\gds23mf.exe"
-	File "..\build\gds2openscad\Release\gds2openscad.exe"
-	File "..\build\gds2pov\Release\gds2pov.exe"
-	File "..\build\gds2svg\Release\gds2svg.exe"
+	File "..\build\gds2x\Release\gds2x.exe"
 	File "..\build\libgds2x\Release\gds2x.dll"
 	File "..\build\process_editor\Release\gds2x_process_editor.exe"
 
@@ -82,10 +79,9 @@ Section "Visual Studio Runtime"
 SectionEnd
 
 Section "Uninstall"
-	Delete "$INSTDIR\gds2pov.exe"
-	Delete "$INSTDIR\gds2svg.exe"
-	Delete "$INSTDIR\libgds2x.dll"
+	Delete "$INSTDIR\gds2x.exe"
 	Delete "$INSTDIR\gds2x_process_editor.exe"
+	Delete "$INSTDIR\libgds2x.dll"
 
 	Delete "$INSTDIR\AUTHORS"
 	Delete "$INSTDIR\changes.txt"

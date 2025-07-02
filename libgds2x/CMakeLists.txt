@@ -16,28 +16,29 @@ set(GDS2X_SRCS
 	PolygonTriangulator.cxx PolygonTriangulator.h
 )
 
-add_library(gds2x SHARED
+add_library(libgds2x SHARED
 	${GDS2X_SRCS}
 )
-set_target_properties(gds2x PROPERTIES
+set_target_properties(libgds2x PROPERTIES
+	OUTPUT_NAME gds2x
 	VERSION 1.0.0
 	SOVERSION 1
 )
-target_include_directories(gds2x PUBLIC
+target_include_directories(libgds2x PUBLIC
 	${gds2x_SOURCE_DIR}/libgds2x
 )
 
-target_link_libraries(gds2x PRIVATE
+target_link_libraries(libgds2x PRIVATE
 	nlohmann_json::nlohmann_json
 )
 
 if(WIN32)
-	target_link_libraries(gds2x PRIVATE
+	target_link_libraries(libgds2x PRIVATE
 		ws2_32
 	)
 endif()
 
-install(TARGETS gds2x
+install(TARGETS libgds2x
 	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"

@@ -1,9 +1,9 @@
 name: gds2x
 base: core24
 version: '20080229'
-summary: Convert integrated circuit gds2 layoutst to POV-Ray 3D images.
+summary: Convert integrated circuit gds2 layouts to 3mf/openscad/povray/stl/svg
 description: |
-  gds2pov is a program to take a gds2 layout file and output a POV-Ray scene
+  gds2x is a program to take a gds2 layout file and output a POV-Ray scene
   description file of the GDS2 data. This allows the creation of attractive 3D
   pictures of a layout.
 
@@ -11,23 +11,11 @@ grade: stable
 confinement: strict
 
 apps:
-  gds23mf:
-    command: bin/gds23mf
+  gds2x:
+    command: bin/gds2x
     plugs: [home]
     environment:
       LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib
-
-  gds2openscad:
-    command: bin/gds2openscad
-    plugs: [home]
-
-  gds2pov:
-    command: bin/gds2pov
-    plugs: [home]
-
-  gds2svg:
-    command: bin/gds2svg
-    plugs: [home]
 
 parts:
   lib3mf:
@@ -57,7 +45,7 @@ parts:
       - usr/lib/x86_64-linux-gnu
       - usr/lib/*/libzip.so*
 
-  gds2pov:
+  gds2x:
     after:
       - lib3mf
     plugin: cmake

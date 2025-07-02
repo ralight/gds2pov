@@ -58,7 +58,6 @@ public:
 class GDSConfig
 {
 private:
-	std::string m_processfile;
 	std::string m_font;
 	float m_ambient;
 	float m_scale;
@@ -74,7 +73,6 @@ public:
 	GDSConfig(std::string filename="", std::string camfile="");
 	~GDSConfig();
 
-	std::string GetProcessFile();
 	float GetAmbient();
 	float GetScale();
 	bool IsValid();

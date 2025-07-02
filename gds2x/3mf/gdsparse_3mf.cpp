@@ -45,11 +45,9 @@ sLib3MFTriangleProperties fnCreateTriangleColor(PColorGroup colorGroup, Lib3MF_u
 }
 
 
-GDSParse_3mf::GDSParse_3mf(GDS2X::Process *process,
-		bool bounding_output, bool generate_process) :
-		GDS2X::Parse(process, generate_process)
+GDSParse_3mf::GDSParse_3mf(GDS2X::Process *process, GDS2X::option_map_t &options) :
+		GDS2X::Parse(process, options["generate_process"] == "true")
 {
-	m_bounding_output = bounding_output;
 	m_use_outfile = true;
 	m_allow_multiple_output = false;
 	m_output_children_first = true;
@@ -59,32 +57,10 @@ GDSParse_3mf::GDSParse_3mf(GDS2X::Process *process,
 	m_root_component = m_model->AddComponentsObject();
 
 	CreateColours(m_process);
-}
 
-
-GDSParse_3mf::GDSParse_3mf(GDS2X::Parse *parse)
-{
-	m_bounding_output = false; // FIXME
-	m_use_outfile = true;
-	m_allow_multiple_output = false;
-	m_output_children_first = true;
-
-	m_units = parse->GetUnits();
-	m_process = parse->GetProcess();
-
-	m_wrapper = CWrapper::loadLibrary();
-	m_model = m_wrapper->CreateModel();
-	m_root_component = m_model->AddComponentsObject();
-
-	CreateColours(m_process);
-
-	std::unordered_map<std::string, GDS2X::Object*> objects = parse->GetObjects();
-	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
-		auto object = it->second;
-		auto object_3mf = new GDSObject_3mf(object, this, m_wrapper, m_model, m_root_component);
-
-		m_objects[it->first] = static_cast<GDS2X::Object *>(object_3mf);
-	}
+	m_outfile = options["outfile"];
+	m_format = options["format"];
+	m_topcellname = options["topcell"];
 }
 
 
@@ -111,27 +87,20 @@ GDS2X::Object *GDSParse_3mf::NewObject(std::string name)
 	return new GDSObject_3mf(name, this, m_wrapper, m_model, m_root_component);
 }
 
-void GDSParse_3mf::OutputFooter()
-{
-}
-
-void GDSParse_3mf::OutputHeader()
-{
-}
-
 
 GDSObject_3mf *GDSParse_3mf::GetObjectRef(std::string name)
 {
 	return static_cast<GDSObject_3mf *>(m_objects[name]);
 }
 
-void GDSParse_3mf::Output(std::string topcell, std::string outfile, std::string format)
+
+void GDSParse_3mf::Output()
 {
-	GDS2X::Parse::Output(topcell);
+	GDS2X::Parse::Output();
 
 	GDSObject_3mf *oref;
-	if(topcell.length() > 0){
-		oref = GetObjectRef(topcell);
+	if(m_topcellname.length() > 0){
+		oref = GetObjectRef(m_topcellname);
 	}else{
 		oref = static_cast<GDSObject_3mf *>(m_objects[0]);
 	}
@@ -139,8 +108,8 @@ void GDSParse_3mf::Output(std::string topcell, std::string outfile, std::string 
 
 	m_model->AddBuildItem(m_root_component.get(), m_wrapper->GetIdentityTransform());
 
-	PWriter writer3mf = m_model->QueryWriter(format);
-	writer3mf->WriteToFile(outfile);
+	PWriter writer3mf = m_model->QueryWriter(m_format);
+	writer3mf->WriteToFile(m_outfile);
 }
 
 Lib3MF::sTriangleProperties GDSParse_3mf::GetColour(std::string name)

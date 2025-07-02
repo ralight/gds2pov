@@ -30,8 +30,7 @@
 #include "config_cfg.h"
 
 GDSConfig::GDSConfig(std::string filename, std::string camfile) :
-	m_processfile(""), m_font(""),
-	m_ambient(1.2), m_scale(1.0), m_valid(true)
+	m_font(""), m_ambient(1.2), m_scale(1.0), m_valid(true)
 {
 	m_camfile = camfile;
 	m_camerapos.postype = ptCamera;
@@ -63,11 +62,6 @@ float GDSConfig::GetAmbient()
 float GDSConfig::GetScale()
 {
 	return m_scale;
-}
-
-std::string GDSConfig::GetProcessFile()
-{
-	return m_processfile;
 }
 
 std::string GDSConfig::GetFont()
@@ -213,27 +207,6 @@ void GDSConfig::ReadFile(std::string configfile)
 					}
 				}
 				got_scale = true;
-			}else if(strstr(line, "ProcessFile:")){
-				if(!in_global){
-					fprintf(stderr, "Error: ProcessFile definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);
-					m_valid = false;
-					fclose(cptr);
-					return;
-				}
-				if(got_processfile){
-					fprintf(stderr, "Warning: Duplicate ProcessFile definition on line %d of config file. Ignoring new definition.\n", current_line);
-				}else{
-					m_processfile = line;
-					m_processfile = m_processfile.substr(13);
-
-					for(i=m_processfile.length()-1; i>=0; i--){
-						if(m_processfile[i] == '\n'){
-							m_processfile[i] = '\0';
-							break;
-						}
-					}
-				}
-				got_processfile = true;
 			}else if(strstr(line, "Font:")){
 				if(!in_global){
 					fprintf(stderr, "Error: Font definition outside of GlobalStart and GlobalEnd on line %d of config file.\n", current_line);

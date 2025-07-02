@@ -1,5 +1,5 @@
 /*
- * File: gdsobject_pov.h
+ * File: gdsparse_pov.h
  * Author: Roger Light
  * Project: gds2x
  *
@@ -18,32 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GDSOBJECT_POV_H
-#define GDSOBJECT_POV_H
+#ifndef GDSPARSE_POV_H
+#define GDSPARSE_POV_H
 
 #include <string>
 
-#include "gdsobject.h"
+#include "gds2x.h"
+#include "process_cfg.h"
+#include "config_cfg.h"
+#include "gdsparse.h"
 
-class GDSObject_pov : public GDS2X::Object
+class GDSParse_pov : public GDS2X::Parse
 {
 private:
-	bool m_decompose;
+	std::string m_camfile;
 	FILE *m_optr;
-
-	void DecomposePOVPolygons();
+	GDSConfig *m_config;
 public:
-	GDSObject_pov(std::string name, FILE *optr);
-	GDSObject_pov(GDS2X::Object *object, FILE *optr);
-	~GDSObject_pov();
+	GDSParse_pov(GDS2X::Process *process, GDS2X::option_map_t &options);
+	~GDSParse_pov ();
 
-	void Decompose(bool value);
-	virtual void Output();
-	void OutputPaths();
-	void OutputPolygons();
-	void OutputTexts();
-	void OutputSRefs();
-	void OutputARefs();
+	GDS2X::Object *NewObject(std::string name);
+	void OutputHeader();
+	void OutputFooter();
 };
 
 #endif
