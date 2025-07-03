@@ -6,6 +6,7 @@ description: |
   gds2x is a program to take a gds2 layout file and output a POV-Ray scene
   description file of the GDS2 data. This allows the creation of attractive 3D
   pictures of a layout.
+license: LGPL-2.0+
 
 grade: stable
 confinement: strict
@@ -14,6 +15,15 @@ apps:
   gds2x:
     command: bin/gds2x
     plugs: [home]
+    environment:
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib
+
+  process-editor:
+    command: bin/gds2x_process_editor
+    extensions: [gnome]
+    plugs:
+      - desktop
+      - home
     environment:
       LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib
 
@@ -53,13 +63,16 @@ parts:
       - -Dlib3mf_DIR=$SNAPCRAFT_STAGE/usr/lib/cmake/lib3mf
       - -DCMAKE_INSTALL_PREFIX=/
     source: .
+    build-packages:
+      - libwxgtk3.2-dev
     stage-packages:
+      - libjpeg-turbo8
+      - libwxbase3.2-1t64
+      - libwxgtk3.2-1t64
       - nlohmann-json3-dev
     stage:
-      - bin/gds23mf
-      - bin/gds2openscad
-      - bin/gds2pov
-      - bin/gds2svg
+      - bin/gds2x
+      - bin/gds2x_process_editor
       - lib/libgds2x.so*
       - share/gds2x/changes.txt
       - share/gds2x/example.cmd
@@ -67,3 +80,54 @@ parts:
       - share/gds2x/example_process.txt
       - share/gds2x/example_config.txt
       - share/gds2x/readme.txt
+      - usr/lib/*/libICE.so*
+      - usr/lib/*/libLerc.so*
+      - usr/lib/*/libSM.so*
+      - usr/lib/*/libX11.so*
+      - usr/lib/*/libXau.so*
+      - usr/lib/*/libXcomposite.so*
+      - usr/lib/*/libXcursor.so*
+      - usr/lib/*/libXdamage.so*
+      - usr/lib/*/libXdmcp.so*
+      - usr/lib/*/libXext.so*
+      - usr/lib/*/libXfixes.so*
+      - usr/lib/*/libXi.so*
+      - usr/lib/*/libXinerama.so*
+      - usr/lib/*/libXrandr.so*
+      - usr/lib/*/libXrender.so*
+      - usr/lib/*/libXtst.so*
+      - usr/lib/*/libatk-1.0.so*
+      - usr/lib/*/libatk-bridge-2.0.so*
+      - usr/lib/*/libatspi.so*
+      - usr/lib/*/libcairo-gobject.so*
+      - usr/lib/*/libcairo.so*
+      - usr/lib/*/libdatrie.so*
+      - usr/lib/*/libdeflate.so*
+      - usr/lib/*/libepoxy.so*
+      - usr/lib/*/libfontconfig.so*
+      - usr/lib/*/libfribidi.so*
+      - usr/lib/*/libgdk-3.so*
+      - usr/lib/*/libgdk_pixbuf-2.0.so*
+      - usr/lib/*/libgraphite2.so*
+      - usr/lib/*/libgtk-3.so*
+      - usr/lib/*/libharfbuzz.so*
+      - usr/lib/*/libjbig.so*
+      - usr/lib/*/libjpeg.so*
+      - usr/lib/*/libnotify.so*
+      - usr/lib/*/libpango-1.0.so*
+      - usr/lib/*/libpangocairo-1.0.so*
+      - usr/lib/*/libpangoft2-1.0.so*
+      - usr/lib/*/libpcre2-32.so*
+      - usr/lib/*/libpixman-1.so*
+      - usr/lib/*/libsharpyuv.so*
+      - usr/lib/*/libthai.so*
+      - usr/lib/*/libtiff.so*
+      - usr/lib/*/libwayland-client.so*
+      - usr/lib/*/libwayland-cursor.so*
+      - usr/lib/*/libwayland-egl.so*
+      - usr/lib/*/libwebp.so*
+      - usr/lib/*/libwx_baseu-3.2.so*
+      - usr/lib/*/libwx_gtk3u_core-3.2.so*
+      - usr/lib/*/libxcb-render.so*
+      - usr/lib/*/libxcb-shm.so*
+      - usr/lib/*/libxcb.so*
