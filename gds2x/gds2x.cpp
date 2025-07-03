@@ -1,9 +1,9 @@
 /*
- * File: gds23mf
+ * File: gds2x.cpp
  * Author: Roger Light
  * Project: gds2x
  *
- * This is the main body of the gds23mf program.
+ * This is the main body of the gds2x program.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@
 
 void printusage(std::string exe)
 {
-	printf("gds23mf  version %s\n", VERSION);
+	printf("%s version %s\n", exe.c_str(), VERSION);
 	printf("Copyright (C) 2004-2025 Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 	printf("%s comes with ABSOLUTELY NO WARRANTY.  You may distribute %s freely\nas described in the readme.txt distributed with this file.\n\n", exe.c_str(), exe.c_str());
 	printf("%s is a program for converting a GDS2 file to other graphical files.\n\n", exe.c_str());
@@ -78,6 +78,21 @@ GDS2X::Process *load_process(std::string processfile, bool generate_process)
 }
 
 
+static std::string fix_exe(const char *argv0)
+{
+#ifdef WIN32
+	char fname[_MAX_FNAME];
+	_splitpath_s(argv0, nullptr, 0, nullptr, 0, fname, sizeof(fname), nullptr, 0);
+	return std::string(fname);
+#else
+	char *fpath = strdup(argv0);
+	char *fname = basename(fpath);
+	std::string exe(fname);
+	free(fpath);
+	return exe;
+#endif
+}
+
 int main(int argc, char *argv[])
 {
 	std::unordered_map<std::string, std::string> options;
@@ -90,7 +105,7 @@ int main(int argc, char *argv[])
 	options["processfile"] = "";
 	options["topcell"] = "";
 
-	std::string exe = argv[0];
+	std::string exe = fix_exe(argv[0]);
 	if(exe == "gds23mf"){
 		options["format"] = "3mf";
 	}else if(exe == "gds2openscad"){
