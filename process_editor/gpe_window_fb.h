@@ -55,7 +55,7 @@ class GPEAboutDialog_fb : public wxDialog
 
 	public:
 
-		GPEAboutDialog_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 291,290 ), long style = wxDEFAULT_DIALOG_STYLE );
+		GPEAboutDialog_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 291,310 ), long style = wxDEFAULT_DIALOG_STYLE );
 
 		~GPEAboutDialog_fb();
 

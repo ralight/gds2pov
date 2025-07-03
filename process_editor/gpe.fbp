@@ -50,7 +50,7 @@
       <property name="minimum_size"></property>
       <property name="name">GPEAboutDialog_fb</property>
       <property name="pos"></property>
-      <property name="size">291,290</property>
+      <property name="size">291,310</property>
       <property name="style">wxDEFAULT_DIALOG_STYLE</property>
       <property name="subclass"></property>
       <property name="title">About...</property>
@@ -66,7 +66,7 @@
         <property name="permission">none</property>
         <object class="sizeritem" expanded="true">
           <property name="border">5</property>
-          <property name="flag">wxEXPAND|wxALL|wxALIGN_CENTER_HORIZONTAL</property>
+          <property name="flag">wxALL|wxALIGN_CENTER_HORIZONTAL</property>
           <property name="proportion">1</property>
           <object class="wxPanel" expanded="true">
             <property name="BottomDockable">1</property>

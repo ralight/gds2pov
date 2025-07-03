@@ -62,7 +62,7 @@ GPEAboutDialog_fb::GPEAboutDialog_fb( wxWindow* parent, wxWindowID id, const wxS
 	m_panel1->SetSizer( bSizer4 );
 	m_panel1->Layout();
 	bSizer4->Fit( m_panel1 );
-	bSizer3->Add( m_panel1, 1, wxEXPAND|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer3->Add( m_panel1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	m_buttonOk = new wxButton( this, wxID_ANY, wxT("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
 
