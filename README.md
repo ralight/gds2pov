@@ -1,51 +1,29 @@
-GDS2X
-=====
+# GDS2X
 
-Introduction
-------------
+## Introduction
 
-GDS2X is a collection of programs to process GDS2 layout files.
+GDS2X is a program to process GDS2 integrated circuit layout files into other
+formats. It was originally just the gds2pov program, then added support for
+gds2svg, and has now added further output options and merged them into a single
+program.
 
 GDS2 files are used for storing the geometrical and layer information for
-creating an IC or MEMS device. If you do not what this is, GDS2X is
+creating an IC or MEMS device. If you do know not what this is, GDS2X is
 probably of no interest to you!
 
-GDS2POV is a program to take a GDS2 layout file and output a POV-Ray scene
-description file of the GDS2 data. This allows the creation of attractive 3D
-pictures of a layout. POV-Ray is a completely free, cross platform ray tracer.
-It can be obtained from http://www.povray.org/
+## Output formats
 
-GDS2SVG converts GDS2 files to Scalable Vector Graphic (SVG) files. This is
-still experimental as well, but give it a try. "It works for me". Mostly,
-anyway.
-
+* 3mf - a common standard in the 3D printing world
+* openscad - script output for processing in the OpenSCAD 3D solid modeller
+* povray - script output for processing in the POV-Ray ray tracer, to create 3D renders
+* stl - binary 3D model file
+* svg - 2D graphical image format
 
 I would love to hear from you if you produce any nice results! See the contact
 section at the bottom of this document.
 
 
-Compiling
----------
-
-gds2x uses 'cmake' to configure its build environment. This means it is
-possible to support lots of different systems and build tools.
-
-To build gds2x, change to the 'build' directory and type 'cmake ..'. This
-should generate the required files. The build directory contains only
-generated files so it can be completely removed if required. Typically on Unix
-systems you would type 'make' followed by 'make install' to compile and
-install the software respectively.
-
-Typing just 'cmake' should give you a list of options to specify for cmake,
-including a list of generators which can be used to generate the files for
-different build tools. For example, you might be able to use the following
-command to generate files for KDevelop.
-
-cmake -G KDevelop3 ..
-
-
-General Usage
--------------
+## General Usage
 
 Usage is mostly the same across the programs. You can always try:
 
@@ -56,8 +34,6 @@ to get the specific usage information.
 
 gds2pov [-i input.gds] [-o output.pov] [-b] [-c config.txt] [-p process.txt] [-t topcell] [-v]
 
- -b	Output bounding box instead of the layout to allow easier and quicker
-	placing of the camera. It is much quicker to render a box than an IC!
  -c	Specify config file
  -g Generate process file from gds2 file information (suppresses generation of
     output file).
@@ -113,8 +89,7 @@ any number of additional lights. See config.txt for more information.
 If gds2pov does not find your top cell correctly, use the -t option to specify the top cell name.
 
 
-Using the POV File
-------------------
+## Using the POV File
 
 It is beyond the scope of this document to describe how best to use POV-Ray.
 The POV-Ray documentation is excellent, but there are some settings that may
@@ -137,43 +112,34 @@ If you have suggestions for other useful settings, please send them to me for
 inclusion.
 
 
-Known Problems
---------------
+## Known Problems
 
-* Support for the GDS2 format is incomplete. Support is provided for
-everything that the author considers important. Text alignment for example
-is not that critical (compared to placement of paths and cells). If this is
-important to you, please contact me. Any unsupported features found in a
-GDS2 file will be noted when GDS2POV runs, but will be ignored and the rest
-of the file parsed.
+### General
 
-* Concave polygons will not be created properly in POV-Ray. This is a *hard*
-and well recognised problem in general. Papers do exist describing how to
-deal with the problem but I am not yet ready to delve into it. My advice:
-avoid merging multiple polygons/paths.
-
+* Some complex/degenerate polygon forms are not supported. The solution is to
+  split these polygons into simpler polygons, but that's hard in itself.
+* Paths with acute angles aren't properly supported. They produce a point at
+  the corner rather than a mitre.
+* With the exception of svg output, rounded end paths are not supported.
+* For svg only, variable extension paths are not supported.
 * Summary only considers a single instance of each object.
-
+* Support for the GDS2 format is incomplete.
 * Big files take a long time and a lot of memory to render. Yes... try
   reducing the quality and size of your output picture in POV-Ray. I don't
   really envisage GDS2POV being used on complete chips - POV-Ray is limited
   to 2GB of RAM on 32 bit machines and it is quite possible to use that with
   a complicated GDS2 file.
 
-* Lack of support for other platforms. Coming as I get chance.
+
+## License
+
+The GDS2X project is released under the LGPL v2.1+
 
 
-License
--------
+## Contact
 
-The entire GDS2X package is released under the LGPL v2.1
-
-Contact
--------
-
-GDS2POV was written by Roger Light. Questions, bug reports, suggestions
-or requests for new features (especially if they concern the incomplete
-support for the GDS2 format) are very welcome.
+GDS2X was written by Roger Light. Questions, bug reports, suggestions
+or requests for new features are welcome.
 
 Contact me on roger@atchoo.org
 
