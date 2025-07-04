@@ -41,10 +41,22 @@ Section "Files" SecInstall
 	SectionIn RO
 
 	SetOutPath "$INSTDIR"
-	File "..\build\gds2pov\Release\gds2pov.exe"
-	File "..\build\gds2svg\Release\gds2svg.exe"
-	File "..\build\libgdsto3d\Release\gdsto3d.dll"
+	File "..\build\gds2x\Release\gds2x.exe"
+	File "..\build\libgds2x\Release\gds2x.dll"
 	File "..\build\process_editor\Release\gds2x_process_editor.exe"
+	
+	File "..\build\gds2x\Release\bz2.dll"
+	File "..\build\gds2x\Release\lib3mf.dll"
+	File "..\build\gds2x\Release\zip.dll"
+	File "..\build\gds2x\Release\zlib1.dll"
+
+	File "..\build\process_editor\Release\jpeg62.dll"
+	File "..\build\process_editor\Release\liblzma.dll"
+	File "..\build\process_editor\Release\libpng16.dll"
+	File "..\build\process_editor\Release\pcre2-16.dll"
+	File "..\build\process_editor\Release\tiff.dll"
+	File "..\build\process_editor\Release\wxbase32u_vc_x64_custom.dll"
+	File "..\build\process_editor\Release\wxmsw32u_core_vc_x64_custom.dll"
 
 	File "..\AUTHORS"
 	File "..\changes.txt"
@@ -80,10 +92,22 @@ Section "Visual Studio Runtime"
 SectionEnd
 
 Section "Uninstall"
-	Delete "$INSTDIR\gds2pov.exe"
-	Delete "$INSTDIR\gds2svg.exe"
-	Delete "$INSTDIR\libgdsto3d.dll"
+	Delete "$INSTDIR\gds2x.exe"
 	Delete "$INSTDIR\gds2x_process_editor.exe"
+	Delete "$INSTDIR\libgds2x.dll"
+
+	Delete "$INSTDIR\bz2.dll"
+	Delete "$INSTDIR\lib3mf.dll"
+	Delete "$INSTDIR\zip.dll"
+	Delete "$INSTDIR\zlib1.dll"
+
+	Delete "$INSTDIR\jpeg62.dll"
+	Delete "$INSTDIR\liblzma.dll"
+	Delete "$INSTDIR\libpng16.dll"
+	Delete "$INSTDIR\pcre2-16.dll"
+	Delete "$INSTDIR\tiff.dll"
+	Delete "$INSTDIR\wxbase32u_vc_x64_custom.dll"
+	Delete "$INSTDIR\wxmsw32u_core_vc_x64_custom.dll"
 
 	Delete "$INSTDIR\AUTHORS"
 	Delete "$INSTDIR\changes.txt"

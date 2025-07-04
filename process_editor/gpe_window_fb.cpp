@@ -16,19 +16,19 @@ GPEAboutDialog_fb::GPEAboutDialog_fb( wxWindow* parent, wxWindowID id, const wxS
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 
-	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL|wxBORDER_SUNKEN );
-	m_panel1->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
+	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_panel1->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
 
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 
-	m_staticText19 = new wxStaticText( m_panel1, wxID_ANY, wxT("GPE"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText19 = new wxStaticText( m_panel1, wxID_ANY, wxT("GDS2X Process Editor"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText19->Wrap( -1 );
 	m_staticText19->SetFont( wxFont( 14, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Sans") ) );
 
-	bSizer4->Add( m_staticText19, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxSHAPED, 5 );
+	bSizer4->Add( m_staticText19, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_staticText18 = new wxStaticText( m_panel1, wxID_ANY, wxT("Process file editor for gds2pov"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText18 = new wxStaticText( m_panel1, wxID_ANY, wxT("Process file editor for gds2x"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText18->Wrap( -1 );
 	bSizer4->Add( m_staticText18, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
@@ -54,11 +54,15 @@ GPEAboutDialog_fb::GPEAboutDialog_fb( wxWindow* parent, wxWindowID id, const wxS
 
 	bSizer4->Add( m_staticText12, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
+	m_staticText111 = new wxStaticText( m_panel1, wxID_ANY, wxT("https://github.com/ralight/gds2pov"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText111->Wrap( -1 );
+	bSizer4->Add( m_staticText111, 0, wxALIGN_CENTER|wxALL, 5 );
+
 
 	m_panel1->SetSizer( bSizer4 );
 	m_panel1->Layout();
 	bSizer4->Fit( m_panel1 );
-	bSizer3->Add( m_panel1, 1, wxEXPAND|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer3->Add( m_panel1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	m_buttonOk = new wxButton( this, wxID_ANY, wxT("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
 
@@ -83,8 +87,11 @@ GPEAboutDialog_fb::~GPEAboutDialog_fb()
 GPEWindow_fb::GPEWindow_fb( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
 
 	m_menubar1 = new wxMenuBar( 0 );
+	m_menubar1->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+
 	m_menuFile = new wxMenu();
 	wxMenuItem* m_menuItemNew;
 	m_menuItemNew = new wxMenuItem( m_menuFile, wxID_ANY, wxString( wxT("&New") ) + wxT('\t') + wxT("Ctrl+N"), wxEmptyString, wxITEM_NORMAL );

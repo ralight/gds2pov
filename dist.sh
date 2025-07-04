@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cd $1
-DISTDIR=$2/gdsto3d-$3
+DISTDIR=$2/gds2x-$3
 
 mkdir -p ${DISTDIR}
 
@@ -18,24 +18,24 @@ cp	dist.sh \
 	changes.txt \
 	${DISTDIR}
 
-mkdir -p ${DISTDIR}/libgdsto3d
-cp	libgdsto3d/config_cfg.h libgdsto3d/config_cfg.cpp \
-	libgdsto3d/gdselements.h \
-	libgdsto3d/gdsobject.h libgdsto3d/gdsobject.cpp \
-	libgdsto3d/gdsobject_pov.h libgdsto3d/gdsobject_pov.cpp \
-	libgdsto3d/gdsobject_svg.h libgdsto3d/gdsobject_svg.cpp \
-	libgdsto3d/gdsparse.h libgdsto3d/gdsparse.cpp \
-	libgdsto3d/gdsparse_pov.h libgdsto3d/gdsparse_pov.cpp \
-	libgdsto3d/gdsparse_svg.h libgdsto3d/gdsparse_svg.cpp \
-	libgdsto3d/gdspath.h libgdsto3d/gdspath.cpp \
-	libgdsto3d/gdspolygon.h libgdsto3d/gdspolygon.cpp \
-	libgdsto3d/gdstext.h libgdsto3d/gdstext.cpp \
-	libgdsto3d/gdsto3d.h \
-	libgdsto3d/gds_types.h libgdsto3d/gds_types.cpp \
-	libgdsto3d/gds_globals.h libgdsto3d/gds_globals.cpp \
-	libgdsto3d/process_cfg.h libgdsto3d/process_cfg.cpp \
-	libgdsto3d/CMakeLists.txt \
-	${DISTDIR}/libgdsto3d/
+mkdir -p ${DISTDIR}/libgds2x
+cp	libgds2x/config_cfg.h libgds2x/config_cfg.cpp \
+	libgds2x/gdselements.h \
+	libgds2x/gdsobject.h libgds2x/gdsobject.cpp \
+	libgds2x/gdsobject_pov.h libgds2x/gdsobject_pov.cpp \
+	libgds2x/gdsobject_svg.h libgds2x/gdsobject_svg.cpp \
+	libgds2x/gdsparse.h libgds2x/gdsparse.cpp \
+	libgds2x/gdsparse_pov.h libgds2x/gdsparse_pov.cpp \
+	libgds2x/gdsparse_svg.h libgds2x/gdsparse_svg.cpp \
+	libgds2x/gdspath.h libgds2x/gdspath.cpp \
+	libgds2x/gdspolygon.h libgds2x/gdspolygon.cpp \
+	libgds2x/gdstext.h libgds2x/gdstext.cpp \
+	libgds2x/gds2x.h \
+	libgds2x/gds_types.h libgds2x/gds_types.cpp \
+	libgds2x/gds_globals.h libgds2x/gds_globals.cpp \
+	libgds2x/process_cfg.h libgds2x/process_cfg.cpp \
+	libgds2x/CMakeLists.txt \
+	${DISTDIR}/libgds2x/
 
 mkdir -p ${DISTDIR}/gds2pov
 cp	gds2pov/gds2pov.cpp \
@@ -49,7 +49,7 @@ cp	gds2svg/gds2svg.cpp \
 
 mkdir -p ${DISTDIR}/build
 
-tar -jcf ${DISTDIR}.tar.bz2 -C $2 gdsto3d-$3
+tar -jcf ${DISTDIR}.tar.bz2 -C $2 gds2x-$3
 pushd ${DISTDIR}
 zip -9 -r ${DISTDIR}.zip .
 popd

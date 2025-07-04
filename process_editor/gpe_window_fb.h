@@ -46,6 +46,7 @@ class GPEAboutDialog_fb : public wxDialog
 		wxStaticText* m_staticText10;
 		wxStaticText* m_staticText11;
 		wxStaticText* m_staticText12;
+		wxStaticText* m_staticText111;
 		wxButton* m_buttonOk;
 
 		// Virtual event handlers, override them in your derived class
@@ -54,7 +55,7 @@ class GPEAboutDialog_fb : public wxDialog
 
 	public:
 
-		GPEAboutDialog_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 291,257 ), long style = wxDEFAULT_DIALOG_STYLE );
+		GPEAboutDialog_fb( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 291,310 ), long style = wxDEFAULT_DIALOG_STYLE );
 
 		~GPEAboutDialog_fb();
 
