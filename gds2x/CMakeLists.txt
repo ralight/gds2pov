@@ -1,4 +1,5 @@
 add_executable(gds2x
+	../installer/icon.rc
 	gds2x.cpp
 
 	3mf/gdsobject_3mf.cpp
