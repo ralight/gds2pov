@@ -30,8 +30,6 @@ class Path
 {
 private:
 	int m_type;
-	float m_height;
-	float m_thickness;
 	unsigned int m_points;
 	float m_width;
 	float m_bgnextn;
@@ -41,7 +39,7 @@ private:
 	class ProcessLayer	*m_layer;
 
 public:
-	Path(int pathtype, float height, float thickness, unsigned int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
+	Path(int pathtype, unsigned int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
 	~Path();
 
 	void AddPoint(unsigned int index, float x, float y);

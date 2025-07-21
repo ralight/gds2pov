@@ -28,8 +28,6 @@ namespace GDS2X {
 class Polygon
 {
 private:
-	float m_height;
-	float m_thickness;
 	unsigned int m_points;
 	Point *m_coords;
 	Transform m_rotate;
@@ -39,7 +37,7 @@ private:
 	std::vector<Triangle> m_triangles;
 
 public:
-	Polygon(float height, float thickness, unsigned int points, ProcessLayer *layer);
+	Polygon(unsigned int points, ProcessLayer *layer);
 	Polygon(std::vector<Vertex> vertices, std::vector<Triangle> triangles, ProcessLayer *layer);
 	~Polygon();
 

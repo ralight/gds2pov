@@ -58,7 +58,7 @@ public:
 	void AddText(float x, float Y, float Z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer);
 	Text *GetCurrentText();
 
-	void AddPolygon(float height, float thickness, int points, class ProcessLayer *layer);
+	void AddPolygon(int points, class ProcessLayer *layer);
 	Polygon *GetCurrentPolygon();
 
 	void AddSRef(std::string name, float x, float y, bool flipped, float mag);
@@ -67,7 +67,7 @@ public:
 	void AddARef(std::string name, float x1, float y1, float x2, float y2, float x3, float y3, int columns, int rows, bool flipped, float mag);
 	void SetARefRotation(float x, float y, float z);
 
-	void AddPath(int pathtype, float height, float thickness, int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
+	void AddPath(int pathtype, int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
 	Path *GetCurrentPath();
 
 	std::string GetName();

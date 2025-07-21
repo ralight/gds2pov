@@ -737,7 +737,7 @@ void Parse::ParseXYPath()
 	if(m_currentwidth){
 		/* FIXME - need to check for -ve value and then not scale */
 		if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
-			m_currentobject->AddPath(m_currentpathtype, thislayer->Height, thislayer->Thickness, points, m_currentwidth, m_currentbgnextn, m_currentendextn, thislayer);
+			m_currentobject->AddPath(m_currentpathtype, points, m_currentwidth, m_currentbgnextn, m_currentendextn, thislayer);
 		}
 		for(i=0; i<points; i++){
 			X = m_units * (float)GetFourByteSignedInt();
@@ -802,7 +802,7 @@ void Parse::ParseXYBoundary()
 
 	if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
 		//FIXME - why was this points+1 ? m_currentobject->AddPolygon(m_units*thislayer->Height, m_units*thislayer->Thickness, points+1, thislayer->Name);
-		m_currentobject->AddPolygon(thislayer->Height, thislayer->Thickness, points-1, thislayer);
+		m_currentobject->AddPolygon(points-1, thislayer);
 	}
 
 	for(i=0; i<points-1; i++){

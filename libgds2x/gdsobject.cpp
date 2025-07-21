@@ -90,9 +90,9 @@ std::string Object::GetName()
 	return m_name;
 }
 
-void Object::AddPolygon(float height, float thickness, int points, class ProcessLayer *layer)
+void Object::AddPolygon(int points, class ProcessLayer *layer)
 {
-	m_polygons.push_back(new Polygon(height, thickness, points, layer));
+	m_polygons.push_back(new Polygon(points, layer));
 }
 
 Polygon *Object::GetCurrentPolygon()
@@ -306,9 +306,9 @@ struct Boundary *Object::GetBoundary(void)
 	return &m_boundary;
 }
 
-void Object::AddPath(int PathType, float Height, float Thickness, int Points, float Width, float BgnExtn, float EndExtn, class ProcessLayer *layer)
+void Object::AddPath(int PathType, int Points, float Width, float BgnExtn, float EndExtn, class ProcessLayer *layer)
 {
-	m_paths.push_back(new Path(PathType, Height, Thickness, Points, Width, BgnExtn, EndExtn, layer));
+	m_paths.push_back(new Path(PathType, Points, Width, BgnExtn, EndExtn, layer));
 }
 
 Path *Object::GetCurrentPath()

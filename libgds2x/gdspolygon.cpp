@@ -28,8 +28,8 @@
 
 namespace GDS2X {
 
-Polygon::Polygon(float height, float thickness, unsigned int points, class ProcessLayer *layer) :
-	m_height(height), m_thickness(thickness), m_points(points), m_layer(layer)
+Polygon::Polygon(unsigned int points, class ProcessLayer *layer) :
+	m_points(points), m_layer(layer)
 {
 	m_coords = new Point[points+1]; //FIXME - debug +1
 }
@@ -106,12 +106,12 @@ unsigned int Polygon::GetPoints(void)
 
 float Polygon::GetHeight(void)
 {
-	return m_height;
+	return m_layer->Height;
 }
 
 float Polygon::GetThickness(void)
 {
-	return m_thickness;
+	return m_layer->Thickness;
 }
 
 class ProcessLayer *Polygon::GetLayer(void)

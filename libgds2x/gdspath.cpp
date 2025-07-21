@@ -27,11 +27,11 @@
 
 namespace GDS2X {
 
-Path::Path(int type, float height, float thickness,
+Path::Path(int type,
 				unsigned int points, float width,
 				float bgnextn, float endextn,
 				class ProcessLayer *layer) :
-				m_type(type), m_height(height), m_thickness(thickness), m_points(points),
+				m_type(type), m_points(points),
 				m_width(width), m_bgnextn(bgnextn), m_endextn(endextn), m_layer(layer)
 {
 	m_coords = new Point[points];
@@ -81,12 +81,12 @@ unsigned int Path::GetPoints()
 
 float Path::GetHeight()
 {
-	return m_height;
+	return m_layer->Height;
 }
 
 float Path::GetThickness()
 {
-	return m_thickness;
+	return m_layer->Thickness;
 }
 
 float Path::GetWidth()
