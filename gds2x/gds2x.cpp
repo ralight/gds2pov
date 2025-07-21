@@ -37,11 +37,12 @@ void printusage(std::string exe)
 	printf("Copyright (C) 2004-2025 Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 	printf("%s comes with ABSOLUTELY NO WARRANTY.  You may distribute %s freely\nas described in the readme.txt distributed with this file.\n\n", exe.c_str(), exe.c_str());
 	printf("%s is a program for converting a GDS2 file to other graphical files.\n\n", exe.c_str());
-	printf("Usage: %s [-c config.txt] [-e camera.pov] [-f 3mf|openscad|povray|stl|svg] [-h] [-i input.gds] [-o output] [-p process.txt] [-q] [-t topcell] [-v] [-z height-scale]\n\n", exe.c_str());
+	printf("Usage: %s [-c config.txt] [-e camera.pov] [-f 3mf|openscad|povray|stl|svg] [-F] [-h] [-i input.gds] [-o output] [-p process.txt] [-q] [-t topcell] [-v] [-z height-scale]\n\n", exe.c_str());
 	printf("Options\n");
 	printf(" -c\t\tSpecify scene config file (povray only)\n");
 	printf(" -e\t\tSpecify external camera position file (povray only)\n");
 	printf(" -f\t\tSpecify an output format from: 3mf openscad povray stl svg. Defaults to 3mf\n");
+	printf(" -F\t\tMake all layers extend to the z=0 position.\n");
 	printf(" -g\t\tGenerate a process file based on the input gds2 file (suppresses output file generation).\n");
 	printf(" -h\t\tDisplay this help\n");
 	printf(" -i\t\tInput GDS2 file (stdin if not specified)\n");
@@ -56,9 +57,9 @@ void printusage(std::string exe)
 }
 
 
-GDS2X::Process *load_process(std::string processfile, bool generate_process, float zscale)
+GDS2X::Process *load_process(std::string processfile, bool generate_process, float zscale, bool fullheight)
 {
-	GDS2X::Process *process = new GDS2X::Process(zscale);
+	GDS2X::Process *process = new GDS2X::Process(zscale, fullheight);
 	if(!process){
 		fprintf(stderr, "Error: Out of memory.\n");
 		return nullptr;
@@ -106,6 +107,7 @@ int main(int argc, char *argv[])
 	options["processfile"] = "";
 	options["topcell"] = "";
 	float zscale = 1.0f;
+	bool fullheight = false;
 
 	std::string exe = fix_exe(argv[0]);
 	if(exe == "gds23mf"){
@@ -164,6 +166,8 @@ int main(int argc, char *argv[])
 					options["format"] = argv[i+1];
 					i++;
 				}
+			}else if(strncmp(argv[i], "-F", strlen("-F"))==0){
+				fullheight = true;
 			}else if(strncmp(argv[i], "-g", strlen("-g"))==0){
 				options["generate_process"] = "true";
 			}else if(strncmp(argv[i], "-h", strlen("-h"))==0){
@@ -240,7 +244,7 @@ int main(int argc, char *argv[])
 
 	/************ Load process ****************/
 
-	GDS2X::Process *process = load_process(options["processfile"], options["generate_process"] == "true", zscale);
+	GDS2X::Process *process = load_process(options["processfile"], options["generate_process"] == "true", zscale, fullheight);
 	if(!process){
 		return -1;
 	}

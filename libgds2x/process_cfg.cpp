@@ -50,9 +50,10 @@
 
 using namespace GDS2X;
 
-Process::Process(float zscale) :
+Process::Process(float zscale, bool fullheight) :
 	m_valid(true),
-	m_zscale(zscale)
+	m_zscale(zscale),
+	m_fullheight(fullheight)
 {
 }
 
@@ -415,7 +416,7 @@ unsigned int Process::LayerCount()
 
 ProcessLayer *Process::AddLayer(int Layer, int Datatype)
 {
-	ProcessLayer NewLayer(m_zscale);
+	ProcessLayer NewLayer(m_zscale, m_fullheight);
 	std::stringstream sName;
 
 	sName << "Layer-" << Layer << ":" << Datatype;
@@ -437,7 +438,7 @@ ProcessLayer *Process::AddLayer(int Layer, int Datatype)
 
 ProcessLayer *Process::AddLayer(ProcessLayer *NewLayer)
 {
-	ProcessLayer *layer = new ProcessLayer(m_zscale);
+	ProcessLayer *layer = new ProcessLayer(m_zscale, m_fullheight);
 
 	layer->Name = NewLayer->Name;
 	layer->Layer = NewLayer->Layer;
@@ -539,6 +540,28 @@ void Process::SwapLayers(unsigned int a, unsigned int b)
 		tmp = m_layers[a];
 		m_layers[a] = m_layers[b];
 		m_layers[b] = tmp;
+	}
+}
+
+float ProcessLayer::GetHeight()
+{
+	if(m_fullheight){
+		return 0.0f;
+	}else{
+		return Height*m_zscale;
+	}
+}
+
+float ProcessLayer::GetThickness()
+{
+	if(m_fullheight){
+		if(Height > 0.0){
+			return (Height+Thickness)*m_zscale;
+		}else{
+			return (Height-Thickness)*m_zscale;
+		}
+	}else{
+		return Thickness*m_zscale;
 	}
 }
 
