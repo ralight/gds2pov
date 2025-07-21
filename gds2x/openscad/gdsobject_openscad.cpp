@@ -38,7 +38,7 @@ GDSObject_openscad::GDSObject_openscad(GDS2X::Object *object, FILE *optr)
 	m_optr = optr;
 	m_name = object->GetName();
 	m_width = object->GetWidth();
-	m_height = object->GetHeight();
+	m_length = object->GetLength();
 
 	m_gotboundary = false;
 	m_isoutput = false;

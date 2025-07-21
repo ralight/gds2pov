@@ -36,7 +36,7 @@ class Object
 {
 protected:
 	std::string m_name;
-	float m_width, m_height;
+	float m_width, m_length;
 
 	bool m_gotboundary;
 	bool m_isoutput;
@@ -82,7 +82,7 @@ public:
 
 	struct Boundary *GetBoundary(void);
 	float GetWidth();
-	float GetHeight();
+	float GetLength();
 
 	bool GetIsOutput();
 

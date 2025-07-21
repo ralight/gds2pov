@@ -29,7 +29,7 @@
 using namespace GDS2X;
 
 Object::Object(std::string name) :
-	m_name(name), m_width(0.0), m_height(0.0), m_gotboundary(false), m_isoutput(false)
+	m_name(name), m_width(0.0), m_length(0.0), m_gotboundary(false), m_isoutput(false)
 {
 	m_boundary.xmax = m_boundary.ymax = -1000000.0;
 	m_boundary.xmin = m_boundary.ymin =  1000000.0;
@@ -301,7 +301,7 @@ struct Boundary *Object::GetBoundary(void)
 	m_gotboundary = true;
 
 	m_width = m_boundary.xmax - m_boundary.xmin;
-	m_height = m_boundary.ymax - m_boundary.ymin;
+	m_length = m_boundary.ymax - m_boundary.ymin;
 
 	return &m_boundary;
 }
@@ -357,9 +357,9 @@ float Object::GetWidth()
 	return m_width;
 }
 
-float Object::GetHeight()
+float Object::GetLength()
 {
-	return m_height;
+	return m_length;
 }
 
 

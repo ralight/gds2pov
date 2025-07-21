@@ -42,7 +42,7 @@ GDSObject_svg::GDSObject_svg(GDS2X::Object *object, FILE *optr)
 	m_optr = optr;
 	m_name = object->GetName();
 	m_width = object->GetWidth();
-	m_height = object->GetHeight();
+	m_length = object->GetLength();
 
 	m_gotboundary = false;
 	m_isoutput = false;
@@ -93,7 +93,7 @@ void GDSObject_svg::OutputPaths()
 				float x, y;
 				char cmd = 'M';
 				for(unsigned int idx=0; path->GetPointCentre(idx, x, y); idx++){
-					fprintf(m_optr, "%c %f %f ", cmd, m_scale*x, m_scale*(this->GetHeight()-y));
+					fprintf(m_optr, "%c %f %f ", cmd, m_scale*x, m_scale*(this->GetLength()-y));
 					cmd = 'L';
 				}
 				fprintf(m_optr, "\"/>\n");
@@ -112,7 +112,7 @@ void GDSObject_svg::OutputPolygons()
 
 			fprintf(m_optr, "\t\t\t<polygon class=\"%s\" points=\"", polygon->GetLayer()->Name.c_str());
 			for(unsigned int j=0; j<polygon->GetPoints(); j++){
-				fprintf(m_optr, "%.2f,%.2f ",m_scale*(polygon->GetXCoords(j)), m_scale*(this->GetHeight() - polygon->GetYCoords(j)));
+				fprintf(m_optr, "%.2f,%.2f ",m_scale*(polygon->GetXCoords(j)), m_scale*(this->GetLength() - polygon->GetYCoords(j)));
 			}
 			fprintf(m_optr, "\"/>\n");
 		}
@@ -137,7 +137,7 @@ void GDSObject_svg::OutputTexts()
 					fprintf(m_optr, "text{ttf \"crystal.ttf\" \"%s\" 0.2, 0 ", text->GetString());
 				}*/
 				//fprintf(m_optr, "texture{pigment{rgbf <%.2f,%.2f,%.2f,%.2f>}} ", text->Colour.R, text->Colour.G, text->Colour.B, text->Colour.F);
-				fprintf(m_optr, "\t\t\t<text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",m_scale*(text->GetX()), m_scale*(this->GetHeight() - text->GetY()), text->GetLayer()->Name.c_str());
+				fprintf(m_optr, "\t\t\t<text font-family=\"sans-serif\" font-size=\"55\" x=\"%.2f\" y=\"%.2f\" class=\"%s\"",m_scale*(text->GetX()), m_scale*(this->GetLength() - text->GetY()), text->GetLayer()->Name.c_str());
 				float htrans = 0.0, vtrans = 0.0;
 				switch(text->GetHJust()){
 					case 0:
@@ -170,7 +170,7 @@ void GDSObject_svg::OutputTexts()
 						fprintf(m_optr, "scale <1,-1,1> ");
 					} */
 					if(fabs(angle) > 0.0f){
-						fprintf(m_optr, "rotate(%.2f,%.2f,%.2f)", angle, m_scale*text->GetX(), m_scale*(this->GetHeight() - text->GetY()));
+						fprintf(m_optr, "rotate(%.2f,%.2f,%.2f)", angle, m_scale*text->GetX(), m_scale*(this->GetLength() - text->GetY()));
 					}
 					if(htrans < 0.0 || vtrans < 0.0){
 						fprintf(m_optr, " translate(%.2f,%.2f)", 55.0*htrans, 55.0*vtrans);
@@ -195,16 +195,16 @@ void GDSObject_svg::OutputTexts()
 
 void GDSObject_svg::OutputSRefs()
 {
-	float height, x, angle;
+	float length, x, angle;
 
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
 		GDS2X::ASRefElement *sref = m_srefs[i];
 
 		GDS2X::Object *obj = sref->object;
 		if(obj){
-			height = obj->GetHeight();
+			length = obj->GetLength();
 		}else{
-			height = 0.0f;
+			length = 0.0f;
 		}
 
 		x = sref->x1;
@@ -213,7 +213,7 @@ void GDSObject_svg::OutputSRefs()
 		if(sref->flipped){
 			x = -x;
 		}
-		fprintf(m_optr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", m_scale*x, m_scale*(this->GetHeight() - sref->y1 - height), sref->name.c_str());
+		fprintf(m_optr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", m_scale*x, m_scale*(this->GetLength() - sref->y1 - length), sref->name.c_str());
 
 		if(sref->mag!=1.0 || sref->flipped || fabs(angle) > 0.0f){
 			fprintf(m_optr, " transform=\"");
@@ -225,7 +225,7 @@ void GDSObject_svg::OutputSRefs()
 				fprintf(m_optr, " scale(-1,1)");
 			}
 			if(fabs(angle) > 0.0f){
-				fprintf(m_optr, " rotate(%.2f,%.2f,%.2f)", angle, m_scale*x, m_scale*(this->GetHeight() - sref->y1));
+				fprintf(m_optr, " rotate(%.2f,%.2f,%.2f)", angle, m_scale*x, m_scale*(this->GetLength() - sref->y1));
 			}
 			fprintf(m_optr, "\"");
 		}
@@ -238,14 +238,14 @@ void GDSObject_svg::OutputARefs()
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		GDS2X::ASRefElement *aref = m_arefs[i];
 		float x, y, angle;
-		float height;
+		float length;
 		float dx, dy;
 
 		GDS2X::Object *obj = aref->object;
 		if(obj){
-			height = obj->GetHeight();
+			length = obj->GetLength();
 		}else{
-			height = 0.0f;
+			length = 0.0f;
 		}
 
 		fprintf(m_optr, "<!-- ARef Start -->\n");
@@ -272,7 +272,7 @@ void GDSObject_svg::OutputARefs()
 
 			for(int j=0; j<aref->columns; j++){
 				for(int k=0; k<aref->rows; k++){
-					fprintf(m_optr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", m_scale*(x + dx * j), m_scale*(this->GetHeight() - (y + dy * k) - height), aref->name.c_str());
+					fprintf(m_optr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", m_scale*(x + dx * j), m_scale*(this->GetLength() - (y + dy * k) - length), aref->name.c_str());
 					if(aref->mag!=1.0f || aref->flipped || fabs(angle)>0.0f){
 						fprintf(m_optr, " transform=\"");
 						/* FIXME - mag isn't tested */
@@ -283,7 +283,7 @@ void GDSObject_svg::OutputARefs()
 							fprintf(m_optr, " scale(-1,1)");
 						}
 						if(fabs(angle)>0.0f){
-							fprintf(m_optr, " rotate(%.2f,%.2f,%.2f)", angle, m_scale*x, m_scale*(this->GetHeight() - aref->y1));
+							fprintf(m_optr, " rotate(%.2f,%.2f,%.2f)", angle, m_scale*x, m_scale*(this->GetLength() - aref->y1));
 						}
 						fprintf(m_optr, "\"");
 					}

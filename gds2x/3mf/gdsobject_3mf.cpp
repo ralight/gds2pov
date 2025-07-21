@@ -115,7 +115,7 @@ GDSObject_3mf::GDSObject_3mf(GDS2X::Object *object, GDSParse_3mf *parse, Lib3MF:
 
 	m_name = object->GetName();
 	m_width = object->GetWidth();
-	m_height = object->GetHeight();
+	m_length = object->GetLength();
 
 	m_gotboundary = false;
 	m_isoutput = false;
