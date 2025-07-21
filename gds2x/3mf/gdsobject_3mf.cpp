@@ -220,18 +220,18 @@ void GDSObject_3mf::OutputTexts()
 void GDSObject_3mf::OutputSRefs()
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
-		GDS2X::ASRefElement *sref = m_srefs[i];
+		GDS2X::SRefElement *sref = m_srefs[i];
 
 		GDSObject_3mf *oref = static_cast<GDSObject_3mf *>(m_parse->GetObjectRef(sref->name));
 
-		m_component->AddComponent(oref->GetComponent().get(), CreateTransformMatrix(sref->x1, sref->y1, sref->rotate.y, sref->flipped, sref->mag));
+		m_component->AddComponent(oref->GetComponent().get(), CreateTransformMatrix(sref->x, sref->y, sref->rotate.y, sref->flipped, sref->mag));
 	}
 }
 
 void GDSObject_3mf::OutputARefs()
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
-		GDS2X::ASRefElement *aref = m_arefs[i];
+		GDS2X::ARefElement *aref = m_arefs[i];
 
 		float dx = 0.0, dy = 0.0;
 		int columns, rows;

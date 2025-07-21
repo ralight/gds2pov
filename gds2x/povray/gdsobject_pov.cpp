@@ -172,7 +172,7 @@ void GDSObject_pov::OutputTexts()
 void GDSObject_pov::OutputSRefs()
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
-		GDS2X::ASRefElement *sref = m_srefs[i];
+		GDS2X::SRefElement *sref = m_srefs[i];
 
 		fprintf(m_optr, "object{str_%s ", sref->name.c_str());
 		if(sref->mag!=1.0){
@@ -181,9 +181,9 @@ void GDSObject_pov::OutputSRefs()
 		if(sref->flipped){
 			fprintf(m_optr, "scale <1,-1,1> ");
 		}
-		fprintf(m_optr, "translate <%.2f,%.2f,0> ", sref->x1, sref->y1);
+		fprintf(m_optr, "translate <%.2f,%.2f,0> ", sref->x, sref->y);
 		if(sref->rotate.y){
-			fprintf(m_optr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->rotate.y, sref->x1, sref->y1);
+			fprintf(m_optr, "Rotate_Around_Trans(<0,0,%.2f>,<%.2f,%.2f,0>)", -sref->rotate.y, sref->x, sref->y);
 		}
 		fprintf(m_optr, "}\n");
 	}
@@ -192,7 +192,7 @@ void GDSObject_pov::OutputSRefs()
 void GDSObject_pov::OutputARefs()
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
-		GDS2X::ASRefElement *aref = m_arefs[i];
+		GDS2X::ARefElement *aref = m_arefs[i];
 
 		float dx = 0.0, dy = 0.0;
 		int columns = 0, rows = 0;

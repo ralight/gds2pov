@@ -108,7 +108,7 @@ void Parse::AssignASRefs(void)
 		auto obj = it->second;
 
 		for(unsigned int j = 0; j < obj->GetSRefCount(); j++){
-			ASRefElement *sref = obj->GetSRef(j);
+			SRefElement *sref = obj->GetSRef(j);
 
 			if(sref){
 				sref->object = m_objects[sref->name];
@@ -118,7 +118,7 @@ void Parse::AssignASRefs(void)
 		}
 
 		for(unsigned int j = 0; j < obj->GetARefCount(); j++){
-			ASRefElement *aref = obj->GetARef(j);
+			ARefElement *aref = obj->GetARef(j);
 
 			if(aref){
 				aref->object = m_objects[aref->name];

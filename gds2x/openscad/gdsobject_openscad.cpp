@@ -163,9 +163,9 @@ void GDSObject_openscad::OutputTexts()
 void GDSObject_openscad::OutputSRefs()
 {
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
-		GDS2X::ASRefElement *sref = m_srefs[i];
+		GDS2X::SRefElement *sref = m_srefs[i];
 
-		fprintf(m_optr, "translate([%.4f,%.4f,0]){", sref->x1, sref->y1);
+		fprintf(m_optr, "translate([%.4f,%.4f,0]){", sref->x, sref->y);
 
 		if(sref->rotate.y){
 			fprintf(m_optr, "rotate([0,0,%.4f]){", -sref->rotate.y);
@@ -193,7 +193,7 @@ void GDSObject_openscad::OutputSRefs()
 void GDSObject_openscad::OutputARefs()
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
-		GDS2X::ASRefElement *aref = m_arefs[i];
+		GDS2X::ARefElement *aref = m_arefs[i];
 
 		float dx = 0.0, dy = 0.0;
 		int columns = 0, rows = 0;

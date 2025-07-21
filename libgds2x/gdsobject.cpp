@@ -102,11 +102,11 @@ Polygon *Object::GetCurrentPolygon()
 
 void Object::AddSRef(std::string name, float x, float y, bool flipped, float mag)
 {
-	ASRefElement *sref = new ASRefElement;
+	SRefElement *sref = new SRefElement;
 
 	sref->name = name;
-	sref->x1 = x;
-	sref->y1 = y;
+	sref->x = x;
+	sref->y = y;
 	sref->flipped = flipped;
 	sref->mag = mag;
 
@@ -124,7 +124,7 @@ void Object::SetSRefRotation(float x, float y, float z)
 
 void Object::AddARef(std::string name, float x1, float y1, float x2, float y2, float x3, float y3, int columns, int rows, bool flipped, float mag)
 {
-	ASRefElement *aref = new ASRefElement;
+	ARefElement *aref = new ARefElement;
 
 	aref->name = name;
 	aref->x1 = x1;
@@ -198,7 +198,7 @@ struct Boundary *Object::GetBoundary(void)
 	}
 
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
-		ASRefElement *sref = m_srefs[i];
+		SRefElement *sref = m_srefs[i];
 		if(m_name == sref->name && sref->object){
 			Object *object = sref->object;
 			struct Boundary *NewBound;
@@ -229,23 +229,23 @@ struct Boundary *Object::GetBoundary(void)
 					break;
 			}
 
-			if(sref->x1 + xmax > m_boundary.xmax){
-				m_boundary.xmax = sref->x1 + xmax;
+			if(sref->x + xmax > m_boundary.xmax){
+				m_boundary.xmax = sref->x + xmax;
 			}
-			if(sref->x1 - xmin < m_boundary.xmin){
-				m_boundary.xmin = sref->x1 - xmin;
+			if(sref->x - xmin < m_boundary.xmin){
+				m_boundary.xmin = sref->x - xmin;
 			}
-			if(sref->y1 + ymax > m_boundary.ymax){
-				m_boundary.ymax = sref->y1 + ymax;
+			if(sref->y + ymax > m_boundary.ymax){
+				m_boundary.ymax = sref->y + ymax;
 			}
-			if(sref->y1 - ymin < m_boundary.ymin){
-				m_boundary.ymin = sref->y1 - ymin;
+			if(sref->y - ymin < m_boundary.ymin){
+				m_boundary.ymin = sref->y - ymin;
 			}
 		}
 	}
 
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
-		ASRefElement *aref = m_arefs[i];
+		ARefElement *aref = m_arefs[i];
 		if(m_name != aref->name && aref->object){
 			Object *object = aref->object;
 			struct Boundary *NewBound;
@@ -321,7 +321,7 @@ bool Object::HasASRef()
 	return (!m_arefs.empty() || !m_srefs.empty());
 }
 
-ASRefElement *Object::GetSRef(unsigned int index)
+SRefElement *Object::GetSRef(unsigned int index)
 {
 	if(m_srefs.size() > 0 && index < m_srefs.size()){
 		return m_srefs[index];
@@ -329,7 +329,7 @@ ASRefElement *Object::GetSRef(unsigned int index)
 	return NULL;
 }
 
-ASRefElement *Object::GetARef(unsigned int index)
+ARefElement *Object::GetARef(unsigned int index)
 {
 	if(m_arefs.size() > 0 && index < m_arefs.size()){
 		return m_arefs[index];
@@ -379,12 +379,12 @@ std::vector<Polygon*> Object::GetPolygons()
 }
 
 
-std::vector<ASRefElement*> Object::GetSRefs()
+std::vector<SRefElement*> Object::GetSRefs()
 {
 	return m_srefs;
 }
 
-std::vector<ASRefElement*> Object::GetARefs()
+std::vector<ARefElement*> Object::GetARefs()
 {
 	return m_arefs;
 }

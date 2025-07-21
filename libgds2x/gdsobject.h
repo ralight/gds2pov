@@ -45,8 +45,8 @@ protected:
 	std::vector<Text*> m_texts;
 	std::vector<Polygon*> m_polygons;
 
-	std::vector<ASRefElement*> m_srefs;
-	std::vector<ASRefElement*> m_arefs;
+	std::vector<SRefElement*> m_srefs;
+	std::vector<ARefElement*> m_arefs;
 	struct Boundary m_boundary;
 
 public:
@@ -75,8 +75,8 @@ public:
 	virtual void Output() { };
 
 	bool HasASRef();
-	ASRefElement *GetSRef(unsigned int index);
-	ASRefElement *GetARef(unsigned int index);
+	SRefElement *GetSRef(unsigned int index);
+	ARefElement *GetARef(unsigned int index);
 	unsigned int GetSRefCount(void);
 	unsigned int GetARefCount(void);
 
@@ -90,8 +90,8 @@ public:
 	std::vector<Text*> GetTexts();
 	std::vector<Polygon*> GetPolygons();
 
-	std::vector<ASRefElement*> GetSRefs();
-	std::vector<ASRefElement*> GetARefs();
+	std::vector<SRefElement*> GetSRefs();
+	std::vector<ARefElement*> GetARefs();
 };
 
 }

@@ -52,7 +52,7 @@ public:
 	Transform() : x(0.0), y(0.0), z(0.0) {};
 };
 
-class ASRefElement {
+class ARefElement {
 public:
 	float x1;
 	float y1;
@@ -68,9 +68,23 @@ public:
 	Object *object;
 	Transform rotate;
 
-	ASRefElement() : x1(0.0), y1(0.0), x2(0.0), y2(0.0),
+	ARefElement() : x1(0.0), y1(0.0), x2(0.0), y2(0.0),
 			x3(0.0), y3(0.0), mag(1.0), columns(0),
 			rows(0), name(""), flipped(false), object(NULL) {};
+};
+
+class SRefElement {
+public:
+	float x;
+	float y;
+	float mag;
+	std::string name;
+	bool flipped;
+	Object *object;
+	Transform rotate;
+
+	SRefElement() : x(0.0), y(0.0), mag(1.0),
+			name(""), flipped(false), object(NULL) {};
 };
 
 struct Boundary {

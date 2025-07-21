@@ -198,7 +198,7 @@ void GDSObject_svg::OutputSRefs()
 	float length, x, angle;
 
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
-		GDS2X::ASRefElement *sref = m_srefs[i];
+		GDS2X::SRefElement *sref = m_srefs[i];
 
 		GDS2X::Object *obj = sref->object;
 		if(obj){
@@ -207,13 +207,13 @@ void GDSObject_svg::OutputSRefs()
 			length = 0.0f;
 		}
 
-		x = sref->x1;
+		x = sref->x;
 		angle = 180/M_PI*asin(sin(sref->rotate.y*M_PI/180));
 
 		if(sref->flipped){
 			x = -x;
 		}
-		fprintf(m_optr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", m_scale*x, m_scale*(this->GetLength() - sref->y1 - length), sref->name.c_str());
+		fprintf(m_optr, "\t\t\t<use x=\"%.2f\" y=\"%.2f\" xlink:href=\"#%s\"", m_scale*x, m_scale*(this->GetLength() - sref->y - length), sref->name.c_str());
 
 		if(sref->mag!=1.0 || sref->flipped || fabs(angle) > 0.0f){
 			fprintf(m_optr, " transform=\"");
@@ -225,7 +225,7 @@ void GDSObject_svg::OutputSRefs()
 				fprintf(m_optr, " scale(-1,1)");
 			}
 			if(fabs(angle) > 0.0f){
-				fprintf(m_optr, " rotate(%.2f,%.2f,%.2f)", angle, m_scale*x, m_scale*(this->GetLength() - sref->y1));
+				fprintf(m_optr, " rotate(%.2f,%.2f,%.2f)", angle, m_scale*x, m_scale*(this->GetLength() - sref->y));
 			}
 			fprintf(m_optr, "\"");
 		}
@@ -236,7 +236,7 @@ void GDSObject_svg::OutputSRefs()
 void GDSObject_svg::OutputARefs()
 {
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
-		GDS2X::ASRefElement *aref = m_arefs[i];
+		GDS2X::ARefElement *aref = m_arefs[i];
 		float x, y, angle;
 		float length;
 		float dx, dy;
