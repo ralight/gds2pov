@@ -50,7 +50,9 @@
 
 using namespace GDS2X;
 
-Process::Process() : m_valid(true)
+Process::Process(float zscale) :
+	m_valid(true),
+	m_zscale(zscale)
 {
 }
 
@@ -413,7 +415,7 @@ unsigned int Process::LayerCount()
 
 ProcessLayer *Process::AddLayer(int Layer, int Datatype)
 {
-	ProcessLayer NewLayer;
+	ProcessLayer NewLayer(m_zscale);
 	std::stringstream sName;
 
 	sName << "Layer-" << Layer << ":" << Datatype;
@@ -435,7 +437,7 @@ ProcessLayer *Process::AddLayer(int Layer, int Datatype)
 
 ProcessLayer *Process::AddLayer(ProcessLayer *NewLayer)
 {
-	ProcessLayer *layer = new ProcessLayer;
+	ProcessLayer *layer = new ProcessLayer(m_zscale);
 
 	layer->Name = NewLayer->Name;
 	layer->Layer = NewLayer->Layer;

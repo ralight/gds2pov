@@ -81,12 +81,12 @@ unsigned int Path::GetPoints()
 
 float Path::GetHeight()
 {
-	return m_layer->Height;
+	return m_layer->GetHeight();
 }
 
 float Path::GetThickness()
 {
-	return m_layer->Thickness;
+	return m_layer->GetThickness();
 }
 
 float Path::GetWidth()

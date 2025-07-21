@@ -27,6 +27,8 @@
 namespace GDS2X {
 
 class ProcessLayer {
+private:
+	float m_zscale;
 public:
 	std::string Name;
 	int Layer;
@@ -40,9 +42,12 @@ public:
 	float Filter;
 	bool Metal;
 
-	ProcessLayer() : Name(""), Layer(-1), Datatype(-1),
+	ProcessLayer(float zscale=1.0) : Name(""), Layer(-1), Datatype(-1),
 					Height(0.0), Thickness(0.0), Show(false),
-					Red(0.5), Green(0.5), Blue(0.5), Metal(false) {}
+					Red(0.5), Green(0.5), Blue(0.5), Metal(false),
+					m_zscale(zscale) {}
+	float GetHeight() { return Height*m_zscale; };
+	float GetThickness() { return Thickness*m_zscale; };
 
 	void HexColour(char *buf, size_t buflen);
 };
@@ -52,8 +57,9 @@ class Process
 private:
 	std::vector<ProcessLayer*> m_layers;
 	bool m_valid;		/* Is the process file valid? */
+	float m_zscale;
 public:
-	Process ();
+	Process (float zscale=1.0f);
 	~Process ();
 
 	void Parse(std::string processfile);

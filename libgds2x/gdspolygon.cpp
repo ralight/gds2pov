@@ -106,12 +106,12 @@ unsigned int Polygon::GetPoints(void)
 
 float Polygon::GetHeight(void)
 {
-	return m_layer->Height;
+	return m_layer->GetHeight();
 }
 
 float Polygon::GetThickness(void)
 {
-	return m_layer->Thickness;
+	return m_layer->GetThickness();
 }
 
 class ProcessLayer *Polygon::GetLayer(void)

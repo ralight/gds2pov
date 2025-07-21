@@ -37,7 +37,7 @@ void printusage(std::string exe)
 	printf("Copyright (C) 2004-2025 Roger Light\nhttp://atchoo.org/gds2pov/\n\n");
 	printf("%s comes with ABSOLUTELY NO WARRANTY.  You may distribute %s freely\nas described in the readme.txt distributed with this file.\n\n", exe.c_str(), exe.c_str());
 	printf("%s is a program for converting a GDS2 file to other graphical files.\n\n", exe.c_str());
-	printf("Usage: %s [-c config.txt] [-e camera.pov] [-f 3mf|openscad|povray|stl|svg] [-h] [-i input.gds] [-o output] [-p process.txt] [-q] [-t topcell] [-v]\n\n", exe.c_str());
+	printf("Usage: %s [-c config.txt] [-e camera.pov] [-f 3mf|openscad|povray|stl|svg] [-h] [-i input.gds] [-o output] [-p process.txt] [-q] [-t topcell] [-v] [-z height-scale]\n\n", exe.c_str());
 	printf("Options\n");
 	printf(" -c\t\tSpecify scene config file (povray only)\n");
 	printf(" -e\t\tSpecify external camera position file (povray only)\n");
@@ -50,14 +50,15 @@ void printusage(std::string exe)
 	printf(" -p\t\tSpecify process file\n");
 	printf(" -q\t\tQuiet output\n");
 	printf(" -t\t\tSpecify top cell name\n");
-	printf(" -v\t\tVerbose output\n\n");
+	printf(" -v\t\tVerbose output\n");
+	printf(" -z\t\tHeight and thickness scale factor. Defaults to 1.0.\n\n");
 	printf("See http://atchoo.org/gds2pov/ for updates.\n");
 }
 
 
-GDS2X::Process *load_process(std::string processfile, bool generate_process)
+GDS2X::Process *load_process(std::string processfile, bool generate_process, float zscale)
 {
-	GDS2X::Process *process = new GDS2X::Process();
+	GDS2X::Process *process = new GDS2X::Process(zscale);
 	if(!process){
 		fprintf(stderr, "Error: Out of memory.\n");
 		return nullptr;
@@ -104,6 +105,7 @@ int main(int argc, char *argv[])
 	options["outfile"] = "";
 	options["processfile"] = "";
 	options["topcell"] = "";
+	float zscale = 1.0f;
 
 	std::string exe = fix_exe(argv[0]);
 	if(exe == "gds23mf"){
@@ -216,6 +218,15 @@ int main(int argc, char *argv[])
 				}
 			}else if(strncmp(argv[i], "-v", strlen("-v"))==0){
 				verbose_output++;
+			}else if(strncmp(argv[i], "-z", strlen("-z"))==0){
+				if(i==argc-1){
+					fprintf(stderr, "Error: -z switch given but no scale specified.\n\n");
+					printusage(exe);
+					return 1;
+				}else{
+					zscale = atof(argv[i+1]);
+					i++;
+				}
 			}else{
 				printusage(exe);
 				return 1;
@@ -229,7 +240,7 @@ int main(int argc, char *argv[])
 
 	/************ Load process ****************/
 
-	GDS2X::Process *process = load_process(options["processfile"], options["generate_process"] == "true");
+	GDS2X::Process *process = load_process(options["processfile"], options["generate_process"] == "true", zscale);
 	if(!process){
 		return -1;
 	}
