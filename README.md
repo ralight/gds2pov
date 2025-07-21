@@ -25,42 +25,37 @@ section at the bottom of this document.
 
 ## General Usage
 
-Usage is mostly the same across the programs. You can always try:
+Usage is mostly the same across the different output formats.
 
-program -h
+```
+Usage: gds2x [-c config.txt] [-e camera.pov] [-f 3mf|openscad|povray|stl|svg] [-h]
+             [-i input.gds] [-o output] [-p process.txt] [-q] [-t topcell] [-v] [-z height-scale]
 
-to get the specific usage information.
+Options
+ -c             Specify scene config file (povray only)
+ -e             Specify external camera position file (povray only)
+ -f             Specify an output format from: 3mf openscad povray stl svg. Defaults to 3mf
+ -g             Generate a process file based on the input gds2 file (suppresses output file generation).
+ -h             Display this help
+ -i             Input GDS2 file (stdin if not specified)
+ -m             Input macro file
+ -o             Output file (stdout if not specified)
+ -p             Specify process file
+ -q             Quiet output
+ -t             Specify top cell name
+ -v             Verbose output
 
-
-gds2pov [-i input.gds] [-o output.pov] [-b] [-c config.txt] [-p process.txt] [-t topcell] [-v]
-
- -c	Specify config file
- -g Generate process file from gds2 file information (suppresses generation of
-    output file).
- -h Show usage
- -i Input GDS2 file (stdin if not given)
- -o Output POV file (stdout if not given)
- -p	Specify process file
- -q Quiet output
- -t	Specify top cell name
- -v	Verbose output
+ -z             Height and thickness scale factor. Default 1.0
+```
 
 First steps - what do you need at the absolute minimum? This program, a GDS2
-file and a file describing your process to GDS2POV.
+file and a file describing your process to gds2x.
 
-An example process file is provided with this package and is called
-example_process.txt. This file should give you all the information you need on
-how to create a configuration for your own process. You will also need the layer
-information for your process as well as the height and thickness of the layers
-if you have it and want the output to be more accurate.
+An example process file `example_process.txt` is provided with this package.
+This file should give you all the information you need on how to create a
+configuration for your own process. You will also need the layer information
+for your process as well as the height and thickness of the layers.
 
-Note: POV-Ray prefers it if objects are not perfectly aligned with one another.
-That is to say, it would prefer a box at (0,0,0) extending in the +x direction
-and a box at (1,0,0) extending in the -x direction to a box at (0,0,0) extending
-in the +x direction and a box at (0,0,0) extending in the -x direction. I hope
-that is clear. Anyway, what this means is that when you are defining the height
-and thickness for adjacent layers, make sure that they overlap just slightly.
-This is the reason for the slightly odd numbers in example_process.txt.
 
 So, you have everything. Just run:
 
@@ -80,7 +75,7 @@ lights and the camera where you wish.
 The second option is to use a config file. An example config file is provided
 and is called config.txt. To use a config file with GDS2POV, try the following:
 
-gds2pov input.gds output.pov -c config.txt
+gds2x input.gds output.pov -c config.txt
 
 The config file allows you to set the ambient light level, a process file and
 the position of the camera, where the camera is looking as well as defining
@@ -125,10 +120,7 @@ inclusion.
 * Summary only considers a single instance of each object.
 * Support for the GDS2 format is incomplete.
 * Big files take a long time and a lot of memory to render. Yes... try
-  reducing the quality and size of your output picture in POV-Ray. I don't
-  really envisage GDS2POV being used on complete chips - POV-Ray is limited
-  to 2GB of RAM on 32 bit machines and it is quite possible to use that with
-  a complicated GDS2 file.
+  reducing the quality and size of your output picture in POV-Ray.
 
 
 ## License
