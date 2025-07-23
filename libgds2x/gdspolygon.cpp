@@ -28,10 +28,9 @@
 
 namespace GDS2X {
 
-Polygon::Polygon(unsigned int points, class ProcessLayer *layer) :
-	m_points(points), m_layer(layer)
+Polygon::Polygon(ProcessLayer *layer) :
+	m_layer(layer)
 {
-	m_coords = new Point[points+1]; //FIXME - debug +1
 }
 
 
@@ -49,15 +48,11 @@ Polygon::Polygon(std::vector<Vertex> vertices, std::vector<Triangle> triangles, 
 
 Polygon::~Polygon()
 {
-	if(m_coords) delete [] m_coords;
 }
 
-void Polygon::AddPoint(unsigned int index, float x, float y)
+void Polygon::AddPoint(float x, float y)
 {
-	if(index < m_points){
-		m_coords[index].x = x;
-		m_coords[index].y = y;
-	}
+	m_coords.push_back(Point(x, y));
 }
 
 
@@ -70,7 +65,7 @@ void Polygon::SetRotation(float x, float y, float z)
 
 float Polygon::GetXCoords(unsigned int index)
 {
-	if(index < m_points){
+	if(index < m_coords.size()){
 		return m_coords[index].x;
 	}
 	return 0.0;
@@ -78,7 +73,7 @@ float Polygon::GetXCoords(unsigned int index)
 
 float Polygon::GetYCoords(unsigned int index)
 {
-	if(index < m_points){
+	if(index < m_coords.size()){
 		return m_coords[index].y;
 	}
 	return 0.0;
@@ -86,7 +81,7 @@ float Polygon::GetYCoords(unsigned int index)
 
 float Polygon::GetAngleCoords(unsigned int index)
 {
-	if(index < m_points){
+	if(index < m_coords.size()){
 	return m_coords[index].angle;
 	}
 	return 0.0;
@@ -94,14 +89,14 @@ float Polygon::GetAngleCoords(unsigned int index)
 
 void Polygon::SetAngleCoords(unsigned int index, float value)
 {
-	if(index < m_points){
+	if(index < m_coords.size()){
 		m_coords[index].angle = value;
 	}
 }
 
 unsigned int Polygon::GetPoints(void)
 {
-	return m_points;
+	return m_coords.size();
 }
 
 float Polygon::GetHeight(void)
@@ -114,7 +109,7 @@ float Polygon::GetThickness(void)
 	return m_layer->GetThickness();
 }
 
-class ProcessLayer *Polygon::GetLayer(void)
+ProcessLayer *Polygon::GetLayer(void)
 {
 	return m_layer;
 }

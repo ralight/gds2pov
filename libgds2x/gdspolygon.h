@@ -28,20 +28,19 @@ namespace GDS2X {
 class Polygon
 {
 private:
-	unsigned int m_points;
-	Point *m_coords;
 	Transform m_rotate;
-	class ProcessLayer	*m_layer;
+	ProcessLayer	*m_layer;
 	std::string m_layer_name;
+	std::vector<Point> m_coords;
 	std::vector<Vertex> m_vertices;
 	std::vector<Triangle> m_triangles;
 
 public:
-	Polygon(unsigned int points, ProcessLayer *layer);
+	Polygon(ProcessLayer *layer);
 	Polygon(std::vector<Vertex> vertices, std::vector<Triangle> triangles, ProcessLayer *layer);
 	~Polygon();
 
-	void AddPoint(unsigned int index, float x, float y);
+	void AddPoint(float x, float y);
 	void SetRotation(float x, float y, float z);
 
 	float GetHeight(void);
@@ -51,7 +50,7 @@ public:
 	float GetYCoords(unsigned int index);
 	float GetAngleCoords(unsigned int index);
 	void SetAngleCoords(unsigned int index, float value);
-	class ProcessLayer *GetLayer(void);
+	ProcessLayer *GetLayer(void);
 	std::vector<Vertex> GetVertices();
 	std::vector<Triangle> GetTriangles();
 };

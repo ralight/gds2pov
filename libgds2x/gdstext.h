@@ -38,12 +38,12 @@ private:
 	float m_mag;
 	int m_vjust;
 	int m_hjust;
-	class ProcessLayer *m_layer;
+	ProcessLayer *m_layer;
 	std::string m_string;
 	Transform m_rotate;
 
 public:
-	Text(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer);
+	Text(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, ProcessLayer *layer);
 	~Text();
 
 	void SetString(std::string String);
@@ -61,7 +61,7 @@ public:
 
 	bool GetFlipped();
 
-	class ProcessLayer *GetLayer();
+	ProcessLayer *GetLayer();
 };
 
 }

@@ -30,19 +30,18 @@ class Path
 {
 private:
 	int m_type;
-	unsigned int m_points;
 	float m_width;
 	float m_bgnextn;
 	float m_endextn;
-	Point *m_coords;
+	std::vector<Point> m_coords;
 	Transform m_rotate;
-	class ProcessLayer	*m_layer;
+	ProcessLayer *m_layer;
 
 public:
-	Path(int pathtype, unsigned int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
+	Path(int pathtype, float width, float bgnextn, float endextn, ProcessLayer *layer);
 	~Path();
 
-	void AddPoint(unsigned int index, float x, float y);
+	void AddPoint(float x, float y);
 	void SetRotation(float x, float y, float z);
 
 	float GetXCoords(unsigned int index);
@@ -56,7 +55,7 @@ public:
 	float GetEndExtn();
 
 	int GetType();
-	class ProcessLayer *GetLayer();
+	ProcessLayer *GetLayer();
 
 	int GetPointCentre(unsigned int idx, float &x, float &y);
 	int GetPoint2D(unsigned int idx, float &x, float &y);

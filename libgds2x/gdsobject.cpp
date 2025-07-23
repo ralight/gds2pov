@@ -90,9 +90,9 @@ std::string Object::GetName()
 	return m_name;
 }
 
-void Object::AddPolygon(int points, class ProcessLayer *layer)
+void Object::AddPolygon(ProcessLayer *layer)
 {
-	m_polygons.push_back(new Polygon(points, layer));
+	m_polygons.push_back(new Polygon(layer));
 }
 
 Polygon *Object::GetCurrentPolygon()
@@ -150,7 +150,7 @@ void Object::SetARefRotation(float x, float y, float z)
 	}
 }
 
-struct Boundary *Object::GetBoundary(void)
+Boundary *Object::GetBoundary(void)
 {
 	if(m_gotboundary){
 		return &m_boundary;
@@ -201,7 +201,7 @@ struct Boundary *Object::GetBoundary(void)
 		SRefElement *sref = m_srefs[i];
 		if(m_name == sref->name && sref->object){
 			Object *object = sref->object;
-			struct Boundary *NewBound;
+			Boundary *NewBound;
 			NewBound = object->GetBoundary();
 
 			float xmax = 0.0, xmin = 0.0;
@@ -248,7 +248,7 @@ struct Boundary *Object::GetBoundary(void)
 		ARefElement *aref = m_arefs[i];
 		if(m_name != aref->name && aref->object){
 			Object *object = aref->object;
-			struct Boundary *NewBound;
+			Boundary *NewBound;
 			NewBound = object->GetBoundary();
 
 			float xmax = 0.0, xmin = 0.0;
@@ -306,9 +306,9 @@ struct Boundary *Object::GetBoundary(void)
 	return &m_boundary;
 }
 
-void Object::AddPath(int PathType, int Points, float Width, float BgnExtn, float EndExtn, class ProcessLayer *layer)
+void Object::AddPath(int PathType, float Width, float BgnExtn, float EndExtn, ProcessLayer *layer)
 {
-	m_paths.push_back(new Path(PathType, Points, Width, BgnExtn, EndExtn, layer));
+	m_paths.push_back(new Path(PathType, Width, BgnExtn, EndExtn, layer));
 }
 
 Path *Object::GetCurrentPath()

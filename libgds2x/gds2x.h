@@ -42,6 +42,8 @@ public:
 	float y;
 	float angle;
 	Point() : x(0.0), y(0.0), angle(0.0) {};
+	Point(float x, float y, float angle=0.0) :
+		x(x), y(y), angle(angle) {};
 };
 
 class Transform {

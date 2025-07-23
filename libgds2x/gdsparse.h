@@ -63,7 +63,7 @@ protected:
 	FILE *m_iptr;
 	Process *m_process;
 
-	struct Boundary *m_boundary;
+	Boundary *m_boundary;
 	int16_t m_recordlen;
 
 	/* Output options */
@@ -136,7 +136,7 @@ public:
 	virtual ~Parse ();
 
 	object_map_t LoadMacroFile(std::string filename);
-	struct Boundary *GetBoundary();
+	Boundary *GetBoundary();
 	bool ParseFile(FILE *iptr);
 	void Output();
 	virtual Object *NewObject(std::string name) { return new Object(name); };

@@ -737,14 +737,14 @@ void Parse::ParseXYPath()
 	if(m_currentwidth){
 		/* FIXME - need to check for -ve value and then not scale */
 		if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
-			m_currentobject->AddPath(m_currentpathtype, points, m_currentwidth, m_currentbgnextn, m_currentendextn, thislayer);
+			m_currentobject->AddPath(m_currentpathtype, m_currentwidth, m_currentbgnextn, m_currentendextn, thislayer);
 		}
 		for(i=0; i<points; i++){
 			X = m_units * (float)GetFourByteSignedInt();
 			Y = m_units * (float)GetFourByteSignedInt();
 			v_printf(2, "(%.3f,%.3f) ", X, Y);
 			if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
-				m_currentobject->GetCurrentPath()->AddPoint(i, X, Y);
+				m_currentobject->GetCurrentPath()->AddPoint(X, Y);
 			}
 		}
 	}else{
@@ -801,8 +801,7 @@ void Parse::ParseXYBoundary()
 	}
 
 	if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
-		//FIXME - why was this points+1 ? m_currentobject->AddPolygon(m_units*thislayer->Height, m_units*thislayer->Thickness, points+1, thislayer->Name);
-		m_currentobject->AddPolygon(points-1, thislayer);
+		m_currentobject->AddPolygon(thislayer);
 	}
 
 	for(i=0; i<points-1; i++){
@@ -814,7 +813,7 @@ void Parse::ParseXYBoundary()
 			firstY = Y;
 		}
 		if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
-			m_currentobject->GetCurrentPolygon()->AddPoint(i, X, Y);
+			m_currentobject->GetCurrentPolygon()->AddPoint(X, Y);
 		}
 	}
 	/* Clear duplicate point */
@@ -963,17 +962,17 @@ void Parse::ReportUnsupported(std::string name, enum RecordNumbers rn)
 }
 
 
-struct Boundary *Parse::GetBoundary()
+Boundary *Parse::GetBoundary()
 {
 	if(!m_boundary){
-		m_boundary = new struct Boundary;
+		m_boundary = new Boundary;
 	}
 
 	m_boundary->xmax = m_boundary->ymax = std::numeric_limits<float>::lowest();
 	m_boundary->xmin = m_boundary->ymin =  std::numeric_limits<float>::max();
 
 	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
-		struct Boundary *object_bound = it->second->GetBoundary();
+		Boundary *object_bound = it->second->GetBoundary();
 
 		if(object_bound->xmax > m_boundary->xmax){
 			m_boundary->xmax = object_bound->xmax;

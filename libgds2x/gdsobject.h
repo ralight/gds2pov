@@ -47,18 +47,18 @@ protected:
 
 	std::vector<SRefElement*> m_srefs;
 	std::vector<ARefElement*> m_arefs;
-	struct Boundary m_boundary;
+	Boundary m_boundary;
 
 public:
 	Object() { };
 	Object(std::string name);
-	Object(std::string name, std::vector<Vertex> vertices, std::vector<Triangle> triangles, class ProcessLayer *layer);
+	Object(std::string name, std::vector<Vertex> vertices, std::vector<Triangle> triangles, ProcessLayer *layer);
 	virtual ~Object();
 
-	void AddText(float x, float Y, float Z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer);
+	void AddText(float x, float Y, float Z, bool flipped, float mag, int vjust, int hjust, ProcessLayer *layer);
 	Text *GetCurrentText();
 
-	void AddPolygon(int points, class ProcessLayer *layer);
+	void AddPolygon(ProcessLayer *layer);
 	Polygon *GetCurrentPolygon();
 
 	void AddSRef(std::string name, float x, float y, bool flipped, float mag);
@@ -67,7 +67,7 @@ public:
 	void AddARef(std::string name, float x1, float y1, float x2, float y2, float x3, float y3, int columns, int rows, bool flipped, float mag);
 	void SetARefRotation(float x, float y, float z);
 
-	void AddPath(int pathtype, int points, float width, float bgnextn, float endextn, class ProcessLayer *layer);
+	void AddPath(int pathtype, float width, float bgnextn, float endextn, ProcessLayer *layer);
 	Path *GetCurrentPath();
 
 	std::string GetName();
@@ -80,7 +80,7 @@ public:
 	unsigned int GetSRefCount(void);
 	unsigned int GetARefCount(void);
 
-	struct Boundary *GetBoundary(void);
+	Boundary *GetBoundary(void);
 	float GetWidth();
 	float GetLength();
 

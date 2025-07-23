@@ -30,7 +30,7 @@ namespace GDS2X {
 Text::Text(float x, float y, float z,
 				bool flipped, float mag,
 				int vjust, int hjust,
-				class ProcessLayer *layer) :
+				ProcessLayer *layer) :
 				m_x(x), m_y(y), m_z(z),
 				m_flipped(flipped), m_mag(mag),
 				m_vjust(vjust), m_hjust(hjust),
@@ -99,7 +99,7 @@ bool Text::GetFlipped()
 	return m_flipped;
 }
 
-class ProcessLayer *Text::GetLayer()
+ProcessLayer *Text::GetLayer()
 {
 	return m_layer;
 }

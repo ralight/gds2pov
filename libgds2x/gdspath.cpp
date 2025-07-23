@@ -27,27 +27,21 @@
 
 namespace GDS2X {
 
-Path::Path(int type,
-				unsigned int points, float width,
+Path::Path(int type, float width,
 				float bgnextn, float endextn,
-				class ProcessLayer *layer) :
-				m_type(type), m_points(points),
-				m_width(width), m_bgnextn(bgnextn), m_endextn(endextn), m_layer(layer)
+				ProcessLayer *layer) :
+				m_type(type), m_width(width),
+				m_bgnextn(bgnextn), m_endextn(endextn), m_layer(layer)
 {
-	m_coords = new Point[points];
 }
 
 Path::~Path()
 {
-	if(m_coords) delete [] m_coords;
 }
 
-void Path::AddPoint(unsigned int index, float x, float y)
+void Path::AddPoint(float x, float y)
 {
-	if(index < m_points){
-		m_coords[index].x = x;
-		m_coords[index].y = y;
-	}
+	m_coords.push_back(Point(x, y));
 }
 
 
@@ -60,7 +54,7 @@ void Path::SetRotation(float x, float y, float z)
 
 float Path::GetXCoords(unsigned int index)
 {
-	if(index < m_points){
+	if(index < m_coords.size()){
 		return m_coords[index].x;
 	}
 	return 0.0;
@@ -68,7 +62,7 @@ float Path::GetXCoords(unsigned int index)
 
 float Path::GetYCoords(unsigned int index)
 {
-	if(index < m_points){
+	if(index < m_coords.size()){
 		return m_coords[index].y;
 	}
 	return 0.0;
@@ -76,7 +70,7 @@ float Path::GetYCoords(unsigned int index)
 
 unsigned int Path::GetPoints()
 {
-	return m_points;
+	return m_coords.size();
 }
 
 float Path::GetHeight()
@@ -109,7 +103,7 @@ int Path::GetType()
 	return m_type;
 }
 
-class ProcessLayer *Path::GetLayer()
+ProcessLayer *Path::GetLayer()
 {
 	return m_layer;
 }
@@ -117,7 +111,7 @@ class ProcessLayer *Path::GetLayer()
 
 int Path::GetPointCentre(unsigned int idx, float &x, float &y)
 {
-	if(idx < m_points){
+	if(idx < m_coords.size()){
 		x = m_coords[idx].x;
 		y = m_coords[idx].y;
 		return 1;
