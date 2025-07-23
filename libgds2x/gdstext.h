@@ -31,11 +31,11 @@ namespace GDS2X {
 class Text
 {
 private:
-	float m_x;
-	float m_y;
-	float m_z;
+	double m_x;
+	double m_y;
+	double m_z;
 	bool m_flipped;
-	float m_mag;
+	double m_mag;
 	int m_vjust;
 	int m_hjust;
 	ProcessLayer *m_layer;
@@ -43,18 +43,18 @@ private:
 	Transform m_rotate;
 
 public:
-	Text(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, ProcessLayer *layer);
+	Text(double x, double y, double z, bool flipped, double mag, int vjust, int hjust, ProcessLayer *layer);
 	~Text();
 
 	void SetString(std::string String);
-	void SetRotation(float x, float y, float z);
+	void SetRotation(double x, double y, double z);
 
 	std::string GetString();
-	float GetX();
-	float GetY();
-	float GetZ();
-	float GetRY();
-	float GetMag();
+	double GetX();
+	double GetY();
+	double GetZ();
+	double GetRY();
+	double GetMag();
 
 	int GetVJust();
 	int GetHJust();

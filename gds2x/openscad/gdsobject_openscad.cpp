@@ -72,7 +72,7 @@ void GDSObject_openscad::OutputPaths()
 			{
 				fprintf(m_optr, "\tpoints=[");
 
-				float x, y, z;
+				double x, y, z;
 				unsigned idx = 0;
 				path->GetPoint3D(idx, x, y, z);
 
@@ -195,7 +195,7 @@ void GDSObject_openscad::OutputARefs()
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		GDS2X::ARefElement *aref = m_arefs[i];
 
-		float dx = 0.0, dy = 0.0;
+		double dx = 0.0, dy = 0.0;
 		int columns = 0, rows = 0;
 
 		switch((int)round(aref->rotate.y)){
@@ -203,8 +203,8 @@ void GDSObject_openscad::OutputARefs()
 			case 360:
 			case 180:
 			case -180:
-				dx = (float)(aref->x2 - aref->x1) / (float)aref->columns;
-				dy = (float)(aref->y3 - aref->y1) / (float)aref->rows;
+				dx = (aref->x2 - aref->x1) / aref->columns;
+				dy = (aref->y3 - aref->y1) / aref->rows;
 				columns = aref->columns;
 				rows = aref->rows;
 				break;
@@ -213,8 +213,8 @@ void GDSObject_openscad::OutputARefs()
 			case -270:
 			case 270:
 			case -90:
-				dx = (float)(aref->x3 - aref->x1) / (float)aref->rows;
-				dy = (float)(aref->y2 - aref->y1) / (float)aref->columns;
+				dx = (aref->x3 - aref->x1) / aref->rows;
+				dy = (aref->y2 - aref->y1) / aref->columns;
 				columns = aref->rows;
 				rows = aref->columns;
 				break;

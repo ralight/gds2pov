@@ -44,7 +44,7 @@ void SetVerbosity(int level)
 	verbose_output = level;
 }
 
-Vertex CreateVertex(float x, float y, float z)
+Vertex CreateVertex(double x, double y, double z)
 {
 	Vertex result;
 	result.x = x;

@@ -44,22 +44,22 @@ protected:
 
 	int16_t m_currentlayer;
 	int16_t m_currentdatatype;
-	float m_currentwidth;
+	double m_currentwidth;
 	int16_t m_currentpathtype;
 	gds_element_type m_currentelement;
 	int16_t m_currenttexttype;
 	int16_t m_currentpresentation;
 	std::string m_textstring;
 	int16_t m_currentstrans;
-	float m_currentangle;
-	float m_currentmag;
-	float m_currentbgnextn;
-	float m_currentendextn;
+	double m_currentangle;
+	double m_currentmag;
+	double m_currentbgnextn;
+	double m_currentendextn;
 
 	std::string m_sname;
 	int16_t m_arrayrows, m_arraycols;
-	float m_units;
-	float m_angle;
+	double m_units;
+	double m_angle;
 	FILE *m_iptr;
 	Process *m_process;
 
@@ -141,7 +141,7 @@ public:
 	void Output();
 	virtual Object *NewObject(std::string name) { return new Object(name); };
 
-	float GetUnits();
+	double GetUnits();
 	Process *GetProcess();
 };
 

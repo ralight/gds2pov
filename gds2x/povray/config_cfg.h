@@ -47,9 +47,9 @@ class Position {
 public:
 	PosType postype;
 	BoundaryPos boundarypos;
-	float xmod;
-	float ymod;
-	float zmod;
+	double xmod;
+	double ymod;
+	double zmod;
 
 	Position() : postype(ptLight), boundarypos(bpCentre),
 		xmod(1.0), ymod(1.0), zmod(1.0) { };
@@ -59,8 +59,8 @@ class GDSConfig
 {
 private:
 	std::string m_font;
-	float m_ambient;
-	float m_scale;
+	double m_ambient;
+	double m_scale;
 	bool m_valid;
 	std::string m_camfile;
 
@@ -73,8 +73,8 @@ public:
 	GDSConfig(std::string filename="", std::string camfile="");
 	~GDSConfig();
 
-	float GetAmbient();
-	float GetScale();
+	double GetAmbient();
+	double GetScale();
 	bool IsValid();
 	std::string GetFont();
 

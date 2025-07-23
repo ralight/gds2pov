@@ -71,7 +71,7 @@ Object::~Object()
 	}
 }
 
-void Object::AddText(float x, float y, float z, bool flipped, float mag, int vjust, int hjust, class ProcessLayer *layer)
+void Object::AddText(double x, double y, double z, bool flipped, double mag, int vjust, int hjust, class ProcessLayer *layer)
 {
 	m_texts.push_back(new Text(x, y, z, flipped, mag, vjust, hjust, layer));
 }
@@ -100,7 +100,7 @@ Polygon *Object::GetCurrentPolygon()
 	return m_polygons[m_polygons.size()-1];
 }
 
-void Object::AddSRef(std::string name, float x, float y, bool flipped, float mag)
+void Object::AddSRef(std::string name, double x, double y, bool flipped, double mag)
 {
 	SRefElement *sref = new SRefElement;
 
@@ -113,7 +113,7 @@ void Object::AddSRef(std::string name, float x, float y, bool flipped, float mag
 	m_srefs.push_back(sref);
 }
 
-void Object::SetSRefRotation(float x, float y, float z)
+void Object::SetSRefRotation(double x, double y, double z)
 {
 	if(!m_srefs.empty()){
 		m_srefs[m_srefs.size()-1]->rotate.x = x;
@@ -122,7 +122,7 @@ void Object::SetSRefRotation(float x, float y, float z)
 	}
 }
 
-void Object::AddARef(std::string name, float x1, float y1, float x2, float y2, float x3, float y3, int columns, int rows, bool flipped, float mag)
+void Object::AddARef(std::string name, double x1, double y1, double x2, double y2, double x3, double y3, int columns, int rows, bool flipped, double mag)
 {
 	ARefElement *aref = new ARefElement;
 
@@ -141,7 +141,7 @@ void Object::AddARef(std::string name, float x1, float y1, float x2, float y2, f
 	m_arefs.push_back(aref);
 }
 
-void Object::SetARefRotation(float x, float y, float z)
+void Object::SetARefRotation(double x, double y, double z)
 {
 	if(!m_arefs.empty()){
 		m_arefs[m_arefs.size()-1]->rotate.x = x;
@@ -204,8 +204,8 @@ Boundary *Object::GetBoundary(void)
 			Boundary *NewBound;
 			NewBound = object->GetBoundary();
 
-			float xmax = 0.0, xmin = 0.0;
-			float ymax = 0.0, ymin = 0.0;
+			double xmax = 0.0, xmin = 0.0;
+			double ymax = 0.0, ymin = 0.0;
 
 			switch((int)round(sref->rotate.y)){
 				case 0:
@@ -251,8 +251,8 @@ Boundary *Object::GetBoundary(void)
 			Boundary *NewBound;
 			NewBound = object->GetBoundary();
 
-			float xmax = 0.0, xmin = 0.0;
-			float ymax = 0.0, ymin = 0.0;
+			double xmax = 0.0, xmin = 0.0;
+			double ymax = 0.0, ymin = 0.0;
 
 			switch((int)round(aref->rotate.y)){
 				case 0:
@@ -306,7 +306,7 @@ Boundary *Object::GetBoundary(void)
 	return &m_boundary;
 }
 
-void Object::AddPath(int PathType, float Width, float BgnExtn, float EndExtn, ProcessLayer *layer)
+void Object::AddPath(int PathType, double Width, double BgnExtn, double EndExtn, ProcessLayer *layer)
 {
 	m_paths.push_back(new Path(PathType, Width, BgnExtn, EndExtn, layer));
 }
@@ -352,12 +352,12 @@ bool Object::GetIsOutput()
 	return m_isoutput;
 }
 
-float Object::GetWidth()
+double Object::GetWidth()
 {
 	return m_width;
 }
 
-float Object::GetLength()
+double Object::GetLength()
 {
 	return m_length;
 }

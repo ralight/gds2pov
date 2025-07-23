@@ -29,7 +29,7 @@
 
 using namespace Lib3MF;
 
-sLib3MFPosition CreateVertex3(float x, float y, float z)
+sLib3MFPosition CreateVertex3(double x, double y, double z)
 {
 	sLib3MFPosition result;
 	result.m_Coordinates[0] = x;
@@ -67,12 +67,12 @@ sLib3MFTriangle CreateTriangle(GDS2X::Triangle &t)
 }
 
 
-sLib3MFTransform CreateTransformMatrix(float x, float y, float rotate, bool mirror, float scale)
+sLib3MFTransform CreateTransformMatrix(double x, double y, double rotate, bool mirror, double scale)
 {
 	sLib3MFTransform mMatrix;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 3; j++) {
-			mMatrix.m_Fields[i][j] = (i == j) ? 1.0f : 0.0f;
+			mMatrix.m_Fields[i][j] = (i == j) ? 1.0 : 0.0;
 		}
 	}
 
@@ -148,7 +148,7 @@ void GDSObject_3mf::OutputPaths()
 			std::vector<sLib3MFTriangle> faces(4+8*(path->GetPoints()-1));
 
 			int idx = 0;
-			float x, y, z;
+			double x, y, z;
 			while(path->GetPoint3D(idx, x, y, z)){
 				vertices[idx] = CreateVertex3(x, y, z);
 				idx++;
@@ -233,7 +233,7 @@ void GDSObject_3mf::OutputARefs()
 	for(unsigned int i = 0; i < m_arefs.size(); i++){
 		GDS2X::ARefElement *aref = m_arefs[i];
 
-		float dx = 0.0, dy = 0.0;
+		double dx = 0.0, dy = 0.0;
 		int columns, rows;
 
 		switch((int)round(aref->rotate.y)){
@@ -241,8 +241,8 @@ void GDSObject_3mf::OutputARefs()
 			case 360:
 			case 180:
 			case -180:
-				dx = (float)(aref->x2 - aref->x1) / (float)aref->columns;
-				dy = (float)(aref->y3 - aref->y1) / (float)aref->rows;
+				dx = (aref->x2 - aref->x1) / aref->columns;
+				dy = (aref->y3 - aref->y1) / aref->rows;
 				columns = aref->columns;
 				rows = aref->rows;
 				break;
@@ -251,8 +251,8 @@ void GDSObject_3mf::OutputARefs()
 			case -270:
 			case 270:
 			case -90:
-				dx = (float)(aref->x3 - aref->x1) / (float)aref->rows;
-				dy = (float)(aref->y2 - aref->y1) / (float)aref->columns;
+				dx = (aref->x3 - aref->x1) / aref->rows;
+				dy = (aref->y2 - aref->y1) / aref->columns;
 				columns = aref->rows;
 				rows = aref->columns;
 				break;

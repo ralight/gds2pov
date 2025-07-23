@@ -86,8 +86,8 @@ void GDSParse_svg::OutputHeader()
 {
 	if(m_optr && !m_objects.empty()){
 		struct GDS2X::Boundary *boundary = GetBoundary();
-		float width = (boundary->xmax - boundary->xmin);
-		float height = (boundary->ymax - boundary->ymin);
+		double width = (boundary->xmax - boundary->xmin);
+		double height = (boundary->ymax - boundary->ymin);
 
 		for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
 			GDSObject_svg *obj = static_cast<GDSObject_svg*>(it->second);
@@ -120,11 +120,11 @@ void GDSParse_svg::OutputHeader()
 		fprintf(m_optr, "\t<title></title>");
 		fprintf(m_optr, "\t<desc></desc>\n");
 
-		float distance;
-		if(width/2 > height/2){
-			distance = width * 1.8/2;
+		double distance;
+		if(width/2.0 > height/2.0){
+			distance = width * 1.8/2.0;
 		}else{
-			distance = height * 1.8/2;
+			distance = height * 1.8/2.0;
 		}
 
 		fprintf(m_optr, "\t<defs>\n");

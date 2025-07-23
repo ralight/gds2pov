@@ -31,7 +31,7 @@ class GDSParse_svg : public GDS2X::Parse
 {
 private:
 	FILE *m_optr;
-	float m_scale;
+	double m_scale;
 
 public:
 	GDSParse_svg(GDS2X::Process *process, GDS2X::option_map_t &options);

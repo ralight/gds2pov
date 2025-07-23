@@ -28,27 +28,27 @@ namespace GDS2X {
 
 class ProcessLayer {
 private:
-	float m_zscale;
+	double m_zscale;
 	bool m_fullheight;
 public:
 	std::string Name;
 	int Layer;
 	int Datatype;
-	float Height;
-	float Thickness;
+	double Height;
+	double Thickness;
 	bool Show;
-	float Red;
-	float Green;
-	float Blue;
-	float Filter;
+	double Red;
+	double Green;
+	double Blue;
+	double Filter;
 	bool Metal;
 
-	ProcessLayer(float zscale=1.0, bool fullheight=false) : Name(""), Layer(-1), Datatype(-1),
+	ProcessLayer(double zscale=1.0, bool fullheight=false) : Name(""), Layer(-1), Datatype(-1),
 					Height(0.0), Thickness(0.0), Show(false),
 					Red(0.5), Green(0.5), Blue(0.5), Metal(false),
 					m_zscale(zscale), m_fullheight(fullheight) {}
-	float GetHeight();
-	float GetThickness();
+	double GetHeight();
+	double GetThickness();
 
 	void HexColour(char *buf, size_t buflen);
 };
@@ -58,10 +58,10 @@ class Process
 private:
 	std::vector<ProcessLayer*> m_layers;
 	bool m_valid;		/* Is the process file valid? */
-	float m_zscale;
+	double m_zscale;
 	bool m_fullheight;
 public:
-	Process (float zscale=1.0f, bool fullheight=false);
+	Process (double zscale=1.0, bool fullheight=false);
 	~Process ();
 
 	void Parse(std::string processfile);
@@ -74,8 +74,8 @@ public:
 	ProcessLayer *GetLayer(std::string Name);
 	unsigned int LayerCount();
 	bool IsValid();
-	float GetHighest();
-	float GetLowest();
+	double GetHighest();
+	double GetLowest();
 	bool RemoveLayer(unsigned int index);
 	bool Save(std::string filename);
 	void SwapLayers(unsigned int a, unsigned int b);

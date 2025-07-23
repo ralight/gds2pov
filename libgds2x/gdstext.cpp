@@ -27,8 +27,8 @@
 
 namespace GDS2X {
 
-Text::Text(float x, float y, float z,
-				bool flipped, float mag,
+Text::Text(double x, double y, double z,
+				bool flipped, double mag,
 				int vjust, int hjust,
 				ProcessLayer *layer) :
 				m_x(x), m_y(y), m_z(z),
@@ -47,7 +47,7 @@ void Text::SetString(std::string String)
 	m_string = String;
 }
 
-void Text::SetRotation(float x, float y, float z)
+void Text::SetRotation(double x, double y, double z)
 {
 	m_rotate.x = x;
 	m_rotate.y = y;
@@ -59,27 +59,27 @@ std::string Text::GetString()
 	return m_string;
 }
 
-float Text::GetX()
+double Text::GetX()
 {
 	return m_x;
 }
 
-float Text::GetY()
+double Text::GetY()
 {
 	return m_y;
 }
 
-float Text::GetZ()
+double Text::GetZ()
 {
 	return m_z;
 }
 
-float Text::GetRY()
+double Text::GetRY()
 {
 	return m_rotate.y;
 }
 
-float Text::GetMag()
+double Text::GetMag()
 {
 	return m_mag;
 }

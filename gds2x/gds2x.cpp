@@ -57,7 +57,7 @@ void printusage(std::string exe)
 }
 
 
-GDS2X::Process *load_process(std::string processfile, bool generate_process, float zscale, bool fullheight)
+GDS2X::Process *load_process(std::string processfile, bool generate_process, double zscale, bool fullheight)
 {
 	GDS2X::Process *process = new GDS2X::Process(zscale, fullheight);
 	if(!process){
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 	options["outfile"] = "";
 	options["processfile"] = "";
 	options["topcell"] = "";
-	float zscale = 1.0f;
+	double zscale = 1.0;
 	bool fullheight = false;
 
 	std::string exe = fix_exe(argv[0]);

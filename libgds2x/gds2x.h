@@ -29,7 +29,7 @@ namespace GDS2X {
 class Object;
 
 struct Vertex{
-	float x, y, z;
+	double x, y, z;
 };
 
 struct Triangle{
@@ -38,31 +38,31 @@ struct Triangle{
 
 class Point {
 public:
-	float x;
-	float y;
-	float angle;
+	double x;
+	double y;
+	double angle;
 	Point() : x(0.0), y(0.0), angle(0.0) {};
-	Point(float x, float y, float angle=0.0) :
+	Point(double x, double y, double angle=0.0) :
 		x(x), y(y), angle(angle) {};
 };
 
 class Transform {
 public:
-	float x;
-	float y;
-	float z;
+	double x;
+	double y;
+	double z;
 	Transform() : x(0.0), y(0.0), z(0.0) {};
 };
 
 class ARefElement {
 public:
-	float x1;
-	float y1;
-	float x2;
-	float y2;
-	float x3;
-	float y3;
-	float mag;
+	double x1;
+	double y1;
+	double x2;
+	double y2;
+	double x3;
+	double y3;
+	double mag;
 	int columns;
 	int rows;
 	std::string name;
@@ -77,9 +77,9 @@ public:
 
 class SRefElement {
 public:
-	float x;
-	float y;
-	float mag;
+	double x;
+	double y;
+	double mag;
 	std::string name;
 	bool flipped;
 	Object *object;
@@ -90,10 +90,10 @@ public:
 };
 
 struct Boundary {
-	float xmin;
-	float xmax;
-	float ymin;
-	float ymax;
+	double xmin;
+	double xmax;
+	double ymin;
+	double ymax;
 };
 
 typedef std::unordered_map<std::string, std::string> option_map_t;

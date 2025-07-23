@@ -54,12 +54,12 @@ bool GDSConfig::IsValid()
 	return m_valid;
 }
 
-float GDSConfig::GetAmbient()
+double GDSConfig::GetAmbient()
 {
 	return m_ambient;
 }
 
-float GDSConfig::GetScale()
+double GDSConfig::GetScale()
 {
 	return m_scale;
 }
@@ -188,7 +188,7 @@ void GDSConfig::ReadFile(std::string configfile)
 				if(got_ambient){
 					fprintf(stderr, "Warning: Duplicate Ambient definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Ambient: %f", &m_ambient);
+					sscanf(line, "Ambient: %lf", &m_ambient);
 				}
 				got_ambient = true;
 			}else if(strstr(line, "Scale:")){
@@ -201,7 +201,7 @@ void GDSConfig::ReadFile(std::string configfile)
 				if(got_scale){
 					fprintf(stderr, "Warning: Duplicate Scale definition on line %d of config file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Scale: %f", &m_scale);
+					sscanf(line, "Scale: %lf", &m_scale);
 					if(m_scale<0.001){
 						fprintf(stderr, "Warning: Scale is very small (<0.001)\n");
 					}
@@ -350,14 +350,14 @@ void GDSConfig::ReadFile(std::string configfile)
 				}else{
 					switch(current_type){
 						case ptCamera:
-							sscanf(line, "XMod: %f", &m_camerapos.xmod);
+							sscanf(line, "XMod: %lf", &m_camerapos.xmod);
 							break;
 						case ptLookAt:
-							sscanf(line, "XMod: %f", &m_lookatpos.xmod);
+							sscanf(line, "XMod: %lf", &m_lookatpos.xmod);
 							break;
 						case ptLight:
 							if(m_currentlight){
-								sscanf(line, "XMod: %f", &m_currentlight->xmod);
+								sscanf(line, "XMod: %lf", &m_currentlight->xmod);
 							}else{
 								fprintf(stderr, "Error: XMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								m_valid = false;
@@ -390,14 +390,14 @@ void GDSConfig::ReadFile(std::string configfile)
 				}else{
 					switch(current_type){
 						case ptCamera:
-							sscanf(line, "YMod: %f", &m_camerapos.ymod);
+							sscanf(line, "YMod: %lf", &m_camerapos.ymod);
 							break;
 						case ptLookAt:
-							sscanf(line, "YMod: %f", &m_lookatpos.ymod);
+							sscanf(line, "YMod: %lf", &m_lookatpos.ymod);
 							break;
 						case ptLight:
 							if(m_currentlight){
-								sscanf(line, "YMod: %f", &m_currentlight->ymod);
+								sscanf(line, "YMod: %lf", &m_currentlight->ymod);
 							}else{
 								fprintf(stderr, "Error: YMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								m_valid = false;
@@ -430,14 +430,14 @@ void GDSConfig::ReadFile(std::string configfile)
 				}else{
 					switch(current_type){
 						case ptCamera:
-							sscanf(line, "ZMod: %f", &m_camerapos.zmod);
+							sscanf(line, "ZMod: %lf", &m_camerapos.zmod);
 							break;
 						case ptLookAt:
-							sscanf(line, "ZMod: %f", &m_lookatpos.zmod);
+							sscanf(line, "ZMod: %lf", &m_lookatpos.zmod);
 							break;
 						case ptLight:
 							if(m_currentlight){
-								sscanf(line, "ZMod: %f", &m_currentlight->zmod);
+								sscanf(line, "ZMod: %lf", &m_currentlight->zmod);
 							}else{
 								fprintf(stderr, "Error: ZMod found but LastLight not initialised (this shouldn't happen, please contact the author)\n");
 								m_valid = false;
@@ -479,12 +479,12 @@ void GDSConfig::ReadFile(std::string configfile)
 
 void GDSConfig::OutputToFile(FILE *fptr, struct GDS2X::Boundary *boundary)
 {
-	float half_widthX = (boundary->xmax - boundary->xmin)/2;
-	float half_widthY = (boundary->ymax - boundary->ymin)/2;
-	float centreX = half_widthX + boundary->xmin;
-	float centreY = half_widthY + boundary->ymin;
+	double half_widthX = (boundary->xmax - boundary->xmin)/2;
+	double half_widthY = (boundary->ymax - boundary->ymin)/2;
+	double centreX = half_widthX + boundary->xmin;
+	double centreY = half_widthY + boundary->ymin;
 
-	float distance;
+	double distance;
 	if(half_widthX > half_widthY){
 		distance = half_widthX * 1.8;
 	}else{
@@ -500,9 +500,9 @@ void GDSConfig::OutputToFile(FILE *fptr, struct GDS2X::Boundary *boundary)
 	fprintf(fptr, "// BottomRight: %.2f, %.2f\n", boundary->xmax, boundary->ymin);
 	fprintf(fptr, "// Centre: %.2f, %.2f\n", centreX, centreY);
 
-	float xmod = this->GetCameraPos()->xmod;
-	float ymod = this->GetCameraPos()->ymod;
-	float zmod = this->GetCameraPos()->zmod;
+	double xmod = this->GetCameraPos()->xmod;
+	double ymod = this->GetCameraPos()->ymod;
+	double zmod = this->GetCameraPos()->zmod;
 
 	/* m_camfile is a possible camera include file. Depends on the -e option
 	 * If it is null, use the normal camera else use the include */

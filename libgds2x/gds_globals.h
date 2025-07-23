@@ -165,7 +165,7 @@ enum RecordNumbers{
 	rnContact		/* 69 */
 };
 
-Vertex CreateVertex(float x, float y, float z);
+Vertex CreateVertex(double x, double y, double z);
 Triangle CreateTriangle(int v1, int v2, int v3);
 
 }

@@ -27,8 +27,8 @@
 
 namespace GDS2X {
 
-Path::Path(int type, float width,
-				float bgnextn, float endextn,
+Path::Path(int type, double width,
+				double bgnextn, double endextn,
 				ProcessLayer *layer) :
 				m_type(type), m_width(width),
 				m_bgnextn(bgnextn), m_endextn(endextn), m_layer(layer)
@@ -39,20 +39,20 @@ Path::~Path()
 {
 }
 
-void Path::AddPoint(float x, float y)
+void Path::AddPoint(double x, double y)
 {
 	m_coords.push_back(Point(x, y));
 }
 
 
-void Path::SetRotation(float x, float y, float z)
+void Path::SetRotation(double x, double y, double z)
 {
 	m_rotate.x = x;
 	m_rotate.y = y;
 	m_rotate.z = z;
 }
 
-float Path::GetXCoords(unsigned int index)
+double Path::GetXCoords(unsigned int index)
 {
 	if(index < m_coords.size()){
 		return m_coords[index].x;
@@ -60,7 +60,7 @@ float Path::GetXCoords(unsigned int index)
 	return 0.0;
 }
 
-float Path::GetYCoords(unsigned int index)
+double Path::GetYCoords(unsigned int index)
 {
 	if(index < m_coords.size()){
 		return m_coords[index].y;
@@ -73,27 +73,27 @@ unsigned int Path::GetPoints()
 	return m_coords.size();
 }
 
-float Path::GetHeight()
+double Path::GetHeight()
 {
 	return m_layer->GetHeight();
 }
 
-float Path::GetThickness()
+double Path::GetThickness()
 {
 	return m_layer->GetThickness();
 }
 
-float Path::GetWidth()
+double Path::GetWidth()
 {
 	return m_width;
 }
 
-float Path::GetBgnExtn()
+double Path::GetBgnExtn()
 {
 	return m_bgnextn;
 }
 
-float Path::GetEndExtn()
+double Path::GetEndExtn()
 {
 	return m_endextn;
 }
@@ -109,7 +109,7 @@ ProcessLayer *Path::GetLayer()
 }
 
 
-int Path::GetPointCentre(unsigned int idx, float &x, float &y)
+int Path::GetPointCentre(unsigned int idx, double &x, double &y)
 {
 	if(idx < m_coords.size()){
 		x = m_coords[idx].x;
@@ -120,11 +120,11 @@ int Path::GetPointCentre(unsigned int idx, float &x, float &y)
 	}
 }
 
-int Path::GetPoint2D(unsigned int idx, float &x, float &y)
+int Path::GetPoint2D(unsigned int idx, double &x, double &y)
 {
 	if(this->GetWidth()){
-		float BgnExtn;
-		float EndExtn;
+		double BgnExtn;
+		double EndExtn;
 
 		switch(this->GetType()){
 			case 1:
@@ -150,10 +150,10 @@ int Path::GetPoint2D(unsigned int idx, float &x, float &y)
 		{
 			double XCoords_j2;
 			double YCoords_j2;
-			float angle12 = 0.0, angle23 = 0.0;
-			float angleX, angleY;
-			float PathWidth = this->GetWidth();
-			float extn_x, extn_y;
+			double angle12 = 0.0, angle23 = 0.0;
+			double angleX, angleY;
+			double PathWidth = this->GetWidth();
+			double extn_x, extn_y;
 
 			XCoords_j2 = this->GetXCoords(point);
 			YCoords_j2 = this->GetYCoords(point);
@@ -181,9 +181,9 @@ int Path::GetPoint2D(unsigned int idx, float &x, float &y)
 			}else{
 				extn_x = 0.0;
 				extn_y = 0.0;
-				float ax = sin(angle12)*tan((angle23-angle12)*.5);
-				float ay = cos(angle12)*tan((angle23-angle12)*.5);
-				if(ax > 1.0f || ay > 1.0f){
+				double ax = sin(angle12)*tan((angle23-angle12)*.5);
+				double ay = cos(angle12)*tan((angle23-angle12)*.5);
+				if(ax > 1.0 || ay > 1.0){
 					printf("WARNING: Path angle is acute and will not be properly represented.\n");
 				}
 				angleX = cos(angle12) - ax;
@@ -214,11 +214,11 @@ int Path::GetPoint2D(unsigned int idx, float &x, float &y)
 /* FIXME - use GetPoint2D here, instead of duplicating code.
  * This will result in point ordering changing, and hence also face vertices
  */
-int Path::GetPoint3D(unsigned int idx, float &x, float &y, float &z)
+int Path::GetPoint3D(unsigned int idx, double &x, double &y, double &z)
 {
 	if(this->GetWidth()){
-		float BgnExtn;
-		float EndExtn;
+		double BgnExtn;
+		double EndExtn;
 
 		switch(this->GetType()){
 			case 1:
@@ -244,10 +244,10 @@ int Path::GetPoint3D(unsigned int idx, float &x, float &y, float &z)
 		{
 			double XCoords_j2;
 			double YCoords_j2;
-			float angle12 = 0.0, angle23 = 0.0;
-			float angleX, angleY;
-			float PathWidth = this->GetWidth();
-			float extn_x, extn_y;
+			double angle12 = 0.0, angle23 = 0.0;
+			double angleX, angleY;
+			double PathWidth = this->GetWidth();
+			double extn_x, extn_y;
 
 			XCoords_j2 = this->GetXCoords(point);
 			YCoords_j2 = this->GetYCoords(point);
@@ -275,9 +275,9 @@ int Path::GetPoint3D(unsigned int idx, float &x, float &y, float &z)
 			}else{
 				extn_x = 0.0;
 				extn_y = 0.0;
-				float ax = sin(angle12)*tan((angle23-angle12)*.5);
-				float ay = cos(angle12)*tan((angle23-angle12)*.5);
-				if(ax > 1.0f || ay > 1.0f){
+				double ax = sin(angle12)*tan((angle23-angle12)*.5);
+				double ay = cos(angle12)*tan((angle23-angle12)*.5);
+				if(ax > 1.0 || ay > 1.0){
 					printf("WARNING: Path angle is acute and will not be properly represented.\n");
 				}
 				angleX = cos(angle12) - ax;

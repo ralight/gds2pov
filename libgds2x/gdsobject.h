@@ -36,7 +36,7 @@ class Object
 {
 protected:
 	std::string m_name;
-	float m_width, m_length;
+	double m_width, m_length;
 
 	bool m_gotboundary;
 	bool m_isoutput;
@@ -55,19 +55,19 @@ public:
 	Object(std::string name, std::vector<Vertex> vertices, std::vector<Triangle> triangles, ProcessLayer *layer);
 	virtual ~Object();
 
-	void AddText(float x, float Y, float Z, bool flipped, float mag, int vjust, int hjust, ProcessLayer *layer);
+	void AddText(double x, double Y, double Z, bool flipped, double mag, int vjust, int hjust, ProcessLayer *layer);
 	Text *GetCurrentText();
 
 	void AddPolygon(ProcessLayer *layer);
 	Polygon *GetCurrentPolygon();
 
-	void AddSRef(std::string name, float x, float y, bool flipped, float mag);
-	void SetSRefRotation(float x, float y, float z);
+	void AddSRef(std::string name, double x, double y, bool flipped, double mag);
+	void SetSRefRotation(double x, double y, double z);
 
-	void AddARef(std::string name, float x1, float y1, float x2, float y2, float x3, float y3, int columns, int rows, bool flipped, float mag);
-	void SetARefRotation(float x, float y, float z);
+	void AddARef(std::string name, double x1, double y1, double x2, double y2, double x3, double y3, int columns, int rows, bool flipped, double mag);
+	void SetARefRotation(double x, double y, double z);
 
-	void AddPath(int pathtype, float width, float bgnextn, float endextn, ProcessLayer *layer);
+	void AddPath(int pathtype, double width, double bgnextn, double endextn, ProcessLayer *layer);
 	Path *GetCurrentPath();
 
 	std::string GetName();
@@ -81,8 +81,8 @@ public:
 	unsigned int GetARefCount(void);
 
 	Boundary *GetBoundary(void);
-	float GetWidth();
-	float GetLength();
+	double GetWidth();
+	double GetLength();
 
 	bool GetIsOutput();
 

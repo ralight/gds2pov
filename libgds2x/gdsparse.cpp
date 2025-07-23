@@ -271,7 +271,7 @@ int Parse::ParseFileInternal()
 				v_printf(2, "DATATYPE (%d)\n", m_currentdatatype);
 				break;
 			case rnWidth:
-				m_currentwidth = (float)(GetFourByteSignedInt()/2);
+				m_currentwidth = GetFourByteSignedInt()/2;
 				if(m_currentwidth > 0){
 					m_currentwidth *= m_units;
 				}
@@ -364,7 +364,7 @@ int Parse::ParseFileInternal()
 				v_printf(2, "MAG (%f)\n", m_currentmag);
 				break;
 			case rnAngle:
-				m_currentangle = (float)GetEightByteReal();
+				m_currentangle = GetEightByteReal();
 				v_printf(2, "ANGLE (%f)\n", m_currentangle);
 				break;
 /*			case rnUInteger:
@@ -483,12 +483,12 @@ Not used in GDS2 spec	case rnUString:
 				break;
 			case rnBgnExtn:
 				ReportUnsupported("BGNEXTN", rnBgnExtn);
-				m_currentbgnextn = m_units * (float)GetFourByteSignedInt();
+				m_currentbgnextn = m_units * GetFourByteSignedInt();
 				v_printf(2, "BGNEXTN (%f)\n", m_currentbgnextn);
 				break;
 			case rnEndExtn:
 				ReportUnsupported("ENDEXTN", rnEndExtn);
-				m_currentendextn = m_units * (float)GetFourByteSignedInt();
+				m_currentendextn = m_units * GetFourByteSignedInt();
 				v_printf(2, "ENDEXTN (%ld)\n", m_currentendextn);
 				break;
 			case rnTapeNum:
@@ -659,7 +659,7 @@ void Parse::ParseSName()
 void Parse::ParseUnits()
 {
 	double tmp;
-	m_units = (float)GetEightByteReal();
+	m_units = GetEightByteReal();
 	tmp = GetEightByteReal();
 	v_printf(1, "DB units/user units = %g\nSize of DB units in metres = %g\nSize of user units in m = %g\n\n", 1/m_units, tmp, tmp/m_units);
 }
@@ -698,7 +698,7 @@ void Parse::ParseStrName()
 
 void Parse::ParseXYPath()
 {
-	float X, Y;
+	double X, Y;
 	int points = m_recordlen/8;
 	int i;
 	ProcessLayer *thislayer = NULL;
@@ -740,8 +740,8 @@ void Parse::ParseXYPath()
 			m_currentobject->AddPath(m_currentpathtype, m_currentwidth, m_currentbgnextn, m_currentendextn, thislayer);
 		}
 		for(i=0; i<points; i++){
-			X = m_units * (float)GetFourByteSignedInt();
-			Y = m_units * (float)GetFourByteSignedInt();
+			X = m_units * GetFourByteSignedInt();
+			Y = m_units * GetFourByteSignedInt();
 			v_printf(2, "(%.3f,%.3f) ", X, Y);
 			if(thislayer && thislayer->Thickness && thislayer->Show && m_currentobject){
 				m_currentobject->GetCurrentPath()->AddPoint(X, Y);
@@ -766,8 +766,8 @@ void Parse::ParseXYPath()
 
 void Parse::ParseXYBoundary()
 {
-	float X, Y;
-	float firstX=0.0, firstY=0.0;
+	double X, Y;
+	double firstX=0.0, firstY=0.0;
 	int points = m_recordlen/8;
 	int i;
 	ProcessLayer *thislayer = NULL;
@@ -805,8 +805,8 @@ void Parse::ParseXYBoundary()
 	}
 
 	for(i=0; i<points-1; i++){
-		X = m_units * (float)GetFourByteSignedInt();
-		Y = m_units * (float)GetFourByteSignedInt();
+		X = m_units * GetFourByteSignedInt();
+		Y = m_units * GetFourByteSignedInt();
 		v_printf(2, "(%.3f,%.3f) ", X, Y);
 		if(i==0){
 			firstX = X;
@@ -817,8 +817,8 @@ void Parse::ParseXYBoundary()
 		}
 	}
 	/* Clear duplicate point */
-	X = m_units * (float)GetFourByteSignedInt();
-	Y = m_units * (float)GetFourByteSignedInt();
+	X = m_units * GetFourByteSignedInt();
+	Y = m_units * GetFourByteSignedInt();
 
 	v_printf(2, "\n");
 
@@ -835,8 +835,8 @@ void Parse::ParseXYBoundary()
 void Parse::ParseXYSRef(bool Flipped)
 {
 	m_srefelements++;
-	float X = m_units * (float)GetFourByteSignedInt();
-	float Y = m_units * (float)GetFourByteSignedInt();
+	double X = m_units * GetFourByteSignedInt();
+	double Y = m_units * GetFourByteSignedInt();
 	v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
 	if(m_currentobject){
@@ -851,12 +851,12 @@ void Parse::ParseXYSRef(bool Flipped)
 void Parse::ParseXYARef(bool Flipped)
 {
 	m_arefelements++;
-	float firstX = m_units * (float)GetFourByteSignedInt();
-	float firstY = m_units * (float)GetFourByteSignedInt();
-	float secondX = m_units * (float)GetFourByteSignedInt();
-	float secondY = m_units * (float)GetFourByteSignedInt();
-	float X = m_units * (float)GetFourByteSignedInt();
-	float Y = m_units * (float)GetFourByteSignedInt();
+	double firstX = m_units * GetFourByteSignedInt();
+	double firstY = m_units * GetFourByteSignedInt();
+	double secondX = m_units * GetFourByteSignedInt();
+	double secondY = m_units * GetFourByteSignedInt();
+	double X = m_units * GetFourByteSignedInt();
+	double Y = m_units * GetFourByteSignedInt();
 
 	v_printf(2, "(%.3f,%.3f) ", firstX, firstY);
 	v_printf(2, "(%.3f,%.3f) ", secondX, secondY);
@@ -900,8 +900,8 @@ void Parse::ParseXYText(bool Flipped)
 		return;
 	}
 
-	float X = m_units * (float)GetFourByteSignedInt();
-	float Y = m_units * (float)GetFourByteSignedInt();
+	double X = m_units * GetFourByteSignedInt();
+	double Y = m_units * GetFourByteSignedInt();
 	v_printf(2, "(%.3f,%.3f)\n", X, Y);
 
 	if(m_currentobject && m_currentobject->GetCurrentText()){
@@ -968,8 +968,8 @@ Boundary *Parse::GetBoundary()
 		m_boundary = new Boundary;
 	}
 
-	m_boundary->xmax = m_boundary->ymax = std::numeric_limits<float>::lowest();
-	m_boundary->xmin = m_boundary->ymin =  std::numeric_limits<float>::max();
+	m_boundary->xmax = m_boundary->ymax = std::numeric_limits<double>::lowest();
+	m_boundary->xmin = m_boundary->ymin =  std::numeric_limits<double>::max();
 
 	for(auto it=m_objects.begin(); it!=m_objects.end(); it++) {
 		Boundary *object_bound = it->second->GetBoundary();
@@ -997,7 +997,7 @@ Object *Parse::GetObjectRef(std::string name)
 }
 
 
-float Parse::GetUnits()
+double Parse::GetUnits()
 {
 	return m_units;
 }

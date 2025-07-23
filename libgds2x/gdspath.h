@@ -30,36 +30,36 @@ class Path
 {
 private:
 	int m_type;
-	float m_width;
-	float m_bgnextn;
-	float m_endextn;
+	double m_width;
+	double m_bgnextn;
+	double m_endextn;
 	std::vector<Point> m_coords;
 	Transform m_rotate;
 	ProcessLayer *m_layer;
 
 public:
-	Path(int pathtype, float width, float bgnextn, float endextn, ProcessLayer *layer);
+	Path(int pathtype, double width, double bgnextn, double endextn, ProcessLayer *layer);
 	~Path();
 
-	void AddPoint(float x, float y);
-	void SetRotation(float x, float y, float z);
+	void AddPoint(double x, double y);
+	void SetRotation(double x, double y, double z);
 
-	float GetXCoords(unsigned int index);
-	float GetYCoords(unsigned int index);
+	double GetXCoords(unsigned int index);
+	double GetYCoords(unsigned int index);
 	unsigned int GetPoints();
 
-	float GetHeight();
-	float GetThickness();
-	float GetWidth();
-	float GetBgnExtn();
-	float GetEndExtn();
+	double GetHeight();
+	double GetThickness();
+	double GetWidth();
+	double GetBgnExtn();
+	double GetEndExtn();
 
 	int GetType();
 	ProcessLayer *GetLayer();
 
-	int GetPointCentre(unsigned int idx, float &x, float &y);
-	int GetPoint2D(unsigned int idx, float &x, float &y);
-	int GetPoint3D(unsigned int idx, float &x, float &y, float &z);
+	int GetPointCentre(unsigned int idx, double &x, double &y);
+	int GetPoint2D(unsigned int idx, double &x, double &y);
+	int GetPoint3D(unsigned int idx, double &x, double &y, double &z);
 	int GetFace3D(unsigned int idx, int &v1, int &v2, int &v3);
 };
 

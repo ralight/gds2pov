@@ -28,14 +28,14 @@
 class GDSObject_svg : public GDS2X::Object
 {
 private:
-	float m_scale;
+	double m_scale;
 	FILE *m_optr;
 public:
 	GDSObject_svg(std::string name, FILE *optr);
 	GDSObject_svg(GDS2X::Object *object, FILE *optr);
 	~GDSObject_svg();
 
-	void SetScale(float scale);
+	void SetScale(double scale);
 
 	virtual void Output();
 	void OutputPaths();

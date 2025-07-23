@@ -40,16 +40,16 @@ public:
 	Polygon(std::vector<Vertex> vertices, std::vector<Triangle> triangles, ProcessLayer *layer);
 	~Polygon();
 
-	void AddPoint(float x, float y);
-	void SetRotation(float x, float y, float z);
+	void AddPoint(double x, double y);
+	void SetRotation(double x, double y, double z);
 
-	float GetHeight(void);
-	float GetThickness(void);
+	double GetHeight(void);
+	double GetThickness(void);
 	unsigned int GetPoints(void);
-	float GetXCoords(unsigned int index);
-	float GetYCoords(unsigned int index);
-	float GetAngleCoords(unsigned int index);
-	void SetAngleCoords(unsigned int index, float value);
+	double GetXCoords(unsigned int index);
+	double GetYCoords(unsigned int index);
+	double GetAngleCoords(unsigned int index);
+	void SetAngleCoords(unsigned int index, double value);
 	ProcessLayer *GetLayer(void);
 	std::vector<Vertex> GetVertices();
 	std::vector<Triangle> GetTriangles();

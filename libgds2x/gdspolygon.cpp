@@ -50,20 +50,20 @@ Polygon::~Polygon()
 {
 }
 
-void Polygon::AddPoint(float x, float y)
+void Polygon::AddPoint(double x, double y)
 {
 	m_coords.push_back(Point(x, y));
 }
 
 
-void Polygon::SetRotation(float x, float y, float z)
+void Polygon::SetRotation(double x, double y, double z)
 {
 	m_rotate.x = x;
 	m_rotate.y = y;
 	m_rotate.z = z;
 }
 
-float Polygon::GetXCoords(unsigned int index)
+double Polygon::GetXCoords(unsigned int index)
 {
 	if(index < m_coords.size()){
 		return m_coords[index].x;
@@ -71,7 +71,7 @@ float Polygon::GetXCoords(unsigned int index)
 	return 0.0;
 }
 
-float Polygon::GetYCoords(unsigned int index)
+double Polygon::GetYCoords(unsigned int index)
 {
 	if(index < m_coords.size()){
 		return m_coords[index].y;
@@ -79,15 +79,15 @@ float Polygon::GetYCoords(unsigned int index)
 	return 0.0;
 }
 
-float Polygon::GetAngleCoords(unsigned int index)
+double Polygon::GetAngleCoords(unsigned int index)
 {
 	if(index < m_coords.size()){
-	return m_coords[index].angle;
+		return m_coords[index].angle;
 	}
 	return 0.0;
 }
 
-void Polygon::SetAngleCoords(unsigned int index, float value)
+void Polygon::SetAngleCoords(unsigned int index, double value)
 {
 	if(index < m_coords.size()){
 		m_coords[index].angle = value;
@@ -99,12 +99,12 @@ unsigned int Polygon::GetPoints(void)
 	return m_coords.size();
 }
 
-float Polygon::GetHeight(void)
+double Polygon::GetHeight(void)
 {
 	return m_layer->GetHeight();
 }
 
-float Polygon::GetThickness(void)
+double Polygon::GetThickness(void)
 {
 	return m_layer->GetThickness();
 }

@@ -50,7 +50,7 @@
 
 using namespace GDS2X;
 
-Process::Process(float zscale, bool fullheight) :
+Process::Process(double zscale, bool fullheight) :
 	m_valid(true),
 	m_zscale(zscale),
 	m_fullheight(fullheight)
@@ -198,7 +198,7 @@ void Process::Parse(std::string processfile)
 				if(got_height){
 					fprintf(stderr, "Warning: Duplicate Height definition on line %d of process file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Height: %f", &NewLayer.Height);
+					sscanf(line, "Height: %lf", &NewLayer.Height);
 					got_height = true;
 				}
 			}else if(strstr(line, "Thickness:")){
@@ -211,7 +211,7 @@ void Process::Parse(std::string processfile)
 				if(got_thickness){
 					fprintf(stderr, "Warning: Duplicate Thickness definition on line %d of process file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Thickness: %f", &NewLayer.Thickness);
+					sscanf(line, "Thickness: %lf", &NewLayer.Thickness);
 					got_thickness = true;
 				}
 			}else if(strstr(line, "Colour:")){
@@ -226,7 +226,7 @@ void Process::Parse(std::string processfile)
 				}else{
 					unsigned int filter, red, green, blue;
 					if(sscanf(line, "Colour: #%02x%02x%02x%02x", &red, &green, &blue, &filter) == 4){
-						NewLayer.Filter = (float)filter/255.0;
+						NewLayer.Filter = filter/255.0;
 					}else if(sscanf(line, "Colour: #%02x%02x%02x", &red, &green, &blue) == 3){
 						/* Ok */
 					}else{
@@ -235,9 +235,9 @@ void Process::Parse(std::string processfile)
 						fclose(pptr);
 						return;
 					}
-					NewLayer.Red = (float)red/255.0;
-					NewLayer.Green = (float)green/255.0;
-					NewLayer.Blue = (float)blue/255.0;
+					NewLayer.Red = red/255.0;
+					NewLayer.Green = green/255.0;
+					NewLayer.Blue = blue/255.0;
 					got_colour = true;
 				}
 			}else if(strstr(line, "Red:")){
@@ -250,7 +250,7 @@ void Process::Parse(std::string processfile)
 				if(got_red){
 					fprintf(stderr, "Warning: Duplicate Red definition on line %d of process file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Red: %f", &NewLayer.Red);
+					sscanf(line, "Red: %lf", &NewLayer.Red);
 					got_red = true;
 				}
 			}else if(strstr(line, "Green:")){
@@ -263,7 +263,7 @@ void Process::Parse(std::string processfile)
 				if(got_green){
 					fprintf(stderr, "Warning: Duplicate Green definition on line %d of process file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Green: %f", &NewLayer.Green);
+					sscanf(line, "Green: %lf", &NewLayer.Green);
 					got_green = true;
 				}
 			}else if(strstr(line, "Blue:")){
@@ -276,7 +276,7 @@ void Process::Parse(std::string processfile)
 				if(got_blue){
 					fprintf(stderr, "Warning: Duplicate Blue definition on line %d of process file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Blue: %f", &NewLayer.Blue);
+					sscanf(line, "Blue: %lf", &NewLayer.Blue);
 					got_blue = true;
 				}
 			}else if(strstr(line, "Filter:")){
@@ -289,7 +289,7 @@ void Process::Parse(std::string processfile)
 				if(got_filter){
 					fprintf(stderr, "Warning: Duplicate Filter definition on line %d of process file. Ignoring new definition.\n", current_line);
 				}else{
-					sscanf(line, "Filter: %f", &NewLayer.Filter);
+					sscanf(line, "Filter: %lf", &NewLayer.Filter);
 					got_filter = true;
 				}
 			}else if(strstr(line, "Metal:")){
@@ -462,9 +462,9 @@ bool Process::IsValid()
 	return m_valid;
 }
 
-float Process::GetHighest()
+double Process::GetHighest()
 {
-	float Highest = -10000.0;
+	double Highest = -10000.0;
 
 	for(unsigned int i = 0; i < m_layers.size(); i++){
 		if(m_layers[i]->Height + m_layers[i]->Thickness > Highest && m_layers[i]->Show){
@@ -474,9 +474,9 @@ float Process::GetHighest()
 	return Highest;
 }
 
-float Process::GetLowest()
+double Process::GetLowest()
 {
-	float Lowest = 10000.0;
+	double Lowest = 10000.0;
 
 	for(unsigned int i = 0; i < m_layers.size(); i++){
 		if(m_layers[i]->Height < Lowest && m_layers[i]->Show){
@@ -543,16 +543,16 @@ void Process::SwapLayers(unsigned int a, unsigned int b)
 	}
 }
 
-float ProcessLayer::GetHeight()
+double ProcessLayer::GetHeight()
 {
 	if(m_fullheight){
-		return 0.0f;
+		return 0.0;
 	}else{
 		return Height*m_zscale;
 	}
 }
 
-float ProcessLayer::GetThickness()
+double ProcessLayer::GetThickness()
 {
 	if(m_fullheight){
 		if(Height > 0.0){
