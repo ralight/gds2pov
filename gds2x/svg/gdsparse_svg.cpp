@@ -106,10 +106,10 @@ void GDSParse_svg::OutputHeader()
 		for(unsigned int i = 0; i < m_process->LayerCount(); i++){
 			layer = m_process->GetLayer(i);
 			if(layer->Show){
-				fprintf(m_optr, "\t\t.%s { fill: #%02x%02x%02x; opacity:0.75; }\n",
-						layer->Name.c_str(), (int)(255*layer->Red), (int)(255*layer->Green), (int)(255*layer->Blue));
-				fprintf(m_optr, "\t\t.s%s { fill: none; stroke: #%02x%02x%02x; opacity:0.75; stroke-miterlimit:2.5;stroke-linejoin:miter}\n",
-						layer->Name.c_str(), (int)(255*layer->Red), (int)(255*layer->Green), (int)(255*layer->Blue));
+				fprintf(m_optr, "\t\t.%s { fill: #%02x%02x%02x; opacity:%.2f; }\n",
+						layer->Name.c_str(), (int)(255*layer->Red), (int)(255*layer->Green), (int)(255*layer->Blue), 1.0-layer->Filter);
+				fprintf(m_optr, "\t\t.s%s { fill: none; stroke: #%02x%02x%02x; opacity:%.2f; stroke-miterlimit:2.5;stroke-linejoin:miter}\n",
+						layer->Name.c_str(), (int)(255*layer->Red), (int)(255*layer->Green), (int)(255*layer->Blue), 1.0-layer->Filter);
 			}
 		}
 		fprintf(m_optr, "\t</style>\n");
