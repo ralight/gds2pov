@@ -199,7 +199,7 @@ Boundary *Object::GetBoundary(void)
 
 	for(unsigned int i = 0; i < m_srefs.size(); i++){
 		SRefElement *sref = m_srefs[i];
-		if(m_name == sref->name && sref->object){
+		if(sref->object){
 			Object *object = sref->object;
 			Boundary *NewBound;
 			NewBound = object->GetBoundary();
