@@ -1,0 +1,282 @@
+# Process configuration file for gds2x
+#
+# Lines starting with a # are comments.
+#
+# This file *roughly* describes the AMS C35 process.
+#
+# This file consists of Layer entries in the following format:
+#
+# LayerStart: LayerName
+# Layer: LayerNumber (integer)
+# Datatype: (integer)
+# Height: (float, microns)
+# Thickness: (float, microns)
+# Red: (float, between 0,1 with 1 being full)
+# Green: (float, between 0,1 with 1 being full)
+# Blue: (float, between 0,1 with 1 being full)
+# Filter: (float, between 0,1 with 1 being full)
+# Metal: (boolean, 0 or 1)
+# Show: (boolean, 0 or 1)
+# LayerEnd
+#
+# Filter defines the transparency of the layer, with 1 being the most
+# transparent. It actually works for values greater than 1, but the povray
+# documentation states that it is limited to 1 so don't rely on it.
+#
+# Metal, when set to 1, will make the layer slightly reflective.
+# Show defines whether the layer is shown or not.
+#
+# The only compulsory items are LayerStart, Layer and LayerEnd. If any value
+# is omitted, the default will be used. The defaults are:
+#
+# Datatype: 0
+# Height: 0
+# Thickness: 0       (thickness of 0 means the layer will not be shown)
+# Red: 0.0
+# Green: 0.0
+# Blue: 0.0
+# Filter: 0.0
+# Metal: 0
+# Show: 0            (do *not* show by default)
+#
+#
+# If any layer is not listed in this file it will be ignored in the gds2 file.
+
+LayerStart: ERROR
+Layer: 0
+LayerEnd
+
+LayerStart: NTUB
+Layer: 5
+Height: -2.0
+Thickness: 2.0
+Red: 0
+Green: 0
+Blue: 1
+Filter: 0.2
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: FIMP
+Layer: 8
+LayerEnd
+
+LayerStart: DIFF
+Layer: 10
+Height: 0.010
+Thickness: 0.010
+Red: 0
+Green: 1
+Blue: 1
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: POLY1
+Layer: 20
+Height: 0.028
+Thickness: 0.280
+Red: 1
+Green: 1
+Blue: 0
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: NPLUS
+Layer: 23
+Height: -0.195
+Thickness: 0.200
+Red: 0.5
+Green: 0.25
+Blue: 0
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: PPLUS
+Layer: 24
+Height: -0.195
+Thickness: 0.200
+Red: 1
+Green: 0
+Blue: 1
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: HRES
+Layer: 29
+Height: 0
+Thickness: 0
+Red: 0
+Green: 0
+Blue: 0
+Filter: 0
+Metal: 0
+Show: 0
+LayerEnd
+
+LayerStart: POLY2
+Layer: 30
+Height: 0.400
+Thickness: 0.280
+Red: 0.9
+Green: 0.35
+Blue: 0.04
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: CONT
+Layer: 34
+Height: 0.010
+Thickness: 1.600
+Red: 0
+Green: 1
+Blue: 0
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET1
+Layer: 35
+Height: 1.600
+Thickness: 0.660
+Red: 1
+Green: 0
+Blue: 0
+Filter: 0
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: VIA1
+Layer: 36
+Height: 2.250
+Thickness: 1.000
+Red: 1
+Green: 0.75
+Blue: 1
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET2
+Layer: 37
+Height: 3.240
+Thickness: 0.640
+Red: 1
+Green: 0.75
+Blue: 0
+Filter: 0
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: VIA2
+Layer: 38
+Height: 3.870
+Thickness: 1.000
+Red: 1
+Green: 0.5
+Blue: 0.5
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET3
+Layer: 39
+Height: 4.860
+Thickness: 1.000
+Red: 0
+Green: 0.5
+Blue: 0.5
+Filter: 0
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: VIA3
+Layer: 41
+Height: 5.850
+Thickness: 1.000
+Red: 1
+Green: 0.75
+Blue: 0.75
+Filter: 0
+Metal: 0
+Show: 0
+LayerEnd
+
+LayerStart: MET4
+Layer: 42
+Height: 6.840
+Thickness: 1.000
+Red: 0.75
+Green: 0
+Blue: 1
+Filter: 0
+Metal: 1
+Show: 0
+LayerEnd
+
+LayerStart: TEXT
+Layer: 61
+Height: 7.000
+Thickness: 1.000
+Red: 1
+Green: 1
+Blue: 1
+Filter: 0
+Metal: 0
+Show: 0
+LayerEnd
+
+LayerStart: DIODE
+Layer: 62
+Datatype: 11
+Height: 0.028
+Thickness: 0.028
+Red: 0.4
+Green: 0.4
+Blue: 0.08
+Filter: 0
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: RESDEF
+Layer: 62
+Datatype: 13
+Height: 0.800
+Thickness: 0.050
+Red: 1.0
+Green: 1.0
+Blue: 1.0
+Filter: 0.5
+Metal: 0
+Show: 0
+LayerEnd
+
+LayerStart: ERROR
+Layer: 63
+Height: 0
+Thickness: 0
+Red: 0
+Green: 0
+Blue: 0
+Filter: 0
+Metal: 0
+Show: 0
+LayerEnd
+

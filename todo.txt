@@ -1,17 +1,13 @@
 To Do
 =====
-- Checks for Xext for eg. SuSe.
-- Fix compile errors on Solaris
 - allow "ignore cells" preference
 - graphical process file editor
 - absolute camera position
-- save camera position from gdsoglviewer for use with gds2pov
 - What if top cell isn't found?
 - Allow use of eg. glade2 techfiles as a process file.
 - Should be able to tell whether a gds2 file is empty even if it parsed correctly.
 - Make an example skeleton project.
 
-- libgdsto3d should do more heavy lifting re. calculating path points
 - Need to deal with Text/SRef/ARef rotation issues for boundary calculation
 	(relevant to auto placement of camera)
 	Also for flipped objects.

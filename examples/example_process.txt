@@ -1,0 +1,182 @@
+# Process configuration file for gds2pov
+#
+# Lines starting with a # are comments.
+#
+# This file describes a made up p-sub, single well 4 layer metal CMOS process.
+#
+# This file consists of Layer entries in the following format:
+#
+# LayerStart: LayerName
+# Layer: LayerNumber (integer)
+# Datatype: (integer)
+# Height: (float) - See NOTE below
+# Thickness: (float) - See NOTE below
+#
+# Colour: #rrggbb - hex colour
+# - Or:
+# Colour: #rrggbbff - hex colour and filter
+# - Or:
+# Red: (float, between 0,1 with 1 being full)
+# Green: (float, between 0,1 with 1 being full)
+# Blue: (float, between 0,1 with 1 being full)
+# Filter: (float, between 0,1 with 1 being full)
+
+# Metal: (boolean, 0 or 1)
+# Show: (boolean, 0 or 1)
+# LayerEnd
+#
+# Filter defines the transparency of the layer, with 1 being the most
+# transparent. It actually works for values greater than 1, but the povray
+# documentation states that it is limited to 1 so don't rely on it.
+#
+# Metal, when set to 1, will make the layer slightly reflective.
+# Show defines whether the layer is shown or not.
+#
+# The only compulsory items are LayerStart, Layer and LayerEnd. If any value is ommitted, the default
+# will be used. The defaults are:
+#
+# Datatype: -1	     (meaning all datatypes for this layer)
+# Height: 0
+# Thickness: 0       (thickness of 0 means the layer will not be shown)
+# Colour: #00000000
+# Metal: 0
+# Show: 0            (do *not* show by default)
+#
+#
+# If any layer is not listed in this file it will be ignored in the gds2 file.
+#
+# NOTE
+# ====
+#
+# The numbers given here for Height and Thickness are specified in DB units. This is defined in your GDS2 file
+# (not the process!), which is why the Height and Thickness must use them. To find the DB units for your GDS2
+# file, just run the file through GDS2POV and it will provide the information.
+
+LayerStart: NTUB
+Layer: 1
+Height: -2.000
+Thickness: 2.000
+Colour: #0000FF
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: DIFF
+Layer: 2
+Height: 0.010
+Thickness: 0.010
+Colour: #00FFFF
+Red: 0
+Green: 1
+Blue: 1
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: POLY
+Layer: 3
+Height: 0.050
+Thickness: 0.300
+Colour: #FFFF00
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: NPLUS
+Layer: 4
+Height: -0.200
+Thickness: 0.210
+Colour: #7F3F00
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: PPLUS
+Layer: 5
+Height: -0.205
+Thickness: 0.210
+Colour: #FF00FF
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: CONT
+Layer: 6
+Height: 0.010
+Thickness: 0.990
+Colour: #00FF00
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET1
+Layer: 7
+Height: 0.990
+Thickness: 1.010
+Colour: #FF0000
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: VIA1
+Layer: 8
+Height: 1.990
+Thickness: 1.010
+Colour: #FFBDFF
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET2
+Layer: 9
+Height: 2.990
+Thickness: 1.010
+Colour: #FFBD00
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: VIA2
+Layer: 10
+Height: 3.990
+Thickness: 1.010
+Colour: #FF7F7F
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET3
+Layer: 11
+Height: 4.990
+Thickness: 1.010
+Colour: #007F7F
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: VIA3
+Layer: 12
+Height: 5.990
+Thickness: 1.010
+Colour: #FFBFBF
+Metal: 0
+Show: 1
+LayerEnd
+
+LayerStart: MET4
+Layer: 13
+Height: 6.990
+Thickness: 1.010
+Colour: #BD00FF
+Metal: 1
+Show: 1
+LayerEnd
+
+LayerStart: TEXT
+Layer: 14
+Height: 8.000
+Thickness: 0.010
+Colour: #FFFFFF00
+Metal: 0
+Show: 1
+LayerEnd

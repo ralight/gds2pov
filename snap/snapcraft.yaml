@@ -1,37 +1,133 @@
-name: gds2pov
-base: core18
+name: gds2x
+base: core24
 version: '20080229'
-summary: Convert integrated circuit gds2 layoutst to POV-Ray 3D images.
+summary: Convert integrated circuit gds2 layouts to 3mf/openscad/povray/stl/svg
 description: |
-  gds2pov is a program to take a gds2 layout file and output a POV-Ray scene
+  gds2x is a program to take a gds2 layout file and output a POV-Ray scene
   description file of the GDS2 data. This allows the creation of attractive 3D
   pictures of a layout.
+license: LGPL-2.0+
 
 grade: stable
 confinement: strict
 
 apps:
-  gds2pov:
-    command: bin/gds2pov
+  gds2x:
+    command: bin/gds2x
     plugs: [home]
+    environment:
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib
 
-  gds2svg:
-    command: bin/gds2svg
-    plugs: [home]
+  process-editor:
+    command: bin/gds2x_process_editor
+    extensions: [gnome]
+    plugs:
+      - desktop
+      - home
+    environment:
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib
 
 parts:
-  gds2pov:
+  lib3mf:
+    source: https://github.com/3MFConsortium/lib3mf
+    source-type: git
+    source-tag: v2.3.2
     plugin: cmake
-    source: .
-    configflags:
-      - "-DMAKE_INSTALL_PREFIX=/usr"
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/
+      - -DLIB3MF_TESTS=OFF
+      - -DUSE_INCLUDED_LIBZIP=OFF
+      - -DUSE_INCLUDED_SSL=OFF
+    build-packages:
+      - libzip-dev
+      - pkg-config
+    stage-packages:
+      - libzip4t64
     stage:
-      - bin/gds2pov
-      - bin/gds2svg
-      - lib/libgdsto3d.so*
-      - share/gdsto3d/changes.txt
-      - share/gdsto3d/example.cmd
-      - share/gdsto3d/example.gds
-      - share/gdsto3d/example_process.txt
-      - share/gdsto3d/example_config.txt
-      - share/gdsto3d/readme.txt
+      - usr/include/Bindings/Cpp/*.hpp
+      - usr/include/Bindings/CppDynamic/*.hpp
+      - usr/lib/cmake/lib3mf/lib3mfConfig.cmake
+      - usr/lib/lib3mf.so*
+      - usr/lib/pkgconfig/lib3mf.pc
+      - usr/lib/*/libzip.so*
+    prime:
+      - usr/lib/lib3mf.so*
+      - usr/lib/x86_64-linux-gnu
+      - usr/lib/*/libzip.so*
+
+  gds2x:
+    after:
+      - lib3mf
+    plugin: cmake
+    cmake-parameters:
+      - -Dlib3mf_DIR=$SNAPCRAFT_STAGE/usr/lib/cmake/lib3mf
+      - -DCMAKE_INSTALL_PREFIX=/
+    source: .
+    build-packages:
+      - libwxgtk3.2-dev
+    stage-packages:
+      - libjpeg-turbo8
+      - libwxbase3.2-1t64
+      - libwxgtk3.2-1t64
+      - nlohmann-json3-dev
+    stage:
+      - bin/gds2x
+      - bin/gds2x_process_editor
+      - lib/libgds2x.so*
+      - share/gds2x/changes.txt
+      - share/gds2x/example.cmd
+      - share/gds2x/example.gds
+      - share/gds2x/example_process.txt
+      - share/gds2x/example_config.txt
+      - share/gds2x/readme.txt
+      - usr/lib/*/libICE.so*
+      - usr/lib/*/libLerc.so*
+      - usr/lib/*/libSM.so*
+      - usr/lib/*/libX11.so*
+      - usr/lib/*/libXau.so*
+      - usr/lib/*/libXcomposite.so*
+      - usr/lib/*/libXcursor.so*
+      - usr/lib/*/libXdamage.so*
+      - usr/lib/*/libXdmcp.so*
+      - usr/lib/*/libXext.so*
+      - usr/lib/*/libXfixes.so*
+      - usr/lib/*/libXi.so*
+      - usr/lib/*/libXinerama.so*
+      - usr/lib/*/libXrandr.so*
+      - usr/lib/*/libXrender.so*
+      - usr/lib/*/libXtst.so*
+      - usr/lib/*/libatk-1.0.so*
+      - usr/lib/*/libatk-bridge-2.0.so*
+      - usr/lib/*/libatspi.so*
+      - usr/lib/*/libcairo-gobject.so*
+      - usr/lib/*/libcairo.so*
+      - usr/lib/*/libdatrie.so*
+      - usr/lib/*/libdeflate.so*
+      - usr/lib/*/libepoxy.so*
+      - usr/lib/*/libfontconfig.so*
+      - usr/lib/*/libfribidi.so*
+      - usr/lib/*/libgdk-3.so*
+      - usr/lib/*/libgdk_pixbuf-2.0.so*
+      - usr/lib/*/libgraphite2.so*
+      - usr/lib/*/libgtk-3.so*
+      - usr/lib/*/libharfbuzz.so*
+      - usr/lib/*/libjbig.so*
+      - usr/lib/*/libjpeg.so*
+      - usr/lib/*/libnotify.so*
+      - usr/lib/*/libpango-1.0.so*
+      - usr/lib/*/libpangocairo-1.0.so*
+      - usr/lib/*/libpangoft2-1.0.so*
+      - usr/lib/*/libpcre2-32.so*
+      - usr/lib/*/libpixman-1.so*
+      - usr/lib/*/libsharpyuv.so*
+      - usr/lib/*/libthai.so*
+      - usr/lib/*/libtiff.so*
+      - usr/lib/*/libwayland-client.so*
+      - usr/lib/*/libwayland-cursor.so*
+      - usr/lib/*/libwayland-egl.so*
+      - usr/lib/*/libwebp.so*
+      - usr/lib/*/libwx_baseu-3.2.so*
+      - usr/lib/*/libwx_gtk3u_core-3.2.so*
+      - usr/lib/*/libxcb-render.so*
+      - usr/lib/*/libxcb-shm.so*
+      - usr/lib/*/libxcb.so*

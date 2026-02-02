@@ -26,7 +26,7 @@
 class GPEWindow : public GPEWindow_fb
 {
 	private:
-		GDSProcess *m_process;
+		GDS2X::Process *m_process;
 		wxString m_process_path;
 		wxString m_defaultSaveDir;
 		wxString m_defaultSaveFile;
