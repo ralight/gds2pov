@@ -45,18 +45,8 @@ Section "Files" SecInstall
 	File "..\build\libgds2x\Release\gds2x.dll"
 	File "..\build\process_editor\Release\gds2x_process_editor.exe"
 
-	File "..\build\gds2x\Release\bz2.dll"
-	File "..\build\gds2x\Release\lib3mf.dll"
-	File "..\build\gds2x\Release\zip.dll"
-	File "..\build\gds2x\Release\zlib1.dll"
-
-	File "..\build\process_editor\Release\jpeg62.dll"
-	File "..\build\process_editor\Release\liblzma.dll"
-	File "..\build\process_editor\Release\libpng16.dll"
-	File "..\build\process_editor\Release\pcre2-16.dll"
-	File "..\build\process_editor\Release\tiff.dll"
-	File "..\build\process_editor\Release\wxbase32u_vc_x64_custom.dll"
-	File "..\build\process_editor\Release\wxmsw32u_core_vc_x64_custom.dll"
+	File "..\build\gds2x\Release\*.dll"
+	File "..\build\process_editor\Release\*.dll"
 
 	File "..\AUTHORS"
 	File "..\changes.txt"
